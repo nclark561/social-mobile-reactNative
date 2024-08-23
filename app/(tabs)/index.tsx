@@ -1,18 +1,29 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import Animated, {
-  interpolate,
-  useAnimatedRef,
-  useAnimatedStyle,
-  useScrollViewOffset,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import Post from '@/components/Post';
 
 export default function HomeScreen() {
   return (
     <ThemedView style={styles.pageContainer}>
-      <Animated.ScrollView>
+      <ThemedView style={styles.pageHeader}>
         <ThemedText type='title'>Posts</ThemedText>
+      </ThemedView>
+      <Animated.ScrollView>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
+        <Post></Post>
       </Animated.ScrollView>
     </ThemedView>
   );
@@ -20,9 +31,14 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   pageContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     gap: 8,
-    paddingTop: 48
+    paddingTop: 60,
+  },
+  pageHeader: {
+    borderBottomWidth: .5,
+    borderColor: '#949494',
+    paddingBottom: 5,
+    alignItems: 'center'
   }
 });
