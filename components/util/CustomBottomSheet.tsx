@@ -6,12 +6,13 @@ import { useMemo, useCallback, forwardRef, ReactNode } from "react";
 
 interface CustomBottomSheetProps {
   children: ReactNode,
-  title: string
+  title: string,
+  snapPercs: string[]
 }
 type Ref = BottomSheetModal
 
-const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(({children, title}, ref) => {
-  const snapPoints = useMemo(() => ["35%"], []);
+const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(({children, title, snapPercs}, ref) => {
+  const snapPoints = useMemo(() => snapPercs, []);
 
   const renderBackdrop = useCallback(
     (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props}></BottomSheetBackdrop>,
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 3,
+    marginTop: 10,
     padding: 3,
     borderColor: 'black',
     borderRadius: 25,

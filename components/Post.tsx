@@ -3,7 +3,9 @@ import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useColorScheme } from "react-native";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import CustomBottomSheet from "./util/CustomBottomSheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 interface Post {
   user: string;
@@ -14,6 +16,10 @@ interface Post {
 export default function Post({ post }: { post: Post }) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
+
+  const shareModalRef = useRef<BottomSheetModal>(null)
+
+  const handleOpenShare = () => shareModalRef.current?.present()
 
   const likePost = () => {
     setLiked((prev) => !prev);
@@ -54,6 +60,7 @@ export default function Post({ post }: { post: Post }) {
           <Ionicons
             size={20}
             name="share-outline"
+            onPress={handleOpenShare}
             color={colorScheme === "dark" ? "white" : "black"}
           />
         </ThemedView>
@@ -64,6 +71,18 @@ export default function Post({ post }: { post: Post }) {
         style={styles.ellipsis}
         color={colorScheme === "dark" ? "white" : "black"}
       />
+      <CustomBottomSheet snapPercs={['25%']} ref={shareModalRef} title="share">
+        <ThemedView style={styles.shareContainer}>
+          <ThemedView style={styles.shareOption}>
+            <Ionicons size={20} name="mail-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
+            <ThemedText>Send via Direct Message</ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.shareOption}>
+            <Ionicons size={20} name="copy-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
+            <ThemedText>Copy Link</ThemedText>
+          </ThemedView>
+        </ThemedView>
+      </CustomBottomSheet>
     </ThemedView>
   );
 }
@@ -113,4 +132,13 @@ const styles = StyleSheet.create({
   smallWidth: {
     width: 40,
   },
+  shareContainer: {
+    flexDirection: 'column',
+  },
+  shareOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: 5
+  }
 });
