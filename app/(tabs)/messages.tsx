@@ -1,32 +1,41 @@
-import ParallaxScrollView from "@/components/ParallaxScrollView"
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Button } from "react-native";
+import CustomBottomSheet from "@/components/util/CustomBottomSheet";
+import { ThemedView } from "@/components/ThemedView";
+import { BottomSheetModal } from "@gorhom/bottom-sheet"
+import { useRef } from "react";
+import { ThemedText } from "@/components/ThemedText";
+
 
 export default function messages() {
+  const bottomSheetRef = useRef<BottomSheetModal>(null)
+
+  const handleOpenPress = () => bottomSheetRef.current?.present()
+
   return (
-    <ParallaxScrollView
-        headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-        headerImage={<Ionicons size={310} name="mail-outline" style={styles.messageLogo} />}>
-        <Text>Messages</Text>
-    </ParallaxScrollView>
-  )
+    <ThemedView style={styles.container}>
+      <Button title="open" onPress={handleOpenPress}></Button>
+      <CustomBottomSheet title="Share" ref={bottomSheetRef}>
+        <ThemedText style={styles.text}>Hello</ThemedText>
+      </CustomBottomSheet>
+    </ThemedView>
+  );
 }
 
 const styles = StyleSheet.create({
-    titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
-    stepContainer: {
-      gap: 8,
-      marginBottom: 8,
-    },
-    messageLogo: {
-      height: 178,
-      width: 290,
-      bottom: 0,
-      left: 0,
-      position: 'absolute',
-    },
-  });
+  container: {
+    flex: 1,
+    padding: 50,
+    backgroundColor: "light-grey",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  indicator: {
+    backgroundColor: '#bebebe',
+    width: '20%'
+  },
+  text: {
+    textAlign: 'center'
+  }
+});
