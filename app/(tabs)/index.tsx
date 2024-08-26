@@ -16,6 +16,8 @@ const post2 = {
   text: 'You cant keep doing this Rick. Ive almost died 3 times this week, Im exhausted, and I havent been able to go to school in months. Enough is enough.'
 }
 
+const posts = [post1, post2, post1, post2, post1, post2, post1, post2, post1]
+
 export default function HomeScreen() {
   return (
     <ThemedView style={styles.pageContainer}>
@@ -23,15 +25,7 @@ export default function HomeScreen() {
         <ThemedText type='title'>Posts</ThemedText>
       </ThemedView>
       <Animated.ScrollView>
-        <Post post={post1}></Post>
-        <Post post={post2}></Post>
-        <Post post={post1}></Post>
-        <Post post={post2}></Post>
-        <Post post={post1}></Post>
-        <Post post={post2}></Post>
-        <Post post={post1}></Post>
-        <Post post={post2}></Post>
-        <Post post={post1}></Post>
+        {posts.map(e => <Post post={e}/>)}
       </Animated.ScrollView>
     </ThemedView>
   );
