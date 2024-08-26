@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Appearance } from "react-native"
+import { StyleSheet, Image, Appearance, View } from "react-native"
 import { ThemedText } from "./ThemedText"
 import { ThemedView } from "./ThemedView"
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -14,14 +14,14 @@ export default function Post({ post }: { post: Post }) {
 
     return (
         <ThemedView style={[styles.postContainer, colorScheme === 'dark' ? { borderColor: '#525252' } : { borderColor: '#bebebe' }]}>
-            <ThemedView>
+            <View style={styles.flex}>
                 <Image
                     style={styles.profilePic}
                     source={{ uri: post.profilePic }}
                 />
-            </ThemedView>
-            <ThemedView style={styles.postContent}>
                 <ThemedText style={styles.postUser}>{post.user}</ThemedText>
+            </View>
+            <ThemedView style={styles.postContent}>
                 <ThemedText style={styles.postText}>{post.text}</ThemedText>
                 <ThemedView style={styles.reactionsContainer}>
                     <Ionicons size={20} name="chatbubble-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
@@ -37,18 +37,19 @@ export default function Post({ post }: { post: Post }) {
 
 const styles = StyleSheet.create({
     postContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         width: '100%',
-        borderBottomWidth: .5,
+        borderBottomWidth: 0.5,
         paddingBottom: 2,
     },
-    profilePicContainer: {
-        flexDirection: "column",
+    flex: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     profilePic: {
         borderRadius: 25,
-        width: 35,
-        height: 35,
+        width: 25,
+        height: 25,
         marginTop: 6,
         marginHorizontal: 10,
     },
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         paddingVertical: 8,
         flexShrink: 1,
-        marginRight: 10
+        margin: 10
     },
     postUser: {
         fontWeight: 'bold',
@@ -64,16 +65,19 @@ const styles = StyleSheet.create({
         paddingBottom: 2,
     },
     postText: {
-        flexShrink: 1
+        flexShrink: 1,
     },
     ellipsis: {
         position: 'absolute',
         top: 10,
-        right: 10
+        right: 10,
     },
     reactionsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 5
-    }
-})
+        marginVertical: 5,
+    },
+    smallWidth: {
+        width: 40,
+    },
+});
