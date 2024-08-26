@@ -9,30 +9,30 @@ interface Post {
     text: string
 }
 
-export default function Post({post}: {post: Post}) {
+export default function Post({ post }: { post: Post }) {
     const colorScheme = Appearance.getColorScheme()
 
-  return (
-    <ThemedView style={[styles.postContainer, colorScheme === 'dark' ? {borderColor: '#525252'} : {borderColor: '#bebebe'}]}>
-        <ThemedView>
-            <Image
-             style={styles.profilePic}
-             source={{uri: post.profilePic}}
-            />
-        </ThemedView>
-        <ThemedView style={styles.postContent}>
-            <ThemedText style={styles.postUser}>{post.user}</ThemedText>
-            <ThemedText style={styles.postText}>{post.text}</ThemedText>
-            <ThemedView style={styles.reactionsContainer}>
-                <Ionicons size={20} name="chatbubble-outline" color={colorScheme === 'dark' ? 'white' : 'black'}/>
-                <Ionicons size={20} name="git-compare-outline" color={colorScheme === 'dark' ? 'white' : 'black'}/>
-                <Ionicons size={20} name="heart-outline" color={colorScheme === 'dark' ? 'white' : 'black'}/>
-                <Ionicons size={20} name="share-outline" color={colorScheme === 'dark' ? 'white' : 'black'}/>
+    return (
+        <ThemedView style={[styles.postContainer, colorScheme === 'dark' ? { borderColor: '#525252' } : { borderColor: '#bebebe' }]}>
+            <ThemedView>
+                <Image
+                    style={styles.profilePic}
+                    source={{ uri: post.profilePic }}
+                />
             </ThemedView>
+            <ThemedView style={styles.postContent}>
+                <ThemedText style={styles.postUser}>{post.user}</ThemedText>
+                <ThemedText style={styles.postText}>{post.text}</ThemedText>
+                <ThemedView style={styles.reactionsContainer}>
+                    <Ionicons size={20} name="chatbubble-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
+                    <Ionicons size={20} name="git-compare-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
+                    <Ionicons size={20} name="heart-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
+                    <Ionicons size={20} name="share-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
+                </ThemedView>
+            </ThemedView>
+            <Ionicons size={20} name="ellipsis-horizontal" style={styles.ellipsis} color={colorScheme === 'dark' ? 'white' : 'black'} />
         </ThemedView>
-        <Ionicons size={20} name="ellipsis-horizontal" style={styles.ellipsis} color={colorScheme === 'dark' ? 'white' : 'black'}/>
-    </ThemedView>
-  )
+    )
 }
 
 const styles = StyleSheet.create({

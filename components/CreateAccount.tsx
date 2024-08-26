@@ -1,10 +1,35 @@
 import { Text, View, TextInput, StyleSheet, Pressable } from 'react-native';
-import { useState } from 'react';
+import React, { useState } from 'react';
+// import { supabase } from "./Supabase";
 
 export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string
     const [userName, setUsername] = useState<string>(''); // Initialize with an empty string
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
+
+
+    // const handleSignUp = async (userName: string, email: string) => {
+    //     try {
+    //         const { data, error } = await supabase.auth.signUp({
+    //             email: email,
+    //             password: password,
+    //         });
+    //         const result = await fetch(`http://localhost:3000/api/createUser`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 username: userName,
+    //                 email: email,
+    //             }),
+    //         });
+    //         console.log(result, "this is the responose to making a user in the db");
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
+
 
     return (
         <View style={styles.page}>
