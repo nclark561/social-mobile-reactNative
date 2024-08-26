@@ -1,21 +1,34 @@
 import { StyleSheet, Image } from "react-native"
 import { ThemedText } from "./ThemedText"
 import { ThemedView } from "./ThemedView"
+import Ionicons from '@expo/vector-icons/Ionicons';
 
+interface Post {
+    user: string,
+    profilePic: string,
+    text: string
+}
 
-export default function Post() {
+export default function Post({post}: {post: Post}) {
   return (
     <ThemedView style={styles.postContainer}>
         <ThemedView>
             <Image
              style={styles.profilePic}
-             source={{uri: 'https://avatars.githubusercontent.com/u/125314332?v=4'}}
+             source={{uri: post.profilePic}}
             />
         </ThemedView>
         <ThemedView style={styles.postContent}>
-            <ThemedText style={styles.postUser}>Noah Clark</ThemedText>
-            <ThemedText>I'm making a social media app.</ThemedText>
+            <ThemedText style={styles.postUser}>{post.user}</ThemedText>
+            <ThemedText style={styles.postText}>{post.text}</ThemedText>
+            <ThemedView style={styles.reactionsContainer}>
+                <Ionicons size={20} name="chatbubble-outline" />
+                <Ionicons size={20} name="git-compare-outline" />
+                <Ionicons size={20} name="heart-outline" />
+                <Ionicons size={20} name="share-outline" />
+            </ThemedView>
         </ThemedView>
+        <Ionicons size={20} name="ellipsis-horizontal" style={styles.ellipsis}/>
     </ThemedView>
   )
 }
@@ -23,7 +36,8 @@ export default function Post() {
 const styles = StyleSheet.create({
     postContainer: {
         flexDirection: 'row',
-        borderBottomWidth: .2,
+        width: '100%',
+        borderBottomWidth: .5,
         borderColor: '#bebebe',
         paddingBottom: 2,
     },
@@ -40,10 +54,25 @@ const styles = StyleSheet.create({
     postContent: {
         flexDirection: 'column',
         paddingVertical: 8,
+        flexShrink: 1,
+        marginRight: 10
     },
     postUser: {
         fontWeight: 'bold',
         fontSize: 18,
         paddingBottom: 2,
     },
+    postText: {
+        flexShrink: 1
+    },
+    ellipsis: {
+        position: 'absolute',
+        top: 10,
+        right: 10
+    },
+    reactionsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 5
+    }
 })
