@@ -8,7 +8,7 @@ export default function messages() {
 
   return (
     <ThemedView>
-        <Header name='Messages'/>
+        {/* <Header name='Messages'/> */}
     </ThemedView>
   );
 }

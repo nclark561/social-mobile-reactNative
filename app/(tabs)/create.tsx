@@ -10,7 +10,7 @@ import { ThemedView } from '@/components/ThemedView';
 export default function Create() {
   return (
     <ThemedView>
-      <Header name={'Create A Post'} />
+      
     </ThemedView>
   );
 }
