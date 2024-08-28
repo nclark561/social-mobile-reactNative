@@ -6,12 +6,13 @@ import { useMemo, useCallback, forwardRef, ReactNode } from "react";
 
 interface CustomBottomSheetProps {
   children: ReactNode,
-  title: string,
-  snapPercs: string[]
+  title?: string,
+  snapPercs: string[],
+  hideCancelButton?: boolean
 }
 type Ref = BottomSheetModal
 
-const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(({children, title, snapPercs}, ref) => {
+const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(({children, title, snapPercs, hideCancelButton}, ref) => {
   const snapPoints = useMemo(() => snapPercs, []);
 
   const renderBackdrop = useCallback(
@@ -31,11 +32,11 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(({children, ti
         handleIndicatorStyle={styles.indicator}
     >
       <ThemedView style={styles.container}>
-        <ThemedText type="title" style={styles.header}>{title}</ThemedText>
+        {title && <ThemedText type="title" style={styles.header}>{title}</ThemedText>}
         {children}
-        <Pressable onPress={handleClosePress} style={styles.button}>
+        {!hideCancelButton && <Pressable onPress={handleClosePress} style={styles.button}>
           <ThemedText>Cancel</ThemedText>
-        </Pressable>
+        </Pressable>}
       </ThemedView>
     </BottomSheetModal>
   )

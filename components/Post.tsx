@@ -1,11 +1,11 @@
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet, Image, Button, Pressable, Text } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useColorScheme } from "react-native";
 import { useState, useRef } from "react";
 import CustomBottomSheet from "./util/CustomBottomSheet";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 interface Post {
   user: string;
@@ -18,8 +18,11 @@ export default function Post({ post }: { post: Post }) {
   const [liked, setLiked] = useState(false);
 
   const shareModalRef = useRef<BottomSheetModal>(null)
+  const commentModalRef = useRef<BottomSheetModal>(null)
 
   const handleOpenShare = () => shareModalRef.current?.present()
+  const handleOpenComment = () => commentModalRef.current?.present()
+  const handleCloseComment = () => commentModalRef.current?.dismiss()
 
   const likePost = () => {
     setLiked((prev) => !prev);
@@ -44,6 +47,7 @@ export default function Post({ post }: { post: Post }) {
           <Ionicons
             size={20}
             name="chatbubble-outline"
+            onPress={handleOpenComment}
             color={colorScheme === "dark" ? "white" : "black"}
           />
           <Ionicons
@@ -81,6 +85,17 @@ export default function Post({ post }: { post: Post }) {
             <Ionicons size={20} name="copy-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
             <ThemedText>Copy Link</ThemedText>
           </ThemedView>
+        </ThemedView>
+      </CustomBottomSheet>
+      <CustomBottomSheet snapPercs={['70%']} ref={commentModalRef} hideCancelButton>
+        <ThemedView style={styles.commentContainer}>
+          <ThemedView style={styles.buttonContainer}>
+            <Button title="Cancel" onPress={handleCloseComment}></Button>
+            <Pressable style={styles.postButton}>
+              <Text style={styles.buttonText}>Post</Text>
+            </Pressable>
+          </ThemedView>
+          <BottomSheetTextInput autoFocus placeholder="Post your reply"></BottomSheetTextInput>
         </ThemedView>
       </CustomBottomSheet>
     </ThemedView>
@@ -140,5 +155,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 5
+  },
+  commentContainer: {
+    flexDirection: 'column',
+    paddingTop: 20
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: 10
+  },
+  postButton: {
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#26a7de',
+  },
+  buttonText: {
+    color: 'white'
   }
 });
