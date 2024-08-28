@@ -25,7 +25,7 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.pageContainer}>
-      <Header name='Posts'/>
+      {/* <Header name='Posts'/> */}
       <Animated.ScrollView>
         {posts.map((e, i) => <Post key={i} post={e}/>)}
       </Animated.ScrollView>
