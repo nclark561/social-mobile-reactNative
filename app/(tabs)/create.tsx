@@ -1,4 +1,3 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Image, Platform } from 'react-native';
 import Header from '@/components/Header';
 import { Collapsible } from '@/components/Collapsible';
@@ -7,10 +6,11 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-export default function TabTwoScreen() {
+
+export default function Create() {
   return (
     <ThemedView>
-      <Header name='Search'/>
+      <Header name={'Create A Post'} />
     </ThemedView>
   );
 }

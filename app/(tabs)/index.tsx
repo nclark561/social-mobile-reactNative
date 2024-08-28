@@ -3,6 +3,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import Animated from 'react-native-reanimated';
 import Post from '@/components/Post';
+import Header from '@/components/Header';
 import { useColorScheme } from 'react-native';
 
 const post1 = {
@@ -24,9 +25,7 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.pageContainer}>
-      <ThemedView style={[styles.pageHeader, colorScheme === 'dark' ? {borderColor: '#525252'} : {borderColor: '#bebebe'}]}>
-        <ThemedText type='title'>Posts</ThemedText>
-      </ThemedView>
+      <Header name='Posts'/>
       <Animated.ScrollView>
         {posts.map((e, i) => <Post key={i} post={e}/>)}
       </Animated.ScrollView>
@@ -38,11 +37,7 @@ const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: 'column',
     gap: 8,
-    paddingTop: 60,
+   
   },
-  pageHeader: {
-    borderBottomWidth: .5,
-    paddingBottom: 5,
-    alignItems: 'center'
-  }
+
 });
