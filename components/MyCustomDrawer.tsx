@@ -1,15 +1,16 @@
 // components/MyCustomDrawer.js
 import React from 'react';
-import { View, Text, StyleSheet, Image, Button } from 'react-native';
+import { StyleSheet, Image, Button, View } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { ThemedText } from './ThemedText';
 
 export default function MyCustomDrawer(props: any) {
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
             <View style={styles.header}>
                 <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} />
-                <Text style={styles.headerText}>UserName</Text>
-                <Text style={styles.headerText}>Followers and Following</Text>
+                <ThemedText style={styles.headerText}>UserName</ThemedText>
+                <ThemedText style={styles.headerText}>Followers and Following</ThemedText>
             </View>
             <DrawerItemList {...props} />
             <View style={styles.footer}>

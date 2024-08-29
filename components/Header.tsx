@@ -34,7 +34,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',                
-        width: "100%"
+        width: "100%",
+        borderBottomWidth: .5,
+        borderColor: '#525252'
     },
     profilePic: {
         borderRadius: 15,

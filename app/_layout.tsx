@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Colors } from '@/constants/Colors';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -10,14 +10,18 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { SafeAreaView } from 'react-native';
 import { Drawer } from 'expo-router/drawer';
 import MyCustomDrawer from '@/components/MyCustomDrawer'; // Import your custom drawer
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+  const backgroundColor = useThemeColor({}, 'background')
 
   useEffect(() => {
     if (loaded) {
@@ -33,13 +37,13 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor }}>
             <Drawer drawerContent={(props) => <MyCustomDrawer {...props} />}>
               <Drawer.Screen
                 name="(tabs)"
                 options={{
                   drawerLabel: 'Home',
-                  headerShown: false
+                  headerShown: false,
                 }}
               />
               <Drawer.Screen

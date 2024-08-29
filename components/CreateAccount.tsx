@@ -1,5 +1,6 @@
 import { Text, View, TextInput, StyleSheet, Pressable } from 'react-native';
 import React, { useState } from 'react';
+import { ThemedView } from './ThemedView';
 // import { supabase } from "./Supabase";
 
 export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
@@ -32,8 +33,8 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
 
 
     return (
-        <View style={styles.page}>
-            <View style={styles.wide}>
+        <ThemedView style={styles.page}>
+            <ThemedView style={styles.wide}>
                 <TextInput
                     placeholderTextColor={'rgb(140, 138, 143)'}
                     placeholder='Username'
@@ -56,13 +57,13 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
                     onChangeText={setPassword} // Updates password state
                     secureTextEntry // Hides password input
                 />
-            </View>
-            <View style={styles.wide}>
+            </ThemedView>
+            <ThemedView style={styles.wide}>
                 <Pressable style={styles.button}><Text style={styles.buttonText}>Create Account</Text></Pressable>
-                <Text style={styles.gray}>Or</Text>
+                    <Text style={styles.gray}>Or</Text>
                 <Pressable onPress={() => { setLoginToggle(true) }}><Text style={styles.blueText}>Login</Text></Pressable>
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     );
 }
 
@@ -72,7 +73,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingTop: 50,
-        backgroundColor: '#f8f8f8',
         width: "100%"
     },
     loginInput: {

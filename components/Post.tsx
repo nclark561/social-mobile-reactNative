@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Button, Pressable, Text } from "react-native";
+import { StyleSheet, Image, Button, Pressable, Text, View } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -6,6 +6,7 @@ import { useColorScheme } from "react-native";
 import { useState, useRef } from "react";
 import CustomBottomSheet from "./util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface Post {
     user: string;
@@ -19,10 +20,12 @@ export default function Post({ post }: { post: Post }) {
 
     const shareModalRef = useRef<BottomSheetModal>(null)
     const commentModalRef = useRef<BottomSheetModal>(null)
+    const repostModalRef = useRef<BottomSheetModal>(null)
 
     const handleOpenShare = () => shareModalRef.current?.present()
     const handleOpenComment = () => commentModalRef.current?.present()
     const handleCloseComment = () => commentModalRef.current?.dismiss()
+    const handleOpenRepost = () => repostModalRef.current?.present()
 
     const likePost = () => {
         setLiked((prev) => !prev);
@@ -53,6 +56,7 @@ export default function Post({ post }: { post: Post }) {
                     <Ionicons
                         size={20}
                         name="git-compare-outline"
+                        onPress={handleOpenRepost}
                         color={colorScheme === "dark" ? "white" : "black"}
                     />
                     <Ionicons
@@ -95,7 +99,32 @@ export default function Post({ post }: { post: Post }) {
                             <Text style={styles.buttonText}>Post</Text>
                         </Pressable>
                     </ThemedView>
-                    <BottomSheetTextInput autoFocus placeholder="Post your reply"></BottomSheetTextInput>
+                    <ThemedView style={styles.commentOP} >
+                      <Image style={styles.commentPic} source={{ uri: post.profilePic }}/>
+                      <ThemedText style={styles.postUser}>{post.user}</ThemedText>
+                    </ThemedView>
+                    <ThemedView style={styles.commentOGPost}>
+                      <View style={styles.line}></View>
+                      <ScrollView style={styles.commentScroll} >
+                        <ThemedText>{post.text}</ThemedText>
+                      </ScrollView>
+                    </ThemedView>
+                    <ThemedView style={{flexDirection: 'row'}}>
+                      <Image style={styles.commentPic} source={{ uri: post.profilePic }}/>
+                      <BottomSheetTextInput autoFocus placeholder="Post your reply"  style={colorScheme === "dark" ? { color: '#bebebe' } : { color: "#525252" }}/>
+                    </ThemedView>
+                </ThemedView>
+            </CustomBottomSheet>
+            <CustomBottomSheet snapPercs={['25%']} ref={repostModalRef} >
+                <ThemedView style={styles.shareContainer}>
+                    <ThemedView style={styles.shareOption}>
+                        <Ionicons size={20} name="git-compare-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
+                        <ThemedText>Repost</ThemedText>
+                    </ThemedView>
+                    <ThemedView style={styles.shareOption}>
+                        <Ionicons size={20} name="pencil-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
+                        <ThemedText>Quote</ThemedText>
+                    </ThemedView>
                 </ThemedView>
             </CustomBottomSheet>
         </ThemedView>
@@ -175,5 +204,30 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white'
+    },
+    commentOP: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    commentPic: {
+      borderRadius: 25,
+      width: 25,
+      height: 25,
+      margin: 10
+    },
+    commentOGPost: {
+      flexDirection: 'row',
+      marginVertical: 5,
+      maxHeight: '55%'
+    },
+    line: {
+      backgroundColor: '#bebebe',
+      width: 3,
+      borderRadius: 25,
+      marginHorizontal: 21,
+    },
+    commentScroll: {
+      maxWidth: '80%',
+      paddingRight: 10,
     }
 });

@@ -9,7 +9,7 @@ import { useColorScheme } from 'react-native';
 const post1 = {
   user: 'Noah Clark',
   profilePic: 'https://avatars.githubusercontent.com/u/125314332?v=4',
-  text: 'I\'m making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made'
+  text: 'I\'m making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made. I\'m making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made. I\'m making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made. I\'m making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made.'
 }
 
 const post2 = {
@@ -36,8 +36,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: 'column',
-    gap: 8,
-   
   },
 
 });

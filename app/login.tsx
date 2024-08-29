@@ -1,7 +1,8 @@
-import { Text, View, TextInput, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import CreateAccount from '@/components/CreateAccount';
 import SignIn from '@/components/SignIn';
+import { ThemedView } from '@/components/ThemedView';
 
 
 
@@ -11,9 +12,9 @@ export default function Login() {
 
 
   return (
-    <View style={styles.page}>
+    <ThemedView style={styles.page}>
       {loginToggle ? <SignIn setLoginToggle={setLoginToggle} /> : <CreateAccount setLoginToggle={setLoginToggle}/>}
-    </View>
+    </ThemedView>
   );
 }
 

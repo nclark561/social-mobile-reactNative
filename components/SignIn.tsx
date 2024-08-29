@@ -1,5 +1,6 @@
-import { Text, View, TextInput, StyleSheet, Pressable } from 'react-native';
+import { Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { useState } from 'react';
+import { ThemedView } from './ThemedView';
 
 export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string
@@ -38,17 +39,17 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
 
 
     return (
-        <View style={styles.page}>
-            <View style={styles.wide}>
+        <ThemedView style={styles.page}>
+            <ThemedView style={styles.wide}>
                 <TextInput placeholderTextColor={'rgb(140, 138, 143)'} placeholder='Username' style={styles.loginInput} />
                 <TextInput placeholderTextColor={'rgb(140, 138, 143)'} placeholder='Password' style={styles.loginInput} />
-            </View>
-            <View style={styles.wide}>
+            </ThemedView>
+            <ThemedView style={styles.wide}>
                 <Pressable style={styles.button}><Text style={styles.buttonText}>Sign In</Text></Pressable>
-                <Text style={styles.gray}>Or</Text>
+                    <Text style={styles.gray}>Or</Text>
                 <Pressable onPress={() => { setLoginToggle(false) }}><Text style={styles.blueText}>Create Account</Text></Pressable>
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     );
 }
 
@@ -58,7 +59,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingTop: 50,
-        backgroundColor: '#f8f8f8',
         width: "100%"
     },
     loginInput: {

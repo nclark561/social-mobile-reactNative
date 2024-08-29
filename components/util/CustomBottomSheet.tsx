@@ -3,6 +3,7 @@ import { ThemedText } from "../ThemedText";
 import { StyleSheet, Pressable } from "react-native";
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useMemo, useCallback, forwardRef, ReactNode } from "react";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface CustomBottomSheetProps {
   children: ReactNode,
@@ -14,6 +15,7 @@ type Ref = BottomSheetModal
 
 const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(({children, title, snapPercs, hideCancelButton}, ref) => {
   const snapPoints = useMemo(() => snapPercs, []);
+  const backgroundColor = useThemeColor({}, 'background')
 
   const renderBackdrop = useCallback(
     (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props}></BottomSheetBackdrop>,
@@ -30,6 +32,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(({children, ti
         ref={ref}
         snapPoints={snapPoints}
         handleIndicatorStyle={styles.indicator}
+        backgroundStyle={{ backgroundColor }}
     >
       <ThemedView style={styles.container}>
         {title && <ThemedText type="title" style={styles.header}>{title}</ThemedText>}
