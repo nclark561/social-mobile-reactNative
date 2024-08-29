@@ -1,18 +1,26 @@
 import { Text, View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons'; import { useState } from 'react';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
+import { useNavigation } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
+
+interface HeaderProps {
+    name: string
+}
 
 
+export default function Header({ name }: HeaderProps) {
+    const navigation = useNavigation()
 
-
-export default function Header({ name }: { name: string }) {
-
+    const handlePress = () => navigation.dispatch(DrawerActions.openDrawer())
 
     return (
-        <View style={styles.page}>
+        <ThemedView style={styles.page}>
             <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} />
-            <Text style={styles.Title}>{name}</Text>
-            <Ionicons size={25}  name="menu-outline"></Ionicons>
-        </View>
+            <ThemedText style={styles.Title}>{name}</ThemedText>
+            <Ionicons size={25}  name="menu-outline" onPress={handlePress}></Ionicons>
+        </ThemedView>
     );
 }
 

@@ -39,7 +39,7 @@ export default function RootLayout() {
                 name="(tabs)"
                 options={{
                   drawerLabel: 'Home',
-                  title: 'Posts',
+                  headerShown: false
                 }}
               />
               <Drawer.Screen
