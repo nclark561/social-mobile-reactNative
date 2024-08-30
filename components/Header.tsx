@@ -1,4 +1,4 @@
-import { Text, View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Pressable, Image, useColorScheme } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons'; import { useState } from 'react';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
@@ -12,6 +12,7 @@ interface HeaderProps {
 
 export default function Header({ name }: HeaderProps) {
     const navigation = useNavigation()
+    const colorScheme = useColorScheme()
 
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer())
 
@@ -19,7 +20,7 @@ export default function Header({ name }: HeaderProps) {
         <ThemedView style={styles.page}>
             <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} />
             <ThemedText style={styles.Title}>{name}</ThemedText>
-            <Ionicons size={25}  name="menu-outline" onPress={handlePress}></Ionicons>
+            <Ionicons size={25}  name="menu-outline" onPress={handlePress} style={colorScheme === 'dark' && { color: 'white' }}></Ionicons>
         </ThemedView>
     );
 }
