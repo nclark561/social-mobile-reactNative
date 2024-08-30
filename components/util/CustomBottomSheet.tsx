@@ -51,8 +51,6 @@ const styles = StyleSheet.create({
     width: 75,
   },
   button: {
-    margin: 3,
-    marginTop: 10,
     padding: 3,
     borderColor: 'black',
     borderRadius: 25,
@@ -68,13 +66,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'space-between',
-    paddingBottom: 40
+    paddingBottom: 60
   },
   header: {
     textAlign: 'center',
-    marginVertical: 10
   },
-
 })
 
 export default CustomBottomSheet

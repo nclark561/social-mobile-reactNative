@@ -82,12 +82,12 @@ export default function Post({ post }: { post: Post }) {
             <CustomBottomSheet snapPercs={['25%']} ref={shareModalRef} title="share">
                 <ThemedView style={styles.shareContainer}>
                     <ThemedView style={styles.shareOption}>
-                        <Ionicons size={20} name="mail-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
-                        <ThemedText>Send via Direct Message</ThemedText>
+                        <Ionicons size={25} name="mail-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
+                        <ThemedText style={styles.optionText}>Send via Direct Message</ThemedText>
                     </ThemedView>
                     <ThemedView style={styles.shareOption}>
-                        <Ionicons size={20} name="copy-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
-                        <ThemedText>Copy Link</ThemedText>
+                        <Ionicons size={25} name="copy-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
+                        <ThemedText style={styles.optionText}>Copy Link</ThemedText>
                     </ThemedView>
                 </ThemedView>
             </CustomBottomSheet>
@@ -115,15 +115,15 @@ export default function Post({ post }: { post: Post }) {
                     </ThemedView>
                 </ThemedView>
             </CustomBottomSheet>
-            <CustomBottomSheet snapPercs={['25%']} ref={repostModalRef} >
-                <ThemedView style={styles.shareContainer}>
-                    <ThemedView style={styles.shareOption}>
-                        <Ionicons size={20} name="git-compare-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
-                        <ThemedText>Repost</ThemedText>
+            <CustomBottomSheet snapPercs={['20%']} ref={repostModalRef} >
+                <ThemedView style={[styles.shareContainer, { marginBottom: 30, height: '75%' }]}>
+                    <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+                        <Ionicons size={25} name="git-compare-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
+                        <ThemedText style={styles.optionText}>Repost</ThemedText>
                     </ThemedView>
-                    <ThemedView style={styles.shareOption}>
-                        <Ionicons size={20} name="pencil-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
-                        <ThemedText>Quote</ThemedText>
+                    <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+                        <Ionicons size={25} name="pencil-outline" color={colorScheme === "dark" ? "white" : "black"}></Ionicons>
+                        <ThemedText style={styles.optionText}>Quote</ThemedText>
                     </ThemedView>
                 </ThemedView>
             </CustomBottomSheet>
@@ -141,14 +141,14 @@ const styles = StyleSheet.create({
     flex: {
         flexDirection: "row",
         height: '35%',
-        alignItems: "center",
+        // alignItems: "center",
     },
     profilePic: {
         borderRadius: 25,
         width: 25,
         height: 25,
-        marginTop: 6,
-        marginHorizontal: 10,
+        marginTop: 17,
+        marginLeft: 10,
     },
     postContent: {
         flexDirection: "column",
@@ -179,12 +179,19 @@ const styles = StyleSheet.create({
     },
     shareContainer: {
         flexDirection: 'column',
+        width: '100%',
     },
     shareOption: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        padding: 5
+        paddingHorizontal: 10,
+        width: '100%',
+        height: '40%'
+    },
+    optionText: {
+        marginLeft: 10,
+        fontSize: 18
     },
     commentContainer: {
         flexDirection: 'column',
