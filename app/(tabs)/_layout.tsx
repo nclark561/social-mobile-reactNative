@@ -38,18 +38,18 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="create"
         options={{
-          title: 'Messages',
+          title: 'Create',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'mail' : 'mail-outline'} color={color} />
+            <TabBarIcon name={focused ? 'create' : 'create-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="create"
+        name="messages"
         options={{
-          title: 'Create',
+          title: 'Messages',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'mail' : 'mail-outline'} color={color} />
           ),
