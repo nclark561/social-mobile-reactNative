@@ -1,6 +1,5 @@
 import { StyleSheet, Pressable, Button, useColorScheme, Text, Image } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
 import Animated from "react-native-reanimated";
 import Post from "@/components/Post";
 import Header from "@/components/Header";
