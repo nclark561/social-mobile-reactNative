@@ -21,7 +21,7 @@ export default function messages() {
     <ThemedView>
         <Header name='Messages'/>
         <Animated.ScrollView>
-          {conversations.map(() => <ConversationPreview convo={conversation1}/>)}
+          {conversations.map((e, i) => <ConversationPreview key={i} convo={e}/>)}
         </Animated.ScrollView>
     </ThemedView>
   );
