@@ -1,29 +1,30 @@
 import { Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { useState } from 'react';
 import { ThemedView } from './ThemedView';
+import { supabase } from './Supabase';
 
 export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string
     const [userName, setUsername] = useState<string>(''); // Initialize with an empty string
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
 
-    // const handleLogin = async () => {
-    //     try {
-    //         const { data, error } = await supabase.auth.signInWithPassword({
-    //             email: email,
-    //             password: password,
-    //         });
-    //         if (error) {
-    //             console.log(error, "this is the login error");
-    //         }
-    //         if (data) {
-    //             localStorage.setItem("user", JSON.stringify(data.user?.email));
-    //             console.log(data, "this is login data");
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+    const handleLogin = async () => {
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+            if (error) {
+                console.log(error, "this is the login error");
+            }
+            if (data) {
+                localStorage.setItem("user", JSON.stringify(data.user?.email));
+                console.log(data, "this is login data");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     // const handleLogout = async () => {
     //     try {

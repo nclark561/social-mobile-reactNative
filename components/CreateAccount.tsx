@@ -1,7 +1,7 @@
 import { Text, View, TextInput, StyleSheet, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import { ThemedView } from './ThemedView';
-// import { supabase } from "./Supabase";
+import { supabase } from "./Supabase";
 
 export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string
@@ -9,27 +9,28 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
 
 
-    // const handleSignUp = async (userName: string, email: string) => {
-    //     try {
-    //         const { data, error } = await supabase.auth.signUp({
-    //             email: email,
-    //             password: password,
-    //         });
-    //         const result = await fetch(`http://localhost:3000/api/createUser`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 username: userName,
-    //                 email: email,
-    //             }),
-    //         });
-    //         console.log(result, "this is the responose to making a user in the db");
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+    const handleSignUp = async (userName: string, email: string) => {
+        debugger
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+            const result = await fetch(`http://localhost:3000/api/createUser`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: userName,
+                    email: email,
+                }),
+            });
+            console.log(result, "this is the responose to making a user in the db");
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
 
     return (
@@ -59,8 +60,8 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
                 />
             </ThemedView>
             <ThemedView style={styles.wide}>
-                <Pressable style={styles.button}><Text style={styles.buttonText}>Create Account</Text></Pressable>
-                    <Text style={styles.gray}>Or</Text>
+                <Pressable onPress={() => { handleSignUp(userName, email) }} style={styles.button}><Text style={styles.buttonText}>Create Account</Text></Pressable>
+                <Text style={styles.gray}>Or</Text>
                 <Pressable onPress={() => { setLoginToggle(true) }}><Text style={styles.blueText}>Login</Text></Pressable>
             </ThemedView>
         </ThemedView>
