@@ -16,11 +16,12 @@ export default function Header({ name }: HeaderProps) {
 
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer())
 
+
     return (
         <ThemedView style={styles.page}>
             <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} />
             <ThemedText style={styles.Title}>{name}</ThemedText>
-            <Ionicons size={25}  name="menu-outline" onPress={handlePress} style={colorScheme === 'dark' && { color: 'white' }}></Ionicons>
+            <Ionicons size={25} name="menu-outline" onPress={handlePress} style={colorScheme === 'dark' && { color: 'white' }}></Ionicons>
         </ThemedView>
     );
 }
@@ -34,15 +35,15 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',                
+        alignItems: 'center',
         width: "100%",
         borderBottomWidth: .5,
-        borderColor: '#525252'
+        borderColor: 'rgb(232,232,232)'
     },
     profilePic: {
         borderRadius: 15,
         width: 35,
-        height: 35,        
+        height: 35,
     },
     Title: {
         fontSize: 25

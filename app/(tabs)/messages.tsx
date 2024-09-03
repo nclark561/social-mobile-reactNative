@@ -16,6 +16,7 @@ const conversations = [ conversation1, conversation1, conversation1, conversatio
 
 export default function messages() {
 
+  
   return (
     <ThemedView>
         <Header name='Messages'/>
