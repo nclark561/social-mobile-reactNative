@@ -111,7 +111,7 @@ export default function Post({ post }: { post: Post }) {
                     </ThemedView>
                     <ThemedView style={{flexDirection: 'row'}}>
                       <Image style={styles.commentPic} source={{ uri: post.profilePic }}/>
-                      <BottomSheetTextInput autoFocus placeholder="Post your reply"  style={colorScheme === "dark" ? { color: '#bebebe' } : { color: "#525252" }}/>
+                      <BottomSheetTextInput autoFocus multiline placeholder="Post your reply"  style={[{ paddingTop: 15, maxWidth: '80%' }, colorScheme === "dark" ? { color: '#bebebe' } : { color: "#525252" }]}/>
                     </ThemedView>
                 </ThemedView>
             </CustomBottomSheet>
