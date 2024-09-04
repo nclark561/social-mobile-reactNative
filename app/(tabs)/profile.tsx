@@ -17,9 +17,10 @@ export default function TabTwoScreen() {
 
     const getUser = async () => {
         try {
-            const userEmail = await AsyncStorage.getItem('user'); // Retrieve email from AsyncStorage
+            const userEmail = await AsyncStorage.getItem("user");
+            const email = JSON.parse(userEmail)
             const result = await fetch(
-                `http://localhost:3000/api/myInfo?email=${userEmail}`,
+                `https://engaged-rattler-correctly.ngrok-free.app/api/myInfo?email=${email}`,
                 {
                     method: 'GET',
                     headers: {
@@ -29,13 +30,14 @@ export default function TabTwoScreen() {
             );
             const userInfo = await result.json();
             setUser(userInfo.Hello);
-            console.log(userInfo, 'this is user result');
+            console.log(userInfo, 'result info')
         } catch (error) {
             console.log(error, 'this is the create user error');
         }
     };
 
     useEffect(() => {
+        console.log('hitting get user')
         getUser();
     }, []);
 
