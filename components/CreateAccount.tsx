@@ -10,7 +10,6 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
 
 
     const handleSignUp = async (userName: string, email: string) => {
-        debugger
         try {
             const { data, error } = await supabase.auth.signUp({
                 email: email,
@@ -26,13 +25,14 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
                     email: email,
                 }),
             });
-            console.log(result, "this is the responose to making a user in the db");
+            setLoginToggle(true)
+
         } catch (error) {
             console.log(error);
         }
     };
 
-
+    console.log('kale')
     return (
         <ThemedView style={styles.page}>
             <ThemedView style={styles.wide}>

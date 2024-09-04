@@ -2,13 +2,14 @@ import { Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { useState } from 'react';
 import { ThemedView } from './ThemedView';
 import { supabase } from './Supabase';
+import { Link, router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
-    const [email, setEmail] = useState<string>(''); // Initialize with an empty string
-    const [userName, setUsername] = useState<string>(''); // Initialize with an empty string
+    const [email, setEmail] = useState<string>(''); // Initialize with an empty string    
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
 
-    const handleLogin = async () => {
+    const handleLogin = async (email: string, password: string) => {
         try {
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
@@ -17,38 +18,42 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
             if (error) {
                 console.log(error, "this is the login error");
             }
-            if (data) {
-                localStorage.setItem("user", JSON.stringify(data.user?.email));
+            if (data) {                
+                await AsyncStorage.setItem("user", JSON.stringify(data.user?.email));
                 console.log(data, "this is login data");
             }
+            router.navigate('/(tabs)/')
         } catch (error) {
             console.log(error);
         }
     };
 
-    // const handleLogout = async () => {
-    //     try {
-    //       const { error } = await supabase.auth.signOut();
-    //       console.log("You Logged Out");
-    //       if (error) {
-    //         console.log("this is logout error", error);
-    //       }
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   };
-
-
     return (
         <ThemedView style={styles.page}>
             <ThemedView style={styles.wide}>
-                <TextInput placeholderTextColor={'rgb(140, 138, 143)'} placeholder='Username' style={styles.loginInput} />
-                <TextInput placeholderTextColor={'rgb(140, 138, 143)'} placeholder='Password' style={styles.loginInput} />
+                <TextInput
+                    onChangeText={(text) => setEmail(text)}
+                    placeholderTextColor={'rgb(140, 138, 143)'}
+                    placeholder='Username'
+                    style={styles.loginInput}
+                />
+
+                <TextInput
+                    onChangeText={(text) => setPassword(text)}
+                    placeholderTextColor={'rgb(140, 138, 143)'}
+                    placeholder='Password'
+                    style={styles.loginInput}
+                    secureTextEntry={true} // Ensure password input is secure
+                />
             </ThemedView>
             <ThemedView style={styles.wide}>
-                <Pressable style={styles.button}><Text style={styles.buttonText}>Sign In</Text></Pressable>
-                    <Text style={styles.gray}>Or</Text>
-                <Pressable onPress={() => { setLoginToggle(false) }}><Text style={styles.blueText}>Create Account</Text></Pressable>
+                <Pressable onPress={() => handleLogin(email, password)} style={styles.button}>
+                    <Text style={styles.buttonText}>Sign In</Text>
+                </Pressable>
+                <Text style={styles.gray}>Or</Text>
+                <Pressable onPress={() => setLoginToggle(false)}>
+                    <Text style={styles.blueText}>Create Account</Text>
+                </Pressable>
             </ThemedView>
         </ThemedView>
     );
