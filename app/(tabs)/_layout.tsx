@@ -55,6 +55,12 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="[conversation]"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
