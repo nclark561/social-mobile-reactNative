@@ -1,4 +1,4 @@
-import { Text, View, TextInput, StyleSheet, Pressable } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Pressable, useColorScheme } from 'react-native';
 import React, { useState } from 'react';
 import { ThemedView } from './ThemedView';
 import { supabase } from "./Supabase";
@@ -7,7 +7,8 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string
     const [userName, setUsername] = useState<string>(''); // Initialize with an empty string
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
-
+    const colorScheme = useColorScheme()
+    const color = colorScheme === 'dark' ? 'white' : 'black'
 
     const handleSignUp = async (userName: string, email: string) => {
         try {
@@ -39,21 +40,21 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
                 <TextInput
                     placeholderTextColor={'rgb(140, 138, 143)'}
                     placeholder='Username'
-                    style={styles.loginInput}
+                    style={[styles.loginInput, {color}]}
                     value={userName}
                     onChangeText={setUsername} // Updates username state
                 />
                 <TextInput
                     placeholderTextColor={'rgb(140, 138, 143)'}
                     placeholder='Email'
-                    style={styles.loginInput}
+                    style={[styles.loginInput, {color}]}
                     value={email}
                     onChangeText={setEmail} // Updates email state
                 />
                 <TextInput
                     placeholderTextColor={'rgb(140, 138, 143)'}
                     placeholder='Password'
-                    style={styles.loginInput}
+                    style={[styles.loginInput, {color}]}
                     value={password}
                     onChangeText={setPassword} // Updates password state
                     secureTextEntry // Hides password input
