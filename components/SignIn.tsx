@@ -1,14 +1,20 @@
 import { Text, TextInput, StyleSheet, Pressable, useColorScheme } from 'react-native';
+import { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { ThemedView } from './ThemedView';
 import { supabase } from './Supabase';
 import { Link, router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import MyContext from './providers/MyContext';
 
-export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
+export default function SignIn() {
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string    
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
     const colorScheme = useColorScheme()
+    const context = useContext(MyContext);
+    const {setLoginToggle} = context
+    
+
 
     const color = colorScheme === 'dark' ? 'white' : 'black'
 
@@ -21,10 +27,11 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
             if (error) {
                 console.log(error, "this is the login error");
             }
-            if (data) {                
-                await AsyncStorage.setItem("user", JSON.stringify(email));                
+            if (data) {
+                await AsyncStorage.setItem("user", JSON.stringify(email));
                 console.log(data, "this is login data");
             }
+            setLoginToggle(true)
             router.navigate('/(tabs)/')
         } catch (error) {
             console.log(error);
@@ -38,14 +45,14 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
                     onChangeText={(text) => setEmail(text)}
                     placeholderTextColor={'rgb(140, 138, 143)'}
                     placeholder='Username'
-                    style={[styles.loginInput, {color}]}
+                    style={[styles.loginInput, { color }]}
                 />
 
                 <TextInput
                     onChangeText={(text) => setPassword(text)}
                     placeholderTextColor={'rgb(140, 138, 143)'}
                     placeholder='Password'
-                    style={[styles.loginInput, {color}]}
+                    style={[styles.loginInput, { color }]}
                     secureTextEntry={true} // Ensure password input is secure
                 />
             </ThemedView>

@@ -1,15 +1,20 @@
 // components/MyCustomDrawer.js
-import React from 'react';
-import { StyleSheet, Image, Button, View } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, Image, Button, View, Pressable } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { ThemedText } from './ThemedText';
 import { supabase } from './Supabase';
 import { Link, router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyContext from './providers/MyContext';
+
 
 export default function MyCustomDrawer(props: any) {
+    const context = useContext(MyContext);
+    const { setLoginToggle, myInfo } = context
+    // const router = useRouter();
 
-
+    console.log(router, 'this is the router')
     const handleLogout = async () => {
         try {
             const { error } = await supabase.auth.signOut();
@@ -18,6 +23,7 @@ export default function MyCustomDrawer(props: any) {
                 console.log("this is logout error", error);
             }
             router.navigate('/login')
+            setLoginToggle(false)
         } catch (error) {
             console.log(error);
         }
@@ -27,13 +33,13 @@ export default function MyCustomDrawer(props: any) {
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
             <View style={styles.header}>
-                <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} />
-                <ThemedText style={styles.headerText}>UserName</ThemedText>
-                <ThemedText style={styles.headerText}>Followers and Following</ThemedText>
+                {myInfo ? <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} /> : <Pressable onPress={() => { router.navigate('/login') }}><ThemedText>Login</ThemedText></Pressable>}
+                <ThemedText style={styles.headerText}>{myInfo?.username}</ThemedText>
             </View>
             <DrawerItemList {...props} />
             <View style={styles.footer}>
-                <Button title="Logout" onPress={() => handleLogout()} />
+                {myInfo ? <Button title="Logout" onPress={() => handleLogout()} /> : <></>}
+
             </View>
         </DrawerContentScrollView>
     );

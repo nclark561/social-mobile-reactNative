@@ -9,8 +9,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { SafeAreaView } from 'react-native';
 import { Drawer } from 'expo-router/drawer';
-import MyCustomDrawer from '@/components/MyCustomDrawer'; // Import your custom drawer
+import MyCustomDrawer from '@/components/MyCustomDrawer';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { MyProvider } from '../components/providers/MyContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,31 +38,33 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <SafeAreaView style={{ flex: 1, backgroundColor }}>
-            <Drawer drawerContent={(props) => <MyCustomDrawer {...props} />}>
-              <Drawer.Screen
-                name="(tabs)"
-                options={{
-                  drawerLabel: 'Home',
-                  headerShown: false,
-                }}
-              />
-              <Drawer.Screen
-                name="settings"
-                options={{
-                  drawerLabel: 'Settings',
-                  title: 'Settings',
-                }}
-              />
+          <MyProvider>
+            <SafeAreaView style={{ flex: 1, backgroundColor }}>
+              <Drawer drawerContent={(props) => <MyCustomDrawer {...props} />}>
                 <Drawer.Screen
-                name="login"
-                options={{
-                  drawerLabel: 'Login',
-                  title: 'Login',
-                }}
-              />
-            </Drawer>
-          </SafeAreaView>
+                  name="(tabs)"
+                  options={{
+                    drawerLabel: 'Home',
+                    headerShown: false,
+                  }}
+                />
+                <Drawer.Screen
+                  name="settings"
+                  options={{
+                    drawerLabel: 'Settings',
+                    title: 'Settings',
+                  }}
+                />
+                <Drawer.Screen
+                  name="login"
+                  options={{
+                    drawerLabel: 'Login',
+                    title: 'Login',
+                  }}
+                />
+              </Drawer>
+            </SafeAreaView>
+          </MyProvider>
         </ThemeProvider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

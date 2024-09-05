@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import CreateAccount from '@/components/CreateAccount';
 import SignIn from '@/components/SignIn';
 import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
 
 
 
@@ -13,7 +14,8 @@ export default function Login() {
 
   return (
     <ThemedView style={styles.page}>
-      {loginToggle ? <SignIn setLoginToggle={setLoginToggle} /> : <CreateAccount setLoginToggle={setLoginToggle}/>}
+      <ThemedText>Testing</ThemedText>
+      {loginToggle ? <SignIn setLoginToggle={setLoginToggle} /> : <CreateAccount setLoginToggle={setLoginToggle} />}
     </ThemedView>
   );
 }

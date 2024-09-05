@@ -1,9 +1,10 @@
 import { Text, View, TextInput, StyleSheet, Pressable, Image, useColorScheme } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons'; import { useState } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons'; import { useState, useContext } from 'react';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { useNavigation } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
+import MyContext from './providers/MyContext';
 
 interface HeaderProps {
     name: string
@@ -13,13 +14,14 @@ interface HeaderProps {
 export default function Header({ name }: HeaderProps) {
     const navigation = useNavigation()
     const colorScheme = useColorScheme()
-
+    const context = useContext(MyContext);
+    const { setLoginToggle, myInfo } = context
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer())
-
+    
 
     return (
         <ThemedView style={styles.page}>
-            <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} />
+            {myInfo ? <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} /> : <ThemedText style={{ marginLeft: 5 }}>Login</ThemedText>}
             <ThemedText style={styles.Title}>{name}</ThemedText>
             <Ionicons size={25} name="menu-outline" onPress={handlePress} style={colorScheme === 'dark' && { color: 'white' }}></Ionicons>
         </ThemedView>

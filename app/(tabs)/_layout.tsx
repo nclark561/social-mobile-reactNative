@@ -7,7 +7,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const backgroundColor = useThemeColor({}, 'background')
+  const backgroundColor = useThemeColor({}, 'background');
 
   return (
     <Tabs
@@ -16,8 +16,8 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor,
-          borderTopWidth: 1
-        }
+          borderTopWidth: 1,
+        },
       }}>
       <Tabs.Screen
         name="index"
@@ -53,12 +53,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="[conversation]"
-        options={{
-          href: null,
         }}
       />
     </Tabs>
