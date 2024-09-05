@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, TextInput, useColorScheme } from 'react-native';
+import { StyleSheet, Image, TextInput, useColorScheme, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation } from 'expo-router';
@@ -14,7 +14,7 @@ export default function TabTwoScreen() {
   return (
     <ThemedView>
       <ThemedView style={styles.header}>
-        <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} />
+      {myInfo ? <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} /> : <Pressable onPress={() => { router.navigate('/login') }}><ThemedText style={{ marginLeft: 5 }}>Login</ThemedText></Pressable>}
         <ThemedView style={[styles.searchInput, colorScheme === 'dark' ? { backgroundColor: '#3b3b3b' } : { backgroundColor: '#d3d3d3' }]}>
           <Ionicons size={17} name="search" color={'gray'} style={styles.searchIcon}/>
           <TextInput placeholder='Search' placeholderTextColor={'gray'} style={[{ maxWidth: '80%' },  colorScheme === 'dark' && { color: 'white' }]}/>

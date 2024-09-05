@@ -7,13 +7,13 @@ import { Link, router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from './providers/MyContext';
 
-export default function SignIn() {
+export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string    
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
     const colorScheme = useColorScheme()
     const context = useContext(MyContext);
-    const {setLoginToggle} = context
-    
+    // const {setLoginToggle} = context
+
 
 
     const color = colorScheme === 'dark' ? 'white' : 'black'

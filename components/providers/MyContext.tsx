@@ -17,20 +17,10 @@ interface UserContextType {
 
 const MyContext = createContext<UserContextType | undefined>(undefined);
 
-const initialMyInfo = {
-    myInfo: {
-        id: "",
-        email: "",
-        bio: "",
-        followers: [],
-        following: [],
-        username: "",
-    },
-};
 
 
 export const MyProvider = ({ children }: { children: ReactNode }) => {
-    const [myInfo, setMyInfo] = useState(initialMyInfo.myInfo);
+    const [myInfo, setMyInfo] = useState();
     const [loginToggle, setLoginToggle] = useState(false);
 
     useEffect(() => {

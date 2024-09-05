@@ -4,6 +4,7 @@ import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { useNavigation } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
+import { Link, router } from 'expo-router';
 import MyContext from './providers/MyContext';
 
 interface HeaderProps {
@@ -17,11 +18,12 @@ export default function Header({ name }: HeaderProps) {
     const context = useContext(MyContext);
     const { setLoginToggle, myInfo } = context
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer())
-    
+
+    console.log(myInfo)
 
     return (
         <ThemedView style={styles.page}>
-            {myInfo ? <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} /> : <ThemedText style={{ marginLeft: 5 }}>Login</ThemedText>}
+            {myInfo ? <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} /> : <Pressable onPress={() => { router.navigate('/login') }}><ThemedText style={{ marginLeft: 5 }}>Login</ThemedText></Pressable>}
             <ThemedText style={styles.Title}>{name}</ThemedText>
             <Ionicons size={25} name="menu-outline" onPress={handlePress} style={colorScheme === 'dark' && { color: 'white' }}></Ionicons>
         </ThemedView>

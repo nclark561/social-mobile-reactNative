@@ -1,4 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useContext } from 'react';
 import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -6,12 +7,15 @@ import { useNavigation } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import MyContext from '../../components/providers/MyContext';
 
 export default function TabTwoScreen() {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
     const [user, setUser] = useState();
+    const context = useContext(MyContext);
+    const { setLoginToggle, myInfo } = context
 
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
@@ -59,7 +63,7 @@ export default function TabTwoScreen() {
         return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
     };
 
-    console.log(user, 'this is the user');
+    console.log(myInfo, 'this is my info');
 
     return (
         <ThemedView>

@@ -13,8 +13,7 @@ export default function MyCustomDrawer(props: any) {
     const context = useContext(MyContext);
     const { setLoginToggle, myInfo } = context
     // const router = useRouter();
-
-    console.log(router, 'this is the router')
+    
     const handleLogout = async () => {
         try {
             const { error } = await supabase.auth.signOut();

@@ -33,7 +33,7 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
         }
     };
 
-    console.log('kale')
+    console.log(supabase.auth.getSession(), 'supabase auth check')
     return (
         <ThemedView style={styles.page}>
             <ThemedView style={styles.wide}>

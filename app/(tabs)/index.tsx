@@ -23,6 +23,8 @@ const post2 = {
 
 const posts = [post1, post2, post1, post2, post1, post2, post1, post2, post1];
 
+
+
 export default function HomeScreen() {
   const newPostRef = useRef<BottomSheetModal>(null);
   const colorScheme = useColorScheme()
