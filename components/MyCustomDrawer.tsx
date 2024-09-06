@@ -11,7 +11,7 @@ import MyContext from './providers/MyContext';
 
 export default function MyCustomDrawer(props: any) {
     const context = useContext<any>(MyContext);
-    const { setLoginToggle, myInfo } = context
+    const { setLoginToggle, myInfo, loggedIn } = context
     // const router = useRouter();
     
     const handleLogout = async () => {
@@ -32,12 +32,12 @@ export default function MyCustomDrawer(props: any) {
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
             <View style={styles.header}>
-                {myInfo ? <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} /> : <Pressable onPress={() => { router.navigate('/login') }}><ThemedText>Login</ThemedText></Pressable>}
+                {loggedIn ? <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} /> : <Pressable onPress={() => { router.navigate('/login') }}><ThemedText>Login</ThemedText></Pressable>}
                 <ThemedText style={styles.headerText}>{myInfo?.username}</ThemedText>
             </View>
             <DrawerItemList {...props} />
             <View style={styles.footer}>
-                {myInfo ? <Button title="Logout" onPress={() => handleLogout()} /> : <></>}
+                {loggedIn ? <Button title="Logout" onPress={() => handleLogout()} /> : <></>}
 
             </View>
         </DrawerContentScrollView>

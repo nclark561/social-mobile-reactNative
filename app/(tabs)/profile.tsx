@@ -8,7 +8,6 @@ import { DrawerActions } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from '../../components/providers/MyContext';
-import { supabase } from "../../components/Supabase";
 
 export default function TabTwoScreen() {
     const navigation = useNavigation();
@@ -16,37 +15,12 @@ export default function TabTwoScreen() {
     const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
     const [user, setUser] = useState<any>();
     const context = useContext<any>(MyContext);
-    const { setLoginToggle, myInfo } = context
+    const { setLoginToggle, myInfo, loggedIn } = context
 
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
-    const getUser = async () => {
-        try {
-            const userEmail = await AsyncStorage.getItem("user");
-            if (!userEmail) throw new Error('No email logged in')
-            const email = JSON.parse(userEmail)
-            const result = await fetch(
-                `https://engaged-rattler-correctly.ngrok-free.app/api/myInfo?email=${email}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            const userInfo = await result.json();
-            setUser(userInfo.Hello);
-            console.log(userInfo, 'result info')
-        } catch (error) {
-            console.log(error, 'this is the create user error');
-        }
-    };
+    
 
-    useEffect(() => {
-        console.log('hitting get user')
-        getUser();
-        getSession()
-    }, []);
 
     const renderContent = () => {
         switch (selectedOption) {
@@ -66,17 +40,16 @@ export default function TabTwoScreen() {
         return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
     };
 
-    async function getSession() {
-        console.log(await supabase.auth.getUser(), 'this is the user')
-    }
 
 
+
+    console.log(myInfo, "myInfo object")
 
     return (
         <ThemedView>
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.row}>
-                    {myInfo ? <Image
+                    {loggedIn ? <Image
                         style={styles.profilePic}
                         source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
                     /> : <ThemedText>Empty Photo</ThemedText>}
@@ -86,20 +59,20 @@ export default function TabTwoScreen() {
                     </TouchableOpacity>
                 </ThemedView>
                 <ThemedView style={styles.close}>
-                    {myInfo ? <><ThemedText style={styles.userName}>{user?.username}</ThemedText>
-                        <ThemedText style={styles.tag}>@{user?.email}</ThemedText></> : <ThemedText>Login Nigga</ThemedText>}
+                    {loggedIn ? <><ThemedText style={styles.userName}>{myInfo?.username}</ThemedText>
+                        <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText></> : <ThemedText>Login </ThemedText>}
 
                 </ThemedView>
-                <ThemedView style={styles.locationRow}>
-                    {myInfo ? <><ThemedText style={styles.smallGray}>{user?.location}</ThemedText>
+                {/* <ThemedView style={styles.locationRow}>
+                    {loggedIn ? <><ThemedText style={styles.smallGray}>{user?.location}</ThemedText>
                         <ThemedText style={styles.smallGrayDate}>
-                            Joined {user?.date ? formatDate(user.date) : ''}
+                            Joined {myInfo?.date ? formatDate(myInfo?.date) : ''}
                         </ThemedText></> : <ThemedText></ThemedText>}
 
-                </ThemedView>
+                </ThemedView> */}
                 <ThemedView style={styles.followersRow}>
-                    {myInfo ? <><ThemedText style={styles.smallGray}>{user?.followers.length} Followers</ThemedText>
-                        <ThemedText style={styles.smallGray}>{user?.following.length} Following</ThemedText></> : <ThemedText></ThemedText>}
+                    {loggedIn ? <><ThemedText style={styles.smallGray}>{myInfo?.followers.length} Followers</ThemedText>
+                        <ThemedText style={styles.smallGray}>{myInfo?.following.length} Following</ThemedText></> : <ThemedText></ThemedText>}
 
                 </ThemedView>
             </ThemedView>

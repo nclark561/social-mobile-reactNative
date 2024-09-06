@@ -9,12 +9,11 @@ import { ThemedText } from '@/components/ThemedText';
 
 export default function Login() {
 
-  const [loginToggle, setLoginToggle] = useState(true)
-
+  const [login, setLogin] = useState(true)
 
   return (
     <ThemedView style={styles.page}>      
-      {loginToggle ? <SignIn setLoginToggle={setLoginToggle} /> : <CreateAccount setLoginToggle={setLoginToggle} />}
+      {login ? <SignIn setLogin={setLogin} /> : <CreateAccount setLoginToggle={setLogin} />}
     </ThemedView>
   );
 }

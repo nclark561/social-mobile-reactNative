@@ -7,12 +7,12 @@ import { Link, router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from './providers/MyContext';
 
-export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boolean) => void }) {
+export default function SignIn({ setLogin }: { setLogin: (value: boolean) => void }) {
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string    
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
     const colorScheme = useColorScheme()
     const context = useContext(MyContext);
-    // const {setLoginToggle} = context
+    const { setLoginToggle } = context
 
 
 
@@ -31,6 +31,7 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
                 await AsyncStorage.setItem("user", JSON.stringify(email));
                 console.log(data, "this is login data");
             }
+            setLogin(true)
             setLoginToggle(true)
             router.navigate('/(tabs)/')
         } catch (error) {
@@ -61,7 +62,7 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
                     <Text style={styles.buttonText}>Sign In</Text>
                 </Pressable>
                 <Text style={styles.gray}>Or</Text>
-                <Pressable onPress={() => setLoginToggle(false)}>
+                <Pressable onPress={() => { setLogin(false) }}>
                     <Text style={styles.blueText}>Create Account</Text>
                 </Pressable>
             </ThemedView>

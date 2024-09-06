@@ -1,6 +1,6 @@
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { supabase } from "../../components/Supabase";
 
 interface UserContextType {
     myInfo: {
@@ -12,6 +12,7 @@ interface UserContextType {
         username: string;
     };
     setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
+    loggedIn: boolean
 }
 
 
@@ -22,19 +23,43 @@ const MyContext = createContext<UserContextType | undefined>(undefined);
 export const MyProvider = ({ children }: { children: ReactNode }) => {
     const [myInfo, setMyInfo] = useState();
     const [loginToggle, setLoginToggle] = useState(false);
+    const [loggedIn, setLoggedIn] = useState<boolean>(false)
+
+ 
 
     useEffect(() => {
+        console.log('hitting the right use effect')
         getUser();
-    }, [loginToggle]);
+        getSession()
+    }, [loginToggle])   
 
 
-    const getUser = async () => {
+    async function getSession() {                
+        try {
+            const { data, error } = await supabase.auth.getUser();
+            if (error) {
+                console.error('Error fetching user:', error.message);
+                setLoggedIn(false)
+                return null;
+            }            
+            console.log(data, 'supabase auth');
+            setLoggedIn(true)
+            return data;
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return null;
+        }
+    }
+
+
+    const getUser = async () => {        
         try {
             const userEmail = await AsyncStorage.getItem("user");
             console.log(userEmail, 'this is user email')
             const email = JSON.parse(userEmail);
             const result = await fetch(
                 `https://engaged-rattler-correctly.ngrok-free.app/api/myInfo?email=${email}`,
+                // `http://localhost:3000/api/myInfo?email=${email}`,
                 {
                     method: 'GET',
                     headers: {
@@ -43,7 +68,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                 }
             );
             const userInfo = await result.json();
-            setMyInfo(userInfo.Hello);            
+            console.log(userInfo, 'this is user info')            
+            setMyInfo(userInfo.Hello);
         } catch (error) {
             console.log(error, 'this is the create user error');
         }
@@ -52,7 +78,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <MyContext.Provider value={{ myInfo, setLoginToggle: setLoginToggle }}>
+        <MyContext.Provider value={{ myInfo, setLoginToggle: setLoginToggle, loggedIn }}>
             {children}
         </MyContext.Provider>
     );
