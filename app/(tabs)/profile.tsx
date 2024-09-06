@@ -13,8 +13,8 @@ export default function TabTwoScreen() {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
-    const [user, setUser] = useState();
-    const context = useContext(MyContext);
+    const [user, setUser] = useState<any>();
+    const context = useContext<any>(MyContext);
     const { setLoginToggle, myInfo } = context
 
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
@@ -22,6 +22,7 @@ export default function TabTwoScreen() {
     const getUser = async () => {
         try {
             const userEmail = await AsyncStorage.getItem("user");
+            if(!userEmail) throw new Error('No email logged in')
             const email = JSON.parse(userEmail)
             const result = await fetch(
                 `https://engaged-rattler-correctly.ngrok-free.app/api/myInfo?email=${email}`,
@@ -58,7 +59,7 @@ export default function TabTwoScreen() {
         }
     };
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString: any) => {
         const date = new Date(dateString);
         return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
     };
