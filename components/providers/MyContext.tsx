@@ -15,33 +15,30 @@ interface UserContextType {
     loggedIn: boolean
 }
 
-
 const MyContext = createContext<UserContextType | undefined>(undefined);
-
-
 
 export const MyProvider = ({ children }: { children: ReactNode }) => {
     const [myInfo, setMyInfo] = useState();
     const [loginToggle, setLoginToggle] = useState(false);
     const [loggedIn, setLoggedIn] = useState<boolean>(false)
 
- 
+
 
     useEffect(() => {
         console.log('hitting the right use effect')
         getUser();
         getSession()
-    }, [loginToggle])   
+    }, [loginToggle])
 
 
-    async function getSession() {                
+    async function getSession() {
         try {
             const { data, error } = await supabase.auth.getUser();
             if (error) {
                 console.error('Error fetching user:', error.message);
                 setLoggedIn(false)
                 return null;
-            }            
+            }
             console.log(data, 'supabase auth');
             setLoggedIn(true)
             return data;
@@ -52,7 +49,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     }
 
 
-    const getUser = async () => {        
+    const getUser = async () => {
         try {
             const userEmail = await AsyncStorage.getItem("user");
             console.log(userEmail, 'this is user email')
@@ -68,7 +65,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                 }
             );
             const userInfo = await result.json();
-            console.log(userInfo, 'this is user info')            
+            console.log(userInfo, 'this is user info')
             setMyInfo(userInfo.Hello);
         } catch (error) {
             console.log(error, 'this is the create user error');

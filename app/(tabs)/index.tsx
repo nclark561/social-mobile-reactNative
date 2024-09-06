@@ -48,7 +48,7 @@ export default function HomeScreen() {
         <ThemedView style={styles.commentContainer}>
           <ThemedView style={styles.buttonContainer}>
             <Button title="Cancel" onPress={handleCloseNewPost}></Button>
-            <Pressable style={styles.postButton}>
+            <Pressable onPress={() => {}} style={styles.postButton}>
               <Text style={styles.buttonText}>Post</Text>
             </Pressable>
           </ThemedView>
