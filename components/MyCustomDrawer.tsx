@@ -10,7 +10,7 @@ import MyContext from './providers/MyContext';
 
 
 export default function MyCustomDrawer(props: any) {
-    const context = useContext(MyContext);
+    const context = useContext<any>(MyContext);
     const { setLoginToggle, myInfo } = context
     // const router = useRouter();
     

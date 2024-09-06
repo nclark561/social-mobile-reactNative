@@ -1,12 +1,12 @@
 import { StyleSheet, Pressable, Button, useColorScheme, Text, Image } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import Animated from "react-native-reanimated";
-import Post from "@/components/Post";
+import Post from "@/components/postComponents/Post";
 import Header from "@/components/Header";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const post1 = {
   user: "Noah Clark",
@@ -27,6 +27,7 @@ const posts = [post1, post2, post1, post2, post1, post2, post1, post2, post1];
 
 export default function HomeScreen() {
   const newPostRef = useRef<BottomSheetModal>(null);
+  const [postInput, setPostInput] = useState('')
   const colorScheme = useColorScheme()
 
   const handleOpenNewPost = () => newPostRef?.current?.present();
@@ -58,6 +59,7 @@ export default function HomeScreen() {
             />
             <BottomSheetTextInput
               autoFocus
+              onChangeText={(input) => setPostInput(input)}
               multiline
               placeholder="Type your post here"
               style={[

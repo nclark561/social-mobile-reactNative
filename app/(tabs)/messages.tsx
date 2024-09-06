@@ -16,7 +16,7 @@ const conversation1 = {
 const conversations = [ conversation1, conversation1, conversation1, conversation1, conversation1, conversation1, conversation1, conversation1, conversation1, conversation1, conversation1]
 
 export default function messages() {
-  const handleNavigate = (route: string) => router.navigate(`/(tabs)/${route}`)
+  const handleNavigate = (route: string) => router.navigate(`/${route}`)
   
   return (
     <ThemedView>
