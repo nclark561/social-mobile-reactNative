@@ -62,6 +62,20 @@ export default function RootLayout() {
                     title: 'Login',
                   }}
                 />
+                <Drawer.Screen
+                  name="[conversation]"
+                  options={{
+                    drawerLabel: () => null, // Hides it from the drawer
+                    drawerItemStyle: { display: 'none' }, // Prevents it from appearing in the drawer
+                  }}
+                />
+                <Drawer.Screen
+                  name="index"
+                  options={{
+                    drawerLabel: () => null, // Hide index route
+                    drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                  }}
+                />
               </Drawer>
             </SafeAreaView>
           </MyProvider>
