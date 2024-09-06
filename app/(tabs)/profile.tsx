@@ -19,7 +19,7 @@ export default function TabTwoScreen() {
 
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
-    
+
 
 
     const renderContent = () => {
@@ -92,7 +92,7 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
     header: {
-        flexDirection: 'column',
+        flexDirection: 'column',        
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 10,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 16,
         fontWeight: '700',
-        lineHeight: 10,
+        
     },
     tag: {
         fontSize: 10,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     close: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column',        
     },
     smallGray: {
         fontSize: 11,
