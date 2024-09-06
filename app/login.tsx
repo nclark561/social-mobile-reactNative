@@ -13,8 +13,7 @@ export default function Login() {
 
 
   return (
-    <ThemedView style={styles.page}>
-      <ThemedText>Testing</ThemedText>
+    <ThemedView style={styles.page}>      
       {loginToggle ? <SignIn setLoginToggle={setLoginToggle} /> : <CreateAccount setLoginToggle={setLoginToggle} />}
     </ThemedView>
   );

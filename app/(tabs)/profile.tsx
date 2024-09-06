@@ -8,6 +8,7 @@ import { DrawerActions } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from '../../components/providers/MyContext';
+import { supabase } from "../../components/Supabase";
 
 export default function TabTwoScreen() {
     const navigation = useNavigation();
@@ -22,7 +23,7 @@ export default function TabTwoScreen() {
     const getUser = async () => {
         try {
             const userEmail = await AsyncStorage.getItem("user");
-            if(!userEmail) throw new Error('No email logged in')
+            if (!userEmail) throw new Error('No email logged in')
             const email = JSON.parse(userEmail)
             const result = await fetch(
                 `https://engaged-rattler-correctly.ngrok-free.app/api/myInfo?email=${email}`,
@@ -44,6 +45,7 @@ export default function TabTwoScreen() {
     useEffect(() => {
         console.log('hitting get user')
         getUser();
+        getSession()
     }, []);
 
     const renderContent = () => {
@@ -64,34 +66,41 @@ export default function TabTwoScreen() {
         return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
     };
 
-    console.log(myInfo, 'this is my info');
+    async function getSession() {
+        console.log(await supabase.auth.getUser(), 'this is the user')
+    }
+
+
 
     return (
         <ThemedView>
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.row}>
-                    <Image
+                    {myInfo ? <Image
                         style={styles.profilePic}
                         source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
-                    />
+                    /> : <ThemedText>Empty Photo</ThemedText>}
+
                     <TouchableOpacity style={styles.button}>
                         <ThemedText>Edit</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
                 <ThemedView style={styles.close}>
-                    <ThemedText style={styles.userName}>{user?.username}</ThemedText>
-                    <ThemedText style={styles.tag}>@{user?.email}</ThemedText>
-                </ThemedView>
+                    {myInfo ? <><ThemedText style={styles.userName}>{user?.username}</ThemedText>
+                        <ThemedText style={styles.tag}>@{user?.email}</ThemedText></> : <ThemedText>Login Nigga</ThemedText>}
 
+                </ThemedView>
                 <ThemedView style={styles.locationRow}>
-                    <ThemedText style={styles.smallGray}>{user?.location}</ThemedText>
-                    <ThemedText style={styles.smallGrayDate}>
-                        Joined {user?.date ? formatDate(user.date) : ''}
-                    </ThemedText>
+                    {myInfo ? <><ThemedText style={styles.smallGray}>{user?.location}</ThemedText>
+                        <ThemedText style={styles.smallGrayDate}>
+                            Joined {user?.date ? formatDate(user.date) : ''}
+                        </ThemedText></> : <ThemedText></ThemedText>}
+
                 </ThemedView>
                 <ThemedView style={styles.followersRow}>
-                    <ThemedText style={styles.smallGray}>{user?.followers.length} Followers</ThemedText>
-                    <ThemedText style={styles.smallGray}>{user?.following.length} Following</ThemedText>
+                    {myInfo ? <><ThemedText style={styles.smallGray}>{user?.followers.length} Followers</ThemedText>
+                        <ThemedText style={styles.smallGray}>{user?.following.length} Following</ThemedText></> : <ThemedText></ThemedText>}
+
                 </ThemedView>
             </ThemedView>
             <ThemedView style={styles.column}>
@@ -186,14 +195,14 @@ const styles = StyleSheet.create({
         width: '95%',
     },
     button: {
-        width: 35,
+        width: 45,
         fontSize: 12,
-        height: 20,
+        height: 35,
         borderRadius: 15,
         borderColor: 'black',
         borderWidth: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 3,
+        padding: 1,
     },
 });
