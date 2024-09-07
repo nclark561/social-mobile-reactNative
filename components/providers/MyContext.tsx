@@ -2,15 +2,17 @@ import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from "../../components/Supabase";
 
+interface MyInfo {
+    id: string;
+    email: string;
+    bio: string;
+    followers: string[];
+    following: string[];
+    username: string;
+}
+
 interface UserContextType {
-    myInfo: {
-        id: string;
-        email: string;
-        bio: string;
-        followers: string[];
-        following: string[];
-        username: string;
-    };
+    myInfo: MyInfo | undefined
     setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
     loggedIn: boolean
 }
@@ -18,7 +20,7 @@ interface UserContextType {
 const MyContext = createContext<UserContextType | undefined>(undefined);
 
 export const MyProvider = ({ children }: { children: ReactNode }) => {
-    const [myInfo, setMyInfo] = useState();
+    const [myInfo, setMyInfo] = useState<MyInfo>();
     const [loginToggle, setLoginToggle] = useState(false);
     const [loggedIn, setLoggedIn] = useState<boolean>(false)
 
@@ -53,6 +55,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         try {
             const userEmail = await AsyncStorage.getItem("user");
             console.log(userEmail, 'this is user email')
+            if (!userEmail) throw new Error('User not logged in')
             const email = JSON.parse(userEmail);
             const result = await fetch(
                 `https://engaged-rattler-correctly.ngrok-free.app/api/myInfo?email=${email}`,
