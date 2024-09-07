@@ -67,6 +67,7 @@ export default function RootLayout() {
                   options={{
                     drawerLabel: () => null, // Hides it from the drawer
                     drawerItemStyle: { display: 'none' }, // Prevents it from appearing in the drawer
+                    headerShown: false
                   }}
                 />
                 <Drawer.Screen
