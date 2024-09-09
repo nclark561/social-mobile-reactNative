@@ -1,4 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useCallback } from 'react';
+import { useFocusEffect } from 'expo-router';
 import { useContext } from 'react';
 import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,6 +10,7 @@ import { DrawerActions } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from '../../components/providers/MyContext';
+import PostContext from '../../components/providers/PostContext';
 
 export default function TabTwoScreen() {
     const navigation = useNavigation();
@@ -17,15 +20,41 @@ export default function TabTwoScreen() {
     const context = useContext<any>(MyContext);
     const { setLoginToggle, myInfo, loggedIn } = context
 
+    const postContext = useContext<any>(PostContext);
+    const { getUserPosts, posts } = postContext
+
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
 
+    useFocusEffect(
+        useCallback(() => {
+            getUserPosts(myInfo?.email);            
+        }, [])
+    );
+
+
+
+    // useEffect(() => {
+    //     getUserPosts(myInfo?.email);
+    //     // return () => {          
+    //     // };
+    // }, []);
 
 
     const renderContent = () => {
         switch (selectedOption) {
-            case 'Posts':
-                return <ThemedText>Posts Content</ThemedText>;
+            case 'Posts':                
+                return <ThemedView>                    
+                    {Array.isArray(posts.Posts) && posts?.Posts?.map((post: any) => {
+                        console.log(post, 'this is the posts post')
+                        return (
+                            <ThemedView key={post.id || post.content}>
+                                <ThemedText style={styles.content}>{post?.content}</ThemedText>                                
+                            </ThemedView>
+                        )
+                    })}
+                    {/* <ThemedText>kale</ThemedText> */}
+                </ThemedView>;
             case 'Likes':
                 return <ThemedText>Likes Content</ThemedText>;
             case 'Replies':
@@ -43,7 +72,7 @@ export default function TabTwoScreen() {
 
 
 
-    console.log(myInfo, "myInfo object")
+    console.log(posts.Posts, 'these are posts')
 
     return (
         <ThemedView>
@@ -92,7 +121,7 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
     header: {
-        flexDirection: 'column',        
+        flexDirection: 'column',
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 10,
@@ -111,7 +140,7 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 16,
         fontWeight: '700',
-        
+
     },
     tag: {
         fontSize: 10,
@@ -130,7 +159,7 @@ const styles = StyleSheet.create({
     },
     close: {
         display: 'flex',
-        flexDirection: 'column',        
+        flexDirection: 'column',
     },
     smallGray: {
         fontSize: 11,
@@ -178,4 +207,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 1,
     },
+    black: {
+        color: 'black',
+        backgroundColor: 'black'
+    }
 });

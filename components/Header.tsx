@@ -18,8 +18,7 @@ export default function Header({ name }: HeaderProps) {
     const context = useContext(MyContext);
     const { setLoginToggle, myInfo, loggedIn } = context
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer())
-
-    console.log(myInfo)
+    
 
     return (
         <ThemedView style={styles.page}>

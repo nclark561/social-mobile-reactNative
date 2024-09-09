@@ -1,5 +1,6 @@
 import { StyleSheet, Pressable, Button, useColorScheme, Text, Image } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
+import { useContext } from "react";
 import Animated from "react-native-reanimated";
 import Post from "@/components/postComponents/Post";
 import Header from "@/components/Header";
@@ -7,6 +8,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { useRef, useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import PostContext from "@/components/providers/PostContext";
 
 const post1 = {
   user: "Noah Clark",
@@ -29,9 +32,36 @@ export default function HomeScreen() {
   const newPostRef = useRef<BottomSheetModal>(null);
   const [postInput, setPostInput] = useState('')
   const colorScheme = useColorScheme()
+  const postContext = useContext<any>(PostContext);
+  const { getUserPosts} = postContext
 
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
+
+
+
+  const createPost = async (
+    content: string,
+  ) => {
+    console.log('testing create post')
+    const userEmail = await AsyncStorage.getItem("user");
+    try {
+      const test = await fetch("https://engaged-rattler-correctly.ngrok-free.app/api/createPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content,
+          email: userEmail,
+        }),
+      });      
+    } catch (error) {
+      console.log(error, "this is the create user error");
+    }
+  };
+
+
 
   return (
     <ThemedView style={styles.pageContainer}>
@@ -48,7 +78,7 @@ export default function HomeScreen() {
         <ThemedView style={styles.commentContainer}>
           <ThemedView style={styles.buttonContainer}>
             <Button title="Cancel" onPress={handleCloseNewPost}></Button>
-            <Pressable onPress={() => {}} style={styles.postButton}>
+            <Pressable onPress={() => { createPost(postInput); handleCloseNewPost() }} style={styles.postButton}>
               <Text style={styles.buttonText}>Post</Text>
             </Pressable>
           </ThemedView>

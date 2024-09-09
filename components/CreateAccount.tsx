@@ -11,12 +11,13 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
     const color = colorScheme === 'dark' ? 'white' : 'black'
 
     const handleSignUp = async (userName: string, email: string) => {
+        console.log('hitting signup')
         try {
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
-            const result = await fetch(`http://localhost:3000/api/createUser`, {
+            // const { data, error } = await supabase.auth.signUp({
+            //     email: email,
+            //     password: password,
+            // });
+            const result = await fetch(`https://engaged-rattler-correctly.ngrok-free.app/api/createUser`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
