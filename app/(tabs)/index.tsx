@@ -33,7 +33,7 @@ export default function HomeScreen() {
   const [postInput, setPostInput] = useState('')
   const colorScheme = useColorScheme()
   const postContext = useContext<any>(PostContext);
-  const { getUserPosts} = postContext
+  // const { getUserPosts} = postContext
 
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();

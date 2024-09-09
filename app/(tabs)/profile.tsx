@@ -26,11 +26,11 @@ export default function TabTwoScreen() {
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
 
-    useFocusEffect(
-        useCallback(() => {
-            getUserPosts(myInfo?.email);            
-        }, [])
-    );
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         getUserPosts(myInfo?.email);            
+    //     }, [])
+    // );
 
 
 
