@@ -26,11 +26,11 @@ export default function TabTwoScreen() {
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         getUserPosts(myInfo?.email);            
-    //     }, [])
-    // );
+    useFocusEffect(
+        useCallback(() => {
+            getUserPosts(myInfo?.email);
+        }, [])
+    );
 
 
 
@@ -43,13 +43,13 @@ export default function TabTwoScreen() {
 
     const renderContent = () => {
         switch (selectedOption) {
-            case 'Posts':                
-                return <ThemedView>                    
+            case 'Posts':
+                return <ThemedView>
                     {Array.isArray(posts.Posts) && posts?.Posts?.map((post: any) => {
                         console.log(post, 'this is the posts post')
                         return (
                             <ThemedView key={post.id || post.content}>
-                                <ThemedText style={styles.content}>{post?.content}</ThemedText>                                
+                                <ThemedText style={styles.content}>{post?.content}</ThemedText>
                             </ThemedView>
                         )
                     })}

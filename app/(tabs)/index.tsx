@@ -10,6 +10,7 @@ import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { useRef, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import PostContext from "@/components/providers/PostContext";
+import MyContext from "@/components/providers/MyContext";
 
 const post1 = {
   user: "Noah Clark",
@@ -24,7 +25,7 @@ const post2 = {
   text: "You cant keep doing this Rick. Ive almost died 3 times this week, Im exhausted, and I havent been able to go to school in months. Enough is enough.",
 };
 
-const posts = [post1, post2, post1, post2, post1, post2, post1, post2, post1];
+
 
 
 
@@ -33,7 +34,10 @@ export default function HomeScreen() {
   const [postInput, setPostInput] = useState('')
   const colorScheme = useColorScheme()
   const postContext = useContext<any>(PostContext);
-  // const { getUserPosts} = postContext
+  const { getUserPosts, forYouPosts } = postContext
+
+  const context = useContext<any>(MyContext);
+  const { myInfo } = context
 
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
@@ -55,20 +59,21 @@ export default function HomeScreen() {
           content,
           email: userEmail,
         }),
-      });      
+      });
     } catch (error) {
       console.log(error, "this is the create user error");
     }
   };
 
 
+  console.log(forYouPosts, 'these are for you posts')
 
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name="Posts" />
       <Animated.ScrollView>
-        {posts.map((e, i) => (
-          <Post key={i} post={e} />
+        {Array.isArray(forYouPosts) && forYouPosts.map((post, i) => (
+          <Post key={i} post={post} />
         ))}
       </Animated.ScrollView>
       <Pressable style={styles.addButton} onPress={handleOpenNewPost}>

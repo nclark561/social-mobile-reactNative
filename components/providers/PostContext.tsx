@@ -4,14 +4,20 @@ import { supabase } from "../../components/Supabase";
 
 type PostContextType = {
     getUserPosts: (id: string) => Promise<void>;
-    posts: any[]; // Adjust type based on your actual data structure
+    getForYouPosts: () => Promise<void>;
+    posts: any[];
+    forYouPosts: any[]
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
     const [posts, setPosts] = useState<any[]>([]);
+    const [forYouPosts, setForYouPosts] = useState<any[]>([]);
 
+    useEffect(() => {
+        getForYouPosts()
+    }, [])
 
     // const createPost = async (
     //     content: string,
@@ -32,7 +38,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     // };
 
 
-    const getUserPosts = async (email: string) => {        
+    const getUserPosts = async (email: string) => {
         try {
             const result = await fetch(
                 `https://engaged-rattler-correctly.ngrok-free.app/api/getMyPosts?email=${email}`,
@@ -43,18 +49,18 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
                     },
                 },
             );
-            const fetchedPosts = await result.json();                        
-            setPosts(fetchedPosts); 
+            const fetchedPosts = await result.json();
+            setPosts(fetchedPosts);
         } catch (error) {
             console.log(error, "this is the get user error");
         }
     };
 
 
-    const getForYouPosts = async (id: string) => {
+    const getForYouPosts = async () => {
         try {
             const result = await fetch(
-                `http://localhost:3000/api/getMyPosts?id=${id}`,
+                `https://engaged-rattler-correctly.ngrok-free.app/api/getPosts`,
                 {
                     method: "GET",
                     headers: {
@@ -63,7 +69,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
                 },
             );
             const fetchedPosts = await result.json();
-            setPosts(fetchedPosts); // Update state with fetched posts
+            setForYouPosts(fetchedPosts.Posts);
         } catch (error) {
             console.log(error, "this is the get for you posts error");
         }
@@ -71,7 +77,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <PostContext.Provider value={{ getUserPosts, posts }}>
+        <PostContext.Provider value={{ getUserPosts, posts, getForYouPosts, forYouPosts }}>
             {children}
         </PostContext.Provider>
     );

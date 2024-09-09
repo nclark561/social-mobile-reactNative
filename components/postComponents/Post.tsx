@@ -32,6 +32,9 @@ export default function Post({ post }: { post: Post }) {
     setLiked((prev) => !prev);
   };
 
+
+  console.log(post, 'this is a post?')
+
   return (
     <ThemedView
       style={[
@@ -45,8 +48,8 @@ export default function Post({ post }: { post: Post }) {
         <Image style={styles.profilePic} source={{ uri: post.profilePic }} />
       </ThemedView>
       <ThemedView style={styles.postContent}>
-        <ThemedText style={styles.postUser}>{post.user}</ThemedText>
-        <ThemedText style={styles.postText}>{post.text}</ThemedText>
+        <ThemedText style={styles.postUser}>{post.email}</ThemedText>
+        <ThemedText style={styles.postText}>{post.content}</ThemedText>
         <ThemedView style={styles.reactionsContainer}>
           <Ionicons
             size={20}
