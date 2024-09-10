@@ -17,7 +17,7 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
             //     email: email,
             //     password: password,
             // });
-            const result = await fetch(`https://engaged-rattler-correctly.ngrok-free.app/api/createUser`, {
+            const result = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/createUser`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
