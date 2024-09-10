@@ -58,7 +58,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             if (!userEmail) throw new Error('User not logged in')
             const email = JSON.parse(userEmail);
             const result = await fetch(
-                `https://engaged-rattler-correctly.ngrok-free.app/api/myInfo?email=${email}`,
+                `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/myInfo?email=${email}`,
                 // `http://localhost:3000/api/myInfo?email=${email}`,
                 {
                     method: 'GET',

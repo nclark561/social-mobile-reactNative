@@ -50,7 +50,7 @@ export default function HomeScreen() {
     console.log('testing create post')
     const userEmail = await AsyncStorage.getItem("user");
     try {
-      const test = await fetch("https://engaged-rattler-correctly.ngrok-free.app/api/createPost", {
+      const test = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/createPost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -116,6 +116,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: "column",
+    height: '110%'
   },
   addButton: {
     position: "absolute",
