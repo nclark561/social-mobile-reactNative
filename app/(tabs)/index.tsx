@@ -34,7 +34,7 @@ export default function HomeScreen() {
   const [postInput, setPostInput] = useState('')
   const colorScheme = useColorScheme()
   const postContext = useContext<any>(PostContext);
-  const { getUserPosts, forYouPosts } = postContext
+  const { getUserPosts, forYouPosts, getForYouPosts } = postContext
 
   const context = useContext<any>(MyContext);
   const { myInfo } = context
@@ -60,6 +60,7 @@ export default function HomeScreen() {
           email: userEmail,
         }),
       });
+      await getForYouPosts()
     } catch (error) {
       console.log(error, "this is the create user error");
     }
