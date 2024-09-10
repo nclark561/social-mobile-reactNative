@@ -67,7 +67,6 @@ export default function HomeScreen() {
   };
 
 
-  console.log(forYouPosts, 'these are for you posts')
 
   return (
     <ThemedView style={styles.pageContainer}>

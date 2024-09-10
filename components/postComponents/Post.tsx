@@ -31,9 +31,7 @@ export default function Post({ post }: { post: Post }) {
   const likePost = () => {
     setLiked((prev) => !prev);
   };
-
-
-  console.log(post, 'this is a post?')
+  
 
   return (
     <ThemedView

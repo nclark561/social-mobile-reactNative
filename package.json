@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "grok": "ngrok http --domain=engaged-rattler-correctly.ngrok-free.app 3001",
+    "grok": "ngrok http --domain=engaged-rattler-correctly.ngrok-free.app 3000",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",

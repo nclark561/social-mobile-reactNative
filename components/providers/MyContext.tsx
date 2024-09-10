@@ -26,8 +26,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
 
 
-    useEffect(() => {
-        console.log('hitting the right use effect')
+    useEffect(() => {        
         getUser();
         getSession()
     }, [loginToggle])
@@ -36,12 +35,10 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     async function getSession() {
         try {
             const { data, error } = await supabase.auth.getUser();
-            if (error) {
-                console.error('Error fetching user:', error.message);
+            if (error) {                
                 setLoggedIn(false)
                 return null;
-            }
-            console.log(data, 'supabase auth');
+            }            
             setLoggedIn(true)
             return data;
         } catch (err) {
@@ -59,7 +56,6 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             const email = JSON.parse(userEmail);
             const result = await fetch(
                 `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/myInfo?email=${email}`,
-                // `http://localhost:3000/api/myInfo?email=${email}`,
                 {
                     method: 'GET',
                     headers: {
@@ -67,13 +63,21 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                     },
                 }
             );
-            const userInfo = await result.json();
+    
+            // Log the status and response text to diagnose the issue
+            console.log(`Status: ${result.status}`);
+            const text = await result.text();
+            console.log(`Response Text: ${text}`);
+    
+            // Attempt to parse JSON if the content type is correct
+            const userInfo = JSON.parse(text);
             console.log(userInfo, 'this is user info')
             setMyInfo(userInfo.Hello);
         } catch (error) {
-            console.log(error, 'this is the create user error');
+            console.log(error, 'this is the get user error');
         }
     };
+    
 
 
 
