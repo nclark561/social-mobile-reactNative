@@ -67,6 +67,38 @@ export default function Post({ post }: { post: Post }) {
     }
   };
 
+  const addComment = async (
+    comment: string,
+    userName: string,
+    postId: string,
+    userId: string,
+    commentId: string | null,    
+  ) => {
+    try {
+      const response = await fetch(
+        `https://engaged-rattler-correctly.ngrok-free.app/api/addComment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            comment,
+            userName,
+            postId,
+            userId,
+            commentId,            
+          }),
+        },
+      );
+      const post = await response.json();
+      console.log(post, 'this is the comment response')      
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+
 
   return (
     <ThemedView
@@ -146,7 +178,7 @@ export default function Post({ post }: { post: Post }) {
         <ThemedView style={styles.commentContainer}>
           <ThemedView style={styles.buttonContainer}>
             <Button title="Cancel" onPress={handleCloseComment}></Button>
-            <Pressable style={styles.postButton}>
+            <Pressable onPress={() => { addComment(commentInput, myInfo.username, post.id, myInfo.id,  ) }} style={styles.postButton}>
               <Text style={styles.buttonText}>Post</Text>
             </Pressable>
           </ThemedView>
