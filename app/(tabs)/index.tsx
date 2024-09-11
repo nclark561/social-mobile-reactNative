@@ -12,22 +12,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // Import 
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "@/components/providers/MyContext";
 
-const post1 = {
-  user: "Noah Clark",
-  profilePic: "https://avatars.githubusercontent.com/u/125314332?v=4",
-  text: "I'm making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made. I'm making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made. I'm making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made. I'm making a social media app. I am typing a bunch of random stuff to create a fake twitter post. this is the best post i ever made.",
-};
-
-const post2 = {
-  user: "Morty Smith",
-  profilePic:
-    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg",
-  text: "You cant keep doing this Rick. Ive almost died 3 times this week, Im exhausted, and I havent been able to go to school in months. Enough is enough.",
-};
-
-
-
-
 
 export default function HomeScreen() {
   const newPostRef = useRef<BottomSheetModal>(null);
@@ -88,10 +72,10 @@ export default function HomeScreen() {
             </Pressable>
           </ThemedView>
           <ThemedView style={{ flexDirection: "row" }}>
-            <Image
+            {/* <Image
               style={styles.commentPic}
               source={{ uri: post1.profilePic }}
-            />
+            /> */}
             <BottomSheetTextInput
               autoFocus
               onChangeText={(input) => setPostInput(input)}

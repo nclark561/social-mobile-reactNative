@@ -11,7 +11,7 @@ interface MyInfo {
     username: string;
 }
 
-interface UserContextType {
+export interface UserContextType {
     myInfo: MyInfo | undefined
     setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
     loggedIn: boolean
@@ -26,7 +26,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
 
 
-    useEffect(() => {        
+    useEffect(() => {
         getUser();
         getSession()
     }, [loginToggle])
@@ -35,10 +35,10 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     async function getSession() {
         try {
             const { data, error } = await supabase.auth.getUser();
-            if (error) {                
+            if (error) {
                 setLoggedIn(false)
                 return null;
-            }            
+            }
             setLoggedIn(true)
             return data;
         } catch (err) {
@@ -63,12 +63,12 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                     },
                 }
             );
-    
+
             // Log the status and response text to diagnose the issue
             console.log(`Status: ${result.status}`);
             const text = await result.text();
             console.log(`Response Text: ${text}`);
-    
+
             // Attempt to parse JSON if the content type is correct
             const userInfo = JSON.parse(text);
             console.log(userInfo, 'this is user info')
@@ -77,7 +77,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             console.log(error, 'this is the get user error');
         }
     };
-    
+
 
 
 

@@ -6,7 +6,9 @@ type PostContextType = {
     getUserPosts: (id: string) => Promise<void>;
     getForYouPosts: () => Promise<void>;
     posts: any[];
-    forYouPosts: any[]
+    forYouPosts: any[];
+    forYouPostsToggle: boolean;
+    setForYouPostsToggle: (value: boolean) => void
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -14,10 +16,11 @@ const PostContext = createContext<PostContextType | undefined>(undefined);
 export const PostProvider = ({ children }: { children: ReactNode }) => {
     const [posts, setPosts] = useState<any[]>([]);
     const [forYouPosts, setForYouPosts] = useState<any[]>([]);
+    const [forYouPostsToggle, setForYouPostsToggle] = useState<boolean>(false);
 
     useEffect(() => {
         getForYouPosts()
-    }, [])
+    }, [forYouPostsToggle])
 
     // const createPost = async (
     //     content: string,
@@ -58,6 +61,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
 
     const getForYouPosts = async () => {
+        console.log('getting for you posts')
         try {
             const result = await fetch(
                 `https://engaged-rattler-correctly.ngrok-free.app/api/getPosts`,
@@ -77,7 +81,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <PostContext.Provider value={{ getUserPosts, posts, getForYouPosts, forYouPosts }}>
+        <PostContext.Provider value={{ getUserPosts, posts, getForYouPosts, forYouPosts, forYouPostsToggle, setForYouPostsToggle }}>
             {children}
         </PostContext.Provider>
     );

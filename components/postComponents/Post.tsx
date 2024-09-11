@@ -1,4 +1,7 @@
 import { StyleSheet, Image, Button, Pressable, Text, View } from "react-native";
+import { useContext } from "react";
+import MyContext from "../providers/MyContext";
+import PostContext from "../providers/PostContext";
 import { ThemedText } from "../ThemedText";
 import { ThemedView } from "../ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -7,17 +10,21 @@ import { useState, useRef } from "react";
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
-
+import { UserContextType } from "../providers/MyContext";
 interface Post {
-  user: string;
-  profilePic: string;
-  text: string;
+  id: string;
+  content: string;
+  date: Date;
+
 }
 
 export default function Post({ post }: { post: Post }) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
+
+  const { getForYouPosts } = useContext<any>(PostContext);
+  const { setLoginToggle, myInfo, loggedIn } = useContext<any>(MyContext);
 
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
@@ -31,7 +38,35 @@ export default function Post({ post }: { post: Post }) {
   const likePost = () => {
     setLiked((prev) => !prev);
   };
-  
+
+  const isLikedByUser = (likes: string[]): boolean => {
+    return likes.includes(myInfo?.id);
+  };
+
+
+
+  const addLike = async (
+    userId: string,
+    postId: string,
+  ) => {
+    console.log(postId, 'hitting add like')
+    try {
+      const test = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          postId
+        }),
+      });
+      await getForYouPosts()
+    } catch (error) {
+      console.log(error, "this is the create user error");
+    }
+  };
+
 
   return (
     <ThemedView
@@ -63,8 +98,8 @@ export default function Post({ post }: { post: Post }) {
           />
           <Ionicons
             size={20}
-            name={liked ? "heart" : "heart-outline"}
-            onPress={likePost}
+            name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
+            onPress={() => { addLike(myInfo.id, post.id) }}
             color={colorScheme === "dark" ? "white" : "black"}
           />
           <Ionicons
@@ -116,16 +151,16 @@ export default function Post({ post }: { post: Post }) {
             </Pressable>
           </ThemedView>
           <ThemedView style={styles.commentOP}>
-            <Image
+            {/* <Image
               style={styles.commentPic}
               source={{ uri: post.profilePic }}
-            />
-            <ThemedText style={styles.postUser}>{post.user}</ThemedText>
+            /> */}
+            <ThemedText style={styles.postUser}>{post.email}</ThemedText>
           </ThemedView>
           <ThemedView style={styles.commentOGPost}>
             <View style={styles.line}></View>
             <ScrollView style={styles.commentScroll}>
-              <ThemedText>{post.text}</ThemedText>
+              <ThemedText>{post.content}</ThemedText>
             </ScrollView>
           </ThemedView>
           <ThemedView style={{ flexDirection: "row" }}>
