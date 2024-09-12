@@ -64,15 +64,12 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                 }
             );
 
-            // Log the status and response text to diagnose the issue
             console.log(`Status: ${result.status}`);
             const text = await result.text();
             console.log(`Response Text: ${text}`);
-
-            // Attempt to parse JSON if the content type is correct
             const userInfo = JSON.parse(text);
-            console.log(userInfo, 'this is user info')
-            setMyInfo(userInfo.Hello);
+            setMyInfo(userInfo.user);
+            
         } catch (error) {
             console.log(error, 'this is the get user error');
         }

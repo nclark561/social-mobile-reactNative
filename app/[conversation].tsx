@@ -1,4 +1,4 @@
-import { StyleSheet, useColorScheme, Image, TextInput } from 'react-native'
+import { StyleSheet, useColorScheme, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native'
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
@@ -22,13 +22,13 @@ const messages = [message1, message2, message1, message2, message1, message2, me
 
 export default function Conversation() {
   const translateX = useSharedValue(-300);
-  const colorScheme =useColorScheme()
+  const colorScheme = useColorScheme()
 
   const handleNavigate = () => router.navigate('/(tabs)/messages')
 
   useFocusEffect(
     useCallback(() => {
-      translateX.value = withSpring(0, { damping: 15, stiffness: 100 }) 
+      translateX.value = withSpring(0, { damping: 15, stiffness: 100 })
       return () => translateX.value = withSpring(-300)
     }, [translateX])
   )
@@ -40,25 +40,31 @@ export default function Conversation() {
   });
 
   return (
-    <Animated.View style={[styles.screenContainer, animatedStyle]}>
-      <ThemedView style={styles.screenContainer}>
-        <ThemedView style={styles.header}>
-            <Ionicons onPress={handleNavigate} size={25} name='arrow-back' color={colorScheme === 'dark' ? 'white' : 'black'}/>
-            <ThemedView style={{flexDirection: 'column', alignItems: 'center'}}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 35 : 0}
+    >
+      <Animated.View style={[styles.screenContainer, animatedStyle]}>
+        <ThemedView style={styles.screenContainer}>
+          <ThemedView style={styles.header}>
+            <Ionicons onPress={handleNavigate} size={25} name='arrow-back' color={colorScheme === 'dark' ? 'white' : 'black'} />
+            <ThemedView style={{ flexDirection: 'column', alignItems: 'center' }}>
               <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} />
               <ThemedText style={{ fontSize: 20, textAlign: 'center' }}>Kale</ThemedText>
             </ThemedView>
             <ThemedView style={{ width: 25 }}></ThemedView>
-        </ThemedView>
-          <Animated.ScrollView style={{ width: '100%'}}>
-              {messages.map(e => <UserMessage username={e.username} message={e.message}/>)}
+          </ThemedView>
+          <Animated.ScrollView style={{ width: '100%' }}>
+            {messages.map((e, index) => <UserMessage key={index} username={e.username} message={e.message} />)}
           </Animated.ScrollView>
-        <ThemedView style={{flexDirection: 'row', width: '100%', margin: 30, marginTop: 15}}>
-          <TextInput multiline placeholder='start message' style={[styles.textInput, colorScheme === 'dark' ? { backgroundColor: '#3b3b3b', color: 'white' } : { backgroundColor: '#d3d3d3' }]}></TextInput>
-          <ThemedView style={styles.circle}></ThemedView>
+          <ThemedView style={{ flexDirection: 'row', width: '100%', margin: 30, marginTop: 15 }}>
+            <TextInput multiline placeholder='start message' style={[styles.textInput, colorScheme === 'dark' ? { backgroundColor: '#3b3b3b', color: 'white' } : { backgroundColor: '#d3d3d3' }]} />
+            <ThemedView style={styles.circle}></ThemedView>
+          </ThemedView>
         </ThemedView>
-      </ThemedView>
-    </Animated.View>
+      </Animated.View>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -87,7 +93,7 @@ const styles = StyleSheet.create({
     width: '80%'
   },
   circle: {
-    borderRadius: 25, 
+    borderRadius: 25,
     width: 25,
     height: 25,
     backgroundColor: "#26a7de"

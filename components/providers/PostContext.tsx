@@ -21,6 +21,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         getForYouPosts()
     }, [forYouPostsToggle])
+    
 
     // const createPost = async (
     //     content: string,
@@ -73,6 +74,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
                 },
             );
             const fetchedPosts = await result.json();
+            console.log(fetchedPosts, 'all the for you posts fetched')
             setForYouPosts(fetchedPosts.Posts);
         } catch (error) {
             console.log(error, "this is the get for you posts error");

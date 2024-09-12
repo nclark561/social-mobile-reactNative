@@ -45,20 +45,28 @@ export default function TabTwoScreen() {
         switch (selectedOption) {
             case 'Posts':
                 return <ThemedView>
-                    {Array.isArray(posts.Posts) && posts?.Posts?.map((post: any) => {
-                        console.log(post, 'this is the posts post')
+                    {Array.isArray(posts.Posts) && posts?.Posts?.map((post: any) => {                        
                         return (
                             <ThemedView key={post.id || post.content}>
                                 <ThemedText style={styles.content}>{post?.content}</ThemedText>
                             </ThemedView>
                         )
-                    })}
-                    {/* <ThemedText>kale</ThemedText> */}
+                    })}                    
                 </ThemedView>;
             case 'Likes':
-                return <ThemedText>Likes Content</ThemedText>;
+                return <ThemedText>Reposts</ThemedText>;
             case 'Replies':
-                return <ThemedText>Replies Content</ThemedText>;
+                return <ThemedView>
+                    {myInfo?.comments?.map((comment: any) => {
+                        console.log(myInfo?.comments, 'these are comments')
+                        return (
+                            <ThemedView key={comment.id || comment.content}>
+                                <ThemedText style={styles.content}>{comment?.comment}</ThemedText>
+                            </ThemedView>
+                        )
+                    })}
+                    <ThemedText>kale</ThemedText>
+                </ThemedView>;
             default:
                 return null;
         }
@@ -68,8 +76,8 @@ export default function TabTwoScreen() {
         const date = new Date(dateString);
         return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
     };
-    
 
+console.log(posts.Posts, 'these are comments')
     return (
         <ThemedView>
             <ThemedView style={styles.header}>
@@ -102,7 +110,7 @@ export default function TabTwoScreen() {
                 </ThemedView>
             </ThemedView>
             <ThemedView style={styles.column}>
-                {['Posts', 'Likes', 'Replies'].map((option) => (
+                {['Posts', 'Reposts', 'Replies'].map((option) => (
                     <TouchableOpacity key={option} onPress={() => setSelectedOption(option)}>
                         <ThemedText style={[styles.optionText, selectedOption === option && styles.underline]}>
                             {option}
@@ -171,7 +179,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '95%',
+        width: '90%',
         marginLeft: 10,
     },
     optionText: {
