@@ -72,7 +72,7 @@ export default function Post({ post }: { post: Post }) {
     userName: string,
     postId: string,
     userId: string,
-    commentId: string | null,    
+    commentId: string | null,
   ) => {
     try {
       const response = await fetch(
@@ -87,12 +87,12 @@ export default function Post({ post }: { post: Post }) {
             userName,
             postId,
             userId,
-            commentId,            
+            commentId,
           }),
         },
       );
       const post = await response.json();
-      console.log(post, 'this is the comment response')      
+      console.log(post, 'this is the comment response')
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -110,32 +110,38 @@ export default function Post({ post }: { post: Post }) {
       ]}
     >
       <ThemedView style={styles.flex}>
-        <Image style={styles.profilePic} source={{ uri: post.profilePic }} />
+        <Image style={styles.profilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
       </ThemedView>
       <ThemedView style={styles.postContent}>
         <ThemedText style={styles.postUser}>{post.email}</ThemedText>
         <ThemedText style={styles.postText}>{post.content}</ThemedText>
         <ThemedView style={styles.reactionsContainer}>
+          <ThemedView style={styles.smallRow}>
+            <Ionicons
+              size={15}
+              name="chatbubble-outline"
+              onPress={handleOpenComment}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+            <ThemedText style={styles.smallNumber}>{post.comments.length}</ThemedText>
+          </ThemedView>
           <Ionicons
-            size={20}
-            name="chatbubble-outline"
-            onPress={handleOpenComment}
-            color={colorScheme === "dark" ? "white" : "black"}
-          />
-          <Ionicons
-            size={20}
+            size={15}
             name="git-compare-outline"
             onPress={handleOpenRepost}
             color={colorScheme === "dark" ? "white" : "black"}
           />
+          <ThemedView style={styles.smallRow}>
+            <Ionicons
+              size={15}
+              name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
+              onPress={() => { addLike(myInfo.id, post.id) }}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+            <ThemedText style={styles.smallNumber}>{post.likes.length}</ThemedText>
+          </ThemedView>
           <Ionicons
-            size={20}
-            name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
-            onPress={() => { addLike(myInfo.id, post.id) }}
-            color={colorScheme === "dark" ? "white" : "black"}
-          />
-          <Ionicons
-            size={20}
+            size={15}
             name="share-outline"
             onPress={handleOpenShare}
             color={colorScheme === "dark" ? "white" : "black"}
@@ -178,7 +184,7 @@ export default function Post({ post }: { post: Post }) {
         <ThemedView style={styles.commentContainer}>
           <ThemedView style={styles.buttonContainer}>
             <Button title="Cancel" onPress={handleCloseComment}></Button>
-            <Pressable onPress={() => { addComment(commentInput, myInfo.username, post.id, myInfo.id,  ) }} style={styles.postButton}>
+            <Pressable onPress={() => { addComment(commentInput, myInfo.username, post.id, myInfo.id,) }} style={styles.postButton}>
               <Text style={styles.buttonText}>Post</Text>
             </Pressable>
           </ThemedView>
@@ -245,7 +251,7 @@ const styles = StyleSheet.create({
   postContainer: {
     flexDirection: "row",
     width: "100%",
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 0.3,
     paddingBottom: 2,
   },
   flex: {
@@ -257,22 +263,23 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: 25,
     height: 25,
-    marginTop: 17,
+    marginTop: 20,
     marginLeft: 10,
   },
   postContent: {
     flexDirection: "column",
-    paddingVertical: 8,
+    paddingVertical: 10,
     flexShrink: 1,
-    margin: 10,
+    margin: 5,
   },
   postUser: {
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 15,
     paddingBottom: 2,
   },
   postText: {
     flexShrink: 1,
+    fontSize: 13
   },
   ellipsis: {
     position: "absolute",
@@ -281,8 +288,10 @@ const styles = StyleSheet.create({
   },
   reactionsContainer: {
     flexDirection: "row",
+    width: '95%',
     justifyContent: "space-between",
-    marginVertical: 5,
+    alignItems: 'center',
+    paddingTop: 10,
   },
   smallWidth: {
     width: 40,
@@ -347,4 +356,14 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     paddingRight: 10,
   },
+  smallRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '10%',
+    justifyContent: 'space-evenly'
+  },
+  smallNumber: {
+    fontSize: 11
+  }
 });
