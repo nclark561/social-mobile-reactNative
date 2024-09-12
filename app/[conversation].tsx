@@ -1,4 +1,4 @@
-import { StyleSheet, useColorScheme, Image } from 'react-native'
+import { StyleSheet, useColorScheme, Image, TextInput } from 'react-native'
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
@@ -50,9 +50,13 @@ export default function Conversation() {
             </ThemedView>
             <ThemedView style={{ width: 25 }}></ThemedView>
         </ThemedView>
-        <Animated.ScrollView style={{ width: '100%'}}>
-            {messages.map(e => <UserMessage username={e.username} message={e.message}/>)}
-        </Animated.ScrollView>
+          <Animated.ScrollView style={{ width: '100%'}}>
+              {messages.map(e => <UserMessage username={e.username} message={e.message}/>)}
+          </Animated.ScrollView>
+        <ThemedView style={{flexDirection: 'row', width: '100%', margin: 30, marginTop: 15}}>
+          <TextInput multiline placeholder='start message' style={[styles.textInput, colorScheme === 'dark' ? { backgroundColor: '#3b3b3b', color: 'white' } : { backgroundColor: '#d3d3d3' }]}></TextInput>
+          <ThemedView style={styles.circle}></ThemedView>
+        </ThemedView>
       </ThemedView>
     </Animated.View>
   )
@@ -60,18 +64,38 @@ export default function Conversation() {
 
 const styles = StyleSheet.create({
   header: {
-      flexDirection: 'row',
-      padding: 10,
-      justifyContent: 'space-between',
-      alignItems: 'center'
+    flexDirection: 'row',
+    padding: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   screenContainer: {
-      flexDirection: 'column',
-      height: '100%'
+    flexDirection: 'column',
+    height: '100%'
   },
   profilePic: {
     borderRadius: 25,
     height: 50,
     width: 50
   },
+  textInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 25,
+    padding: 10,
+    width: '80%'
+  },
+  circle: {
+    borderRadius: 25, 
+    width: 25,
+    height: 25,
+    backgroundColor: "#26a7de"
+  },
+  textInputContainer: {
+    flexDirection: 'row',
+    margin: 30,
+    marginTop: 15,
+    borderRadius: 25,
+  }
 })
