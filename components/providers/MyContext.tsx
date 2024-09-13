@@ -40,6 +40,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                 return null;
             }
             setLoggedIn(true)
+            
             return data;
         } catch (err) {
             console.error('Unexpected error:', err);

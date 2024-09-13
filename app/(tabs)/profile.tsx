@@ -7,10 +7,12 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from '../../components/providers/MyContext';
 import PostContext from '../../components/providers/PostContext';
+import axios from 'axios';
 
 export default function TabTwoScreen() {
     const navigation = useNavigation();
@@ -18,8 +20,8 @@ export default function TabTwoScreen() {
     const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
     const [user, setUser] = useState<any>();
     const context = useContext<any>(MyContext);
+    const [profileImage, setProfileImage] = useState<any>(null);
     const { setLoginToggle, myInfo, loggedIn } = context
-
     const postContext = useContext<any>(PostContext);
     const { getUserPosts, posts } = postContext
 
@@ -33,6 +35,53 @@ export default function TabTwoScreen() {
     );
 
 
+    async function uploadProfileImage(imageUri: string) {
+        try {
+            // Fetch the image from the URI
+            const response = await fetch(imageUri);
+            if (!response.ok) {
+                throw new Error('Failed to fetch the image');
+            }
+            console.log(response, 'this is the res');
+
+            // Create FormData
+            const blob = await response.blob()
+            const formData = new FormData();
+            // formData.append('image', blob, 'testing.jpg')
+            // Append the image correctly with uri, type, and name
+            formData.append('image', {
+                uri: imageUri,           // The local URI of the image
+                type: 'image/jpg',      
+                name: 'testing.jpg',     
+            } as any);
+            
+            // Make the POST request with fetch
+            console.log(formData, 'this is form data')
+            const uploadResponse = await fetch(
+                `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/supabase-s3`,
+                {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        // 'Content-Type': 'multipart/form-data' - Not needed; fetch will automatically set the correct headers
+                    },
+                }
+            );
+
+            // Check if the upload was successful
+            if (!uploadResponse.ok) {
+                const errorText = await uploadResponse.text(); // Get the error text if the response is not ok
+                throw new Error(`Upload failed: ${errorText}`);
+            }
+
+            // Parse the JSON response from the server
+            const result = await uploadResponse.json();
+            console.log('Upload successful:', result);
+        } catch (error) {
+            console.error('Error uploading image:', error instanceof Error ? error.message : error);
+        }
+    }
+
 
     // useEffect(() => {
     //     getUserPosts(myInfo?.email);
@@ -45,13 +94,13 @@ export default function TabTwoScreen() {
         switch (selectedOption) {
             case 'Posts':
                 return <ThemedView>
-                    {Array.isArray(posts.Posts) && posts?.Posts?.map((post: any) => {                        
+                    {Array.isArray(posts.Posts) && posts?.Posts?.map((post: any) => {
                         return (
                             <ThemedView key={post.id || post.content}>
                                 <ThemedText style={styles.content}>{post?.content}</ThemedText>
                             </ThemedView>
                         )
-                    })}                    
+                    })}
                 </ThemedView>;
             case 'Likes':
                 return <ThemedText>Reposts</ThemedText>;
@@ -77,7 +126,24 @@ export default function TabTwoScreen() {
         return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
     };
 
-console.log(posts.Posts, 'these are comments')
+
+    const handleEditPress = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setProfileImage(result.assets[0].uri);
+
+        }
+    };
+
+
+
+
     return (
         <ThemedView>
             <ThemedView style={styles.header}>
@@ -87,8 +153,11 @@ console.log(posts.Posts, 'these are comments')
                         source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
                     /> : <ThemedText>Empty Photo</ThemedText>}
 
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={handleEditPress}>
                         <ThemedText>Edit</ThemedText>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => { uploadProfileImage(profileImage) }}>
+                        <ThemedText>Send that bitch</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
                 <ThemedView style={styles.close}>
