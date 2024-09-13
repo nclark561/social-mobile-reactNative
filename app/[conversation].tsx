@@ -58,9 +58,11 @@ export default function Conversation() {
           <Animated.ScrollView style={{ width: '100%' }}>
             {messages.map((e, index) => <UserMessage key={index} username={e.username} message={e.message} />)}
           </Animated.ScrollView>
-          <ThemedView style={{ flexDirection: 'row', width: '100%', margin: 30, marginTop: 15 }}>
-            <TextInput multiline placeholder='start message' style={[styles.textInput, colorScheme === 'dark' ? { backgroundColor: '#3b3b3b', color: 'white' } : { backgroundColor: '#d3d3d3' }]} />
-            <ThemedView style={styles.circle}></ThemedView>
+          <ThemedView style={[styles.textInputContainer, , colorScheme === 'dark' ? { backgroundColor: '#3b3b3b'} : { backgroundColor: '#d3d3d3' }]}>
+            <TextInput multiline placeholder='start message' style={[styles.textInput, colorScheme === 'dark' && { color: 'white' }]} />
+            <ThemedView style={styles.circle}>
+              <Ionicons name='send' color='white' size={15}/>
+            </ThemedView>
           </ThemedView>
         </ThemedView>
       </Animated.View>
@@ -89,19 +91,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
-    padding: 10,
-    width: '80%'
+    width: '80%',
+    paddingVertical: 5,
+    maxHeight: 80
   },
   circle: {
     borderRadius: 25,
     width: 25,
     height: 25,
-    backgroundColor: "#26a7de"
+    backgroundColor: "#26a7de",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   textInputContainer: {
     flexDirection: 'row',
     margin: 30,
     marginTop: 15,
     borderRadius: 25,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5
   }
 })

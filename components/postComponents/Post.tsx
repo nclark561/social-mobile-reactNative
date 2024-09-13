@@ -15,7 +15,10 @@ interface Post {
   id: string;
   content: string;
   date: Date;
-
+  comments: any,
+  email: string,
+  likes: any,
+  profilePic: string
 }
 
 export default function Post({ post }: { post: Post }) {

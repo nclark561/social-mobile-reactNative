@@ -15,7 +15,7 @@ interface HeaderProps {
 export default function Header({ name }: HeaderProps) {
     const navigation = useNavigation()
     const colorScheme = useColorScheme()
-    const context = useContext(MyContext);
+    const context = useContext<any>(MyContext);
     const { setLoginToggle, myInfo, loggedIn } = context
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer())
 
@@ -34,6 +34,7 @@ export default function Header({ name }: HeaderProps) {
                 </Pressable>
             )}
             <ThemedText style={styles.Title}>{name}</ThemedText>
+            <ThemedView style={{width: 35}}></ThemedView>
         </ThemedView>
     );
 }
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: "60%",
+        width: "100%",
         borderBottomWidth: .5,
         borderColor: 'rgb(232,232,232)'
     },

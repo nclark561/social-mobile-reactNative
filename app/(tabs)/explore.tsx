@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Image, TextInput, useColorScheme, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useNavigation } from 'expo-router';
+import { useNavigation, router } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
 import { useContext } from 'react';
 import MyContext from '../../components/providers/MyContext';
@@ -34,6 +34,7 @@ export default function TabTwoScreen() {
           <Ionicons size={17} name="search" color={'gray'} style={styles.searchIcon} />
           <TextInput placeholder='Search' placeholderTextColor={'gray'} style={[{ maxWidth: '80%' }, colorScheme === 'dark' && { color: 'white' }]} />
         </ThemedView>
+        <ThemedView style={{width: 35}}></ThemedView>
       </ThemedView>
     </ThemedView>
   );
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: "80%",
+    width: "100%",
     borderBottomWidth: .5,
     borderColor: 'rgb(232,232,232)'
   },

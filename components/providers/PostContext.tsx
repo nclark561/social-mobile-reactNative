@@ -45,7 +45,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     const getUserPosts = async (email: string) => {
         try {
             const result = await fetch(
-                `https://engaged-rattler-correctly.ngrok-free.app/api/getMyPosts?email=${email}`,
+                `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/getMyPosts?email=${email}`,
                 {
                     method: "GET",
                     headers: {
@@ -65,7 +65,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         console.log('getting for you posts')
         try {
             const result = await fetch(
-                `https://engaged-rattler-correctly.ngrok-free.app/api/getPosts`,
+                `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/getPosts`,
                 {
                     method: "GET",
                     headers: {

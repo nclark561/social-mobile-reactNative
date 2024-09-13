@@ -16,7 +16,7 @@ const UserMessage = ({username, message}: UserMessageProps) => {
   const backgroundColor = colorScheme === 'dark' ? '#525252' : "#bebebe"
   const context = useContext<any>(MyContext) 
   const { myInfo } = context
-  const isOutMessage = myInfo.username === username 
+  const isOutMessage = myInfo?.username === username 
 
   return (
     <ThemedView style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
