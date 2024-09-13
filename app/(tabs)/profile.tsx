@@ -44,11 +44,9 @@ export default function TabTwoScreen() {
             }
             console.log(response, 'this is the res');
 
-            // Create FormData
-            const blob = await response.blob()
-            const formData = new FormData();
-            // formData.append('image', blob, 'testing.jpg')
-            // Append the image correctly with uri, type, and name
+            // const blob = await response.blob()
+            const formData = new FormData();            
+            
             formData.append('image', {
                 uri: imageUri,           // The local URI of the image
                 type: 'image/jpg',      
