@@ -77,6 +77,7 @@ export default function RootLayout() {
                     options={{
                       drawerLabel: () => null, // Hide index route
                       drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                      headerShown: false
                     }}
                   />
                 </Drawer>

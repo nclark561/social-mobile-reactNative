@@ -1,13 +1,23 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useFocusEffect } from 'expo-router';
 import React from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useContext } from 'react';
+import MyContext from '@/components/providers/MyContext';
+import { router } from 'expo-router';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
+
+  const context = useContext<any>(MyContext)
+  const { loggedIn } = context
+
+  useFocusEffect(() => {
+    if(!loggedIn) router.push('/login')
+  })
 
   return (
     <Tabs

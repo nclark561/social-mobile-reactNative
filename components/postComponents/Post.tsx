@@ -75,11 +75,11 @@ export default function Post({ post }: { post: Post }) {
     userName: string,
     postId: string,
     userId: string,
-    commentId: string | null,
+    commentId?: string,
   ) => {
     try {
       const response = await fetch(
-        `https://engaged-rattler-correctly.ngrok-free.app/api/addComment`,
+        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addComment`,
         {
           method: "POST",
           headers: {

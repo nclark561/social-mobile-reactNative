@@ -1,13 +1,20 @@
-import { Redirect } from "expo-router";
+import { router } from "expo-router";
 import { useContext } from "react";
 import MyContext from "@/components/providers/MyContext";
+import { useFocusEffect } from "expo-router";
 
 export default function Page() {
   const context = useContext<any>(MyContext);
   const { loggedIn } = context
 
-  return (
-    loggedIn ? <Redirect href='/(tabs)/index'/> : <Redirect href='/login'/>
-  );
+  useFocusEffect(() => {
+    if (loggedIn) {
+      router.push('/(tabs)');
+    } else {
+      router.push('/login');
+    }
+  });
+
+  return <></>
 }
 
