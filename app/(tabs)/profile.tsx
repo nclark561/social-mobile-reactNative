@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from '../../components/providers/MyContext';
 import PostContext from '../../components/providers/PostContext';
-import axios from 'axios';
+import Post from '@/components/postComponents/Post';
 
 export default function TabTwoScreen() {
     const navigation = useNavigation();
@@ -94,9 +94,7 @@ export default function TabTwoScreen() {
                 return <ThemedView>
                     {Array.isArray(posts.Posts) && posts?.Posts?.map((post: any) => {
                         return (
-                            <ThemedView key={post.id || post.content}>
-                                <ThemedText style={styles.content}>{post?.content}</ThemedText>
-                            </ThemedView>
+                            <Post key={post.id} post={post}/>
                         )
                     })}
                 </ThemedView>;
@@ -143,7 +141,7 @@ export default function TabTwoScreen() {
 
 
     return (
-        <ThemedView>
+        <ThemedView style={{flex: 1}}>
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.row}>
                     {loggedIn ? <Image

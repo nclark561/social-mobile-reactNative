@@ -10,7 +10,7 @@ import { useState, useRef } from "react";
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
-import { UserContextType } from "../providers/MyContext";
+
 interface Post {
   id: string;
   content: string;
@@ -192,10 +192,10 @@ export default function Post({ post }: { post: Post }) {
             </Pressable>
           </ThemedView>
           <ThemedView style={styles.commentOP}>
-            {/* <Image
+            <Image
               style={styles.commentPic}
-              source={{ uri: post.profilePic }}
-            /> */}
+              source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
+            />
             <ThemedText style={styles.postUser}>{post.email}</ThemedText>
           </ThemedView>
           <ThemedView style={styles.commentOGPost}>
@@ -207,7 +207,7 @@ export default function Post({ post }: { post: Post }) {
           <ThemedView style={{ flexDirection: "row" }}>
             <Image
               style={styles.commentPic}
-              source={{ uri: post.profilePic }}
+              source={{ uri: "https://avatars.githubusercontent.com/u/125314332?v=4" }}
             />
             <BottomSheetTextInput
               autoFocus

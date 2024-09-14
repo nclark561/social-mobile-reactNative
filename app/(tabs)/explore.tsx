@@ -6,6 +6,19 @@ import { useNavigation, router } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
 import { useContext } from 'react';
 import MyContext from '../../components/providers/MyContext';
+import ProfileDisplay from '@/components/exploreComponents/ProfileDisplay';
+
+const noah = {
+  name: 'Noah Clark',
+  username: 'nclark561',
+  profilePic: "https://avatars.githubusercontent.com/u/125314332?v=4"
+}
+
+const kale = {
+  name: 'Kale Hamm',
+  username: 'kaethebae',
+  profilePic: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+}
 
 export default function TabTwoScreen() {
   const navigation = useNavigation();
@@ -16,7 +29,7 @@ export default function TabTwoScreen() {
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
   return (
-    <ThemedView>
+    <ThemedView style={{flex: 1, flexDirection: 'column'}}>
       <ThemedView style={styles.header}>
         {loggedIn ? (
           <Pressable onPress={handlePress}>
@@ -36,6 +49,9 @@ export default function TabTwoScreen() {
         </ThemedView>
         <ThemedView style={{width: 35}}></ThemedView>
       </ThemedView>
+      <ThemedText style={styles.title} type='title'>Featured</ThemedText>
+      <ProfileDisplay user={noah}/>
+      <ProfileDisplay user={kale}/>
     </ThemedView>
   );
 }
@@ -68,5 +84,8 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     marginHorizontal: 3
+  },
+  title: {
+    margin: 10
   }
 });
