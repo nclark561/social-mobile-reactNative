@@ -4,9 +4,10 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation, router } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import MyContext from '../../components/providers/MyContext';
 import ProfileDisplay from '@/components/exploreComponents/ProfileDisplay';
+import Animated from 'react-native-reanimated';
 
 const noah = {
   name: 'Noah Clark',
@@ -20,11 +21,14 @@ const kale = {
   profilePic: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
 }
 
+const results = [ kale, noah, kale, noah, kale, noah, kale, noah, kale ]
+
 export default function TabTwoScreen() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn } = context;
+  const [ searchInput, setSearchInput ] = useState('')
 
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
@@ -45,13 +49,23 @@ export default function TabTwoScreen() {
         )}
         <ThemedView style={[styles.searchInput, colorScheme === 'dark' ? { backgroundColor: '#3b3b3b' } : { backgroundColor: '#d3d3d3' }]}>
           <Ionicons size={17} name="search" color={'gray'} style={styles.searchIcon} />
-          <TextInput placeholder='Search' placeholderTextColor={'gray'} style={[{ maxWidth: '80%' }, colorScheme === 'dark' && { color: 'white' }]} />
+          <TextInput placeholder='Search' placeholderTextColor={'gray'} style={[{ maxWidth: '80%' }, colorScheme === 'dark' && { color: 'white' }]} onChangeText={text => setSearchInput(text)}/>
         </ThemedView>
         <ThemedView style={{width: 35}}></ThemedView>
       </ThemedView>
-      <ThemedText style={styles.title} type='title'>Featured</ThemedText>
-      <ProfileDisplay user={noah}/>
-      <ProfileDisplay user={kale}/>
+      {searchInput.length === 0 ? (<>
+          <ThemedText style={styles.title} type='title'>Featured</ThemedText>
+          <ProfileDisplay user={noah}/>
+          <ProfileDisplay user={kale}/>
+        </>
+        ) : (
+        <>
+          <ThemedText style={styles.title} type='title'>Results</ThemedText>
+          <Animated.ScrollView>
+            {results.map((e, i) => <ProfileDisplay key={i} user={e}/>)}
+          </Animated.ScrollView>
+        </>
+      )}
     </ThemedView>
   );
 }
