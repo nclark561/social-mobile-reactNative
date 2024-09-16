@@ -45,14 +45,14 @@ export default function TabTwoScreen() {
             console.log(response, 'this is the res');
 
             // const blob = await response.blob()
-            const formData = new FormData();            
-            
+            const formData = new FormData();
+
             formData.append('image', {
                 uri: imageUri,           // The local URI of the image
-                type: 'image/jpg',      
-                name: 'testing.jpg',     
+                type: 'image/jpg',
+                name: 'testing.jpg',
             } as any);
-            
+
             // Make the POST request with fetch
             console.log(formData, 'this is form data')
             const uploadResponse = await fetch(
@@ -94,7 +94,7 @@ export default function TabTwoScreen() {
                 return <ThemedView>
                     {Array.isArray(posts.Posts) && posts?.Posts?.map((post: any) => {
                         return (
-                            <Post key={post.id} post={post}/>
+                            <Post key={post.id} post={post} />
                         )
                     })}
                 </ThemedView>;
@@ -141,7 +141,7 @@ export default function TabTwoScreen() {
 
 
     return (
-        <ThemedView style={{flex: 1}}>
+        <ThemedView style={{ flex: 1 }}>
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.row}>
                     {loggedIn ? <Image
@@ -149,12 +149,12 @@ export default function TabTwoScreen() {
                         source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
                     /> : <ThemedText>Empty Photo</ThemedText>}
 
-                    <TouchableOpacity style={styles.button} onPress={handleEditPress}>
+                    {/* <TouchableOpacity style={styles.button} onPress={handleEditPress}>
                         <ThemedText>Edit</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => { uploadProfileImage(profileImage) }}>
+                    </TouchableOpacity> */}
+                    {/* <TouchableOpacity style={styles.button} onPress={() => { uploadProfileImage(profileImage) }}>
                         <ThemedText>Send that bitch</ThemedText>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </ThemedView>
                 <ThemedView style={styles.close}>
                     {loggedIn ? <><ThemedText style={styles.userName}>{myInfo?.username}</ThemedText>

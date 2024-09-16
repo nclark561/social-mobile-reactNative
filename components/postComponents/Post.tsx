@@ -10,6 +10,7 @@ import { useState, useRef } from "react";
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
+import { Link } from "expo-router";
 
 interface Post {
   id: string;
@@ -101,7 +102,7 @@ export default function Post({ post }: { post: Post }) {
     }
   };
 
-
+  console.log(post, 'this is the post')
 
   return (
     <ThemedView
@@ -111,13 +112,17 @@ export default function Post({ post }: { post: Post }) {
           ? { borderColor: "#525252" }
           : { borderColor: "#bebebe" },
       ]}
-    >
+    >      
       <ThemedView style={styles.flex}>
         <Image style={styles.profilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
       </ThemedView>
       <ThemedView style={styles.postContent}>
-        <ThemedText style={styles.postUser}>{post.email}</ThemedText>
-        <ThemedText style={styles.postText}>{post.content}</ThemedText>
+        <Link href={`/profile/${post.email}`}>
+          <ThemedText style={styles.postUser}>{post.email}</ThemedText>
+        </Link>
+        <Link href={`/post/${post.id}`}>
+          <ThemedText style={styles.postText}>{post.content}</ThemedText>
+        </Link>
         <ThemedView style={styles.reactionsContainer}>
           <ThemedView style={styles.smallRow}>
             <Ionicons
@@ -126,7 +131,7 @@ export default function Post({ post }: { post: Post }) {
               onPress={handleOpenComment}
               color={colorScheme === "dark" ? "white" : "black"}
             />
-            <ThemedText style={styles.smallNumber}>{post.comments.length}</ThemedText>
+            <ThemedText style={styles.smallNumber}>{post?.comments?.length}</ThemedText>
           </ThemedView>
           <Ionicons
             size={15}
@@ -157,7 +162,7 @@ export default function Post({ post }: { post: Post }) {
         style={styles.ellipsis}
         color={colorScheme === "dark" ? "white" : "black"}
       />
-      <CustomBottomSheet snapPercs={["25%"]} ref={shareModalRef} title="share">
+      <CustomBottomSheet snapPercs={["25%"]} ref={shareModalRef} title="Share">
         <ThemedView style={styles.shareContainer}>
           <ThemedView style={styles.shareOption}>
             <Ionicons

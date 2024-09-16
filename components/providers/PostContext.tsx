@@ -37,7 +37,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     //             }),
     //         });
     //     } catch (error) {
-    //         console.log(error, "this is the create user error");
+    //         console.log(error, "this is the create user error");`
     //     }
     // };
 

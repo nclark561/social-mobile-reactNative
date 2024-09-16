@@ -65,7 +65,7 @@ export default function RootLayout() {
                     }}
                   />
                   <Drawer.Screen
-                    name="[conversation]"
+                    name="conversation/[conversation]"
                     options={{
                       drawerLabel: () => null, // Hides it from the drawer
                       drawerItemStyle: { display: 'none' }, // Prevents it from appearing in the drawer
@@ -74,6 +74,22 @@ export default function RootLayout() {
                   />
                   <Drawer.Screen
                     name="index"
+                    options={{
+                      drawerLabel: () => null, // Hide index route
+                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                      headerShown: false
+                    }}
+                  />
+                  <Drawer.Screen
+                    name="post/[post]"
+                    options={{
+                      drawerLabel: () => null, // Hide index route
+                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                      headerShown: false
+                    }}
+                  />
+                  <Drawer.Screen
+                    name="profile/[profile]"
                     options={{
                       drawerLabel: () => null, // Hide index route
                       drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
