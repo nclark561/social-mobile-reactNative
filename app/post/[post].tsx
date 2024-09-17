@@ -35,7 +35,7 @@ export default function Post({ post }: { post: Post }) {
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
   const local = useLocalSearchParams()
-  const { setLoginToggle, myInfo, loggedIn } = useContext<any>(MyContext);
+  const { setLoginToggle, myInfo, loggedIn, getUser } = useContext<any>(MyContext);
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
@@ -46,7 +46,7 @@ export default function Post({ post }: { post: Post }) {
     setLiked((prev) => !prev);
   };
 
-  
+
 
   useFocusEffect(
     useCallback(() => {
@@ -58,10 +58,11 @@ export default function Post({ post }: { post: Post }) {
   const addLike = async (
     userId: string,
     postId: string,
+    comment: boolean
   ) => {
     console.log(postId, 'hitting add like')
     try {
-      const test = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`, {
+      const test = await fetch(comment ? `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addCommentLike` : `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +72,8 @@ export default function Post({ post }: { post: Post }) {
           postId
         }),
       });
-      await getForYouPosts()
+      await getForYouPosts()      
+      await getPost()
     } catch (error) {
       console.log(error, "this is the create user error");
     }
@@ -151,8 +153,6 @@ export default function Post({ post }: { post: Post }) {
             : { borderColor: "#bebebe" },
         ]}
       >
-
-
         <ThemedView style={styles.postContent}>
           <ThemedView style={styles.row}>
             <ThemedView style={styles.flex}>
@@ -181,11 +181,11 @@ export default function Post({ post }: { post: Post }) {
             />
             <ThemedView style={styles.smallRow}>
               <Ionicons
-              size={15}
-              name={isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"}
-              onPress={() => { addLike(myInfo?.id, thisPost?.id) }}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
+                size={15}
+                name={isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"}
+                onPress={() => { addLike(myInfo?.id, thisPost?.id, false) }}
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
               <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
             </ThemedView>
             <Ionicons
@@ -294,16 +294,17 @@ export default function Post({ post }: { post: Post }) {
         </CustomBottomSheet>
       </ThemedView>
       {thisPost?.comments.map((comment: any) => {
+        console.log(thisPost.likes, 'these are the lieks')
         return (
-          <ThemedView style={styles.postContainer}>
+          <ThemedView key={comment.id} style={styles.postContainer}>
             <ThemedView style={styles.flex}>
               <Image style={styles.profilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
             </ThemedView>
             <ThemedView style={styles.postContent}>
               <Link href={`/profile/${post?.email}`}>
-                <ThemedText style={styles.postUser}>{comment?.username}</ThemedText>
+                <ThemedText style={styles.postUser}>{comment?.userName}</ThemedText>
               </Link>
-              <ThemedText style={styles.postText}>{comment?.comment}</ThemedText>
+              <ThemedText style={styles.postText}>{comment?.content}</ThemedText>
               <ThemedView style={styles.reactionsContainer}>
                 <ThemedView style={styles.smallRow}>
                   <Ionicons
@@ -322,12 +323,12 @@ export default function Post({ post }: { post: Post }) {
                 />
                 <ThemedView style={styles.smallRow}>
                   <Ionicons
-                size={15}
-                name={isLikedByUser(comment?.likes) ? "heart" : "heart-outline"}
-                onPress={() => { addLike(myInfo?.id, comment.id) }}
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
-                  <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
+                    size={15}
+                    name={isLikedByUser(comment?.likes) ? "heart" : "heart-outline"}
+                    onPress={() => { addLike(myInfo?.id, comment.id, true) }}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
+                  <ThemedText style={styles.smallNumber}>{thisPost?.likes?.length}</ThemedText>
                 </ThemedView>
                 <Ionicons
                   size={15}

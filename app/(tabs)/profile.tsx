@@ -1,8 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useFocusEffect, router } from 'expo-router';
 import { useContext } from 'react';
-import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity, Pressable, Button } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation } from 'expo-router';
@@ -11,10 +11,13 @@ import * as ImagePicker from 'expo-image-picker';
 import { useState, useEffect } from 'react';
 import MyContext from '../../components/providers/MyContext';
 import PostContext from '../../components/providers/PostContext';
+import CustomBottomSheet from "@/components/util/CustomBottomSheet";
+import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import Post from '@/components/postComponents/Post';
 
 export default function TabTwoScreen() {
     const navigation = useNavigation();
+    const newPostRef = useRef<BottomSheetModal>(null);
     const colorScheme = useColorScheme();
     const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
     const [user, setUser] = useState<any>();
@@ -25,7 +28,8 @@ export default function TabTwoScreen() {
     const { getUserPosts, posts } = postContext
 
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
-
+    const handleOpenNewPost = () => newPostRef?.current?.present();
+    const handleCloseNewPost = () => newPostRef?.current?.dismiss();
 
     useFocusEffect(
         useCallback(() => {
@@ -102,10 +106,10 @@ export default function TabTwoScreen() {
             case 'Replies':
                 return <ThemedView>
                     {myInfo?.comments?.map((comment: any) => {
-                        console.log(myInfo?.comments, 'these are comments')
+                        console.log(comment, 'these are comments')
                         return (
                             <Pressable key={comment.id || comment.content} onPress={() => router.navigate(`/comment/${comment.id}`)}>
-                                <Post isComment post={{...comment, likes: [], content: comment.comment}}/>
+                                <Post isComment post={comment} />
                             </Pressable>
                         )
                     })}
@@ -147,9 +151,9 @@ export default function TabTwoScreen() {
                         source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
                     /> : <ThemedText>Empty Photo</ThemedText>}
 
-                    {/* <TouchableOpacity style={styles.button} onPress={handleEditPress}>
+                    <TouchableOpacity style={styles.button} onPress={handleOpenNewPost}>
                         <ThemedText>Edit</ThemedText>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                     {/* <TouchableOpacity style={styles.button} onPress={() => { uploadProfileImage(profileImage) }}>
                         <ThemedText>Send that bitch</ThemedText>
                     </TouchableOpacity> */}
@@ -182,6 +186,12 @@ export default function TabTwoScreen() {
                 ))}
             </ThemedView>
             <ThemedView style={styles.content}>{renderContent()}</ThemedView>
+            <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["95%"]}>
+                <ThemedView>
+                    <Button title="Cancel" onPress={handleCloseNewPost}></Button>
+                    <ThemedText>kale</ThemedText>
+                </ThemedView>
+            </CustomBottomSheet>
         </ThemedView>
     );
 }

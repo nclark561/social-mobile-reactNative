@@ -34,7 +34,7 @@ export default function Post({ post }: { post: Post }) {
   const repostModalRef = useRef<BottomSheetModal>(null);
   const local = useLocalSearchParams()
 
-  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe" 
+  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
@@ -130,7 +130,7 @@ export default function Post({ post }: { post: Post }) {
   };
 
 
-
+  console.log(local, 'hitting this')
 
   return (
     <>
@@ -142,6 +142,11 @@ export default function Post({ post }: { post: Post }) {
             : { borderColor: "#bebebe" },
         ]}
       >
+        <Pressable>
+          <Link href="/(tabs)/">
+            <Ionicons size={20} name="arrow-back-outline" />
+          </Link>
+        </Pressable>
 
         <ThemedView style={styles.postContent}>
           <ThemedView style={[styles.row, { marginBottom: 20 }]}>
@@ -149,7 +154,7 @@ export default function Post({ post }: { post: Post }) {
               <Image style={styles.mainProfilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
             </ThemedView>
             <Link href={`/profile/${post?.email}`}>
-                <ThemedText style={styles.postUser}>{thisPost?.username}</ThemedText>
+              <ThemedText style={styles.postUser}>{thisPost?.username}</ThemedText>
             </Link>
           </ThemedView>
           <ThemedText style={styles.mainPostText}>{thisPost?.comment}</ThemedText>
@@ -170,11 +175,11 @@ export default function Post({ post }: { post: Post }) {
               color={colorScheme === "dark" ? "white" : "black"}
             />
             <ThemedView style={styles.smallRow}>
-                <Ionicons
-                    size={15}
-                    name='heart-outline'
-                    color={colorScheme === "dark" ? "white" : "black"}
-                />
+              <Ionicons
+                size={15}
+                name='heart-outline'
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
               <ThemedText style={styles.smallNumber}>{0}</ThemedText>
             </ThemedView>
             <Ionicons
@@ -360,7 +365,7 @@ const styles = StyleSheet.create({
   mainProfilePic: {
     borderRadius: 25,
     width: 45,
-    height: 45,    
+    height: 45,
     marginHorizontal: 10,
   },
   postContent: {
