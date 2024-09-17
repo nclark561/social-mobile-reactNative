@@ -1,4 +1,3 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback } from 'react';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useContext } from 'react';
@@ -7,9 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation } from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker';
 import { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from '../../components/providers/MyContext';
 import PostContext from '../../components/providers/PostContext';
 import Post from '@/components/postComponents/Post';

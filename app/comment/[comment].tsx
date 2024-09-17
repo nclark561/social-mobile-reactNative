@@ -17,10 +17,10 @@ interface Post {
   id: string;
   content: string;
   date: Date;
-  comments: any,
+  replies: any,
   email: string,
-  likes: any,
-  profilePic: string
+  profilePic: string,
+  username: string
 }
 
 export default function Post({ post }: { post: Post }) {
@@ -33,6 +33,8 @@ export default function Post({ post }: { post: Post }) {
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
   const local = useLocalSearchParams()
+
+  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe" 
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
@@ -111,7 +113,7 @@ export default function Post({ post }: { post: Post }) {
   const getPost = async () => {
     try {
       const result = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/getPost?id=${local.post}`,
+        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/getSingleComment?id=${local.comment}`,
         {
           method: "GET",
           headers: {
@@ -120,8 +122,8 @@ export default function Post({ post }: { post: Post }) {
         },
       );
       const userData = await result.json();
-      console.log(userData.post, 'this is this post data')
-      setThisPost(userData.post);
+      console.log(userData.comment, 'this is this comment data')
+      setThisPost(userData.comment);
     } catch (error) {
       console.log(error, "this is the get user error");
     }
@@ -142,15 +144,15 @@ export default function Post({ post }: { post: Post }) {
       >
 
         <ThemedView style={styles.postContent}>
-          <ThemedView style={styles.row}>
+          <ThemedView style={[styles.row, { marginBottom: 20 }]}>
             <ThemedView style={styles.flex}>
               <Image style={styles.mainProfilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
             </ThemedView>
             <Link href={`/profile/${post?.email}`}>
-              <ThemedText style={styles.postUser}>{thisPost?.email}</ThemedText>
+                <ThemedText style={styles.postUser}>{thisPost?.username}</ThemedText>
             </Link>
           </ThemedView>
-          <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
+          <ThemedText style={styles.mainPostText}>{thisPost?.comment}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
             <ThemedView style={styles.smallRow}>
               <Ionicons
@@ -159,7 +161,7 @@ export default function Post({ post }: { post: Post }) {
                 onPress={handleOpenComment}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{thisPost?.comments?.length}</ThemedText>
+              <ThemedText style={styles.smallNumber}>{thisPost?.replies?.length}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -168,13 +170,12 @@ export default function Post({ post }: { post: Post }) {
               color={colorScheme === "dark" ? "white" : "black"}
             />
             <ThemedView style={styles.smallRow}>
-              {/* <Ionicons
-              size={15}
-              name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
-              onPress={() => { addLike(myInfo.id, post.id) }}
-              color={colorScheme === "dark" ? "white" : "black"}
-            /> */}
-              <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
+                <Ionicons
+                    size={15}
+                    name='heart-outline'
+                    color={colorScheme === "dark" ? "white" : "black"}
+                />
+              <ThemedText style={styles.smallNumber}>{0}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -281,7 +282,7 @@ export default function Post({ post }: { post: Post }) {
           </ThemedView>
         </CustomBottomSheet>
       </ThemedView>
-      {thisPost?.comments.map((comment: any) => {
+      {thisPost?.replies.map((comment: any) => {
         return (
           <ThemedView style={styles.postContainer}>
             <ThemedView style={styles.flex}>
@@ -309,13 +310,12 @@ export default function Post({ post }: { post: Post }) {
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
                 <ThemedView style={styles.smallRow}>
-                  {/* <Ionicons
-                size={15}
-                name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
-                onPress={() => { addLike(myInfo.id, post.id) }}
-                color={colorScheme === "dark" ? "white" : "black"}
-              /> */}
-                  <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
+                  <Ionicons
+                    size={15}
+                    name="heart-outline"
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
+                  <ThemedText style={styles.smallNumber}>{0}</ThemedText>
                 </ThemedView>
                 <Ionicons
                   size={15}
@@ -359,9 +359,9 @@ const styles = StyleSheet.create({
   },
   mainProfilePic: {
     borderRadius: 25,
-    width: 25,
-    height: 25,    
-    marginLeft: 10,
+    width: 45,
+    height: 45,    
+    marginHorizontal: 10,
   },
   postContent: {
     flexDirection: "column",
@@ -376,7 +376,13 @@ const styles = StyleSheet.create({
   },
   postText: {
     flexShrink: 1,
-    fontSize: 13
+    fontSize: 13,
+    margin: 10
+  },
+  mainPostText: {
+    fontSize: 16,
+    flexShrink: 1,
+    margin: 10
   },
   ellipsis: {
     position: "absolute",
@@ -467,5 +473,5 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
-  }
+  },
 });

@@ -96,6 +96,14 @@ export default function RootLayout() {
                       headerShown: false
                     }}
                   />
+                  <Drawer.Screen
+                    name="comment/[comment]"
+                    options={{
+                      drawerLabel: () => null, // Hide index route
+                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                      headerShown: false
+                    }}
+                  />
                 </Drawer>
               </SafeAreaView>
             </MyProvider>
