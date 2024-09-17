@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useRef } from 'react';
 import { useFocusEffect, router } from 'expo-router';
 import { useContext } from 'react';
-import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity, Pressable, Button } from 'react-native';
+import { StyleSheet, Image, TextInput, useColorScheme, TouchableOpacity, Pressable, Button } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation } from 'expo-router';
@@ -12,20 +12,23 @@ import { useState, useEffect } from 'react';
 import MyContext from '../../components/providers/MyContext';
 import PostContext from '../../components/providers/PostContext';
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
-import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Post from '@/components/postComponents/Post';
 
 export default function TabTwoScreen() {
     const navigation = useNavigation();
     const newPostRef = useRef<BottomSheetModal>(null);
     const colorScheme = useColorScheme();
-    const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
+    const [selectedOption, setSelectedOption] = useState('Posts');
     const [user, setUser] = useState<any>();
     const context = useContext<any>(MyContext);
     const [profileImage, setProfileImage] = useState<any>(null);
-    const { setLoginToggle, myInfo, loggedIn } = context
+    const { setLoginToggle, myInfo, loggedIn } = context;
     const postContext = useContext<any>(PostContext);
-    const { getUserPosts, posts } = postContext
+    const { getUserPosts, posts } = postContext;
+
+    const [bio, setBio] = useState(myInfo?.bio || '');
+    const [location, setLocation] = useState(myInfo?.location || '');
 
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
     const handleOpenNewPost = () => newPostRef?.current?.present();
@@ -36,60 +39,6 @@ export default function TabTwoScreen() {
             getUserPosts(myInfo?.email);
         }, [])
     );
-
-
-    async function uploadProfileImage(imageUri: string) {
-        try {
-            // Fetch the image from the URI
-            const response = await fetch(imageUri);
-            if (!response.ok) {
-                throw new Error('Failed to fetch the image');
-            }
-            console.log(response, 'this is the res');
-
-            // const blob = await response.blob()
-            const formData = new FormData();
-
-            formData.append('image', {
-                uri: imageUri,           // The local URI of the image
-                type: 'image/jpg',
-                name: 'testing.jpg',
-            } as any);
-
-            // Make the POST request with fetch
-            console.log(formData, 'this is form data')
-            const uploadResponse = await fetch(
-                `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/supabase-s3`,
-                {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data' - Not needed; fetch will automatically set the correct headers
-                    },
-                }
-            );
-
-            // Check if the upload was successful
-            if (!uploadResponse.ok) {
-                const errorText = await uploadResponse.text(); // Get the error text if the response is not ok
-                throw new Error(`Upload failed: ${errorText}`);
-            }
-
-            // Parse the JSON response from the server
-            const result = await uploadResponse.json();
-            console.log('Upload successful:', result);
-        } catch (error) {
-            console.error('Error uploading image:', error instanceof Error ? error.message : error);
-        }
-    }
-
-
-    // useEffect(() => {
-    //     getUserPosts(myInfo?.email);
-    //     // return () => {          
-    //     // };
-    // }, []);
-
 
     const renderContent = () => {
         switch (selectedOption) {
@@ -106,7 +55,6 @@ export default function TabTwoScreen() {
             case 'Replies':
                 return <ThemedView>
                     {myInfo?.comments?.map((comment: any) => {
-                        console.log(comment, 'these are comments')
                         return (
                             <Pressable key={comment.id || comment.content} onPress={() => router.navigate(`/comment/${comment.id}`)}>
                                 <Post isComment post={comment} />
@@ -119,28 +67,13 @@ export default function TabTwoScreen() {
         }
     };
 
-    const formatDate = (dateString: any) => {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
+    const handleSave = () => {
+        // Handle saving the bio and location here
+        // For example, you might update the user's profile information in your database
+        console.log("Bio:", bio);
+        console.log("Location:", location);
+        handleCloseNewPost();
     };
-
-
-    const handleEditPress = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setProfileImage(result.assets[0].uri);
-
-        }
-    };
-
-
-
 
     return (
         <ThemedView style={{ flex: 1 }}>
@@ -154,26 +87,14 @@ export default function TabTwoScreen() {
                     <TouchableOpacity style={styles.button} onPress={handleOpenNewPost}>
                         <ThemedText>Edit</ThemedText>
                     </TouchableOpacity>
-                    {/* <TouchableOpacity style={styles.button} onPress={() => { uploadProfileImage(profileImage) }}>
-                        <ThemedText>Send that bitch</ThemedText>
-                    </TouchableOpacity> */}
                 </ThemedView>
                 <ThemedView style={styles.close}>
                     {loggedIn ? <><ThemedText style={styles.userName}>{myInfo?.username}</ThemedText>
                         <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText></> : <ThemedText>Login </ThemedText>}
-
                 </ThemedView>
-                {/* <ThemedView style={styles.locationRow}>
-                    {loggedIn ? <><ThemedText style={styles.smallGray}>{user?.location}</ThemedText>
-                        <ThemedText style={styles.smallGrayDate}>
-                            Joined {myInfo?.date ? formatDate(myInfo?.date) : ''}
-                        </ThemedText></> : <ThemedText></ThemedText>}
-
-                </ThemedView> */}
                 <ThemedView style={styles.followersRow}>
                     {loggedIn ? <><ThemedText style={styles.smallGray}>{myInfo?.followers.length} Followers</ThemedText>
                         <ThemedText style={styles.smallGray}>{myInfo?.following.length} Following</ThemedText></> : <ThemedText></ThemedText>}
-
                 </ThemedView>
             </ThemedView>
             <ThemedView style={styles.column}>
@@ -186,10 +107,24 @@ export default function TabTwoScreen() {
                 ))}
             </ThemedView>
             <ThemedView style={styles.content}>{renderContent()}</ThemedView>
-            <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["95%"]}>
-                <ThemedView>
-                    <Button title="Cancel" onPress={handleCloseNewPost}></Button>
-                    <ThemedText>kale</ThemedText>
+            <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["35%"]}>
+                <ThemedView style={styles.bottomSheetContent}>                    
+                    <ThemedText style={styles.bottomSheetTitle}>Edit Profile</ThemedText>
+                    <TextInput
+                        style={[styles.input, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}
+                        placeholder="Bio"
+                        placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
+                        value={bio}
+                        onChangeText={setBio}
+                    />
+                    <TextInput
+                        style={[styles.input, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}
+                        placeholder="Location"
+                        placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
+                        value={location}
+                        onChangeText={setLocation}
+                    />
+                    <Button title="Save" onPress={handleSave}></Button>
                 </ThemedView>
             </CustomBottomSheet>
         </ThemedView>
@@ -217,16 +152,10 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 16,
         fontWeight: '700',
-
     },
     tag: {
         fontSize: 10,
         marginLeft: 1,
-    },
-    locationRow: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
     },
     followersRow: {
         display: 'flex',
@@ -239,11 +168,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     smallGray: {
-        fontSize: 11,
-        lineHeight: 18,
-        color: 'rgb(119 118 118)',
-    },
-    smallGrayDate: {
         fontSize: 11,
         lineHeight: 18,
         color: 'rgb(119 118 118)',
@@ -284,8 +208,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 1,
     },
-    black: {
-        color: 'black',
-        backgroundColor: 'black'
-    }
+    bottomSheetContent: {
+        padding: 20,        
+        width: '90%'
+    },
+    bottomSheetTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 15,
+    },
+    input: {
+        borderWidth: 1,
+        
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 15,
+    },
 });

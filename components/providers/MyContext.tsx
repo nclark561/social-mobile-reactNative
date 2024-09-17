@@ -76,6 +76,23 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    // const updateUser = async (
+    //     username: string,
+    //     bio: string,
+    //     following: string[],
+    //   ) => {
+    //     const updateUser = await post({
+    //       url: `http://localhost:3000/api/updateUsers?email=${myInfo.email}`,
+    //       body: {
+    //         bio: bio,
+    //         username: myInfo?.username,
+    //         following,
+    //       },
+    //     });
+    //     setMyInfo(updateUser.update);
+    //     getUserInfo();
+    //   };
+
 
 
 
