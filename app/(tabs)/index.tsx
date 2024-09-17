@@ -30,6 +30,7 @@ export default function HomeScreen() {
 
   const createPost = async (
     content: string,
+    userName: string,
   ) => {
     console.log('testing create post')
     const userEmail = await AsyncStorage.getItem("user");
@@ -42,6 +43,7 @@ export default function HomeScreen() {
         body: JSON.stringify({
           content,
           email: userEmail,
+          userName
         }),
       });
       await getForYouPosts()
@@ -68,7 +70,7 @@ export default function HomeScreen() {
         <ThemedView style={styles.commentContainer}>
           <ThemedView style={styles.buttonContainer}>
             <Button title="Cancel" onPress={handleCloseNewPost}></Button>
-            <Pressable onPress={() => { createPost(postInput); handleCloseNewPost() }} style={styles.postButton}>
+            <Pressable onPress={() => { createPost(postInput, myInfo.username); handleCloseNewPost() }} style={styles.postButton}>
               <Text style={styles.buttonText}>Post</Text>
             </Pressable>
           </ThemedView>

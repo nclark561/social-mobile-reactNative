@@ -15,9 +15,7 @@ export default function TabLayout() {
   const context = useContext<any>(MyContext)
   const { loggedIn } = context
 
-  useFocusEffect(() => {
-    if(!loggedIn) router.push('/login')
-  })
+  
 
   return (
     <Tabs

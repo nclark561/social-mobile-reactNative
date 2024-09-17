@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useContext } from 'react';
-import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation } from 'expo-router';
@@ -10,6 +11,8 @@ import { useState, useEffect } from 'react';
 import MyContext from '../../components/providers/MyContext';
 import PostContext from '../../components/providers/PostContext';
 import Post from '@/components/postComponents/Post';
+import { Link } from 'expo-router';
+
 
 export default function TabTwoScreen() {
   const navigation = useNavigation();
@@ -83,11 +86,16 @@ export default function TabTwoScreen() {
     return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
   };
 
-console.log(user, 'user data')
+  console.log(user, 'user data')
 
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.header}>
+        <Pressable>
+          <Link href="/(tabs)/">
+            <Ionicons size={25} name="arrow-back-outline" />
+          </Link>
+        </Pressable>
         <ThemedView style={styles.row}>
           {loggedIn ? <Image
             style={styles.profilePic}

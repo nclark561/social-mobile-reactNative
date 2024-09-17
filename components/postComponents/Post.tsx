@@ -23,6 +23,7 @@ interface Post {
   username: string
   replies?: any,
   postId?: string
+  userName: string
 }
 
 interface PostProps {
@@ -112,8 +113,7 @@ export default function Post({ post, isComment }: PostProps) {
     }
   };
 
-  console.log(post, 'this is the post')
-
+  console.log(post, "this is post")
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post.id}`)}>
       <ThemedView
@@ -123,13 +123,13 @@ export default function Post({ post, isComment }: PostProps) {
             ? { borderColor: "#525252" }
             : { borderColor: "#bebebe" },
         ]}
-      >      
+      >
         <ThemedView style={styles.flex}>
           <Image style={styles.profilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
         </ThemedView>
         <ThemedView style={styles.postContent}>
           <Link href={`/profile/${post.email}`}>
-            <ThemedText style={styles.postUser}>{post.username || post.email}</ThemedText>
+            <ThemedText style={styles.postUser}>{post.userName}</ThemedText>
           </Link>
           <ThemedText style={styles.postText}>{post.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
@@ -201,14 +201,14 @@ export default function Post({ post, isComment }: PostProps) {
           <ThemedView style={styles.commentContainer}>
             <ThemedView style={styles.buttonContainer}>
               <Button title="Cancel" onPress={handleCloseComment}></Button>
-              <Pressable onPress={() => { 
-                    if (isComment) {
-                      if(!post.postId) return
-                      addComment(commentInput, myInfo.username, post.postId, myInfo.id, post.id)
-                    } else {
-                      addComment(commentInput, myInfo.username, post.id, myInfo.id,) 
-                    }
-                  }} style={styles.postButton}>
+              <Pressable onPress={() => {
+                if (isComment) {
+                  if (!post.postId) return
+                  addComment(commentInput, myInfo.username, post.postId, myInfo.id, post.id)
+                } else {
+                  addComment(commentInput, myInfo.username, post.id, myInfo.id,)
+                }
+              }} style={styles.postButton}>
                 <Text style={styles.buttonText}>Post</Text>
               </Pressable>
             </ThemedView>

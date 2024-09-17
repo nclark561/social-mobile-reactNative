@@ -23,23 +23,6 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     }, [forYouPostsToggle])
     
 
-    // const createPost = async (
-    //     content: string,
-    // ) => {
-    //     try {
-    //         const test = await fetch("https://engaged-rattler-correctly.ngrok-free.app/api/createPost", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 content
-    //             }),
-    //         });
-    //     } catch (error) {
-    //         console.log(error, "this is the create user error");`
-    //     }
-    // };
 
 
     const getUserPosts = async (email: string) => {

@@ -7,6 +7,7 @@ import { Link, router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import MyContext from './providers/MyContext';
 
+
 export default function SignIn({ setLogin }: { setLogin: (value: boolean) => void }) {
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string    
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
@@ -30,10 +31,11 @@ export default function SignIn({ setLogin }: { setLogin: (value: boolean) => voi
             if (data) {
                 await AsyncStorage.setItem("user", JSON.stringify(email));
                 console.log(data, "this is login data");
+                setLogin(true)
+                setLoginToggle(true)
+                router.navigate('/(tabs)/')
             }
-            setLogin(true)
-            setLoginToggle(true)
-            router.navigate('/(tabs)/')
+
         } catch (error) {
             console.log(error);
         }

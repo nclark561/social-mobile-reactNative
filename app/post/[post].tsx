@@ -11,7 +11,9 @@ import { useState, useRef } from "react";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import MyContext from "@/components/providers/MyContext";
+
 
 interface Post {
   id: string;
@@ -33,6 +35,7 @@ export default function Post({ post }: { post: Post }) {
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
   const local = useLocalSearchParams()
+  const { setLoginToggle, myInfo, loggedIn } = useContext<any>(MyContext);
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
@@ -43,9 +46,7 @@ export default function Post({ post }: { post: Post }) {
     setLiked((prev) => !prev);
   };
 
-  // const isLikedByUser = (likes: string[]): boolean => {
-  //   return likes.includes(myInfo?.id);
-  // };
+  
 
   useFocusEffect(
     useCallback(() => {
@@ -127,11 +128,21 @@ export default function Post({ post }: { post: Post }) {
     }
   };
 
+  const isLikedByUser = (likes: string[]): boolean => {
+    return likes?.includes(myInfo?.id);
+  };
+
 
 
 
   return (
     <>
+      <Pressable style={styles.transparent}>
+        <Link href="/(tabs)/">
+          <Ionicons size={20} name="arrow-back-outline" />
+        </Link>
+      </Pressable>
+      {/* <ThemedText>Post</ThemedText> */}
       <ThemedView
         style={[
           styles.mainPostContainer,
@@ -140,6 +151,7 @@ export default function Post({ post }: { post: Post }) {
             : { borderColor: "#bebebe" },
         ]}
       >
+
 
         <ThemedView style={styles.postContent}>
           <ThemedView style={styles.row}>
@@ -168,12 +180,12 @@ export default function Post({ post }: { post: Post }) {
               color={colorScheme === "dark" ? "white" : "black"}
             />
             <ThemedView style={styles.smallRow}>
-              {/* <Ionicons
+              <Ionicons
               size={15}
-              name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
-              onPress={() => { addLike(myInfo.id, post.id) }}
+              name={isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"}
+              onPress={() => { addLike(myInfo?.id, thisPost?.id) }}
               color={colorScheme === "dark" ? "white" : "black"}
-            /> */}
+            />
               <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
             </ThemedView>
             <Ionicons
@@ -309,12 +321,12 @@ export default function Post({ post }: { post: Post }) {
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
                 <ThemedView style={styles.smallRow}>
-                  {/* <Ionicons
+                  <Ionicons
                 size={15}
-                name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
-                onPress={() => { addLike(myInfo.id, post.id) }}
+                name={isLikedByUser(comment?.likes) ? "heart" : "heart-outline"}
+                onPress={() => { addLike(myInfo?.id, comment.id) }}
                 color={colorScheme === "dark" ? "white" : "black"}
-              /> */}
+              />
                   <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
                 </ThemedView>
                 <Ionicons
@@ -338,16 +350,17 @@ const styles = StyleSheet.create({
     width: "100%",
     borderBottomWidth: 0.3,
     paddingBottom: 2,
+    borderColor: 'gray'
   },
   mainPostContainer: {
     flexDirection: "row",
     width: "100%",
+    paddingLeft: 5,
     borderBottomWidth: 0.3,
     paddingBottom: 2,
   },
   flex: {
     flexDirection: "row",
-    height: "35%",
     // alignItems: "center",
   },
   profilePic: {
@@ -360,8 +373,8 @@ const styles = StyleSheet.create({
   mainProfilePic: {
     borderRadius: 25,
     width: 25,
-    height: 25,    
-    marginLeft: 10,
+    height: 25,
+    marginRight: 5,
   },
   postContent: {
     flexDirection: "column",
@@ -371,7 +384,7 @@ const styles = StyleSheet.create({
   },
   postUser: {
     fontWeight: "bold",
-    fontSize: 15,
+    fontSize: 12,
     paddingBottom: 2,
   },
   postText: {
@@ -466,6 +479,10 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+
+  },
+  transparent: {
+    backgroundColor: 'white'
   }
 });
