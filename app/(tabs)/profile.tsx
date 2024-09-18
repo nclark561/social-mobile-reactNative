@@ -1,52 +1,38 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useCallback, useRef } from "react";
 import { useFocusEffect, router } from "expo-router";
 import { useContext } from "react";
 import {
   StyleSheet,
   Image,
-  TextInput,
   useColorScheme,
   TouchableOpacity,
-  Pressable,
-  Button,
   Linking
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useNavigation } from "expo-router";
-import { DrawerActions } from "@react-navigation/native";
-import * as ImagePicker from "expo-image-picker";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import MyContext from "../../components/providers/MyContext";
 import PostContext from "../../components/providers/PostContext";
-import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Post from "@/components/postComponents/Post";
 import Animated from "react-native-reanimated";
+import EditProfileSheet from "@/components/profileComponents/EditProfileSheet";
 
 
 export default function TabTwoScreen() {
-  const navigation = useNavigation();
-  const newPostRef = useRef<BottomSheetModal>(null);
+  const editProfileRef = useRef<BottomSheetModal>(null);
   const colorScheme = useColorScheme();
   const [selectedOption, setSelectedOption] = useState("Posts");
-  const [user, setUser] = useState<any>();
   const context = useContext<any>(MyContext);
-  const [profileImage, setProfileImage] = useState<any>(null);
   const { setLoginToggle, myInfo, loggedIn, updateUser } = context;
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext;
 
-  const [bio, setBio] = useState(myInfo?.bio || "");
-  const [links, setLinks] = useState('');
-  const [location, setLocation] = useState(myInfo?.location || "");
-
   const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe" 
+  const profileImageUrl = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
 
-  const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
-  const handleOpenNewPost = () => newPostRef?.current?.present();
-  const handleCloseNewPost = () => newPostRef?.current?.dismiss();
+  const handleOpenEditProfile = () => editProfileRef?.current?.present();
 
   useFocusEffect(
     useCallback(() => {
@@ -92,13 +78,6 @@ export default function TabTwoScreen() {
     Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
   };
 
-  const handleSave = () => {
-    updateUser(myInfo.email, links, location, bio)
-    console.log("Bio:", bio);
-    console.log("Location:", location);
-    handleCloseNewPost();
-  };
-
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.header}>
@@ -107,14 +86,16 @@ export default function TabTwoScreen() {
             <Image
               style={styles.profilePic}
               source={{
-                uri: "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg",
+                uri: profileImageUrl,
+                cache: 'reload'
               }}
+              defaultSource={{uri: mortyUrl}}
             />
           ) : (
             <ThemedText>Empty Photo</ThemedText>
           )}
 
-          <TouchableOpacity style={[styles.button, { borderColor: fadedTextColor }]} onPress={handleOpenNewPost}>
+          <TouchableOpacity style={[styles.button, { borderColor: fadedTextColor }]} onPress={handleOpenEditProfile}>
             <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
           </TouchableOpacity>
         </ThemedView>
@@ -171,42 +152,7 @@ export default function TabTwoScreen() {
         ))}
       </ThemedView>
       <ThemedView style={styles.content}>{renderContent()}</ThemedView>
-      <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["35%"]}>
-        <ThemedView style={styles.bottomSheetContent}>
-          <ThemedText style={styles.bottomSheetTitle}>Edit Profile</ThemedText>
-          <TextInput
-            style={[
-              styles.input,
-              { color: colorScheme === "dark" ? "#fff" : "#000" },
-            ]}
-            placeholder="Bio"
-            placeholderTextColor={colorScheme === "dark" ? "#aaa" : "#555"}
-            value={bio}
-            onChangeText={setBio}
-          />
-          <TextInput
-            style={[
-              styles.input,
-              { color: colorScheme === "dark" ? "#fff" : "#000" },
-            ]}
-            placeholder="Links"
-            placeholderTextColor={colorScheme === "dark" ? "#aaa" : "#555"}
-            value={links}
-            onChangeText={setLinks}
-          />
-          <TextInput
-            style={[
-              styles.input,
-              { color: colorScheme === "dark" ? "#fff" : "#000" },
-            ]}
-            placeholder="Location"
-            placeholderTextColor={colorScheme === "dark" ? "#aaa" : "#555"}
-            value={location}
-            onChangeText={setLocation}
-          />
-          <Button title="Save" onPress={handleSave}></Button>
-        </ThemedView>
-      </CustomBottomSheet>
+      <EditProfileSheet currProfileImage={profileImageUrl} editProfileRef={editProfileRef}/>
     </ThemedView>
   );
 }
@@ -224,9 +170,9 @@ const styles = StyleSheet.create({
     borderColor: "#525252",
   },
   profilePic: {
-    borderRadius: 15,
-    width: 35,
-    height: 35,
+    borderRadius: 25,
+    width: 45,
+    height: 45,
     marginBottom: 15,
   },
   userName: {
