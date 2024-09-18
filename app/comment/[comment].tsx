@@ -33,8 +33,7 @@ export default function CommentPage() {
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
-  const local = useLocalSearchParams();
-  console.log(local, "this is the local")
+  const local = useLocalSearchParams();  
 
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
@@ -54,7 +53,7 @@ export default function CommentPage() {
   
 
   const addLike = async (userId: string, postId: string) => {
-    console.log(postId, "hitting add like");
+    
     try {
       const test = await fetch(
         `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`,
@@ -100,7 +99,7 @@ export default function CommentPage() {
         }
       );
       const post = await response.json();
-      console.log(post, "this is the comment response");
+      
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -118,7 +117,7 @@ export default function CommentPage() {
         }
       );
       const userData = await result.json();
-      console.log(userData.comment, "this is this comment data");
+      
       setThisPost(userData.comment);
     } catch (error) {
       console.log(error, "this is the get user error");

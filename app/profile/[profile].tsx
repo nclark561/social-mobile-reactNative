@@ -67,7 +67,7 @@ export default function TabTwoScreen() {
       case 'Replies':
         return <ThemedView>
           {myInfo?.comments?.map((comment: any) => {
-            console.log(myInfo?.comments, 'these are comments')
+            
             return (
               <ThemedView key={comment.id || comment.content}>
                 <ThemedText style={styles.content}>{comment?.comment}</ThemedText>

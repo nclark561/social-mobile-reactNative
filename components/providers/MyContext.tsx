@@ -52,8 +52,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
     const getUser = async () => {
         try {
-            const userEmail = await AsyncStorage.getItem("user");
-            console.log(userEmail, 'this is user email')
+            const userEmail = await AsyncStorage.getItem("user");            
             if (!userEmail) throw new Error('User not logged in')
             const email = JSON.parse(userEmail);
             const result = await fetch(
@@ -84,8 +83,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         location?: string,
         bio?: string,
         color?: string
-    ) => {
-        console.log(bio, 'bio')
+    ) => {        
         try {
             const bodyData: any = {};
 

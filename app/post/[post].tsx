@@ -62,7 +62,7 @@ export default function PostPage({ post }: { post: Post }) {
     postId: string,
     comment: boolean
   ) => {
-    console.log(postId, 'hitting add like')
+    
     try {
       const test = await fetch(comment ? `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addCommentLike` : `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`, {
         method: "POST",
@@ -107,7 +107,7 @@ export default function PostPage({ post }: { post: Post }) {
         },
       );
       const post = await response.json();
-      console.log(post, 'this is the comment response')
+      
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -125,7 +125,7 @@ export default function PostPage({ post }: { post: Post }) {
         },
       );
       const userData = await result.json();
-      console.log(userData.post, 'this is this post data')
+      
       setThisPost(userData.post);
     } catch (error) {
       console.log(error, "this is the get user error");
@@ -254,7 +254,7 @@ export default function PostPage({ post }: { post: Post }) {
         </CustomBottomSheet>
       </ThemedView>
       {thisPost?.comments.map((comment: any) => {
-        console.log(thisPost.likes, 'these are the lieks')
+        
         return <Post key={comment.id} isComment post={comment}/>
       })}
     </>

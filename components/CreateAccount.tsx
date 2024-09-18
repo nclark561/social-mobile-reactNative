@@ -11,7 +11,7 @@ export default function SignIn({ setLoginToggle }: { setLoginToggle: (value: boo
     const color = colorScheme === 'dark' ? 'white' : 'black'
 
     const handleSignUp = async (userName: string, email: string) => {
-        console.log('hitting signup')
+        
         try {
             // const { data, error } = await supabase.auth.signUp({
             //     email: email,

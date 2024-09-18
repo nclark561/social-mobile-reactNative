@@ -61,7 +61,7 @@ export default function Post({ post, isComment, user }: PostProps) {
   };
 
   const addLike = async (userId: string, postId: string) => {
-    console.log(postId, "hitting add like");
+    
     try {
       const test = await fetch(
         !isComment
@@ -110,7 +110,7 @@ export default function Post({ post, isComment, user }: PostProps) {
         }
       );
       const post = await response.json();
-      console.log(post, "this is the comment response");
+      
     } catch (error) {
       console.error("Error adding comment:", error);
     }

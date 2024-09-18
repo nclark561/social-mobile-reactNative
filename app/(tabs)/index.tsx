@@ -31,8 +31,7 @@ export default function HomeScreen() {
   const createPost = async (
     content: string,
     userName: string,
-  ) => {
-    console.log('testing create post')
+  ) => {    
     const userEmail = await AsyncStorage.getItem("user");
     try {
       const test = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/createPost`, {

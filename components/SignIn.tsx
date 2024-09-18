@@ -30,7 +30,7 @@ export default function SignIn({ setLogin }: { setLogin: (value: boolean) => voi
             }
             if (data) {
                 await AsyncStorage.setItem("user", JSON.stringify(email));
-                console.log(data, "this is login data");
+                
                 setLogin(true)
                 setLoginToggle(true)
                 router.navigate('/(tabs)/')

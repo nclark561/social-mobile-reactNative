@@ -47,7 +47,7 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage }: EditProfileProps
       aspect: [4, 3],
       quality: 1,
     });
-    console.log(result);
+    
 
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
@@ -60,8 +60,7 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage }: EditProfileProps
       const response = await fetch(imageUri);
       if (!response.ok) {
         throw new Error("Failed to fetch the image");
-      }
-      console.log(response, "this is the res");
+      }      
       const formData = new FormData();
 
       formData.append("image", {
@@ -70,8 +69,7 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage }: EditProfileProps
         name: `${myInfo.id}.jpg`,
       } as any);
 
-      // Make the POST request with fetch
-      console.log(formData, "this is form data");
+      // Make the POST request with fetch      
       const uploadResponse = await fetch(
         `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/supabase-s3`,
         {
@@ -101,8 +99,6 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage }: EditProfileProps
     handleCloseEditProfile();
   };
 
-
-console.log(selectedColor, 'selected color')  
 
   return (
     <CustomBottomSheet
