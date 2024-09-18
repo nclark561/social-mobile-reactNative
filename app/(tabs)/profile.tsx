@@ -27,12 +27,16 @@ export default function TabTwoScreen() {
   const { setLoginToggle, myInfo, loggedIn, updateUser } = context;
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext;
+  const [ profileImageUri, setProfileImageUri ] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`)
 
   const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
-  const profileImageUrl = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`
   const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
 
   const handleOpenEditProfile = () => editProfileRef?.current?.present();
+
+  const handleError = () => {
+    setProfileImageUri(mortyUrl);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -89,10 +93,10 @@ export default function TabTwoScreen() {
               <Image
                 style={styles.profilePic}
                 source={{
-                  uri: profileImageUrl,
+                  uri: profileImageUri,
                   cache: 'reload'
                 }}
-                defaultSource={{ uri: mortyUrl }}
+                onError={handleError}
               />
             ) : (
               <ThemedText>Empty Photo</ThemedText>
@@ -153,7 +157,7 @@ export default function TabTwoScreen() {
         ))}
       </ThemedView>
       <ThemedView style={styles.content}>{renderContent()}</ThemedView>
-      <EditProfileSheet currProfileImage={profileImageUrl} editProfileRef={editProfileRef} />
+      <EditProfileSheet setProfileImageUri={setProfileImageUri} currProfileImage={profileImageUri} editProfileRef={editProfileRef} />
     </ThemedView>
   );
 }

@@ -17,9 +17,10 @@ import * as ImagePicker from "expo-image-picker";
 interface EditProfileProps {
   editProfileRef: any;
   currProfileImage: string,
+  setProfileImageUri: React.Dispatch<SetStateAction<string>>
 }
 
-const EditProfileSheet = ({ editProfileRef, currProfileImage }: EditProfileProps) => {
+const EditProfileSheet = ({ editProfileRef, currProfileImage, setProfileImageUri }: EditProfileProps) => {
   const colorScheme = useColorScheme();
   const { myInfo, updateUser } = useContext<any>(MyContext);
   const [bio, setBio] = useState(myInfo?.bio || "");
@@ -85,6 +86,7 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage }: EditProfileProps
       // Parse the JSON response from the server
       const result = await uploadResponse.json();
       console.log("Upload successful:", result);
+      setProfileImageUri(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`)
     } catch (error) {
       console.error(
         "Error uploading image:",
