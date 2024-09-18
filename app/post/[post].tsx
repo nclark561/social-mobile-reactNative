@@ -13,6 +13,8 @@ import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
 import { Link, router } from "expo-router";
 import MyContext from "@/components/providers/MyContext";
+import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
+import Post from "@/components/postComponents/Post";
 
 
 interface Post {
@@ -25,7 +27,7 @@ interface Post {
   profilePic: string
 }
 
-export default function Post({ post }: { post: Post }) {
+export default function PostPage({ post }: { post: Post }) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
@@ -139,11 +141,13 @@ export default function Post({ post }: { post: Post }) {
 
   return (
     <>
-      <Pressable style={styles.transparent}>
-        <Link href="/(tabs)/">
-          <Ionicons size={20} name="arrow-back-outline" />
-        </Link>
-      </Pressable>
+      <ThemedView>
+        <Pressable>
+          <Link href="/(tabs)/">
+            <Ionicons size={20} name="arrow-back-outline" color={colorScheme === 'dark' ? 'white' : 'black'}/>
+          </Link>
+        </Pressable>
+      </ThemedView>
       {/* <ThemedText>Post</ThemedText> */}
       <ThemedView
         style={[
@@ -225,51 +229,7 @@ export default function Post({ post }: { post: Post }) {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CustomBottomSheet
-          snapPercs={["70%"]}
-          ref={commentModalRef}
-          hideCancelButton
-        >
-          <ThemedView style={styles.commentContainer}>
-            <ThemedView style={styles.buttonContainer}>
-              <Button title="Cancel" onPress={handleCloseComment}></Button>
-              {/* <Pressable onPress={() => { addComment(commentInput, myInfo.username, post.id, myInfo.id,) }} style={styles.postButton}>
-              <Text style={styles.buttonText}>Post</Text>
-            </Pressable> */}
-            </ThemedView>
-            <ThemedView style={styles.commentOP}>
-              <Image
-                style={styles.commentPic}
-                source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
-              />
-              <ThemedText style={styles.postUser}>{thisPost?.email}</ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.commentOGPost}>
-              <View style={styles.line}></View>
-              <ScrollView style={styles.commentScroll}>
-                {/* <ThemedText>{post.content}</ThemedText> */}
-              </ScrollView>
-            </ThemedView>
-            <ThemedView style={{ flexDirection: "row" }}>
-              <Image
-                style={styles.commentPic}
-                source={{ uri: "https://avatars.githubusercontent.com/u/125314332?v=4" }}
-              />
-              <BottomSheetTextInput
-                autoFocus
-                onChangeText={(input) => setCommentInput(input)}
-                multiline
-                placeholder="Post your reply"
-                style={[
-                  { paddingTop: 15, maxWidth: "80%" },
-                  colorScheme === "dark"
-                    ? { color: "#bebebe" }
-                    : { color: "#525252" },
-                ]}
-              />
-            </ThemedView>
-          </ThemedView>
-        </CustomBottomSheet>
+        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef}/>
         <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
@@ -295,51 +255,7 @@ export default function Post({ post }: { post: Post }) {
       </ThemedView>
       {thisPost?.comments.map((comment: any) => {
         console.log(thisPost.likes, 'these are the lieks')
-        return (
-          <ThemedView key={comment.id} style={styles.postContainer}>
-            <ThemedView style={styles.flex}>
-              <Image style={styles.profilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
-            </ThemedView>
-            <ThemedView style={styles.postContent}>
-              <Link href={`/profile/${post?.email}`}>
-                <ThemedText style={styles.postUser}>{comment?.userName}</ThemedText>
-              </Link>
-              <ThemedText style={styles.postText}>{comment?.content}</ThemedText>
-              <ThemedView style={styles.reactionsContainer}>
-                <ThemedView style={styles.smallRow}>
-                  <Ionicons
-                    size={15}
-                    name="chatbubble-outline"
-                    onPress={handleOpenComment}
-                    color={colorScheme === "dark" ? "white" : "black"}
-                  />
-                  <ThemedText style={styles.smallNumber}>{comment?.comments?.length}</ThemedText>
-                </ThemedView>
-                <Ionicons
-                  size={15}
-                  name="git-compare-outline"
-                  onPress={handleOpenRepost}
-                  color={colorScheme === "dark" ? "white" : "black"}
-                />
-                <ThemedView style={styles.smallRow}>
-                  <Ionicons
-                    size={15}
-                    name={isLikedByUser(comment?.likes) ? "heart" : "heart-outline"}
-                    onPress={() => { addLike(myInfo?.id, comment.id, true) }}
-                    color={colorScheme === "dark" ? "white" : "black"}
-                  />
-                  <ThemedText style={styles.smallNumber}>{thisPost?.likes?.length}</ThemedText>
-                </ThemedView>
-                <Ionicons
-                  size={15}
-                  name="share-outline"
-                  onPress={handleOpenShare}
-                  color={colorScheme === "dark" ? "white" : "black"}
-                />
-              </ThemedView>
-            </ThemedView>
-          </ThemedView>
-        )
+        return <Post key={comment.id} isComment post={comment}/>
       })}
     </>
   );
@@ -483,7 +399,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
   },
-  transparent: {
-    backgroundColor: 'white'
-  }
 });

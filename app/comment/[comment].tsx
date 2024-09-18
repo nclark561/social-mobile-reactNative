@@ -10,20 +10,21 @@ import { useColorScheme } from "react-native";
 import { useState, useRef } from "react";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { ScrollView } from "react-native-gesture-handler";
 import { Link } from "expo-router";
+import Post from "@/components/postComponents/Post";
+import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 
 interface Post {
   id: string;
   content: string;
   date: Date;
-  replies: any,
-  email: string,
-  profilePic: string,
-  username: string
+  replies: any;
+  email: string;
+  profilePic: string;
+  username: string;
 }
 
-export default function Post({ post }: { post: Post }) {
+export default function CommentPage() {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
@@ -32,9 +33,10 @@ export default function Post({ post }: { post: Post }) {
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
-  const local = useLocalSearchParams()
+  const local = useLocalSearchParams();
+  console.log(local, "this is the local")
 
-  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
+  const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
@@ -49,42 +51,36 @@ export default function Post({ post }: { post: Post }) {
   //   return likes.includes(myInfo?.id);
   // };
 
-  useFocusEffect(
-    useCallback(() => {
-      getPost();
-    }, [])
-  );
+  
 
-
-  const addLike = async (
-    userId: string,
-    postId: string,
-  ) => {
-    console.log(postId, 'hitting add like')
+  const addLike = async (userId: string, postId: string) => {
+    console.log(postId, "hitting add like");
     try {
-      const test = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          postId
-        }),
-      });
-      await getForYouPosts()
+      const test = await fetch(
+        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            postId,
+          }),
+        }
+      );
+      await getForYouPosts();
     } catch (error) {
       console.log(error, "this is the create user error");
     }
   };
-
 
   const addComment = async (
     comment: string,
     userName: string,
     postId: string,
     userId: string,
-    commentId?: string,
+    commentId?: string
   ) => {
     try {
       const response = await fetch(
@@ -101,10 +97,10 @@ export default function Post({ post }: { post: Post }) {
             userId,
             commentId,
           }),
-        },
+        }
       );
       const post = await response.json();
-      console.log(post, 'this is the comment response')
+      console.log(post, "this is the comment response");
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -119,21 +115,22 @@ export default function Post({ post }: { post: Post }) {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       const userData = await result.json();
-      console.log(userData.comment, 'this is this comment data')
+      console.log(userData.comment, "this is this comment data");
       setThisPost(userData.comment);
     } catch (error) {
       console.log(error, "this is the get user error");
     }
   };
 
-
-  console.log(local, 'hitting this')
+  useFocusEffect(() => {
+      getPost();
+  });
 
   return (
-    <>
+    <ThemedView style={{ flex: 1 }}>
       <ThemedView
         style={[
           styles.mainPostContainer,
@@ -144,20 +141,32 @@ export default function Post({ post }: { post: Post }) {
       >
         <Pressable>
           <Link href="/(tabs)/">
-            <Ionicons size={20} name="arrow-back-outline" />
+            <Ionicons
+              size={20}
+              name="arrow-back-outline"
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
           </Link>
         </Pressable>
-
         <ThemedView style={styles.postContent}>
           <ThemedView style={[styles.row, { marginBottom: 20 }]}>
             <ThemedView style={styles.flex}>
-              <Image style={styles.mainProfilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
+              <Image
+                style={styles.mainProfilePic}
+                source={{
+                  uri: "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250",
+                }}
+              />
             </ThemedView>
-            <Link href={`/profile/${post?.email}`}>
-              <ThemedText style={styles.postUser}>{thisPost?.username}</ThemedText>
+            <Link href={`/profile/${thisPost?.email}`}>
+              <ThemedText style={styles.postUser}>
+                {thisPost?.userName}
+              </ThemedText>
             </Link>
           </ThemedView>
-          <ThemedText style={styles.mainPostText}>{thisPost?.comment}</ThemedText>
+          <ThemedText style={styles.mainPostText}>
+            {thisPost?.content}
+          </ThemedText>
           <ThemedView style={styles.reactionsContainer}>
             <ThemedView style={styles.smallRow}>
               <Ionicons
@@ -166,7 +175,9 @@ export default function Post({ post }: { post: Post }) {
                 onPress={handleOpenComment}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{thisPost?.replies?.length}</ThemedText>
+              <ThemedText style={styles.smallNumber}>
+                {thisPost?.replies?.length}
+              </ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -177,7 +188,7 @@ export default function Post({ post }: { post: Post }) {
             <ThemedView style={styles.smallRow}>
               <Ionicons
                 size={15}
-                name='heart-outline'
+                name="heart-outline"
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>{0}</ThemedText>
@@ -197,7 +208,11 @@ export default function Post({ post }: { post: Post }) {
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
         />
-        <CustomBottomSheet snapPercs={["25%"]} ref={shareModalRef} title="Share">
+        <CustomBottomSheet
+          snapPercs={["25%"]}
+          ref={shareModalRef}
+          title="Share"
+        >
           <ThemedView style={styles.shareContainer}>
             <ThemedView style={styles.shareOption}>
               <Ionicons
@@ -219,51 +234,7 @@ export default function Post({ post }: { post: Post }) {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CustomBottomSheet
-          snapPercs={["70%"]}
-          ref={commentModalRef}
-          hideCancelButton
-        >
-          <ThemedView style={styles.commentContainer}>
-            <ThemedView style={styles.buttonContainer}>
-              <Button title="Cancel" onPress={handleCloseComment}></Button>
-              {/* <Pressable onPress={() => { addComment(commentInput, myInfo.username, post.id, myInfo.id,) }} style={styles.postButton}>
-              <Text style={styles.buttonText}>Post</Text>
-            </Pressable> */}
-            </ThemedView>
-            <ThemedView style={styles.commentOP}>
-              <Image
-                style={styles.commentPic}
-                source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
-              />
-              <ThemedText style={styles.postUser}>{thisPost?.email}</ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.commentOGPost}>
-              <View style={styles.line}></View>
-              <ScrollView style={styles.commentScroll}>
-                {/* <ThemedText>{post.content}</ThemedText> */}
-              </ScrollView>
-            </ThemedView>
-            <ThemedView style={{ flexDirection: "row" }}>
-              <Image
-                style={styles.commentPic}
-                source={{ uri: "https://avatars.githubusercontent.com/u/125314332?v=4" }}
-              />
-              <BottomSheetTextInput
-                autoFocus
-                onChangeText={(input) => setCommentInput(input)}
-                multiline
-                placeholder="Post your reply"
-                style={[
-                  { paddingTop: 15, maxWidth: "80%" },
-                  colorScheme === "dark"
-                    ? { color: "#bebebe" }
-                    : { color: "#525252" },
-                ]}
-              />
-            </ThemedView>
-          </ThemedView>
-        </CustomBottomSheet>
+        <CommentBottomSheet commentModalRef={commentModalRef} post={thisPost} isComment/>
         <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
@@ -288,62 +259,13 @@ export default function Post({ post }: { post: Post }) {
         </CustomBottomSheet>
       </ThemedView>
       {thisPost?.replies.map((comment: any) => {
-        return (
-          <ThemedView style={styles.postContainer}>
-            <ThemedView style={styles.flex}>
-              <Image style={styles.profilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
-            </ThemedView>
-            <ThemedView style={styles.postContent}>
-              <Link href={`/profile/${post?.email}`}>
-                <ThemedText style={styles.postUser}>{comment?.username}</ThemedText>
-              </Link>
-              <ThemedText style={styles.postText}>{comment?.comment}</ThemedText>
-              <ThemedView style={styles.reactionsContainer}>
-                <ThemedView style={styles.smallRow}>
-                  <Ionicons
-                    size={15}
-                    name="chatbubble-outline"
-                    onPress={handleOpenComment}
-                    color={colorScheme === "dark" ? "white" : "black"}
-                  />
-                  <ThemedText style={styles.smallNumber}>{comment?.comments?.length}</ThemedText>
-                </ThemedView>
-                <Ionicons
-                  size={15}
-                  name="git-compare-outline"
-                  onPress={handleOpenRepost}
-                  color={colorScheme === "dark" ? "white" : "black"}
-                />
-                <ThemedView style={styles.smallRow}>
-                  <Ionicons
-                    size={15}
-                    name="heart-outline"
-                    color={colorScheme === "dark" ? "white" : "black"}
-                  />
-                  <ThemedText style={styles.smallNumber}>{0}</ThemedText>
-                </ThemedView>
-                <Ionicons
-                  size={15}
-                  name="share-outline"
-                  onPress={handleOpenShare}
-                  color={colorScheme === "dark" ? "white" : "black"}
-                />
-              </ThemedView>
-            </ThemedView>
-          </ThemedView>
-        )
+        return <Post key={comment.id} isComment post={comment} />;
       })}
-    </>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  postContainer: {
-    flexDirection: "row",
-    width: "100%",
-    borderBottomWidth: 0.3,
-    paddingBottom: 2,
-  },
   mainPostContainer: {
     flexDirection: "row",
     width: "100%",
@@ -354,13 +276,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     height: "35%",
     // alignItems: "center",
-  },
-  profilePic: {
-    borderRadius: 25,
-    width: 25,
-    height: 25,
-    marginTop: 20,
-    marginLeft: 10,
   },
   mainProfilePic: {
     borderRadius: 25,
@@ -379,15 +294,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingBottom: 2,
   },
-  postText: {
-    flexShrink: 1,
-    fontSize: 13,
-    margin: 10
-  },
   mainPostText: {
     fontSize: 16,
     flexShrink: 1,
-    margin: 10
+    margin: 10,
   },
   ellipsis: {
     position: "absolute",
@@ -396,13 +306,10 @@ const styles = StyleSheet.create({
   },
   reactionsContainer: {
     flexDirection: "row",
-    width: '95%',
+    width: "95%",
     justifyContent: "space-between",
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 10,
-  },
-  smallWidth: {
-    width: 40,
   },
   shareContainer: {
     flexDirection: "column",
@@ -430,15 +337,6 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
   },
-  postButton: {
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: "#26a7de",
-  },
-  buttonText: {
-    color: "white",
-  },
   commentOP: {
     flexDirection: "row",
     alignItems: "center",
@@ -465,18 +363,18 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   smallRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '10%',
-    justifyContent: 'space-evenly'
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "10%",
+    justifyContent: "space-evenly",
   },
   smallNumber: {
-    fontSize: 11
+    fontSize: 11,
   },
   row: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
