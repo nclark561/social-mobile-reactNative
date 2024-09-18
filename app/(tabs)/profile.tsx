@@ -42,6 +42,8 @@ export default function TabTwoScreen() {
   const [links, setLinks] = useState('');
   const [location, setLocation] = useState(myInfo?.location || "");
 
+  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe" 
+
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
@@ -112,8 +114,8 @@ export default function TabTwoScreen() {
             <ThemedText>Empty Photo</ThemedText>
           )}
 
-          <TouchableOpacity style={styles.button} onPress={handleOpenNewPost}>
-            <ThemedText>Edit</ThemedText>
+          <TouchableOpacity style={[styles.button, { borderColor: fadedTextColor }]} onPress={handleOpenNewPost}>
+            <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
           </TouchableOpacity>
         </ThemedView>
         <ThemedView style={styles.close}>
@@ -276,15 +278,11 @@ const styles = StyleSheet.create({
     width: "95%",
   },
   button: {
-    width: 45,
-    fontSize: 12,
-    height: 35,
     borderRadius: 15,
-    borderColor: "black",
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 1,
+    paddingHorizontal: 5,
   },
   bottomSheetContent: {
     padding: 20,
