@@ -28,7 +28,7 @@ export default function MyCustomDrawer(props: any) {
         }
     };
 
-console.log(myInfo, 'this is my info')
+
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
             <View style={styles.header}>

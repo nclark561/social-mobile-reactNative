@@ -86,8 +86,7 @@ export default function TabTwoScreen() {
     return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
   };
 
-  console.log(user, 'user data')
-
+  
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.header}>

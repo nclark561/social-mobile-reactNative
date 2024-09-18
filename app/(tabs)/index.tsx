@@ -60,7 +60,7 @@ export default function HomeScreen() {
       <Header name="Posts" />
       <Animated.ScrollView>
         {Array.isArray(forYouPosts) && forYouPosts.map((post, i) => (
-          <Post key={i} post={post} />
+          <Post key={i} post={post} isComment={false} />
         ))}
       </Animated.ScrollView>
       <Pressable style={styles.addButton} onPress={handleOpenNewPost}>

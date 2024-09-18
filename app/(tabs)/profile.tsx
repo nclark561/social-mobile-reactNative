@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Pressable,
   Button,
+  Linking
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -24,6 +25,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Post from "@/components/postComponents/Post";
 import Animated from "react-native-reanimated";
 
+
 export default function TabTwoScreen() {
   const navigation = useNavigation();
   const newPostRef = useRef<BottomSheetModal>(null);
@@ -32,11 +34,12 @@ export default function TabTwoScreen() {
   const [user, setUser] = useState<any>();
   const context = useContext<any>(MyContext);
   const [profileImage, setProfileImage] = useState<any>(null);
-  const { setLoginToggle, myInfo, loggedIn } = context;
+  const { setLoginToggle, myInfo, loggedIn, updateUser } = context;
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext;
 
   const [bio, setBio] = useState(myInfo?.bio || "");
+  const [links, setLinks] = useState('');
   const [location, setLocation] = useState(myInfo?.location || "");
 
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
@@ -55,9 +58,9 @@ export default function TabTwoScreen() {
         return (
           <Animated.ScrollView style={{ height: '72%' }}>
             <ThemedView>
-                {Array.isArray(posts.Posts) &&
+              {Array.isArray(posts.Posts) &&
                 posts?.Posts?.map((post: any) => {
-                    return <Post key={post.id} post={post} />;
+                  return <Post key={post.id} post={post} user={myInfo.email} />;
                 })}
             </ThemedView>
           </Animated.ScrollView>
@@ -69,7 +72,7 @@ export default function TabTwoScreen() {
           <Animated.ScrollView style={{ height: '72%' }}>
             <ThemedView>
               {myInfo?.comments?.map((comment: any) => {
-                return <Post key={comment.id} isComment post={comment} />;
+                return <Post user={myInfo.email} key={comment.id} isComment post={comment} />;
               })}
             </ThemedView>
           </Animated.ScrollView>
@@ -80,8 +83,7 @@ export default function TabTwoScreen() {
   };
 
   const handleSave = () => {
-    // Handle saving the bio and location here
-    // For example, you might update the user's profile information in your database
+    updateUser(myInfo.email, links, location, bio)
     console.log("Bio:", bio);
     console.log("Location:", location);
     handleCloseNewPost();
@@ -113,6 +115,8 @@ export default function TabTwoScreen() {
                 {myInfo?.username}
               </ThemedText>
               <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText>
+              <ThemedText>{myInfo?.bio}</ThemedText>
+              <ThemedText>{myInfo?.links}</ThemedText>
             </>
           ) : (
             <ThemedText>Login </ThemedText>
@@ -163,6 +167,16 @@ export default function TabTwoScreen() {
             placeholderTextColor={colorScheme === "dark" ? "#aaa" : "#555"}
             value={bio}
             onChangeText={setBio}
+          />
+          <TextInput
+            style={[
+              styles.input,
+              { color: colorScheme === "dark" ? "#fff" : "#000" },
+            ]}
+            placeholder="Links"
+            placeholderTextColor={colorScheme === "dark" ? "#aaa" : "#555"}
+            value={links}
+            onChangeText={setLinks}
           />
           <TextInput
             style={[

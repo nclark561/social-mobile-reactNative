@@ -29,16 +29,17 @@ interface Post {
 interface PostProps {
   isComment?: boolean;
   post: Post;
+  user: string
 }
 
-export default function Post({ post, isComment }: PostProps) {
+export default function Post({ post, isComment, user }: PostProps) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
 
   const link = isComment ? "comment" : "post";
 
-  const { getForYouPosts } = useContext<any>(PostContext);
+  const { getForYouPosts, getUserPosts } = useContext<any>(PostContext);
   const { setLoginToggle, myInfo, loggedIn, getUser } =
     useContext<any>(MyContext);
 
@@ -63,7 +64,7 @@ export default function Post({ post, isComment }: PostProps) {
     console.log(postId, "hitting add like");
     try {
       const test = await fetch(
-        isComment
+        !isComment
           ? `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`
           : `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addCommentLike`,
         {
@@ -77,8 +78,8 @@ export default function Post({ post, isComment }: PostProps) {
           }),
         }
       );
-      await getUser();
       await getForYouPosts();
+      await getUserPosts(user)
     } catch (error) {
       console.log(error, "this is the create user error");
     }
@@ -114,6 +115,8 @@ export default function Post({ post, isComment }: PostProps) {
       console.error("Error adding comment:", error);
     }
   };
+
+
 
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post.id}`)}>
@@ -166,7 +169,7 @@ export default function Post({ post, isComment }: PostProps) {
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
-                {post.likes.length}
+                {post?.likes.length}
               </ThemedText>
             </ThemedView>
             <Ionicons

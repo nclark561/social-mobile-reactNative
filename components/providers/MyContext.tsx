@@ -14,7 +14,8 @@ interface MyInfo {
 export interface UserContextType {
     myInfo: MyInfo | undefined
     setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
-    loggedIn: boolean
+    loggedIn: boolean;
+    updateUser: (links: string, email: string, location: string, bio?: string, username?: string, following?: string[]) => Promise<void>;
 }
 
 const MyContext = createContext<UserContextType | undefined>(undefined);
@@ -40,7 +41,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                 return null;
             }
             setLoggedIn(true)
-            
+
             return data;
         } catch (err) {
             console.error('Unexpected error:', err);
@@ -70,34 +71,45 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             console.log(`Response Text: ${text}`);
             const userInfo = JSON.parse(text);
             setMyInfo(userInfo.user);
-            
+
         } catch (error) {
             console.log(error, 'this is the get user error');
         }
     };
 
-    // const updateUser = async (
-    //     username: string,
-    //     bio: string,
-    //     following: string[],
-    //   ) => {
-    //     const updateUser = await post({
-    //       url: `http://localhost:3000/api/updateUsers?email=${myInfo.email}`,
-    //       body: {
-    //         bio: bio,
-    //         username: myInfo?.username,
-    //         following,
-    //       },
-    //     });
-    //     setMyInfo(updateUser.update);
-    //     getUserInfo();
-    //   };
 
+    const updateUser = async (
+        email: string,
+        links?: string,
+        location?: string,
+        bio?: string,            
+    ) => {
+        console.log(bio, 'bio')
+        try {
+            const bodyData: any = {};
 
+            if (email) bodyData.email = email;            
+            if (links) bodyData.links = links;
+            if (location) bodyData.location = location;
+            if (bio) bodyData.bio = bio;
 
+            const response = await fetch(`http://localhost:3000/api/updateUser`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bodyData),
+            });
+
+            const result = await response.json();
+            await getUser(); // Refresh the user info after update
+        } catch (error) {
+            console.error("Failed to update user:", error);
+        }
+    };
 
     return (
-        <MyContext.Provider value={{ myInfo, setLoginToggle: setLoginToggle, loggedIn }}>
+        <MyContext.Provider value={{ myInfo, setLoginToggle: setLoginToggle, loggedIn, updateUser: updateUser }}>
             {children}
         </MyContext.Provider>
     );
