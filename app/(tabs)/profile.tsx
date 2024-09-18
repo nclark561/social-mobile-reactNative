@@ -82,6 +82,14 @@ export default function TabTwoScreen() {
     }
   };
 
+  const openLink = (url: string) => {
+    // Check if the URL starts with "http" or "https"
+    if (!url.startsWith('http')) {
+      url = 'https://' + url; // Add protocol if not present
+    }
+    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+  };
+
   const handleSave = () => {
     updateUser(myInfo.email, links, location, bio)
     console.log("Bio:", bio);
@@ -125,12 +133,18 @@ export default function TabTwoScreen() {
         <ThemedView style={styles.followersRow}>
           {loggedIn ? (
             <>
-              <ThemedText style={styles.smallGray}>
-                {myInfo?.followers.length} Followers
+              <ThemedText style={styles.userName}>
+                {myInfo?.username}
               </ThemedText>
-              <ThemedText style={styles.smallGray}>
-                {myInfo?.following.length} Following
-              </ThemedText>
+              <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText>
+              <ThemedText>{myInfo?.bio}</ThemedText>
+
+              {/* Make links clickable */}
+              {myInfo?.links && (
+                <ThemedText style={{ color: 'blue' }} onPress={() => openLink(myInfo.links)}>
+                  {myInfo.links}
+                </ThemedText>
+              )}
             </>
           ) : (
             <ThemedText></ThemedText>
