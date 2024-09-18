@@ -82,16 +82,18 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         email: string,
         links?: string,
         location?: string,
-        bio?: string,            
+        bio?: string,
+        color?: string
     ) => {
         console.log(bio, 'bio')
         try {
             const bodyData: any = {};
 
-            if (email) bodyData.email = email;            
+            if (email) bodyData.email = email;
             if (links) bodyData.links = links;
             if (location) bodyData.location = location;
             if (bio) bodyData.bio = bio;
+            if (color) bodyData.color = color;
 
             const response = await fetch(`http://localhost:3000/api/updateUser`, {
                 method: 'POST',

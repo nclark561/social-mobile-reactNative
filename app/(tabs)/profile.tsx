@@ -28,7 +28,7 @@ export default function TabTwoScreen() {
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext;
 
-  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe" 
+  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
   const profileImageUrl = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`
   const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
 
@@ -79,38 +79,38 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <ThemedView style={{ flex: 1 }}>
+    <ThemedView style={{ flex: 1 }}>      
       <ThemedView style={styles.header}>
-        <ThemedView style={styles.row}>
-          {loggedIn ? (
-            <Image
-              style={styles.profilePic}
-              source={{
-                uri: profileImageUrl,
-                cache: 'reload'
-              }}
-              defaultSource={{uri: mortyUrl}}
-            />
-          ) : (
-            <ThemedText>Empty Photo</ThemedText>
-          )}
+        <ThemedView style={[styles.backgroundColor, { backgroundColor: myInfo.color || '#fff' }]}></ThemedView>
 
-          <TouchableOpacity style={[styles.button, { borderColor: fadedTextColor }]} onPress={handleOpenEditProfile}>
-            <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
         <ThemedView style={styles.close}>
+          <ThemedView style={[styles.row, {backgroundColor: myInfo.color || '#fff'}]}>
+            {loggedIn ? (
+              <Image
+                style={styles.profilePic}
+                source={{
+                  uri: profileImageUrl,
+                  cache: 'reload'
+                }}
+                defaultSource={{ uri: mortyUrl }}
+              />
+            ) : (
+              <ThemedText>Empty Photo</ThemedText>
+            )}
+
+            <TouchableOpacity style={[styles.button, { borderColor: fadedTextColor }]} onPress={handleOpenEditProfile}>
+              <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
           {loggedIn ? (
             <>
               <ThemedText style={styles.userName}>
                 {myInfo?.username}
               </ThemedText>
               <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText>
-              <ThemedText>{myInfo?.bio}</ThemedText>
-
-              {/* Make links clickable */}
+              <ThemedText style={styles.bio}>{myInfo?.bio}</ThemedText>
               {myInfo?.links && (
-                <ThemedText style={{ color: 'blue' }} onPress={() => openLink(myInfo.links)}>
+                <ThemedText style={styles.link} onPress={() => openLink(myInfo.links)}>
                   {myInfo.links}
                 </ThemedText>
               )}
@@ -128,6 +128,7 @@ export default function TabTwoScreen() {
               <ThemedText style={styles.smallGray}>
                 {myInfo?.following.length} Following
               </ThemedText>
+              
             </>
           ) : (
             <ThemedText></ThemedText>
@@ -152,7 +153,7 @@ export default function TabTwoScreen() {
         ))}
       </ThemedView>
       <ThemedView style={styles.content}>{renderContent()}</ThemedView>
-      <EditProfileSheet currProfileImage={profileImageUrl} editProfileRef={editProfileRef}/>
+      <EditProfileSheet currProfileImage={profileImageUrl} editProfileRef={editProfileRef} />
     </ThemedView>
   );
 }
@@ -216,12 +217,12 @@ const styles = StyleSheet.create({
   content: {
     padding: 10,
   },
-  row: {
+  row: {    
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "95%",
+    width: "95%",        
   },
   button: {
     borderRadius: 15,
@@ -246,5 +247,20 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
+  },
+  link: {
+    color: '#0000EE',
+    fontSize: 10
+  },
+  bio: {
+    fontSize: 13
+  },
+  backgroundColor: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '40%',
+    width: '110%',
+    zIndex: -1,
   },
 });

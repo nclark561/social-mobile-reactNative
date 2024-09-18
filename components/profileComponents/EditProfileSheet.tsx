@@ -4,6 +4,7 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  View
 } from "react-native";
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { ThemedView } from "../ThemedView";
@@ -23,13 +24,20 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage }: EditProfileProps
   const { myInfo, updateUser } = useContext<any>(MyContext);
   const [bio, setBio] = useState(myInfo?.bio || "");
   const [location, setLocation] = useState(myInfo?.location || "");
-  const [links, setLinks] = useState("");
+  const [links, setLinks] = useState(myInfo?.links || "");
   const [profileImage, setProfileImage] = useState<any>(null);
+  const [selectedColor, setSelectedColor] = useState<string>("white");
   const mortyUrl = "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
 
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const handleCloseEditProfile = () => editProfileRef?.current?.dismiss();
+
+  const colors = ["#FFB6C1", "#ADD8E6", "#90EE90", "#FFD700", "#FFA07A"]; // 5 color options
+
+  const handleColorSelect = (color: string) => {
+    setSelectedColor(color);
+  };
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -89,18 +97,33 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage }: EditProfileProps
 
   const handleSave = async () => {
     if (profileImage) await uploadProfileImage(profileImage)
-    updateUser(myInfo.email, links, location, bio);
+    updateUser(myInfo.email, links, location, bio, selectedColor);
     handleCloseEditProfile();
   };
+
+
+console.log(selectedColor, 'selected color')  
 
   return (
     <CustomBottomSheet
       hideCancelButton
       ref={editProfileRef}
-      snapPercs={["70%"]}
+      snapPercs={["60%"]}
     >
       <ThemedView style={styles.bottomSheetContent}>
         <ThemedText style={styles.bottomSheetTitle}>Edit Profile</ThemedText>
+        <View style={styles.colorOptionsContainer}>
+          {colors.map((color) => (
+            <TouchableOpacity
+              key={color}
+              style={[
+                styles.colorOption,
+                { backgroundColor: color, borderWidth: selectedColor === color ? 2 : 0 },
+              ]}
+              onPress={() => handleColorSelect(color)}
+            />
+          ))}
+        </View>
         <ThemedView style={styles.picContainer}>
           <ThemedView style={{ flexDirection: "column", alignItems: "center" }}>
             <Image
@@ -188,5 +211,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 5,
+  },
+  colorOptionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",    
+  },
+  colorOption: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderColor: "#000",
   },
 });
