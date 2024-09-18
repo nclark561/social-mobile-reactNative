@@ -124,7 +124,13 @@ export default function TabTwoScreen() {
               </ThemedText>
               <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText>
               <ThemedText>{myInfo?.bio}</ThemedText>
-              <ThemedText>{myInfo?.links}</ThemedText>
+
+              {/* Make links clickable */}
+              {myInfo?.links && (
+                <ThemedText style={{ color: 'blue' }} onPress={() => openLink(myInfo.links)}>
+                  {myInfo.links}
+                </ThemedText>
+              )}
             </>
           ) : (
             <ThemedText>Login </ThemedText>
@@ -133,18 +139,12 @@ export default function TabTwoScreen() {
         <ThemedView style={styles.followersRow}>
           {loggedIn ? (
             <>
-              <ThemedText style={styles.userName}>
-                {myInfo?.username}
+              <ThemedText style={styles.smallGray}>
+                {myInfo?.followers.length} Followers
               </ThemedText>
-              <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText>
-              <ThemedText>{myInfo?.bio}</ThemedText>
-
-              {/* Make links clickable */}
-              {myInfo?.links && (
-                <ThemedText style={{ color: 'blue' }} onPress={() => openLink(myInfo.links)}>
-                  {myInfo.links}
-                </ThemedText>
-              )}
+              <ThemedText style={styles.smallGray}>
+                {myInfo?.following.length} Following
+              </ThemedText>
             </>
           ) : (
             <ThemedText></ThemedText>
