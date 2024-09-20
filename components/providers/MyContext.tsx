@@ -12,11 +12,17 @@ interface MyInfo {
 }
 
 export interface UserContextType {
-    myInfo: MyInfo | undefined
+    myInfo: MyInfo | undefined;
     setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
     loggedIn: boolean;
     updateUser: (links: string, email: string, location: string, bio?: string, username?: string, following?: string[]) => Promise<void>;
-    getUser: () => Promise<void>;  // Add getUser to the UserContextType interface
+    getUser: () => Promise<void>;
+    updateFollowers: (
+        followeeId: string,
+        followerId: string,
+        followers: string[],
+        following: string[]
+    ) => Promise<void>;  // Add updateFollowers to the UserContextType interface
 }
 
 const MyContext = createContext<UserContextType | undefined>(undefined);
@@ -27,7 +33,6 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log('hitting get user')        
         getSession();
     }, [loggedIn, loginToggle]);
 
@@ -47,12 +52,10 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const getUser = async () => {
-        console.log('hitting get user')
         try {
             const userEmail = await AsyncStorage.getItem("user");
             if (!userEmail) throw new Error('User not logged in');
             const email = JSON.parse(userEmail);
-            console.log(email, 'this is the email')
             const result = await fetch(
                 `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/myInfo?email=${email}`,
                 {
@@ -62,10 +65,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                     },
                 }
             );
-
-            console.log(`Status: ${result.status}`);
             const text = await result.text();
-            console.log(`Response Text: ${text}`);
             const userInfo = JSON.parse(text);
             setMyInfo(userInfo.user);
         } catch (error) {
@@ -82,7 +82,6 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     ) => {
         try {
             const bodyData: any = {};
-
             if (email) bodyData.email = email;
             if (links) bodyData.links = links;
             if (location) bodyData.location = location;
@@ -97,7 +96,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                 body: JSON.stringify(bodyData),
             });
 
-            const result = await response.json();
+            await response.json();
             await getUser(); // Refresh the user info after update
         } catch (error) {
             console.error("Failed to update user:", error);
@@ -107,8 +106,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     const updateFollowers = async (
         followeeId: string,
         followerId: string,
-        followers: String[],
-        following: String[]
+        followers: string[],
+        following: string[]
     ) => {
         try {
             const bodyData: any = {};
@@ -125,15 +124,15 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
                 body: JSON.stringify(bodyData),
             });
 
-            const result = await response.json();
+            await response.json();
             await getUser(); // Refresh the user info after update
         } catch (error) {
-            console.error("Failed to update user:", error);
+            console.error("Failed to update followers:", error);
         }
     };
 
     return (
-        <MyContext.Provider value={{ myInfo, setLoginToggle, loggedIn, updateUser, getUser }}>
+        <MyContext.Provider value={{ myInfo, setLoginToggle, loggedIn, updateUser, getUser, updateFollowers }}>
             {children}
         </MyContext.Provider>
     );

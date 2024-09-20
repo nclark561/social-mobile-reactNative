@@ -258,7 +258,7 @@ console.log(post?.owner?.id, 'this is the post')
               <Image
                 style={styles.commentPic}
                 source={{
-                  uri: "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg",
+                  uri: `${profileImage(post?.owner?.id)}`,
                 }}
               />
               <ThemedText style={styles.postUser}>{post.email}</ThemedText>
@@ -273,7 +273,7 @@ console.log(post?.owner?.id, 'this is the post')
               <Image
                 style={styles.commentPic}
                 source={{
-                  uri: "https://avatars.githubusercontent.com/u/125314332?v=4",
+                  uri: `${profileImage(myInfo.id)}`,
                 }}
               />
               <BottomSheetTextInput

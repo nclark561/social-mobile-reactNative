@@ -19,7 +19,7 @@ export default function TabTwoScreen() {
   const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
   const [user, setUser] = useState<any>();
   const context = useContext<any>(MyContext);
-  const { setLoginToggle, myInfo, loggedIn, updateUser } = context
+  const { setLoginToggle, myInfo, loggedIn, updateUser, updateFollowers } = context
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext
   const local = useLocalSearchParams()
@@ -58,7 +58,7 @@ export default function TabTwoScreen() {
         return <ThemedView>
           {Array.isArray(user?.posts) && user?.posts?.map((post: any) => {
             return (
-              <Post key={post.id} post={post} />
+              <Post key={post.id} post={post} user={myInfo.email} />
             )
           })}
         </ThemedView>;
@@ -108,6 +108,17 @@ export default function TabTwoScreen() {
             style={styles.profilePic}
             source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
           /> : <ThemedText>Empty Photo</ThemedText>}
+          {user && myInfo && myInfo.email !== user.email ? (
+            isFollowed(user.followers) ? (
+              <Pressable>
+                <Ionicons name={'checkmark-done-circle-outline'}></Ionicons>
+              </Pressable>
+            ) : (
+              <Pressable>
+                <ThemedText style={styles.button}>Follow</ThemedText>
+              </Pressable>
+            )
+          ) : null}
         </ThemedView>
         <ThemedView style={styles.close}>
           {loggedIn ? (
@@ -119,13 +130,7 @@ export default function TabTwoScreen() {
             <ThemedText>Login</ThemedText>
           )}
 
-          {user && myInfo && myInfo.email !== user.email ? (
-            isFollowed(user.followers) ? (
-              <ThemedText>Following</ThemedText>
-            ) : (
-              <ThemedText>Not Following</ThemedText>
-            )
-          ) : null}
+
         </ThemedView>
         <ThemedView style={styles.followersRow}>
           {loggedIn ? <><ThemedText style={styles.smallGray}>{user?.followers.length} Followers</ThemedText>
