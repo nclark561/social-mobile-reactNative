@@ -87,6 +87,7 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage, setProfileImageUri
       const result = await uploadResponse.json();
       console.log("Upload successful:", result);
       setProfileImageUri(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`)
+      setProfileImage(null)
     } catch (error) {
       console.error(
         "Error uploading image:",

@@ -48,15 +48,6 @@ export default function PostPage({ post }: { post: Post }) {
     setLiked((prev) => !prev);
   };
 
-
-
-  useFocusEffect(
-    useCallback(() => {
-      getPost();
-    }, [])
-  );
-
-
   const addLike = async (
     userId: string,
     postId: string,
@@ -136,11 +127,12 @@ export default function PostPage({ post }: { post: Post }) {
     return likes?.includes(myInfo?.id);
   };
 
-
-
+  useFocusEffect(() => {
+    getPost();
+  });
 
   return (
-    <>
+    <ThemedView style={{ flex: 1 }}>
       <ThemedView>
         <Pressable>
           <Link href="/(tabs)/">
@@ -255,9 +247,9 @@ export default function PostPage({ post }: { post: Post }) {
       </ThemedView>
       {thisPost?.comments.map((comment: any) => {
         
-        return <Post key={comment.id} isComment post={comment}/>
+        return <Post key={comment.id} isComment post={comment} user={myInfo?.email}/>
       })}
-    </>
+    </ThemedView>
   );
 }
 
