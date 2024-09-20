@@ -65,8 +65,8 @@ export default function Post({ post, isComment, user }: PostProps) {
     try {
       const test = await fetch(
         !isComment
-          ? `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`
-          : `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addCommentLike`,
+          ? `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addLike`
+          : `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addCommentLike`,
         {
           method: "POST",
           headers: {
@@ -94,7 +94,7 @@ export default function Post({ post, isComment, user }: PostProps) {
   ) => {
     try {
       const response = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addComment`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addComment`,
         {
           method: "POST",
           headers: {
@@ -131,7 +131,7 @@ export default function Post({ post, isComment, user }: PostProps) {
         <ThemedView style={styles.flex}>
           <Image
             style={styles.profilePic}
-            source={{
+            source={{                                          
               uri: "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250",
             }}
           />
@@ -164,7 +164,7 @@ export default function Post({ post, isComment, user }: PostProps) {
                 size={15}
                 name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
                 onPress={() => {
-                  addLike(myInfo.id, post.id);
+                  addLike(myInfo?.id, post.id);
                 }}
                 color={colorScheme === "dark" ? "white" : "black"}
               />

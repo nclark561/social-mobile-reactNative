@@ -19,7 +19,7 @@ export default function TabTwoScreen() {
   const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
   const [user, setUser] = useState<any>();
   const context = useContext<any>(MyContext);
-  const { setLoginToggle, myInfo, loggedIn } = context
+  const { setLoginToggle, myInfo, loggedIn, updateUser } = context
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext
   const local = useLocalSearchParams()
@@ -36,7 +36,7 @@ export default function TabTwoScreen() {
   const getUser = async () => {
     try {
       const result = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/myInfo?email=${local.profile}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/myInfo?email=${local.profile}`,
         {
           method: "GET",
           headers: {
@@ -66,8 +66,8 @@ export default function TabTwoScreen() {
         return <ThemedText>Reposts</ThemedText>;
       case 'Replies':
         return <ThemedView>
-          {myInfo?.comments?.map((comment: any) => {
-            
+          {user?.comments?.map((comment: any) => {
+
             return (
               <ThemedView key={comment.id || comment.content}>
                 <ThemedText style={styles.content}>{comment?.comment}</ThemedText>
@@ -86,7 +86,15 @@ export default function TabTwoScreen() {
     return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
   };
 
-  
+
+  console.log(myInfo?.email !== user?.email, 'this is user data')
+
+
+  const isFollowed = (followers: string[]): boolean => {
+    return followers.includes(myInfo?.id);
+  };
+
+
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.header}>
@@ -102,16 +110,23 @@ export default function TabTwoScreen() {
           /> : <ThemedText>Empty Photo</ThemedText>}
         </ThemedView>
         <ThemedView style={styles.close}>
-          {loggedIn ? <><ThemedText style={styles.userName}>{user?.username}</ThemedText>
-            <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText></> : <ThemedText>Login </ThemedText>}
-        </ThemedView>
-        {/* <ThemedView style={styles.locationRow}>
-                    {loggedIn ? <><ThemedText style={styles.smallGray}>{user?.location}</ThemedText>
-                        <ThemedText style={styles.smallGrayDate}>
-                            Joined {myInfo?.date ? formatDate(myInfo?.date) : ''}
-                        </ThemedText></> : <ThemedText></ThemedText>}
+          {loggedIn ? (
+            <>
+              <ThemedText style={styles.userName}>{user?.username}</ThemedText>
+              <ThemedText style={styles.tag}>@{user?.email}</ThemedText>
+            </>
+          ) : (
+            <ThemedText>Login</ThemedText>
+          )}
 
-                </ThemedView> */}
+          {user && myInfo && myInfo.email !== user.email ? (
+            isFollowed(user.followers) ? (
+              <ThemedText>Following</ThemedText>
+            ) : (
+              <ThemedText>Not Following</ThemedText>
+            )
+          ) : null}
+        </ThemedView>
         <ThemedView style={styles.followersRow}>
           {loggedIn ? <><ThemedText style={styles.smallGray}>{user?.followers.length} Followers</ThemedText>
             <ThemedText style={styles.smallGray}>{user?.following.length} Following</ThemedText></> : <ThemedText></ThemedText>}

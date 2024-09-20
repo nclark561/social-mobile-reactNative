@@ -27,7 +27,7 @@ export default function TabTwoScreen() {
   const { setLoginToggle, myInfo, loggedIn, updateUser } = context;
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext;
-  const [ profileImageUri, setProfileImageUri ] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`)
+  const [profileImageUri, setProfileImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`)
 
   const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
   const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
@@ -83,14 +83,14 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <ThemedView style={{ flex: 1 }}>      
+    <ThemedView style={{ flex: 1, marginTop: -70 }}>
       <ThemedView style={styles.header}>
-        <ThemedView style={[styles.backgroundColor, { backgroundColor: myInfo.color || '#fff' }]}></ThemedView>
-
         <ThemedView style={styles.close}>
-          <ThemedView style={[styles.row, {backgroundColor: myInfo.color || '#fff'}]}>
+          <ThemedView style={[styles.backgroundColor, { backgroundColor: myInfo.color || '#fff' }]}></ThemedView>
+          <ThemedView style={styles.row}>
             {loggedIn ? (
               <Image
+              
                 style={styles.profilePic}
                 source={{
                   uri: profileImageUri,
@@ -107,18 +107,18 @@ export default function TabTwoScreen() {
             </TouchableOpacity>
           </ThemedView>
           {loggedIn ? (
-            <>
+            <ThemedView style={styles.columnLeftPadding}>
               <ThemedText style={styles.userName}>
                 {myInfo?.username}
               </ThemedText>
-              <ThemedText style={styles.tag}>@{myInfo?.email}</ThemedText>
+              {/* <ThemedText style={styles.tag}>@{myInfo?.userName}</ThemedText> */}
               <ThemedText style={styles.bio}>{myInfo?.bio}</ThemedText>
               {myInfo?.links && (
                 <ThemedText style={styles.link} onPress={() => openLink(myInfo.links)}>
                   {myInfo.links}
                 </ThemedText>
               )}
-            </>
+            </ThemedView>
           ) : (
             <ThemedText>Login </ThemedText>
           )}
@@ -132,7 +132,7 @@ export default function TabTwoScreen() {
               <ThemedText style={styles.smallGray}>
                 {myInfo?.following.length} Following
               </ThemedText>
-              
+
             </>
           ) : (
             <ThemedText></ThemedText>
@@ -166,9 +166,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "column",
     paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingBottom: 20,        
     justifyContent: "space-between",
     alignItems: "baseline",
     width: "100%",
@@ -176,9 +174,9 @@ const styles = StyleSheet.create({
   },
   profilePic: {
     borderRadius: 25,
-    width: 45,
-    height: 45,
-    marginBottom: 15,
+    marginTop: 60,
+    width: 55,
+    height: 55,
   },
   userName: {
     fontSize: 16,
@@ -193,6 +191,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "40%",
+    paddingLeft: 10
   },
   close: {
     display: "flex",
@@ -221,12 +220,17 @@ const styles = StyleSheet.create({
   content: {
     padding: 10,
   },
-  row: {    
+  row: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "95%",        
+    width: "95%",
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+    paddingLeft: 10
+  },
+  columnLeftPadding: {
+    paddingLeft: 10
   },
   button: {
     borderRadius: 15,
@@ -234,6 +238,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 5,
+    marginTop: 90
   },
   bottomSheetContent: {
     padding: 20,

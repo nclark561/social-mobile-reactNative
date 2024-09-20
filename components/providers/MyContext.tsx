@@ -52,11 +52,11 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
     const getUser = async () => {
         try {
-            const userEmail = await AsyncStorage.getItem("user");            
+            const userEmail = await AsyncStorage.getItem("user");
             if (!userEmail) throw new Error('User not logged in')
             const email = JSON.parse(userEmail);
             const result = await fetch(
-                `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/myInfo?email=${email}`,
+                `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/myInfo?email=${email}`,
                 {
                     method: 'GET',
                     headers: {
@@ -83,7 +83,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         location?: string,
         bio?: string,
         color?: string
-    ) => {        
+    ) => {
         try {
             const bodyData: any = {};
 
@@ -94,6 +94,34 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             if (color) bodyData.color = color;
 
             const response = await fetch(`http://localhost:3000/api/updateUser`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bodyData),
+            });
+
+            const result = await response.json();
+            await getUser(); // Refresh the user info after update
+        } catch (error) {
+            console.error("Failed to update user:", error);
+        }
+    };
+
+
+    const updateFollowers = async (
+        followeeId: string,
+        followerId: string,
+        followers: String[],
+        following: String[]
+    ) => {
+        try {
+            const bodyData: any = {};
+            if (followeeId) bodyData.followeeId = followeeId
+            if (followerId) bodyData.followerId = followerId
+            if (followers) bodyData.followers = followers;
+            if (following) bodyData.following = following;            
+            const response = await fetch(`http://localhost:3000/api/updateUserFollow`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

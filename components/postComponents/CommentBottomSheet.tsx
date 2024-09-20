@@ -29,7 +29,7 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
   ) => {
     try {
       const response = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addComment`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addComment`,
         {
           method: "POST",
           headers: {

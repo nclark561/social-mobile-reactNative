@@ -72,7 +72,7 @@ const EditProfileSheet = ({ editProfileRef, currProfileImage, setProfileImageUri
 
       // Make the POST request with fetch      
       const uploadResponse = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/supabase-s3`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/supabase-s3`,
         {
           method: "POST",
           body: formData,

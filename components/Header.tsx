@@ -18,14 +18,27 @@ export default function Header({ name }: HeaderProps) {
     const context = useContext<any>(MyContext);
     const { setLoginToggle, myInfo, loggedIn } = context
     const handlePress = () => navigation.dispatch(DrawerActions.openDrawer())
+    const [profileImageUri, setProfileImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`)
+    const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+
+
+    const handleError = () => {
+        setProfileImageUri(mortyUrl);
+      };
+      
 
     return (
         <ThemedView style={styles.page}>
             {loggedIn ? (
                 <Pressable onPress={handlePress}>
                     <Image
+
                         style={styles.profilePic}
-                        source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
+                        source={{
+                            uri: profileImageUri,
+                            cache: 'reload'
+                        }}
+                        onError={handleError}
                     />
                 </Pressable>
             ) : (
@@ -34,7 +47,7 @@ export default function Header({ name }: HeaderProps) {
                 </Pressable>
             )}
             <ThemedText style={styles.Title}>{name}</ThemedText>
-            <ThemedView style={{width: 35}}></ThemedView>
+            <ThemedView style={{ width: 35 }}></ThemedView>
         </ThemedView>
     );
 }

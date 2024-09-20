@@ -28,7 +28,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     const getUserPosts = async (email: string) => {
         try {
             const result = await fetch(
-                `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/getMyPosts?email=${email}`,
+                `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getMyPosts?email=${email}`,
                 {
                     method: "GET",
                     headers: {
@@ -48,7 +48,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         console.log('getting for you posts')
         try {
             const result = await fetch(
-                `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/getPosts`,
+                `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getPosts`,
                 {
                     method: "GET",
                     headers: {

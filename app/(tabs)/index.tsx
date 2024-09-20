@@ -34,7 +34,7 @@ export default function HomeScreen() {
   ) => {    
     const userEmail = await AsyncStorage.getItem("user");
     try {
-      const test = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/createPost`, {
+      const test = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createPost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

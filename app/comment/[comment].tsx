@@ -56,7 +56,7 @@ export default function CommentPage() {
     
     try {
       const test = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addLike`,
         {
           method: "POST",
           headers: {
@@ -83,7 +83,7 @@ export default function CommentPage() {
   ) => {
     try {
       const response = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addComment`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addComment`,
         {
           method: "POST",
           headers: {
@@ -108,7 +108,7 @@ export default function CommentPage() {
   const getPost = async () => {
     try {
       const result = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/getSingleComment?id=${local.comment}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getSingleComment?id=${local.comment}`,
         {
           method: "GET",
           headers: {

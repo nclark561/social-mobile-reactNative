@@ -7,6 +7,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useContext } from 'react';
 import MyContext from '@/components/providers/MyContext';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -26,7 +27,7 @@ export default function TabLayout() {
           backgroundColor,
           borderTopWidth: 1,
         },
-      }}>
+      }}>        
       <Tabs.Screen
         name="index"
         options={{

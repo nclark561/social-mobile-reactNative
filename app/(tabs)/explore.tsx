@@ -21,25 +21,32 @@ const kale = {
   profilePic: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
 }
 
-const results = [ kale, noah, kale, noah, kale, noah, kale, noah, kale ]
+const results = [kale, noah, kale, noah, kale, noah, kale, noah, kale]
 
 export default function TabTwoScreen() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn } = context;
-  const [ searchInput, setSearchInput ] = useState('')
+  const [searchInput, setSearchInput] = useState('')
+  const [profileImageUri, setProfileImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`)
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+
+  const handleError = () => {
+    setProfileImageUri(mortyUrl);
+  };
+
 
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
   return (
-    <ThemedView style={{flex: 1, flexDirection: 'column'}}>
+    <ThemedView style={{ flex: 1, flexDirection: 'column' }}>
       <ThemedView style={styles.header}>
         {loggedIn ? (
           <Pressable onPress={handlePress}>
-            <Image 
-              style={styles.profilePic} 
-              source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} 
+            <Image
+              style={styles.profilePic}
+              source={{ uri: profileImageUri }}
             />
           </Pressable>
         ) : (
@@ -49,20 +56,20 @@ export default function TabTwoScreen() {
         )}
         <ThemedView style={[styles.searchInput, colorScheme === 'dark' ? { backgroundColor: '#3b3b3b' } : { backgroundColor: '#d3d3d3' }]}>
           <Ionicons size={17} name="search" color={'gray'} style={styles.searchIcon} />
-          <TextInput placeholder='Search' placeholderTextColor={'gray'} style={[{ maxWidth: '80%' }, colorScheme === 'dark' && { color: 'white' }]} onChangeText={text => setSearchInput(text)}/>
+          <TextInput placeholder='Search' placeholderTextColor={'gray'} style={[{ maxWidth: '80%' }, colorScheme === 'dark' && { color: 'white' }]} onChangeText={text => setSearchInput(text)} />
         </ThemedView>
-        <ThemedView style={{width: 35}}></ThemedView>
+        <ThemedView style={{ width: 35 }}></ThemedView>
       </ThemedView>
       {searchInput.length === 0 ? (<>
-          <ThemedText style={styles.title} type='title'>Featured</ThemedText>
-          <ProfileDisplay user={noah}/>
-          <ProfileDisplay user={kale}/>
-        </>
-        ) : (
+        <ThemedText style={styles.title} type='title'>Featured</ThemedText>
+        <ProfileDisplay user={noah} />
+        <ProfileDisplay user={kale} />
+      </>
+      ) : (
         <>
           <ThemedText style={styles.title} type='title'>Results</ThemedText>
           <Animated.ScrollView>
-            {results.map((e, i) => <ProfileDisplay key={i} user={e}/>)}
+            {results.map((e, i) => <ProfileDisplay key={i} user={e} />)}
           </Animated.ScrollView>
         </>
       )}

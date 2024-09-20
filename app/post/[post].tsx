@@ -64,7 +64,7 @@ export default function PostPage({ post }: { post: Post }) {
   ) => {
     
     try {
-      const test = await fetch(comment ? `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addCommentLike` : `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addLike`, {
+      const test = await fetch(comment ? `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addCommentLike` : `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addLike`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ export default function PostPage({ post }: { post: Post }) {
   ) => {
     try {
       const response = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/addComment`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addComment`,
         {
           method: "POST",
           headers: {
@@ -116,7 +116,7 @@ export default function PostPage({ post }: { post: Post }) {
   const getPost = async () => {
     try {
       const result = await fetch(
-        `https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}.ngrok-free.app/api/getPost?id=${local.post}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getPost?id=${local.post}`,
         {
           method: "GET",
           headers: {
