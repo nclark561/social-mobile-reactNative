@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyContext from "../../components/providers/MyContext";
 import PostContext from "../../components/providers/PostContext";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -27,7 +27,7 @@ export default function TabTwoScreen() {
   const { setLoginToggle, myInfo, loggedIn, updateUser } = context;
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext;
-  const [profileImageUri, setProfileImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`)
+  const [profileImageUri, setProfileImageUri] = useState(``)
 
   const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
   const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
@@ -44,6 +44,15 @@ export default function TabTwoScreen() {
       getUserPosts(myInfo?.email);
     }, [myInfo])
   );
+
+
+  useEffect(() => {
+    if (myInfo?.id) {
+        const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+        setProfileImageUri(newProfileImageUri);
+    }
+}, [myInfo]);
+
 
   const renderContent = () => {
     switch (selectedOption) {

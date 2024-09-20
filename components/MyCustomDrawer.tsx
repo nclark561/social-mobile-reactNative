@@ -1,5 +1,5 @@
 // components/MyCustomDrawer.js
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Image, Button, View, Pressable } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { ThemedText } from './ThemedText';
@@ -12,9 +12,10 @@ import MyContext from './providers/MyContext';
 export default function MyCustomDrawer(props: any) {
     const context = useContext<any>(MyContext);
     const { setLoginToggle, myInfo, loggedIn } = context
-    const [profileImageUri, setProfileImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`)
+    const [profileImageUri, setProfileImageUri] = useState('')
     // const router = useRouter();
     const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+
 
     const handleLogout = async () => {
         try {
@@ -30,19 +31,25 @@ export default function MyCustomDrawer(props: any) {
         }
     };
 
+    useEffect(() => {
+        if (myInfo?.id) {
+            const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+            setProfileImageUri(newProfileImageUri);
+        }
+    }, [myInfo]);
+
 
     const handleError = () => {
-        console.log('hitting morty url')
-        setProfileImageUri(mortyUrl);
-    };
-
+    console.log("Image failed to load. URI:", profileImageUri); // Log the problematic URI
+    console.log("Fallback to default image.");
+    setProfileImageUri(mortyUrl);
+};
 
 
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
             <View style={styles.header}>
                 {loggedIn ? <Image
-
                     style={styles.profilePic}
                     source={{
                         uri: profileImageUri,

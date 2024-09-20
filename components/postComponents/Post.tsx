@@ -36,7 +36,8 @@ export default function Post({ post, isComment, user }: PostProps) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
-
+  const [profileImageUri, setProfileImageUri] = useState('')
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
   const link = isComment ? "comment" : "post";
 
   const { getForYouPosts, getUserPosts } = useContext<any>(PostContext);
@@ -61,7 +62,7 @@ export default function Post({ post, isComment, user }: PostProps) {
   };
 
   const addLike = async (userId: string, postId: string) => {
-    
+
     try {
       const test = await fetch(
         !isComment
@@ -110,16 +111,24 @@ export default function Post({ post, isComment, user }: PostProps) {
         }
       );
       const post = await response.json();
-      
+
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
 
+  const profileImage = (id: string) => {
+    if (id) {
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      return newProfileImageUri
+  }
+  }
+
+console.log(post?.owner?.id, 'this is the post')
 
   return (
-    <Pressable onPress={() => router.navigate(`/${link}/${post.id}`)}>
+    <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
       <ThemedView
         style={[
           styles.postContainer,
@@ -131,8 +140,8 @@ export default function Post({ post, isComment, user }: PostProps) {
         <ThemedView style={styles.flex}>
           <Image
             style={styles.profilePic}
-            source={{                                          
-              uri: "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250",
+            source={{
+              uri: `${profileImage(post?.owner?.id)}`,
             }}
           />
         </ThemedView>

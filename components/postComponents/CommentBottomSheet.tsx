@@ -2,7 +2,7 @@ import { StyleSheet, Button, Pressable, Image, useColorScheme, View, Text } from
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { ThemedView } from "../ThemedView";
 import { ThemedText } from "../ThemedText";
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import MyContext from "../providers/MyContext";
 import { ScrollView } from "react-native-gesture-handler";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
@@ -16,6 +16,8 @@ interface CommentBottomSheetProps {
 const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomSheetProps) => {
   const [commentInput, setCommentInput] = useState("");
   const { myInfo } = useContext<any>(MyContext);
+  const [profileImageUri, setProfileImageUri] = useState('')
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
   const colorScheme = useColorScheme()
 
   const handleCloseComment = () => commentModalRef.current?.dismiss();
@@ -45,11 +47,20 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
         }
       );
       const post = await response.json();
-      
+
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
+
+
+  // useEffect(() => {
+  //   if (myInfo?.id) {
+  //     const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+  //     setProfileImageUri(newProfileImageUri);
+  //   }
+  // }, [myInfo]);
+
 
   return (
     <CustomBottomSheet
@@ -123,53 +134,53 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
 export default CommentBottomSheet;
 
 const styles = StyleSheet.create({
-    commentContainer: {
-        flexDirection: "column",
-        paddingTop: 20,
-      },
-      buttonContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: "100%",
-        padding: 10,
-      },
-      postButton: {
-        borderRadius: 25,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        backgroundColor: "#26a7de",
-      },
-      buttonText: {
-        color: "white",
-      },
-      commentOP: {
-        flexDirection: "row",
-        alignItems: "center",
-      },
-      commentPic: {
-        borderRadius: 25,
-        width: 25,
-        height: 25,
-        margin: 10,
-      },
-      commentOGPost: {
-        flexDirection: "row",
-        marginVertical: 5,
-        maxHeight: "55%",
-      },
-      line: {
-        backgroundColor: "#bebebe",
-        width: 3,
-        borderRadius: 25,
-        marginHorizontal: 21,
-      },
-      commentScroll: {
-        maxWidth: "80%",
-        paddingRight: 10,
-      },
-      postUser: {
-        fontWeight: "bold",
-        fontSize: 15,
-        paddingBottom: 2,
-      },
+  commentContainer: {
+    flexDirection: "column",
+    paddingTop: 20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 10,
+  },
+  postButton: {
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: "#26a7de",
+  },
+  buttonText: {
+    color: "white",
+  },
+  commentOP: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  commentPic: {
+    borderRadius: 25,
+    width: 25,
+    height: 25,
+    margin: 10,
+  },
+  commentOGPost: {
+    flexDirection: "row",
+    marginVertical: 5,
+    maxHeight: "55%",
+  },
+  line: {
+    backgroundColor: "#bebebe",
+    width: 3,
+    borderRadius: 25,
+    marginHorizontal: 21,
+  },
+  commentScroll: {
+    maxWidth: "80%",
+    paddingRight: 10,
+  },
+  postUser: {
+    fontWeight: "bold",
+    fontSize: 15,
+    paddingBottom: 2,
+  },
 });
