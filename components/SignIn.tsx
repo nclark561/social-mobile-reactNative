@@ -13,7 +13,7 @@ export default function SignIn({ setLogin }: { setLogin: (value: boolean) => voi
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
     const colorScheme = useColorScheme()
     const context = useContext(MyContext);
-    const { setLoginToggle } = context
+    const { setLoginToggle, getUser } = context
 
 
 
@@ -33,6 +33,7 @@ export default function SignIn({ setLogin }: { setLogin: (value: boolean) => voi
                 
                 setLogin(true)
                 setLoginToggle(true)
+                await getUser()
                 router.navigate('/(tabs)/')
             }
 

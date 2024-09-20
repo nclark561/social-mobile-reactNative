@@ -40,8 +40,9 @@ export default function TabTwoScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      console.log(myInfo.email, 'this is email on profile apge')
       getUserPosts(myInfo?.email);
-    }, [])
+    }, [myInfo])
   );
 
   const renderContent = () => {
@@ -81,12 +82,14 @@ export default function TabTwoScreen() {
     }
     Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
   };
+  
+  
 
   return (
     <ThemedView style={{ flex: 1, marginTop: -70 }}>
       <ThemedView style={styles.header}>
         <ThemedView style={styles.close}>
-          <ThemedView style={[styles.backgroundColor, { backgroundColor: myInfo.color || '#fff' }]}></ThemedView>
+          <ThemedView style={[styles.backgroundColor, { backgroundColor: myInfo?.color || '#fff' }]}></ThemedView>
           <ThemedView style={styles.row}>
             {loggedIn ? (
               <Image

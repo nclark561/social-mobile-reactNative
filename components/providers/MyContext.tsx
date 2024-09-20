@@ -16,6 +16,7 @@ export interface UserContextType {
     setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
     loggedIn: boolean;
     updateUser: (links: string, email: string, location: string, bio?: string, username?: string, following?: string[]) => Promise<void>;
+    getUser: () => Promise<void>;  // Add getUser to the UserContextType interface
 }
 
 const MyContext = createContext<UserContextType | undefined>(undefined);
@@ -23,25 +24,21 @@ const MyContext = createContext<UserContextType | undefined>(undefined);
 export const MyProvider = ({ children }: { children: ReactNode }) => {
     const [myInfo, setMyInfo] = useState<MyInfo>();
     const [loginToggle, setLoginToggle] = useState(false);
-    const [loggedIn, setLoggedIn] = useState<boolean>(false)
-
-
+    const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
     useEffect(() => {
-        getUser();
-        getSession()
-    }, [loginToggle])
-
+        console.log('hitting get user')        
+        getSession();
+    }, [loggedIn, loginToggle]);
 
     async function getSession() {
         try {
             const { data, error } = await supabase.auth.getUser();
             if (error) {
-                setLoggedIn(false)
+                setLoggedIn(false);
                 return null;
             }
-            setLoggedIn(true)
-
+            setLoggedIn(true);
             return data;
         } catch (err) {
             console.error('Unexpected error:', err);
@@ -49,12 +46,13 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-
     const getUser = async () => {
+        console.log('hitting get user')
         try {
             const userEmail = await AsyncStorage.getItem("user");
-            if (!userEmail) throw new Error('User not logged in')
+            if (!userEmail) throw new Error('User not logged in');
             const email = JSON.parse(userEmail);
+            console.log(email, 'this is the email')
             const result = await fetch(
                 `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/myInfo?email=${email}`,
                 {
@@ -70,12 +68,10 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             console.log(`Response Text: ${text}`);
             const userInfo = JSON.parse(text);
             setMyInfo(userInfo.user);
-
         } catch (error) {
             console.log(error, 'this is the get user error');
         }
     };
-
 
     const updateUser = async (
         email: string,
@@ -108,7 +104,6 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-
     const updateFollowers = async (
         followeeId: string,
         followerId: string,
@@ -117,10 +112,11 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     ) => {
         try {
             const bodyData: any = {};
-            if (followeeId) bodyData.followeeId = followeeId
-            if (followerId) bodyData.followerId = followerId
+            if (followeeId) bodyData.followeeId = followeeId;
+            if (followerId) bodyData.followerId = followerId;
             if (followers) bodyData.followers = followers;
-            if (following) bodyData.following = following;            
+            if (following) bodyData.following = following;
+
             const response = await fetch(`http://localhost:3000/api/updateUserFollow`, {
                 method: 'POST',
                 headers: {
@@ -137,7 +133,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <MyContext.Provider value={{ myInfo, setLoginToggle: setLoginToggle, loggedIn, updateUser: updateUser }}>
+        <MyContext.Provider value={{ myInfo, setLoginToggle, loggedIn, updateUser, getUser }}>
             {children}
         </MyContext.Provider>
     );

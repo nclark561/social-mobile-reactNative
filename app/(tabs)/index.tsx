@@ -1,6 +1,6 @@
 import { StyleSheet, Pressable, Button, useColorScheme, Text, Image } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { useContext } from "react";
+import { useContext, useCallback } from "react";
 import Animated from "react-native-reanimated";
 import Post from "@/components/postComponents/Post";
 import Header from "@/components/Header";
@@ -11,6 +11,7 @@ import { useRef, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "@/components/providers/MyContext";
+import { useFocusEffect } from "expo-router";
 
 
 export default function HomeScreen() {
@@ -34,7 +35,7 @@ export default function HomeScreen() {
   ) => {    
     const userEmail = await AsyncStorage.getItem("user");
     try {
-      const test = await fetch(`https://${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createPost`, {
+      const test = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createPost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +52,13 @@ export default function HomeScreen() {
     }
   };
 
-
+  
+  useFocusEffect(
+    useCallback(() => {      
+      getForYouPosts()
+      getUserPosts(myInfo?.email);
+    }, [myInfo])
+  );
 
 
   return (

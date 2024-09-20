@@ -1,5 +1,5 @@
 // components/MyCustomDrawer.js
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, Image, Button, View, Pressable } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { ThemedText } from './ThemedText';
@@ -12,8 +12,10 @@ import MyContext from './providers/MyContext';
 export default function MyCustomDrawer(props: any) {
     const context = useContext<any>(MyContext);
     const { setLoginToggle, myInfo, loggedIn } = context
+    const [profileImageUri, setProfileImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`)
     // const router = useRouter();
-    
+    const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+
     const handleLogout = async () => {
         try {
             const { error } = await supabase.auth.signOut();
@@ -29,10 +31,25 @@ export default function MyCustomDrawer(props: any) {
     };
 
 
+    const handleError = () => {
+        console.log('hitting morty url')
+        setProfileImageUri(mortyUrl);
+    };
+
+
+
     return (
         <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
             <View style={styles.header}>
-                {loggedIn ? <Image style={styles.profilePic} source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }} /> : <Pressable onPress={() => { router.navigate('/login') }}><ThemedText>Login</ThemedText></Pressable>}
+                {loggedIn ? <Image
+
+                    style={styles.profilePic}
+                    source={{
+                        uri: profileImageUri,
+                        cache: 'reload'
+                    }}
+                    onError={handleError}
+                /> : <Pressable onPress={() => { router.navigate('/login') }}><ThemedText>Login</ThemedText></Pressable>}
                 {loggedIn && <ThemedText style={styles.headerText}>{myInfo?.username}</ThemedText>}
             </View>
             <DrawerItemList {...props} />

@@ -26,6 +26,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
 
     const getUserPosts = async (email: string) => {
+        console.log(email, 'hitting get user posts')
         try {
             const result = await fetch(
                 `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getMyPosts?email=${email}`,
@@ -44,8 +45,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     };
 
 
-    const getForYouPosts = async () => {
-        console.log('getting for you posts')
+    const getForYouPosts = async () => {        
         try {
             const result = await fetch(
                 `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getPosts`,
