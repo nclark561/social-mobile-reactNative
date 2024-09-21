@@ -24,6 +24,8 @@ interface Post {
   replies?: any;
   postId?: string;
   userName: string;
+  userId?: string,
+  owner: any
 }
 
 interface PostProps {
@@ -125,7 +127,7 @@ export default function Post({ post, isComment, user }: PostProps) {
   }
   }
 
-console.log(post?.owner?.id, 'this is the post')
+console.log(post, 'this is the post')
 
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
@@ -141,7 +143,7 @@ console.log(post?.owner?.id, 'this is the post')
           <Image
             style={styles.profilePic}
             source={{
-              uri: `${profileImage(post?.owner?.id)}`,
+              uri: `${profileImage(post?.owner?.id || post?.userId)}`,
             }}
           />
         </ThemedView>
@@ -258,10 +260,10 @@ console.log(post?.owner?.id, 'this is the post')
               <Image
                 style={styles.commentPic}
                 source={{
-                  uri: `${profileImage(post?.owner?.id)}`,
+                  uri: `${profileImage(post?.owner?.id || post?.userId)}`,
                 }}
               />
-              <ThemedText style={styles.postUser}>{post.email}</ThemedText>
+              <ThemedText style={styles.postUser}>{post.email || post.userName}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.commentOGPost}>
               <View style={styles.line}></View>
