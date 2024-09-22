@@ -106,19 +106,20 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const updateFollowers = async (
-        followeeId: string,
-        followerId: string,
-        followers: string[],
-        following: string[]
+        myId: string,
+        theirId: string,
+        theirFollowers: string[],
+        myFollowing: string[]
     ) => {
+        
         try {
             const bodyData: any = {};
-            if (followeeId) bodyData.followeeId = followeeId;
-            if (followerId) bodyData.followerId = followerId;
-            if (followers) bodyData.followers = followers;
-            if (following) bodyData.following = following;
+            if (myId) bodyData.myId = myId;
+            if (theirId) bodyData.theirId = theirId;
+            if (theirFollowers) bodyData.theirFollowers = theirFollowers;
+            if (myFollowing) bodyData.myFollowing = myFollowing;
 
-            const response = await fetch(`http://localhost:3000/api/updateUserFollow`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/updateUserFollow`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

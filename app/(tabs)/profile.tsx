@@ -139,10 +139,10 @@ export default function TabTwoScreen() {
           {loggedIn ? (
             <>
               <ThemedText style={styles.smallGray}>
-                {myInfo?.followers.length} Followers
+                {myInfo?.followers?.length} Followers
               </ThemedText>
               <ThemedText style={styles.smallGray}>
-                {myInfo?.following.length} Following
+                {myInfo?.following?.length} Following
               </ThemedText>
 
             </>

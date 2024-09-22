@@ -27,14 +27,14 @@ export default function TabTwoScreen() {
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
 
- 
+
   useFocusEffect(
     useCallback(() => {
       getUser();
       return () => {
         setUser('');
       };
-    }, [local.post])
+    }, [local.profile, myInfo])
   );
 
 
@@ -100,6 +100,8 @@ export default function TabTwoScreen() {
   };
 
 
+  console.log(myInfo.followers, 'these are followers')
+
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.header}>
@@ -121,10 +123,13 @@ export default function TabTwoScreen() {
               <Pressable>
                 <Ionicons name={'checkmark-done-circle-outline'}></Ionicons>
               </Pressable>
-            ) : (
-              <Pressable>
-                <ThemedText style={styles.button}>Follow</ThemedText>
-              </Pressable>
+            ) : (              
+                <Pressable onPress={() => {
+                  updateFollowers(myInfo.id, user.id, user.followers, myInfo.following)
+                }}>
+                  <ThemedText style={styles.button}>Follow</ThemedText>
+                </Pressable>              
+
             )
           ) : null}
         </ThemedView>
@@ -141,8 +146,8 @@ export default function TabTwoScreen() {
 
         </ThemedView>
         <ThemedView style={styles.followersRow}>
-          {loggedIn ? <><ThemedText style={styles.smallGray}>{user?.followers.length} Followers</ThemedText>
-            <ThemedText style={styles.smallGray}>{user?.following.length} Following</ThemedText></> : <ThemedText></ThemedText>}
+          {loggedIn ? <><ThemedText style={styles.smallGray}>{user?.followers?.length} Followers</ThemedText>
+            <ThemedText style={styles.smallGray}>{user?.following?.length} Following</ThemedText></> : <ThemedText></ThemedText>}
 
         </ThemedView>
       </ThemedView>
@@ -238,16 +243,19 @@ const styles = StyleSheet.create({
     width: '95%',
   },
   button: {
-    width: 45,
+    width: 55,
     fontSize: 12,
-    height: 35,
+    height: 30,
     borderRadius: 15,
     borderColor: 'black',
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 1,
+    textAlign: 'center'
   },
+  
+
   black: {
     color: 'black',
     backgroundColor: 'black'
