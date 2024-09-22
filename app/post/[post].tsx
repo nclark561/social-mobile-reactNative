@@ -135,6 +135,14 @@ export default function PostPage({ post }: { post: Post }) {
     }, [local.post])
   );
 
+  const profileImage = (id: string) => {
+    if (id) {
+      const newProfileImageUri = `${
+        process.env.EXPO_PUBLIC_SUPABASE_URL
+      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      return newProfileImageUri;
+    }
+  };
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -157,10 +165,10 @@ export default function PostPage({ post }: { post: Post }) {
         <ThemedView style={styles.postContent}>
           <ThemedView style={styles.row}>
             <ThemedView style={styles.flex}>
-              <Image style={styles.mainProfilePic} source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }} />
+              <Image style={styles.mainProfilePic} source={{ uri: `${profileImage(thisPost?.owner?.id)}` }} />
             </ThemedView>
-            <Link href={`/profile/${post?.email}`}>
-              <ThemedText style={styles.postUser}>{thisPost?.email}</ThemedText>
+            <Link href={`/profile/${thisPost?.email}`}>
+              <ThemedText style={styles.postUser}>{thisPost?.userName}</ThemedText>
             </Link>
           </ThemedView>
           <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>

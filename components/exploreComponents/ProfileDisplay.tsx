@@ -2,11 +2,12 @@ import { StyleSheet, Image } from 'react-native'
 import { ThemedView } from '../ThemedView'
 import { ThemedText } from '../ThemedText'
 import { useColorScheme } from 'react-native'
+import { useState } from 'react'
 
 interface user {
-    name: string,
+    email: string,
     username: string,
-    profilePic: string
+    id?: string
 }
 
 interface ProfileDisplayProps {
@@ -15,15 +16,21 @@ interface ProfileDisplayProps {
 
 const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
   const colorScheme = useColorScheme()
+  const [profileImageUri, setProfileImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user.id}.jpg?${Date.now()}`)
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+
+  const handleError = () => {
+    setProfileImageUri(mortyUrl);
+  };
 
   const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe" 
 
   return (
     <ThemedView style={styles.previewContainer}>
-      <Image style={styles.profilePic} source={{uri: user.profilePic}}/>
+      <Image style={styles.profilePic} source={{uri: profileImageUri}} onError={handleError}/>
       <ThemedView style={styles.profileInfo}>
-        <ThemedText>{user.name}</ThemedText>
-        <ThemedText style={{color: fadedTextColor}}>@{user.username}</ThemedText>
+        <ThemedText>{user.username}</ThemedText>
+        <ThemedText style={{color: fadedTextColor}}>@{user.email}</ThemedText>
       </ThemedView>
     </ThemedView>
   )

@@ -126,8 +126,6 @@ export default function Post({ post, isComment, user }: PostProps) {
     }
   };
 
-  console.log(post, "this is the post");
-
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
       <ThemedView
@@ -276,7 +274,7 @@ export default function Post({ post, isComment, user }: PostProps) {
               <Image
                 style={styles.commentPic}
                 source={{
-                  uri: `${profileImage(myInfo.id)}`,
+                  uri: `${profileImage(myInfo?.id)}`,
                 }}
               />
               <BottomSheetTextInput

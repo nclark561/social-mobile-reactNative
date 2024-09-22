@@ -51,7 +51,7 @@ export default function TabTwoScreen() {
         const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
         setProfileImageUri(newProfileImageUri);
     }
-}, [myInfo]);
+  }, [myInfo]);
 
 
   const renderContent = () => {
