@@ -40,7 +40,7 @@ export default function TabTwoScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(myInfo.email, 'this is email on profile apge')
+      console.log(myInfo?.email, 'this is email on profile apge')
       getUserPosts(myInfo?.email);
     }, [myInfo])
   );
@@ -62,7 +62,7 @@ export default function TabTwoScreen() {
             <ThemedView>
               {Array.isArray(posts.Posts) &&
                 posts?.Posts?.map((post: any) => {
-                  return <Post key={post.id} post={post} user={myInfo.email} />;
+                  return <Post key={post.id} post={post} user={myInfo?.email} />;
                 })}
             </ThemedView>
           </Animated.ScrollView>
@@ -74,7 +74,7 @@ export default function TabTwoScreen() {
           <Animated.ScrollView style={{ height: '72%' }}>
             <ThemedView>
               {myInfo?.comments?.map((comment: any) => {
-                return <Post user={myInfo.email} key={comment.id} isComment post={comment} />;
+                return <Post user={myInfo?.email} key={comment.id} isComment post={comment} />;
               })}
             </ThemedView>
           </Animated.ScrollView>

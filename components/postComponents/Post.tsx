@@ -120,9 +120,8 @@ export default function Post({ post, isComment, user }: PostProps) {
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -148,7 +147,7 @@ export default function Post({ post, isComment, user }: PostProps) {
           />
         </ThemedView>
         <ThemedView style={styles.postContent}>
-          <Link href={`/profile/${post.email}`}>
+          <Link href={`/profile/${post.email}`} style={styles.link}>
             <ThemedText style={styles.postUser}>{post?.userName}</ThemedText>
           </Link>
           <ThemedText style={styles.postText}>{post?.content}</ThemedText>
@@ -351,6 +350,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
     paddingBottom: 2,
+
   },
   postText: {
     flexShrink: 1,
@@ -440,5 +440,9 @@ const styles = StyleSheet.create({
   },
   smallNumber: {
     fontSize: 11,
+  },
+  link: {
+    alignSelf: "flex-start", // Shrinks the Link component to fit its content
+    flexShrink: 1,
   },
 });

@@ -72,6 +72,8 @@ export default function HomeScreen() {
     }, [myInfo])
   );
 
+  // console.log(myInfo, 'my info')
+
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name="Posts" />
@@ -102,7 +104,7 @@ export default function HomeScreen() {
             <Image
               style={styles.commentPic}
               source={{
-                uri: `${profileImage(myInfo.id)}`,
+                uri: `${profileImage(myInfo?.id)}`,
               }}
             />
             <BottomSheetTextInput

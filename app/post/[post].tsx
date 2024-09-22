@@ -10,7 +10,6 @@ import { useColorScheme } from "react-native";
 import { useState, useRef } from "react";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { ScrollView } from "react-native-gesture-handler";
 import { Link, router } from "expo-router";
 import MyContext from "@/components/providers/MyContext";
 import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
@@ -53,7 +52,7 @@ export default function PostPage({ post }: { post: Post }) {
     postId: string,
     comment: boolean
   ) => {
-    
+
     try {
       const test = await fetch(comment ? `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addCommentLike` : `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addLike`, {
         method: "POST",
@@ -65,8 +64,8 @@ export default function PostPage({ post }: { post: Post }) {
           postId
         }),
       });
-      await getForYouPosts()      
-      await getPost()
+      await getForYouPosts()
+      await getPost(local.post)
     } catch (error) {
       console.log(error, "this is the create user error");
     }
@@ -98,16 +97,17 @@ export default function PostPage({ post }: { post: Post }) {
         },
       );
       const post = await response.json();
-      
+
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
-  const getPost = async () => {
+  const getPost = async (id: string) => {
+    console.log(id, 'calling this post')
     try {
       const result = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getPost?id=${local.post}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getPost?id=${id}`,
         {
           method: "GET",
           headers: {
@@ -116,7 +116,6 @@ export default function PostPage({ post }: { post: Post }) {
         },
       );
       const userData = await result.json();
-      
       setThisPost(userData.post);
     } catch (error) {
       console.log(error, "this is the get user error");
@@ -127,16 +126,22 @@ export default function PostPage({ post }: { post: Post }) {
     return likes?.includes(myInfo?.id);
   };
 
-  useFocusEffect(() => {
-    getPost();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      getPost(local.post);
+      return () => {
+        setThisPost('');
+      };
+    }, [local.post])
+  );
+
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <ThemedView>
+      <ThemedView style={styles.icon}>
         <Pressable>
           <Link href="/(tabs)/">
-            <Ionicons size={20} name="arrow-back-outline" color={colorScheme === 'dark' ? 'white' : 'black'}/>
+            <Ionicons size={20} name="arrow-back-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
           </Link>
         </Pressable>
       </ThemedView>
@@ -182,7 +187,7 @@ export default function PostPage({ post }: { post: Post }) {
                 onPress={() => { addLike(myInfo?.id, thisPost?.id, false) }}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
+              <ThemedText style={styles.smallNumber}>{thisPost?.likes?.length}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -221,7 +226,7 @@ export default function PostPage({ post }: { post: Post }) {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef}/>
+        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} />
         <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
@@ -245,9 +250,9 @@ export default function PostPage({ post }: { post: Post }) {
           </ThemedView>
         </CustomBottomSheet>
       </ThemedView>
-      {thisPost?.comments.map((comment: any) => {
-        
-        return <Post key={comment.id} isComment post={comment} user={myInfo?.email}/>
+      {thisPost?.comments?.map((comment: any) => {
+
+        return <Post key={comment.id} isComment post={comment} user={myInfo?.email} />
       })}
     </ThemedView>
   );
@@ -391,4 +396,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
   },
+  icon: {
+    padding: 10
+  }
+
 });

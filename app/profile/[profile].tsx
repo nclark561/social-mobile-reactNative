@@ -27,11 +27,16 @@ export default function TabTwoScreen() {
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
 
+ 
   useFocusEffect(
     useCallback(() => {
       getUser();
-    }, [])
+      return () => {
+        setUser('');
+      };
+    }, [local.post])
   );
+
 
   const getUser = async () => {
     try {
@@ -98,11 +103,14 @@ export default function TabTwoScreen() {
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.header}>
-        <Pressable>
-          <Link href="/(tabs)/">
-            <Ionicons size={25} name="arrow-back-outline" />
-          </Link>
-        </Pressable>
+        <ThemedView style={[styles.icon, { backgroundColor: `${user?.color}` }]}>
+          <Pressable>
+            <Link href="/(tabs)/">
+              <Ionicons size={25} name="arrow-back-outline" />
+            </Link>
+          </Pressable>
+        </ThemedView>
+        <ThemedView style={[styles.backgroundColor, { backgroundColor: user?.color || '#fff' }]}></ThemedView>
         <ThemedView style={styles.row}>
           {loggedIn ? <Image
             style={styles.profilePic}
@@ -243,5 +251,17 @@ const styles = StyleSheet.create({
   black: {
     color: 'black',
     backgroundColor: 'black'
-  }
+  },
+  icon: {
+    padding: 8,
+
+  },
+  backgroundColor: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '40%',
+    width: '110%',
+    zIndex: -1,
+  },
 });

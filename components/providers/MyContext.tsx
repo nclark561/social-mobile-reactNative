@@ -55,7 +55,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         try {
             const userEmail = await AsyncStorage.getItem("user");
             if (!userEmail) throw new Error('User not logged in');
-            const email = JSON.parse(userEmail);
+            const email = JSON.parse(userEmail);  
+            console.log(email, 'this is the email')         
             const result = await fetch(
                 `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/myInfo?email=${email}`,
                 {
@@ -67,6 +68,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             );
             const text = await result.text();
             const userInfo = JSON.parse(text);
+            console.log(userInfo, 'user info ')
             setMyInfo(userInfo.user);
         } catch (error) {
             console.log(error, 'this is the get user error');
