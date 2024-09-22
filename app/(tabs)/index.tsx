@@ -102,7 +102,7 @@ export default function HomeScreen() {
             <Image
               style={styles.commentPic}
               source={{
-                uri: `${profileImage(myInfo.id)}`,
+                uri: `${profileImage(myInfo?.id)}`,
               }}
             />
             <BottomSheetTextInput

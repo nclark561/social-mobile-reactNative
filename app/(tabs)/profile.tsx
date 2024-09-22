@@ -40,7 +40,6 @@ export default function TabTwoScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(myInfo.email, 'this is email on profile apge')
       getUserPosts(myInfo?.email);
     }, [myInfo])
   );
@@ -51,7 +50,7 @@ export default function TabTwoScreen() {
         const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
         setProfileImageUri(newProfileImageUri);
     }
-}, [myInfo]);
+  }, [myInfo]);
 
 
   const renderContent = () => {
