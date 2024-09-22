@@ -24,22 +24,23 @@ interface Post {
   replies?: any;
   postId?: string;
   userName: string;
-  userId?: string,
-  owner: any
+  userId?: string;
+  owner: any;
 }
 
 interface PostProps {
   isComment?: boolean;
   post: Post;
-  user: string
+  user: string;
 }
 
 export default function Post({ post, isComment, user }: PostProps) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
-  const [profileImageUri, setProfileImageUri] = useState('')
-  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+  const [profileImageUri, setProfileImageUri] = useState("");
+  const mortyUrl =
+    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const link = isComment ? "comment" : "post";
 
   const { getForYouPosts, getUserPosts } = useContext<any>(PostContext);
@@ -64,7 +65,6 @@ export default function Post({ post, isComment, user }: PostProps) {
   };
 
   const addLike = async (userId: string, postId: string) => {
-
     try {
       const test = await fetch(
         !isComment
@@ -82,7 +82,7 @@ export default function Post({ post, isComment, user }: PostProps) {
         }
       );
       await getForYouPosts();
-      await getUserPosts(user)
+      await getUserPosts(user);
     } catch (error) {
       console.log(error, "this is the create user error");
     }
@@ -113,21 +113,21 @@ export default function Post({ post, isComment, user }: PostProps) {
         }
       );
       const post = await response.json();
-
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
-
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
-      return newProfileImageUri
-  }
-  }
+      const newProfileImageUri = `${
+        process.env.EXPO_PUBLIC_SUPABASE_URL
+      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      return newProfileImageUri;
+    }
+  };
 
-console.log(post, 'this is the post')
+  console.log(post, "this is the post");
 
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
@@ -263,7 +263,9 @@ console.log(post, 'this is the post')
                   uri: `${profileImage(post?.owner?.id || post?.userId)}`,
                 }}
               />
-              <ThemedText style={styles.postUser}>{post.email || post.userName}</ThemedText>
+              <ThemedText style={styles.postUser}>
+                {post.email || post.userName}
+              </ThemedText>
             </ThemedView>
             <ThemedView style={styles.commentOGPost}>
               <View style={styles.line}></View>

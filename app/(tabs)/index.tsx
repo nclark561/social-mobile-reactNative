@@ -1,4 +1,11 @@
-import { StyleSheet, Pressable, Button, useColorScheme, Text, Image } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  Button,
+  useColorScheme,
+  Text,
+  Image,
+} from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { useContext, useCallback } from "react";
 import Animated from "react-native-reanimated";
@@ -8,66 +15,71 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { useRef, useState } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "@/components/providers/MyContext";
 import { useFocusEffect } from "expo-router";
 
-
 export default function HomeScreen() {
   const newPostRef = useRef<BottomSheetModal>(null);
-  const [postInput, setPostInput] = useState('')
-  const colorScheme = useColorScheme()
+  const [postInput, setPostInput] = useState("");
+  const colorScheme = useColorScheme();
   const postContext = useContext<any>(PostContext);
-  const { getUserPosts, forYouPosts, getForYouPosts } = postContext
+  const { getUserPosts, forYouPosts, getForYouPosts } = postContext;
 
   const context = useContext<any>(MyContext);
-  const { myInfo } = context
+  const { myInfo } = context;
 
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
 
+  const profileImage = (id: string) => {
+    if (id) {
+      const newProfileImageUri = `${
+        process.env.EXPO_PUBLIC_SUPABASE_URL
+      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      return newProfileImageUri;
+    }
+  };
 
-
-  const createPost = async (
-    content: string,
-    userName: string,
-  ) => {    
+  const createPost = async (content: string, userName: string) => {
     const userEmail = await AsyncStorage.getItem("user");
     try {
-      const test = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createPost`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content,
-          email: userEmail,
-          userName
-        }),
-      });
-      await getForYouPosts()
+      const test = await fetch(
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createPost`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content,
+            email: userEmail,
+            userName,
+          }),
+        }
+      );
+      await getForYouPosts();
     } catch (error) {
       console.log(error, "this is the create user error");
     }
   };
 
-  
   useFocusEffect(
-    useCallback(() => {      
-      getForYouPosts()
+    useCallback(() => {
+      getForYouPosts();
       getUserPosts(myInfo?.email);
     }, [myInfo])
   );
-
 
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name="Posts" />
       <Animated.ScrollView>
-        {Array.isArray(forYouPosts) && forYouPosts.map((post, i) => (
-          <Post key={i} post={post} isComment={false} />
-        ))}
+        {Array.isArray(forYouPosts) &&
+          forYouPosts.map((post, i) => (
+            <Post key={i} post={post} isComment={false} />
+          ))}
       </Animated.ScrollView>
       <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
         <Ionicons size={30} color={"white"} name="add" />
@@ -76,14 +88,22 @@ export default function HomeScreen() {
         <ThemedView style={styles.commentContainer}>
           <ThemedView style={styles.buttonContainer}>
             <Button title="Cancel" onPress={handleCloseNewPost}></Button>
-            <Pressable onPress={() => { createPost(postInput, myInfo.username); handleCloseNewPost() }} style={styles.postButton}>
+            <Pressable
+              onPress={() => {
+                createPost(postInput, myInfo.username);
+                handleCloseNewPost();
+              }}
+              style={styles.postButton}
+            >
               <Text style={styles.buttonText}>Post</Text>
             </Pressable>
           </ThemedView>
           <ThemedView style={{ flexDirection: "row" }}>
             <Image
               style={styles.commentPic}
-              source={{ uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250' }}
+              source={{
+                uri: `${profileImage(myInfo.id)}`,
+              }}
             />
             <BottomSheetTextInput
               autoFocus
@@ -94,9 +114,8 @@ export default function HomeScreen() {
                 styles.postInput,
                 colorScheme === "dark"
                   ? { color: "#bebebe" }
-                  : { color: "#525252" }
-              ]
-              }
+                  : { color: "#525252" },
+              ]}
             />
           </ThemedView>
         </ThemedView>
@@ -108,7 +127,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: "column",
-    height: '110%'
+    height: "110%",
   },
   addButton: {
     position: "absolute",
@@ -147,7 +166,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   postInput: {
-    maxWidth: '80%',
-    paddingTop: 15
-  }
+    maxWidth: "80%",
+    paddingTop: 15,
+  },
 });
