@@ -34,7 +34,7 @@ const MessageHome: React.FC = () => {
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?email=${myInfo.email}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?email=${myInfo.username}`,
         {
           method: "GET",
           headers: {
@@ -43,6 +43,7 @@ const MessageHome: React.FC = () => {
         },
       );
       const userInfo = await convos.json();
+      console.log(userInfo.Posts, 'data')
       setMyConvos([...userInfo.Posts]);
     } catch (error) {
       console.log(error, "this is the create user error");
@@ -71,10 +72,10 @@ const MessageHome: React.FC = () => {
     getConvoData();
   }, [myConvos]);
 
-  
-  
 
-  const renderItem = ({ item }: { item: MessageData }) => {
+
+
+  const Item = ({ item }: { item: MessageData }) => {
     const lastMessageDate = new Date(item.date);
     let hours = lastMessageDate.getHours();
     const minutes = String(lastMessageDate.getMinutes()).padStart(2, "0");
@@ -83,19 +84,22 @@ const MessageHome: React.FC = () => {
     const time = `${hours}:${minutes} ${ampm}`;
 
     return (
-      <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-        <Test
-          key={item.conversationId}
-          time={time}
-          conversationId={item.conversationId}
-          message={item.message}
-          status={item.status}
-          userName={item.userName}
-          recipient={item.recipient}
-        />
-      </MotiView>
+
+      <Test
+        key={item.conversationId}
+        time={time}
+        conversationId={item.conversationId}
+        message={item.message}
+        status={item.status}
+        userName={item.userName}
+        recipient={item.recipient}
+      />
+
     );
   };
+
+
+
 
   return (
     <View style={styles.container}>
@@ -103,9 +107,9 @@ const MessageHome: React.FC = () => {
         <Text style={styles.title}>{myInfo?.username}</Text>
       </View>
       <FlatList
-        data={messageData}
-        keyExtractor={(item) => item.conversationId}
-        renderItem={renderItem}
+        data={myConvos}
+        renderItem={({ item }) => <Item item={item} />}
+        keyExtractor={(item) => item.conversationId + item.id}
       />
       <View style={styles.center}>
         <Text>Create A Conversation</Text>
@@ -125,7 +129,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
     paddingBottom: 10,
@@ -135,8 +139,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    textAlign: 'center'
   },
   center: {
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
     alignItems: "center",
     marginVertical: 20,
   },

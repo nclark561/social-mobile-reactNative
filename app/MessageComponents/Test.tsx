@@ -5,8 +5,9 @@ import {
     Image,
     TouchableOpacity,
     StyleSheet,
-    Alert,
+    Alert,    
 } from "react-native";
+import { ThemedText } from "@/components/ThemedText";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { MotiView } from "moti"; // Use Moti for animations
@@ -44,6 +45,7 @@ const Test = (props: TestProps) => {
             exit={{ opacity: 0, height: 0 }}
             style={styles.messageContainer}
         >
+            <ThemedText>kale</ThemedText>
             <View
                 style={styles.msgContainer}
                 onStartShouldSetResponder={() => true}
@@ -65,8 +67,8 @@ const Test = (props: TestProps) => {
                     }}
                     style={styles.userIcon}
                 />
-                {/* <TouchableOpacity
-                    onPress={() => gotoTopic(props.conversationId)}
+                <TouchableOpacity
+                    // onPress={() => gotoTopic(props.conversationId)}
                     style={styles.messageText}
                 >
                     <View style={styles.flexTime}>
@@ -77,7 +79,7 @@ const Test = (props: TestProps) => {
                         <Ionicons name="chevron-forward" size={16} color="gray" />
                     </View>
                     <Text style={styles.smallGray}>{props.message}</Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
             </View>
             <TouchableOpacity
                 style={styles.deleteBtn}
