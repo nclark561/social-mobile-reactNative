@@ -26,7 +26,7 @@ interface ContextProps {
 }
 
 const MessageContext = createContext<ContextProps>({
-  myUsername: localStorage.getItem("user"),
+  myUsername: 'localStorage.getItem("user")',
   setMyUsername: () => {},
   person: "",
   setPerson: () => {},
@@ -37,16 +37,18 @@ const MessageContext = createContext<ContextProps>({
 });
 
 const ContextProvider = ({ children }: { children: ReactNode }) => {
-  const [myUsername, setMyUsername] = useState<string | null>(
-    localStorage.getItem("user"),
-  );
+  // const [myUsername, setMyUsername] = useState<string | null>(
+  //   localStorage.getItem("user"),
+  // );
   const [person, setPerson] = useState<string>("");
   const [myConvos, setMyConvos] = useState<any[]>([]);
   const [convoId, setConvoId] = useState<any[]>([]);
+
+
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `http://localhost:3000/api/getConvos?email=${localStorage.getItem("user")}`,
+        `http://localhost:3000/api/getConvos?email=${'localStorage.getItem("user")'}`,
         {
           method: "GET",
           headers: {

@@ -3,8 +3,11 @@ import { View, TextInput, Button, Text, ScrollView, TouchableOpacity, StyleSheet
 import { Ionicons } from "@expo/vector-icons"; // Replaces ionicons
 import { useNavigation } from "@react-navigation/native"; // Replaces useHistory
 import { createClient, RealtimeChannel } from "@supabase/supabase-js"; // Ensure Supabase is installed
-import { MessageContext } from "../../components/providers/MessageContext"; 
-// import { post } from "../utils/fetch"; // Ensure your fetch utility is adapted for React Native
+import { MessageContext } from "../../components/providers/MessageContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import MyContext from "@/components/providers/MyContext";
+import { router } from "expo-router";
+
 
 type Message = {
   userName: string;
@@ -19,45 +22,57 @@ const Chat: React.FC = () => {
   const { myUsername, person, setPerson, getConvos, addMessage } = useContext(MessageContext);
   const navigation = useNavigation(); // Replaces useHistory
   const [recipient, setRecipient] = useState<string | undefined>();
-  const [userName, setUserName] = useState<string | null>(localStorage.getItem("user"));
+  const context = useContext<any>(MyContext);
+  const { setLoginToggle, myInfo, loggedIn } = context;
+  const [userName, setUserName] = useState<string | null>(myInfo.username);
   const [roomName, setRoomName] = useState<string>("");
 
   useEffect(() => {
-    setRoomName(`${localStorage.getItem("user")}${recipient}`);
+    setRoomName(`${myInfo.username}${recipient}`);
   }, [recipient]);
 
-//   useEffect(() => {
-//     if (messages.length === 1) {
-//       createConversation();
-//     }
-//   }, [messages]);
+    useEffect(() => {
+      if (messages.length === 1) {
+        createConversation();
+      }
+    }, [messages]);
 
-//   const createConversation = async () => {
-//     try {
-//       const response = await post({
-//         url: `http://localhost:3000/api/createConversation`, // Update this to match your API setup
-//         body: {
-//           messages: {
-//             message,
-//             userName,
-//             recipient,
-//           },
-//           me: localStorage.getItem("user"),
-//           roomName: `${localStorage.getItem("user")}${recipient}`,
-//           recipient,
-//         },
-//       });
-//       navigation.navigate("ChatDetail", { id: response.update.id }); // Navigate to your chat detail screen
-//       setMessage("");
-//       setRecipient("");
-//     } catch (error) {
-//       console.error("Failed to create conversation", error);
-//     }
-//   };
+
+  const createConversation = async () => {    
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createConversation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: {
+            message,
+            userName,
+            recipient,
+          },
+          me: myInfo.username,
+          roomName: `${myInfo.username}${recipient}`,
+          recipient,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      router.navigate(`/MessageComponents/${data.update.id}`); 
+      setMessage("");
+      setRecipient("");
+    } catch (error) {
+      console.error("Failed to create conversation", error);
+    }
+  };
+  
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="black" />
@@ -69,8 +84,6 @@ const Chat: React.FC = () => {
           placeholder="Who to?"
         />
       </View>
-
-      {/* Messages Display */}
       <ScrollView style={styles.messagesContainer}>
         {messages.map((msg, index) => (
           <View key={index} style={myUsername === msg.userName ? styles.myMessage : styles.otherMessage}>
@@ -80,10 +93,8 @@ const Chat: React.FC = () => {
             </Text>
           </View>
         ))}
-      </ScrollView>
-
-      {/* Input Area */}
-      {/* <View style={styles.inputArea}>
+      </ScrollView>      
+      <View style={styles.inputArea}>
         <TextInput
           style={styles.textInput}
           value={message}
@@ -94,7 +105,7 @@ const Chat: React.FC = () => {
         <TouchableOpacity onPress={createConversation} style={styles.sendButton}>
           <Ionicons name="send" size={24} color="white" />
         </TouchableOpacity>
-      </View> */}
+      </View>
     </View>
   );
 };

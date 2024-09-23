@@ -14,8 +14,9 @@ import { useNavigation, useRoute } from "@react-navigation/native"; // For navig
 import { createClient, RealtimeChannel } from "@supabase/supabase-js"; // Supabase setup
 import { MessageContext } from "../../components/providers/MessageContext"; // Update to your actual context path
 import { createId } from "@paralleldrive/cuid2"; // For creating unique IDs
+import { supabase } from "../../components/Supabase";
+import MyContext from "@/components/providers/MyContext";
 
-const supabase = createClient("YOUR_SUPABASE_URL", "YOUR_SUPABASE_KEY");
 
 type MessageStatus = "Delivered" | "Read";
 
@@ -38,8 +39,10 @@ const CurrentChat: React.FC = () => {
     const [message, setMessage] = useState<string>("");
     const [messages, setMessages] = useState<Message[]>([]);
     const { myUsername, addMessage, myConvos } = useContext(MessageContext);
+    const context = useContext<any>(MyContext);
+    const { setLoginToggle, myInfo, loggedIn } = context;
     const [userName, setUserName] = useState<string | null>(
-        localStorage.getItem("user")
+        myInfo.username
     );
     const [info, setInfo] = useState<ConvoInfo | null>(null);
     const messagesEndRef = useRef<ScrollView | null>(null);
@@ -82,7 +85,7 @@ const CurrentChat: React.FC = () => {
 
     const updateMessageStatus = async (messageId: string, status: MessageStatus) => {
         try {
-            await fetch(`http://localhost:3000/api/updateMessage`, {
+            await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/updateMessage`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -96,7 +99,7 @@ const CurrentChat: React.FC = () => {
 
     const getConvoMessages = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/getConvo?id=${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvo?id=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -111,7 +114,7 @@ const CurrentChat: React.FC = () => {
 
     const getConvoDetails = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/getSingleConvo?id=${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getSingleConvo?id=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -163,11 +166,10 @@ const CurrentChat: React.FC = () => {
                     <Ionicons name="arrow-back" size={24} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.title}>
-                    {localStorage.getItem("user") === info?.me ? info?.recipient : info?.me}
+                    {myInfo.username === info?.me ? info?.recipient : info?.me}
                 </Text>
             </View>
 
-            {/* Messages */}
             <ScrollView ref={messagesEndRef} style={styles.messagesContainer}>
                 {messages.map((msg, i) => (
                     <View
@@ -179,7 +181,6 @@ const CurrentChat: React.FC = () => {
                 ))}
             </ScrollView>
 
-            {/* Input */}
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}

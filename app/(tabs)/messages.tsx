@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { AnimatePresence, View as MotiView } from 'moti'; // Use Moti for animations
 import Test from "../MessageComponents/Test"; // Ensure this component is adapted for React Native
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import MyContext from "@/components/providers/MyContext";
+import { router } from "expo-router";
 
 interface MessageData {
   conversationId: string;
@@ -19,6 +22,8 @@ const MessageHome: React.FC = () => {
   const [messageData, setMessageData] = useState<MessageData[]>([]);
   const [myConvos, setMyConvos] = useState<any[]>([]);
   const navigation = useNavigation();
+  const context = useContext<any>(MyContext);
+  const { setLoginToggle, myInfo, loggedIn } = context;
 
   useEffect(() => {
     getConvos();
@@ -29,7 +34,7 @@ const MessageHome: React.FC = () => {
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `http://localhost:3000/api/getConvos?email=${localStorage.getItem("user")}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?email=${myInfo.email}`,
         {
           method: "GET",
           headers: {
@@ -47,7 +52,7 @@ const MessageHome: React.FC = () => {
   const getConvoData = async () => {
     try {
       const result = await fetch(
-        `http://localhost:3000/api/getConvoData?ids=${myConvos?.map((convo) => convo.id)}`,
+        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/api/getConvoData?ids=${myConvos?.map((convo) => convo.id)}`,
         {
           method: "GET",
           headers: {
@@ -66,9 +71,8 @@ const MessageHome: React.FC = () => {
     getConvoData();
   }, [myConvos]);
 
-  // const gotoLogin = () => {
-  //   navigation.navigate("Login"); // Navigate to your login screen
-  // };
+  
+  
 
   const renderItem = ({ item }: { item: MessageData }) => {
     const lastMessageDate = new Date(item.date);
@@ -96,14 +100,7 @@ const MessageHome: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{localStorage.getItem("user")}</Text>
-        <Button
-          title="Logout"
-          onPress={() => {
-            localStorage.removeItem("user");
-            // gotoLogin();
-          }}
-        />
+        <Text style={styles.title}>{myInfo?.username}</Text>
       </View>
       <FlatList
         data={messageData}
@@ -112,9 +109,9 @@ const MessageHome: React.FC = () => {
       />
       <View style={styles.center}>
         <Text>Create A Conversation</Text>
-        {/* <TouchableOpacity onPress={() => navigation.navigate("NewChat")}>
+        <TouchableOpacity onPress={() => router.navigate("/MessageComponents/newChat")}>
           <Ionicons name="add-circle-outline" size={32} />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </View>
   );
