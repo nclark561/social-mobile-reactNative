@@ -7,7 +7,8 @@ import Test from "../MessageComponents/Test"; // Ensure this component is adapte
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyContext from "@/components/providers/MyContext";
 import { router } from "expo-router";
-
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 interface MessageData {
   conversationId: string;
   date: string; // Use string because date is usually a string from an API
@@ -20,6 +21,7 @@ interface MessageData {
 
 const MessageHome: React.FC = () => {
   const [messageData, setMessageData] = useState<MessageData[]>([]);
+  const [testData, setTestData] = useState([{ name: 'kale' }, { name: 'james' }, { name: 'jake' }, { name: 'john' }]);
   const [myConvos, setMyConvos] = useState<any[]>([]);
   const navigation = useNavigation();
   const context = useContext<any>(MyContext);
@@ -53,7 +55,7 @@ const MessageHome: React.FC = () => {
   const getConvoData = async () => {
     try {
       const result = await fetch(
-        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/api/getConvoData?ids=${myConvos?.map((convo) => convo.id)}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvoData?ids=${myConvos?.map((convo) => convo.id)}`,
         {
           method: "GET",
           headers: {
@@ -75,25 +77,27 @@ const MessageHome: React.FC = () => {
 
 
 
-  const Item = ({ item }: { item: MessageData }) => {
-    const lastMessageDate = new Date(item.date);
-    let hours = lastMessageDate.getHours();
-    const minutes = String(lastMessageDate.getMinutes()).padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12; // Convert to 12-hour format
-    const time = `${hours}:${minutes} ${ampm}`;
+  const Item = ({ item }: { item: any }) => {
+    // const lastMessageDate = new Date(item.date);
+    // let hours = lastMessageDate.getHours();
+    // const minutes = String(lastMessageDate.getMinutes()).padStart(2, "0");
+    // const ampm = hours >= 12 ? "PM" : "AM";
+    // hours = hours % 12 || 12; // Convert to 12-hour format
+    // const time = `${hours}:${minutes} ${ampm}`;
 
     return (
-
-      <Test
-        key={item.conversationId}
-        time={time}
-        conversationId={item.conversationId}
-        message={item.message}
-        status={item.status}
-        userName={item.userName}
-        recipient={item.recipient}
-      />
+      <ThemedView>
+        
+        <Test
+          key={item.conversationId}
+          time={item.time}
+          conversationId={item.conversationId}
+          message={item.message}
+          status={item.status}
+          userName={item.userName}
+          recipient={item.recipient}
+        />
+      </ThemedView>
 
     );
   };
@@ -107,9 +111,10 @@ const MessageHome: React.FC = () => {
         <Text style={styles.title}>{myInfo?.username}</Text>
       </View>
       <FlatList
-        data={myConvos}
+        style={{ flex: 1 }}
+        data={messageData}
         renderItem={({ item }) => <Item item={item} />}
-        keyExtractor={(item) => item.conversationId + item.id}
+        keyExtractor={(item) => item.id}
       />
       <View style={styles.center}>
         <Text>Create A Conversation</Text>
@@ -143,7 +148,6 @@ const styles = StyleSheet.create({
   },
   center: {
     display: 'flex',
-    height: '100%',
     justifyContent: 'center',
     alignItems: "center",
     marginVertical: 20,
