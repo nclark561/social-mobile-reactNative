@@ -133,7 +133,6 @@ export default function CommentPage() {
   });
 
   useEffect(() => {
-    console.log(thisPost)
     if (thisPost) {
         const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}.jpg?${Date.now()}`;
         setProfileImageUri(newProfileImageUri);
