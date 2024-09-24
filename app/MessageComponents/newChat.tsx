@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { View, TextInput, Button, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TextInput, Button, Text, ScrollView, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Replaces ionicons
 import { useNavigation } from "@react-navigation/native"; // Replaces useHistory
 import { createClient, RealtimeChannel } from "@supabase/supabase-js"; // Ensure Supabase is installed
@@ -7,6 +7,8 @@ import { MessageContext } from "../../components/providers/MessageContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyContext from "@/components/providers/MyContext";
 import { router } from "expo-router";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 
 
 type Message = {
@@ -26,6 +28,10 @@ const Chat: React.FC = () => {
   const { setLoginToggle, myInfo, loggedIn } = context;
   const [userName, setUserName] = useState<string | null>(myInfo.username);
   const [roomName, setRoomName] = useState<string>("");
+  const colorScheme = useColorScheme()
+
+  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe"
+  const color = colorScheme === "dark" ? 'white' : "black"
 
   useEffect(() => {
     setRoomName(`${myInfo.username}${recipient}`);
@@ -72,18 +78,18 @@ const Chat: React.FC = () => {
   
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <ThemedView style={styles.container}>
+      <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="arrow-back" size={24} color={color} />
         </TouchableOpacity>
         <TextInput
-          style={styles.recipientInput}
+          style={[styles.recipientInput, { borderColor: fadedColor, color }]}
           onChangeText={(text) => setRecipient(text)}
           value={recipient}
           placeholder="Who to?"
         />
-      </View>
+      </ThemedView>
       <ScrollView style={styles.messagesContainer}>
         {messages.map((msg, index) => (
           <View key={index} style={myUsername === msg.userName ? styles.myMessage : styles.otherMessage}>
@@ -94,9 +100,9 @@ const Chat: React.FC = () => {
           </View>
         ))}
       </ScrollView>      
-      <View style={styles.inputArea}>
+      <ThemedView style={[styles.inputArea, { borderColor: fadedColor }]}>
         <TextInput
-          style={styles.textInput}
+          style={[styles.textInput, { borderColor: fadedColor, color }]}
           value={message}
           onChangeText={(text) => setMessage(text)}
           placeholder="Type a message"
@@ -105,8 +111,8 @@ const Chat: React.FC = () => {
         <TouchableOpacity onPress={createConversation} style={styles.sendButton}>
           <Ionicons name="send" size={24} color="white" />
         </TouchableOpacity>
-      </View>
-    </View>
+      </ThemedView>
+    </ThemedView>
   );
 };
 
@@ -114,7 +120,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
-    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
@@ -122,7 +127,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
   },
   backButton: {
     marginRight: 10,
@@ -131,7 +135,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     borderWidth: 1,
-    borderColor: "#ddd",
     borderRadius: 5,
   },
   messagesContainer: {
@@ -163,13 +166,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderTopWidth: 1,
-    borderTopColor: "#ddd",
   },
   textInput: {
     flex: 1,
     padding: 10,
     borderWidth: 1,
-    borderColor: "#ddd",
     borderRadius: 5,
     marginRight: 10,
   },

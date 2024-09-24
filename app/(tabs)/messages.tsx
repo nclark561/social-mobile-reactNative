@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { AnimatePresence, View as MotiView } from 'moti'; // Use Moti for animations
 import Test from "../MessageComponents/Test"; // Ensure this component is adapted for React Native
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyContext from "@/components/providers/MyContext";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 interface MessageData {
@@ -26,11 +26,12 @@ const MessageHome: React.FC = () => {
   const navigation = useNavigation();
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn } = context;
+  const colorScheme = useColorScheme()
+
+  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe" 
 
   useEffect(() => {
     getConvos();
-    const intervalId = setInterval(getConvos, 1000);
-    return () => clearInterval(intervalId);
   }, []);
 
   const getConvos = async () => {
@@ -48,7 +49,7 @@ const MessageHome: React.FC = () => {
       console.log(userInfo.Posts, 'data')
       setMyConvos([...userInfo.Posts]);
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is convo error");
     }
   };
 
@@ -75,7 +76,10 @@ const MessageHome: React.FC = () => {
   }, [myConvos]);
 
 
-
+  useFocusEffect(() => {
+    const intervalId = setInterval(getConvos, 5000);
+    return () => clearInterval(intervalId);
+  })
 
   const Item = ({ item }: { item: any }) => {
     // const lastMessageDate = new Date(item.date);
@@ -106,23 +110,23 @@ const MessageHome: React.FC = () => {
 
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{myInfo?.username}</Text>
-      </View>
+    <ThemedView style={styles.container}>
+      <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
+        <ThemedText style={styles.title}>{myInfo?.username}</ThemedText>
+      </ThemedView>
       <FlatList
         style={{ flex: 1 }}
         data={messageData}
         renderItem={({ item }) => <Item item={item} />}
         keyExtractor={(item) => item.id}
       />
-      <View style={styles.center}>
-        <Text>Create A Conversation</Text>
+      <ThemedView style={styles.center}>
+        <ThemedText>Create A Conversation</ThemedText>
         <TouchableOpacity onPress={() => router.navigate("/MessageComponents/newChat")}>
-          <Ionicons name="add-circle-outline" size={32} />
+          <Ionicons name="add-circle-outline" size={32} color={colorScheme === 'dark' ? 'white' : 'black'} />
         </TouchableOpacity>
-      </View>
-    </View>
+      </ThemedView>
+    </ThemedView>
   );
 };
 
@@ -130,7 +134,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
@@ -139,7 +142,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
   },
   title: {
     fontSize: 20,
