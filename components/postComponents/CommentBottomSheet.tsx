@@ -47,7 +47,7 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
         }
       );
       const post = await response.json();
-
+      handleCloseComment()
     } catch (error) {
       console.error("Error adding comment:", error);
     }

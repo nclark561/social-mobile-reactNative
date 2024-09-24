@@ -1,6 +1,6 @@
-import { StyleSheet, Image, Button, Pressable, Text, View } from "react-native";
+import { StyleSheet, Image, Pressable } from "react-native";
 import { useFocusEffect } from "expo-router";
-import { useContext, useCallback } from "react";
+import { useContext, useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
 import PostContext from "../../components/providers/PostContext";
 import { ThemedText } from "@/components/ThemedText";
@@ -9,10 +9,11 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useColorScheme } from "react-native";
 import { useState, useRef } from "react";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
-import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Link } from "expo-router";
 import Post from "@/components/postComponents/Post";
 import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
+import MyContext from "@/components/providers/MyContext";
 
 interface Post {
   id: string;
@@ -28,19 +29,22 @@ export default function CommentPage() {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
-  const [commentInput, setCommentInput] = useState("");
   const { getForYouPosts } = useContext<any>(PostContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
+  const [ profileImageUri, setProfileImageUri ] = useState('')
   const local = useLocalSearchParams();  
-
-  const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
+  const { myInfo } = useContext<any>(MyContext)
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
-  const handleCloseComment = () => commentModalRef.current?.dismiss();
   const handleOpenRepost = () => repostModalRef.current?.present();
+
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+  const handleError = () => {
+    setProfileImageUri(mortyUrl)
+  }
 
   const likePost = () => {
     setLiked((prev) => !prev);
@@ -128,6 +132,14 @@ export default function CommentPage() {
       getPost();
   });
 
+  useEffect(() => {
+    console.log(thisPost)
+    if (thisPost) {
+        const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}.jpg?${Date.now()}`;
+        setProfileImageUri(newProfileImageUri);
+    }
+  }, [thisPost]);
+
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView
@@ -153,8 +165,9 @@ export default function CommentPage() {
               <Image
                 style={styles.mainProfilePic}
                 source={{
-                  uri: "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250",
+                  uri: profileImageUri,
                 }}
+                onError={handleError}
               />
             </ThemedView>
             <Link href={`/profile/${thisPost?.email}`}>
@@ -258,7 +271,7 @@ export default function CommentPage() {
         </CustomBottomSheet>
       </ThemedView>
       {thisPost?.replies.map((comment: any) => {
-        return <Post key={comment.id} isComment post={comment} />;
+        return <Post key={comment.id} isComment post={comment} user={myInfo?.email}/>;
       })}
     </ThemedView>
   );

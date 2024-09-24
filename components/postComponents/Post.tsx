@@ -113,6 +113,7 @@ export default function Post({ post, isComment, user }: PostProps) {
         }
       );
       const post = await response.json();
+      handleCloseComment()
     } catch (error) {
       console.error("Error adding comment:", error);
     }

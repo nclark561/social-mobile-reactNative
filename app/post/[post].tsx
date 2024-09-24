@@ -35,7 +35,7 @@ export default function PostPage({ post }: { post: Post }) {
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
-  const local = useLocalSearchParams()
+  const local = useLocalSearchParams<any>()
   const { setLoginToggle, myInfo, loggedIn, getUser } = useContext<any>(MyContext);
 
   const handleOpenShare = () => shareModalRef.current?.present();
