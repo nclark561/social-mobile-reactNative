@@ -13,6 +13,8 @@ import MyCustomDrawer from '@/components/MyCustomDrawer';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MyProvider } from '../components/providers/MyContext';
 import { PostProvider } from '../components/providers/PostContext';
+import { MessageProvider } from '@/components/providers/MessageContext';
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,99 +41,101 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <PostProvider>
-            <MyProvider>
-              <SafeAreaView style={{ flex: 1, backgroundColor }}>
-                <Drawer drawerContent={(props) => <MyCustomDrawer {...props} />}>
-                  <Drawer.Screen
-                    name="(tabs)"
-                    options={{
-                      drawerLabel: 'Home',
-                      headerShown: false,
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="settings"
-                    options={{
-                      drawerLabel: 'Settings',
-                      title: 'Settings',
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="login"
-                    options={{
-                      drawerLabel: 'Login',
-                      title: 'Login',
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="conversation/[conversation]"
-                    options={{
-                      drawerLabel: () => null, // Hides it from the drawer
-                      drawerItemStyle: { display: 'none' }, // Prevents it from appearing in the drawer
-                      headerShown: false
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="index"
-                    options={{
-                      drawerLabel: () => null, // Hide index route
-                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
-                      headerShown: false
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="post/[post]"
-                    options={{
-                      drawerLabel: () => null, // Hide index route
-                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
-                      headerShown: false
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="profile/[profile]"
-                    options={{
-                      drawerLabel: () => null, // Hide index route
-                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
-                      headerShown: false
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="comment/[comment]"
-                    options={{
-                      drawerLabel: () => null, // Hide index route
-                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
-                      headerShown: false
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="MessageComponents/[chatId]"
-                    options={{
-                      drawerLabel: () => null, // Hide index route
-                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
-                      headerShown: false
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="MessageComponents/newChat"
-                    options={{
-                      drawerLabel: () => null, // Hide index route
-                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
-                      headerShown: false
-                    }}
-                  />
-                  <Drawer.Screen
-                    name="MessageComponents/Test"
-                    options={{
-                      drawerLabel: () => null, // Hide index route
-                      drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
-                      headerShown: false
-                    }}
-                  />
-                </Drawer>
-              </SafeAreaView>
-            </MyProvider>
-          </PostProvider>
+          <MessageProvider>
+            <PostProvider>
+              <MyProvider>
+                <SafeAreaView style={{ flex: 1, backgroundColor }}>
+                  <Drawer drawerContent={(props) => <MyCustomDrawer {...props} />}>
+                    <Drawer.Screen
+                      name="(tabs)"
+                      options={{
+                        drawerLabel: 'Home',
+                        headerShown: false,
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="settings"
+                      options={{
+                        drawerLabel: 'Settings',
+                        title: 'Settings',
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="login"
+                      options={{
+                        drawerLabel: 'Login',
+                        title: 'Login',
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="conversation/[conversation]"
+                      options={{
+                        drawerLabel: () => null, // Hides it from the drawer
+                        drawerItemStyle: { display: 'none' }, // Prevents it from appearing in the drawer
+                        headerShown: false
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="index"
+                      options={{
+                        drawerLabel: () => null, // Hide index route
+                        drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                        headerShown: false
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="post/[post]"
+                      options={{
+                        drawerLabel: () => null, // Hide index route
+                        drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                        headerShown: false
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="profile/[profile]"
+                      options={{
+                        drawerLabel: () => null, // Hide index route
+                        drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                        headerShown: false
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="comment/[comment]"
+                      options={{
+                        drawerLabel: () => null, // Hide index route
+                        drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                        headerShown: false
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="MessageComponents/[chatId]"
+                      options={{
+                        drawerLabel: () => null, // Hide index route
+                        drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                        headerShown: false
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="MessageComponents/newChat"
+                      options={{
+                        drawerLabel: () => null, // Hide index route
+                        drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                        headerShown: false
+                      }}
+                    />
+                    <Drawer.Screen
+                      name="MessageComponents/Test"
+                      options={{
+                        drawerLabel: () => null, // Hide index route
+                        drawerItemStyle: { display: 'none' }, // Prevents index route from appearing in the drawer
+                        headerShown: false
+                      }}
+                    />
+                  </Drawer>
+                </SafeAreaView>
+              </MyProvider>
+            </PostProvider>
+          </MessageProvider>
         </ThemeProvider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

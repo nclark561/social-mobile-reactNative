@@ -90,7 +90,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             if (bio) bodyData.bio = bio;
             if (color) bodyData.color = color;
 
-            const response = await fetch(`http://localhost:3000/api/updateUser`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/updateUser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

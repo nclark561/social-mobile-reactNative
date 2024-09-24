@@ -1,18 +1,27 @@
-import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  useColorScheme,
+  Pressable,
+  PanResponder,
+  Animated,
+  Dimensions,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-// import { AnimatePresence, View as MotiView } from 'moti'; // Use Moti for animations
-import { motion } from "framer-motion";
-import Test from "../MessageComponents/Test"; // Ensure this component is adapted for React Native
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import Test from "../MessageComponents/Test";
 import MyContext from "@/components/providers/MyContext";
 import { router, useFocusEffect } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import MessageContext from "@/components/providers/MessageContext";
+
 interface MessageData {
   conversationId: string;
-  date: string; // Use string because date is usually a string from an API
+  date: string;
   id: string;
   message: string;
   status: string;
@@ -20,38 +29,18 @@ interface MessageData {
   recipient?: string;
 }
 
+const SCREEN_WIDTH = Dimensions.get("window").width;
+
 const MessageHome: React.FC = () => {
-  const DELETE_BTN_WIDTH = 15;
-  const MESSAGE_DELETE_ANIMATION = { height: 0, opacity: 0 };
-  const MESSAGE_DELETE_TRANSITION = {
-    opacity: {
-      transition: {
-        duration: 0,
-      },
-    },
-  };
-
-  const handleDragEnd = (info: any, messageId: string) => {
-    console.log('hit drag end')
-    const dragDistance = info.point.x;
-    console.log(dragDistance, 'testing drag end truthy')
-    console.log(-DELETE_BTN_WIDTH, 'testing drag end truthy')
-    if (dragDistance < DELETE_BTN_WIDTH) {
-      console.log('drag distance is right')
-      // deleteConvos(messageId);
-    }
-  };
-
-
   const [messageData, setMessageData] = useState<MessageData[]>([]);
-  const [testData, setTestData] = useState([{ name: 'kale' }, { name: 'james' }, { name: 'jake' }, { name: 'john' }]);
   const [myConvos, setMyConvos] = useState<any[]>([]);
+  const { deleteConvos, myUsername } = useContext<any>(MessageContext);
   const navigation = useNavigation();
   const context = useContext<any>(MyContext);
-  const { setLoginToggle, myInfo, loggedIn } = context;
-  const colorScheme = useColorScheme()
-
-  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe"
+  const { myInfo } = context;
+  const colorScheme = useColorScheme();
+  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
+  const deleteThreshold = -SCREEN_WIDTH / 3; // Threshold for deleting an item
 
   useEffect(() => {
     getConvos();
@@ -66,13 +55,13 @@ const MessageHome: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       const userInfo = await convos.json();
-      console.log(userInfo.Posts, 'data')
+      
       setMyConvos([...userInfo.Posts]);
     } catch (error) {
-      console.log(error, "this is convo error");
+      // console.log(error, "this is convo error");
     }
   };
 
@@ -85,12 +74,13 @@ const MessageHome: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       const allData = await result.json();
       setMessageData(allData.Posts);
+      
     } catch (error) {
-      console.log(error, "this is an error");
+      
     }
   };
 
@@ -98,38 +88,24 @@ const MessageHome: React.FC = () => {
     getConvoData();
   }, [myConvos]);
 
-
   useFocusEffect(() => {
-    const intervalId = setInterval(getConvos, 5000);
+    const intervalId = setInterval(getConvos, 1000);
     return () => clearInterval(intervalId);
-  })
+  });
 
-  const Item = ({ item }: { item: any }) => {
-    // const lastMessageDate = new Date(item.date);
-    // let hours = lastMessageDate.getHours();
-    // const minutes = String(lastMessageDate.getMinutes()).padStart(2, "0");
-    // const ampm = hours >= 12 ? "PM" : "AM";
-    // hours = hours % 12 || 12; // Convert to 12-hour format
-    // const time = `${hours}:${minutes} ${ampm}`;
-
-    return (
-      <ThemedView>        
-            <Test
-              key={item.conversationId}
-              time={item.time}
-              conversationId={item.conversationId}
-              message={item.message}
-              status={item.status}
-              userName={item.userName}
-              recipient={item.recipient}
-            />          
-      </ThemedView>
-
-    );
+  const handleDelete = (conversationId: string) => {
+    setMessageData((prevData) => prevData.filter((item) => item.conversationId !== conversationId));
+    deleteConvos(conversationId)
   };
 
-
-
+  const renderItem = ({ item }: { item: MessageData }) => {
+    return (
+      <SwipeableItem
+        item={item}
+        onDelete={() => handleDelete(item.conversationId)}
+      />
+    );
+  };
 
   return (
     <ThemedView style={styles.container}>
@@ -139,8 +115,8 @@ const MessageHome: React.FC = () => {
       <FlatList
         style={{ flex: 1 }}
         data={messageData}
-        renderItem={({ item }) => <Item item={item} />}
-        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.conversationId}
       />
       <ThemedView style={styles.center}>
         <ThemedText>Create A Conversation</ThemedText>
@@ -149,6 +125,53 @@ const MessageHome: React.FC = () => {
         </TouchableOpacity>
       </ThemedView>
     </ThemedView>
+  );
+};
+
+const SwipeableItem = ({ item, onDelete }: { item: MessageData, onDelete: () => void }) => {
+  const translateX = useRef(new Animated.Value(0)).current;
+
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) =>
+      Math.abs(gestureState.dx) > 20,
+    onPanResponderMove: (evt, gestureState) => {
+      if (gestureState.dx < 0) {
+        translateX.setValue(gestureState.dx);
+      }
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      if (gestureState.dx < -SCREEN_WIDTH / 3) {
+        Animated.timing(translateX, {
+          toValue: -SCREEN_WIDTH,
+          duration: 200,
+          useNativeDriver: true,
+        }).start(() => onDelete());
+      } else {
+        Animated.spring(translateX, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+      }
+    },
+  });
+
+  return (
+    <Animated.View
+      style={[styles.animatedItem, { transform: [{ translateX }] }]}
+      {...panResponder.panHandlers}
+    >
+      <ThemedView style={styles.itemContainer}>
+        <Test
+          key={item.conversationId}
+          time={item?.time}
+          conversationId={item.conversationId}
+          message={item.message}
+          status={item.status}
+          userName={item.userName}
+          recipient={item.recipient}
+        />
+      </ThemedView>
+    </Animated.View>
   );
 };
 
@@ -175,6 +198,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: "center",
     marginVertical: 20,
+  },
+  animatedItem: {
+    backgroundColor: "white",
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+  },
+  itemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
   },
 });
 

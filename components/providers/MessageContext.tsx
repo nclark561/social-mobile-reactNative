@@ -1,9 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState, ReactNode, useEffect } from "react";
 // import { post } from "../utils/fetch";
 
 interface ContextProps {
-  myUsername: string | null;
-  setMyUsername: (value: string | null) => void;
   person: string;
   setPerson: (value: string) => void;
   myConvos: {
@@ -26,17 +25,15 @@ interface ContextProps {
 }
 
 const MessageContext = createContext<ContextProps>({
-  myUsername: 'localStorage.getItem("user")',
-  setMyUsername: () => {},
   person: "",
-  setPerson: () => {},
+  setPerson: () => { },
   myConvos: [],
-  getConvos: () => {},
-  deleteConvos: () => {},
-  addMessage: () => {},
+  getConvos: () => { },
+  deleteConvos: () => { },
+  addMessage: () => { },
 });
 
-const ContextProvider = ({ children }: { children: ReactNode }) => {
+export const MessageProvider = ({ children }: { children: ReactNode }) => {
   // const [myUsername, setMyUsername] = useState<string | null>(
   //   localStorage.getItem("user"),
   // );
@@ -48,7 +45,7 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `http://localhost:3000/api/getConvos?email=${'localStorage.getItem("user")'}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?email=${AsyncStorage.getItem("user")}`,
         {
           method: "GET",
           headers: {
@@ -64,8 +61,9 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteConvos = async (id: string) => {
+    console.log(id, 'hitting delete convo')
     try {
-      await fetch(`http://localhost:3000/api/deleteConvo`, {
+      await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deleteConvo`, {
         method: "POST",
         body: JSON.stringify({
           id: id,
@@ -76,7 +74,7 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
       });
       getConvos();
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is the delete error");
     }
   };
 
@@ -89,7 +87,7 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
     recipient: string
   ) => {
     try {
-      const response = await fetch("http://localhost:3000/api/addMessage", {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addMessage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,26 +101,24 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
           recipient,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       console.log("Message added successfully:", data);
-  
+
       getConvos(); // Call the getConvos function to update the conversation data
     } catch (error) {
       console.log(error, "this is the create user error");
     }
   };
-  
+
 
   return (
     <MessageContext.Provider
       value={{
-        myUsername,
-        setMyUsername,
         person,
         setPerson,
         myConvos,
@@ -136,4 +132,4 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export { ContextProvider, MessageContext };
+export default MessageContext;

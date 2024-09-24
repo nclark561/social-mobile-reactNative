@@ -13,7 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons"; // For icons
 import { useNavigation, useRoute } from "@react-navigation/native"; // For navigation
 import { createClient, RealtimeChannel } from "@supabase/supabase-js"; // Supabase setup
-import { MessageContext } from "../../components/providers/MessageContext"; // Update to your actual context path
+import MessageContext from "../../components/providers/MessageContext"; // Update to your actual context path
 import { createId } from "@paralleldrive/cuid2"; // For creating unique IDs
 import { supabase } from "../../components/Supabase";
 import MyContext from "@/components/providers/MyContext";
@@ -40,7 +40,7 @@ interface ConvoInfo {
 const CurrentChat: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const { myUsername, addMessage, myConvos } = useContext(MessageContext);
+  const { addMessage, myConvos } = useContext(MessageContext);
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn } = context;
   const [userName, setUserName] = useState<string | null>(myInfo.username);
@@ -70,7 +70,7 @@ const CurrentChat: React.FC = () => {
           payload.message.date = new Date();
           payload.message.status = "Delivered";
           setMessages((prevMessages) => [...prevMessages, payload.message]);
-          if (payload.message.userName !== myUsername) {
+          if (payload.message.userName !== myInfo.username) {
             updateMessageStatus(payload.message.id, "Read");
           }
         })
@@ -80,7 +80,7 @@ const CurrentChat: React.FC = () => {
       channel.current?.unsubscribe();
       channel.current = null;
     };
-  }, [id, myUsername]);
+  }, [id, myInfo.username]);
 
   useEffect(() => {
     getConvoDetails();
@@ -149,7 +149,7 @@ const CurrentChat: React.FC = () => {
 
     const messageId = createId();
     const recipient =
-      myUsername === info?.recipient ? info.me : info?.recipient;
+      myInfo.username === info?.recipient ? info?.me : info?.recipient;
 
     if (userName && recipient && channel.current) {
       addMessage(messageId, id, message, userName, "Delivered", recipient);
