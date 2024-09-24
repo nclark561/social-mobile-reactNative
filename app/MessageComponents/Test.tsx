@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import {
   View,
   Text,
@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  useColorScheme
+  useColorScheme,
+  Animated,
+  PanResponder,
+  Dimensions,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { MotiView } from "moti"; // Use Moti for animations
 import MyContext from "../../components/providers/MyContext";
 
 interface TestProps {
@@ -24,42 +26,83 @@ interface TestProps {
   time: string;
 }
 
+const SCREEN_WIDTH = Dimensions.get("window").width;
+
 const Test = (props: TestProps) => {
   const navigation = useNavigation();
   const { deleteConvos, myUsername } = useContext<any>(MyContext);
-  const colorScheme = useColorScheme()
+  const colorScheme = useColorScheme();
+  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
+  const color = colorScheme === "dark" ? 'white' : "black";
 
-  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe"
-  const color = colorScheme === "dark" ? 'white' : "black"
+  // Create an Animated Value for the horizontal position
+  const translateX = useRef(new Animated.Value(0)).current;
+  const deleteThreshold = -SCREEN_WIDTH / 4; // Threshold to trigger delete
+  const buttonWidth = SCREEN_WIDTH / 4; // Width of the delete button
 
-  const DELETE_BTN_WIDTH = 15;
+  // PanResponder to handle the swipe gesture
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) =>
+      Math.abs(gestureState.dx) > 20,
+    onPanResponderMove: (evt, gestureState) => {
+      // Prevent swiping right
+      if (gestureState.dx < 0) {
+        translateX.setValue(gestureState.dx);
+      }
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      if (gestureState.dx < deleteThreshold) {
+        // Swipe is past the threshold, stay open
+        Animated.timing(translateX, {
+          toValue: -buttonWidth,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      } else {
+        // Snap back to original position
+        Animated.spring(translateX, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+      }
+    },
+  });
 
-  //   const gotoTopic = (topicId: string) => {
-  //     navigation.navigate("Chat", { topicId }); // Adapt navigation to match your screen names
-  //   };
-
-  const handleDragEnd = (dragX: number, messageId: string) => {
-    if (dragX < DELETE_BTN_WIDTH) {
-      deleteConvos(messageId);
-    }
+  // Function to handle delete button press
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete",
+      "Are you sure you want to delete this message?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          onPress: () => deleteConvos(props.conversationId),
+          style: "destructive",
+        },
+      ]
+    );
   };
 
   return (
-    <MotiView
-      from={{ opacity: 1, height: 100 }}
-      animate={{ opacity: 1, height: 100 }}
-      exit={{ opacity: 0, height: 0 }}
-    >
-      <ThemedView style={[styles.messageContainer, { borderColor: fadedColor }]}>
-        <ThemedText>kale</ThemedText>
-        <ThemedView
-          style={styles.msgContainer}
-          onStartShouldSetResponder={() => true}
-          onResponderMove={(e) => {
-            const dragDistance = e.nativeEvent.pageX;
-            handleDragEnd(dragDistance, props.conversationId);
-          }}
-        >
+    <View style={styles.container}>
+      {/* Delete Section */}
+      <View style={styles.deleteContainer}>
+        <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
+          <Ionicons name="trash-outline" size={30} color="#fff" />
+          <Text style={styles.deleteText}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Message Container */}
+      <Animated.View
+        style={[
+          styles.messageContainer,
+          { borderColor: fadedColor, transform: [{ translateX }] },
+        ]}
+        {...panResponder.panHandlers}
+      >
+        <ThemedView style={styles.messageContent}>
           <View style={styles.statusDot}>
             {props.status === "Delivered" && props.userName !== myUsername ? (
               <View style={styles.blueDot}></View>
@@ -68,20 +111,13 @@ const Test = (props: TestProps) => {
             )}
           </View>
           <Image
-            source={{
-              uri: "https://ionicframework.com/docs/img/demos/avatar.svg",
-            }}
+            source={{ uri: "https://ionicframework.com/docs/img/demos/avatar.svg" }}
             style={styles.userIcon}
           />
-          <TouchableOpacity
-            // onPress={() => gotoTopic(props.conversationId)}
-            style={styles.messageText}
-          >
+          <TouchableOpacity style={styles.messageText}>
             <ThemedView style={styles.flexTime}>
               <ThemedText style={styles.title}>
-                {props.recipient === myUsername
-                  ? props.userName
-                  : props.recipient}
+                {props.recipient === myUsername ? props.userName : props.recipient}
               </ThemedText>
               <Text style={styles.graySub}>{props.time}</Text>
               <Ionicons name="chevron-forward" size={16} color="gray" />
@@ -89,38 +125,27 @@ const Test = (props: TestProps) => {
             <Text style={styles.smallGray}>{props.message}</Text>
           </TouchableOpacity>
         </ThemedView>
-        <TouchableOpacity
-          style={styles.deleteBtn}
-          onPress={() =>
-            Alert.alert(
-              "Delete",
-              "Are you sure you want to delete this message?",
-              [
-                { text: "Cancel", style: "cancel" },
-                {
-                  text: "Delete",
-                  onPress: () => deleteConvos(props.conversationId),
-                  style: "destructive",
-                },
-              ]
-            )
-          }
-        >
-          <Text style={styles.deleteText}>Delete</Text>
-        </TouchableOpacity>
-      </ThemedView>
-    </MotiView>
+      </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    overflow: "hidden",
+  },
   messageContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
     borderBottomWidth: 1,
+    alignItems: "center",
+    backgroundColor: "white",
   },
-  msgContainer: {
+  messageContent: {
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
@@ -169,12 +194,19 @@ const styles = StyleSheet.create({
   smallGray: {
     color: "gray",
   },
-  deleteBtn: {
-    width: 60,
+  deleteContainer: {
+    position: "absolute",
+    right: 0,
     justifyContent: "center",
     alignItems: "center",
+    width: SCREEN_WIDTH / 4,
+    height: "100%",
     backgroundColor: "#ff4d4d",
-    borderRadius: 5,
+  },
+  deleteBtn: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
   },
   deleteText: {
     color: "#fff",

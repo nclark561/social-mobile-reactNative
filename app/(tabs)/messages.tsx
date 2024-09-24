@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { AnimatePresence, View as MotiView } from 'moti'; // Use Moti for animations
+// import { AnimatePresence, View as MotiView } from 'moti'; // Use Moti for animations
+import { motion } from "framer-motion";
 import Test from "../MessageComponents/Test"; // Ensure this component is adapted for React Native
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyContext from "@/components/providers/MyContext";
@@ -20,6 +21,28 @@ interface MessageData {
 }
 
 const MessageHome: React.FC = () => {
+  const DELETE_BTN_WIDTH = 15;
+  const MESSAGE_DELETE_ANIMATION = { height: 0, opacity: 0 };
+  const MESSAGE_DELETE_TRANSITION = {
+    opacity: {
+      transition: {
+        duration: 0,
+      },
+    },
+  };
+
+  const handleDragEnd = (info: any, messageId: string) => {
+    console.log('hit drag end')
+    const dragDistance = info.point.x;
+    console.log(dragDistance, 'testing drag end truthy')
+    console.log(-DELETE_BTN_WIDTH, 'testing drag end truthy')
+    if (dragDistance < DELETE_BTN_WIDTH) {
+      console.log('drag distance is right')
+      // deleteConvos(messageId);
+    }
+  };
+
+
   const [messageData, setMessageData] = useState<MessageData[]>([]);
   const [testData, setTestData] = useState([{ name: 'kale' }, { name: 'james' }, { name: 'jake' }, { name: 'john' }]);
   const [myConvos, setMyConvos] = useState<any[]>([]);
@@ -28,7 +51,7 @@ const MessageHome: React.FC = () => {
   const { setLoginToggle, myInfo, loggedIn } = context;
   const colorScheme = useColorScheme()
 
-  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe" 
+  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe"
 
   useEffect(() => {
     getConvos();
@@ -90,17 +113,16 @@ const MessageHome: React.FC = () => {
     // const time = `${hours}:${minutes} ${ampm}`;
 
     return (
-      <ThemedView>
-        
-        <Test
-          key={item.conversationId}
-          time={item.time}
-          conversationId={item.conversationId}
-          message={item.message}
-          status={item.status}
-          userName={item.userName}
-          recipient={item.recipient}
-        />
+      <ThemedView>        
+            <Test
+              key={item.conversationId}
+              time={item.time}
+              conversationId={item.conversationId}
+              message={item.message}
+              status={item.status}
+              userName={item.userName}
+              recipient={item.recipient}
+            />          
       </ThemedView>
 
     );
