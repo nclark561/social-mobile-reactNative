@@ -23,6 +23,13 @@ export default function TabTwoScreen() {
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts } = postContext
   const local = useLocalSearchParams()
+  const [profileImageUri, setProfileImageUri] = useState('')
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+
+
+  const handleError = () => {
+      setProfileImageUri(mortyUrl);
+    };
 
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
@@ -36,6 +43,13 @@ export default function TabTwoScreen() {
       };
     }, [local.profile, myInfo])
   );
+
+  useEffect(() => {
+    if (myInfo?.id) {
+        const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+        setProfileImageUri(newProfileImageUri);
+    }
+}, [myInfo]);
 
 
   const getUser = async () => {
@@ -116,7 +130,7 @@ export default function TabTwoScreen() {
         <ThemedView style={styles.row}>
           {loggedIn ? <Image
             style={styles.profilePic}
-            source={{ uri: 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg' }}
+            source={{ uri: profileImageUri }}
           /> : <ThemedText>Empty Photo</ThemedText>}
           {user && myInfo && myInfo.email !== user.email ? (
             isFollowed(user.followers) ? (
