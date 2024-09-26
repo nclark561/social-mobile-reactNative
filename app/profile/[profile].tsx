@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useContext } from 'react';
-import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Image, TextInput, useColorScheme, Animated, TouchableOpacity, Pressable, Alert } from 'react-native'; // Import Alert
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation } from 'expo-router';
@@ -33,8 +33,6 @@ export default function TabTwoScreen() {
 
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
-
-
   useFocusEffect(
     useCallback(() => {
       getUser();
@@ -50,7 +48,6 @@ export default function TabTwoScreen() {
         setProfileImageUri(newProfileImageUri);
     }
 }, [myInfo]);
-
 
   const getUser = async () => {
     try {
@@ -70,7 +67,6 @@ export default function TabTwoScreen() {
     }
   };
 
-
   const renderContent = () => {
     switch (selectedOption) {
       case 'Posts':
@@ -86,7 +82,6 @@ export default function TabTwoScreen() {
       case 'Replies':
         return <ThemedView>
           {user?.comments?.map((comment: any) => {
-
             return (
               <ThemedView key={comment.id || comment.content}>
                 <ThemedText style={styles.content}>{comment?.comment}</ThemedText>
@@ -105,16 +100,28 @@ export default function TabTwoScreen() {
     return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
   };
 
-
-  console.log(myInfo?.email !== user?.email, 'this is user data')
-
-
   const isFollowed = (followers: string[]): boolean => {
     return followers.includes(myInfo?.id);
   };
 
-
-  console.log(myInfo.followers, 'these are followers')
+  // Alert function to confirm unfollow action
+  const handleUnfollow = () => {
+    Alert.alert(
+      'Unfollow',
+      'Are you sure you want to unfollow?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Unfollow',
+          onPress: () => updateFollowers(myInfo.id, user.id, user.followers, myInfo.following),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -134,8 +141,8 @@ export default function TabTwoScreen() {
           /> : <ThemedText>Empty Photo</ThemedText>}
           {user && myInfo && myInfo.email !== user.email ? (
             isFollowed(user.followers) ? (
-              <Pressable>
-                <Ionicons name={'checkmark-done-circle-outline'}></Ionicons>
+              <Pressable onPress={handleUnfollow}>
+                <Ionicons size={25} style={styles.followIcon} name={'checkmark-done-circle-outline'}></Ionicons>
               </Pressable>
             ) : (              
                 <Pressable onPress={() => {
@@ -143,7 +150,6 @@ export default function TabTwoScreen() {
                 }}>
                   <ThemedText style={styles.button}>Follow</ThemedText>
                 </Pressable>              
-
             )
           ) : null}
         </ThemedView>
@@ -195,7 +201,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: 35,
     height: 35,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   userName: {
     fontSize: 16,
@@ -274,9 +280,9 @@ const styles = StyleSheet.create({
     color: 'black',
     backgroundColor: 'black'
   },
+  
   icon: {
-    padding: 8,
-
+    padding: 8,    
   },
   backgroundColor: {
     position: 'absolute',

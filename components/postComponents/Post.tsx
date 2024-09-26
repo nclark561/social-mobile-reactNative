@@ -1,12 +1,11 @@
+import React, { useContext, useState, useRef } from "react";
 import { StyleSheet, Image, Button, Pressable, Text, View } from "react-native";
-import { useContext } from "react";
 import MyContext from "../providers/MyContext";
 import PostContext from "../providers/PostContext";
 import { ThemedText } from "../ThemedText";
 import { ThemedView } from "../ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useColorScheme } from "react-native";
-import { useState, useRef } from "react";
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
@@ -39,6 +38,7 @@ export default function Post({ post, isComment, user }: PostProps) {
   const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [profileImageUri, setProfileImageUri] = useState("");
+  const [menuVisible, setMenuVisible] = useState(false); // State for menu visibility
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const link = isComment ? "comment" : "post";
@@ -50,11 +50,13 @@ export default function Post({ post, isComment, user }: PostProps) {
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
+  const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
   const handleCloseComment = () => commentModalRef.current?.dismiss();
   const handleOpenRepost = () => repostModalRef.current?.present();
+  const handleOpenDeleteMenu = () => deleteMenuRef.current?.present(); // Open delete menu
 
   const likePost = () => {
     setLiked((prev) => !prev);
@@ -88,6 +90,50 @@ export default function Post({ post, isComment, user }: PostProps) {
     }
   };
 
+  const deletePost = async (postId: string) => {
+    try {
+      await fetch(
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deletePost`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postId,
+          }),
+        }
+      );
+      await getForYouPosts();
+      await getUserPosts(user);
+      deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
+    } catch (error) {
+      console.log(error, "this is the delete post error");
+    }
+  };
+
+  const deleteComment = async (id: string) => {
+    try {
+      await fetch(
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deleteComment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id,
+          }),
+        }
+      );
+      await getForYouPosts();
+      await getUserPosts(user);
+      deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
+    } catch (error) {
+      console.log(error, "this is the delete post error");
+    }
+  };
+
   const addComment = async (
     comment: string,
     userName: string,
@@ -113,7 +159,7 @@ export default function Post({ post, isComment, user }: PostProps) {
         }
       );
       const post = await response.json();
-      handleCloseComment()
+      handleCloseComment();
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -126,6 +172,9 @@ export default function Post({ post, isComment, user }: PostProps) {
       return newProfileImageUri;
     }
   };
+
+  console.log(post, 'this is postInfo')
+
 
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
@@ -159,7 +208,7 @@ export default function Post({ post, isComment, user }: PostProps) {
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
-                {post?.comments?.length || post?.replies?.length}
+                {post?.comments?.length}
               </ThemedText>
             </ThemedView>
             <Ionicons
@@ -194,7 +243,21 @@ export default function Post({ post, isComment, user }: PostProps) {
           name="ellipsis-horizontal"
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
+          onPress={handleOpenDeleteMenu} // Open the delete menu on click
         />
+        <CustomBottomSheet
+          snapPercs={["30%"]}
+          ref={deleteMenuRef} // Reference for the delete menu
+        >
+          <ThemedView style={styles.deleteMenu}>
+            <Button
+            
+              title="Delete Post"
+              color="red"
+              onPress={() => {if(isComment) {deleteComment(post.id)} else {deletePost(post.id)}}} // Delete the post on button press
+            />
+          </ThemedView>
+        </CustomBottomSheet>
         <CustomBottomSheet
           snapPercs={["25%"]}
           ref={shareModalRef}
@@ -330,7 +393,6 @@ const styles = StyleSheet.create({
   flex: {
     flexDirection: "row",
     height: "35%",
-    // alignItems: "center",
   },
   profilePic: {
     borderRadius: 25,
@@ -349,7 +411,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
     paddingBottom: 2,
-
   },
   postText: {
     flexShrink: 1,
@@ -441,7 +502,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   link: {
-    alignSelf: "flex-start", // Shrinks the Link component to fit its content
+    alignSelf: "flex-start",
     flexShrink: 1,
+  },
+  deleteMenu: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
 });

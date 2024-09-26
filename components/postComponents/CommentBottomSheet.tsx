@@ -27,7 +27,7 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
     userName: string,
     postId: string,
     userId: string,
-    commentId?: string
+    parentId?: string
   ) => {
     try {
       const response = await fetch(
@@ -42,7 +42,7 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
             userName,
             postId,
             userId,
-            commentId,
+            parentId,
           }),
         }
       );

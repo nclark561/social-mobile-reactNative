@@ -1,16 +1,15 @@
-import { StyleSheet, Image, Pressable } from "react-native";
+import { StyleSheet, Image, Pressable, Text, View, Button } from "react-native";
 import { useFocusEffect } from "expo-router";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useCallback, useState, useRef } from "react";
 import { useLocalSearchParams } from "expo-router";
 import PostContext from "../../components/providers/PostContext";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useColorScheme } from "react-native";
-import { useState, useRef } from "react";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import Post from "@/components/postComponents/Post";
 import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 import MyContext from "@/components/providers/MyContext";
@@ -33,31 +32,23 @@ export default function CommentPage() {
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
-  const [ profileImageUri, setProfileImageUri ] = useState('')
-  const local = useLocalSearchParams();  
-  const { myInfo } = useContext<any>(MyContext)
+  const deleteMenuRef = useRef<BottomSheetModal>(null); // Reference for delete menu
+  const [profileImageUri, setProfileImageUri] = useState("");
+  const local = useLocalSearchParams();
+  const { myInfo } = useContext<any>(MyContext);
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
+  const handleCloseComment = () => commentModalRef.current?.dismiss();
   const handleOpenRepost = () => repostModalRef.current?.present();
+  const handleOpenDeleteMenu = () => deleteMenuRef.current?.present(); // Open delete menu
 
-  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
-  const handleError = () => {
-    setProfileImageUri(mortyUrl)
-  }
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg';
+  const handleError = () => setProfileImageUri(mortyUrl);
 
-  const likePost = () => {
-    setLiked((prev) => !prev);
-  };
-
-  // const isLikedByUser = (likes: string[]): boolean => {
-  //   return likes.includes(myInfo?.id);
-  // };
-
-  
+  const likePost = () => setLiked((prev) => !prev);
 
   const addLike = async (userId: string, postId: string) => {
-    
     try {
       const test = await fetch(
         `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addLike`,
@@ -103,9 +94,29 @@ export default function CommentPage() {
         }
       );
       const post = await response.json();
-      
     } catch (error) {
       console.error("Error adding comment:", error);
+    }
+  };
+
+  const deletePost = async (id: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deleteComment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
+      const result = await response.json();
+      if (result) {
+        router.navigate('/(tabs)/');
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
     }
   };
 
@@ -121,26 +132,37 @@ export default function CommentPage() {
         }
       );
       const userData = await result.json();
-      
       setThisPost(userData.comment);
     } catch (error) {
       console.log(error, "this is the get user error");
     }
   };
 
-  useFocusEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
       getPost();
-  });
+      return () => {
+        setThisPost("");
+      };
+    }, [local.comment])
+  );
 
   useEffect(() => {
     if (thisPost) {
-        const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}.jpg?${Date.now()}`;
-        setProfileImageUri(newProfileImageUri);
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}.jpg?${Date.now()}`;
+      setProfileImageUri(newProfileImageUri);
     }
   }, [thisPost]);
 
   return (
     <ThemedView style={{ flex: 1 }}>
+      <ThemedView style={styles.icon}>
+        <Pressable>
+          <Link href="/(tabs)/">
+            <Ionicons size={20} name="arrow-back-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
+          </Link>
+        </Pressable>
+      </ThemedView>
       <ThemedView
         style={[
           styles.mainPostContainer,
@@ -149,35 +171,16 @@ export default function CommentPage() {
             : { borderColor: "#bebebe" },
         ]}
       >
-        <Pressable>
-          <Link href="/(tabs)/">
-            <Ionicons
-              size={20}
-              name="arrow-back-outline"
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-          </Link>
-        </Pressable>
         <ThemedView style={styles.postContent}>
-          <ThemedView style={[styles.row, { marginBottom: 20 }]}>
+          <ThemedView style={styles.row}>
             <ThemedView style={styles.flex}>
-              <Image
-                style={styles.mainProfilePic}
-                source={{
-                  uri: profileImageUri,
-                }}
-                onError={handleError}
-              />
+              <Image style={styles.mainProfilePic} source={{ uri: profileImageUri }} onError={handleError} />
             </ThemedView>
             <Link href={`/profile/${thisPost?.email}`}>
-              <ThemedText style={styles.postUser}>
-                {thisPost?.userName}
-              </ThemedText>
+              <ThemedText style={styles.postUser}>{thisPost?.userName}</ThemedText>
             </Link>
           </ThemedView>
-          <ThemedText style={styles.mainPostText}>
-            {thisPost?.content}
-          </ThemedText>
+          <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
             <ThemedView style={styles.smallRow}>
               <Ionicons
@@ -186,9 +189,7 @@ export default function CommentPage() {
                 onPress={handleOpenComment}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>
-                {thisPost?.replies?.length}
-              </ThemedText>
+              <ThemedText style={styles.smallNumber}>{thisPost?.replies?.length}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -212,18 +213,14 @@ export default function CommentPage() {
             />
           </ThemedView>
         </ThemedView>
-
         <Ionicons
           size={20}
           name="ellipsis-horizontal"
           style={styles.ellipsis}
+          onPress={handleOpenDeleteMenu} // Open delete menu on click
           color={colorScheme === "dark" ? "white" : "black"}
         />
-        <CustomBottomSheet
-          snapPercs={["25%"]}
-          ref={shareModalRef}
-          title="Share"
-        >
+        <CustomBottomSheet snapPercs={["25%"]} ref={shareModalRef} title="Share">
           <ThemedView style={styles.shareContainer}>
             <ThemedView style={styles.shareOption}>
               <Ionicons
@@ -245,7 +242,7 @@ export default function CommentPage() {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CommentBottomSheet commentModalRef={commentModalRef} post={thisPost} isComment/>
+        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} />
         <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
@@ -268,10 +265,24 @@ export default function CommentPage() {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
+        
+        {/* Delete Menu */}
+        <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
+          <ThemedView style={styles.deleteContainer}>
+            <Button
+              title="Delete Post"
+              color="red"
+              onPress={() => {
+                deletePost(thisPost?.id);
+                deleteMenuRef.current?.dismiss();
+              }}
+            />
+          </ThemedView>
+        </CustomBottomSheet>
       </ThemedView>
-      {thisPost?.replies.map((comment: any) => {
-        return <Post key={comment.id} isComment post={comment} user={myInfo?.email}/>;
-      })}
+      {thisPost?.replies?.map((comment: any) => (
+        <Post key={comment.id} isComment post={comment} user={myInfo?.email} />
+      ))}
     </ThemedView>
   );
 }
@@ -280,35 +291,38 @@ const styles = StyleSheet.create({
   mainPostContainer: {
     flexDirection: "row",
     width: "100%",
+    paddingLeft: 5,
     borderBottomWidth: 0.3,
     paddingBottom: 2,
+    alignItems: "center",
+  },
+  icon: {
+    padding: 10,
   },
   flex: {
     flexDirection: "row",
-    height: "35%",
-    // alignItems: "center",
   },
   mainProfilePic: {
     borderRadius: 25,
-    width: 45,
-    height: 45,
-    marginHorizontal: 10,
+    width: 25,
+    height: 25,
+    marginRight: 5,
   },
   postContent: {
     flexDirection: "column",
     paddingVertical: 10,
     flexShrink: 1,
     margin: 5,
+    width: "80%",
   },
   postUser: {
     fontWeight: "bold",
-    fontSize: 15,
+    fontSize: 12,
     paddingBottom: 2,
   },
-  mainPostText: {
-    fontSize: 16,
+  postText: {
     flexShrink: 1,
-    margin: 10,
+    fontSize: 13,
   },
   ellipsis: {
     position: "absolute",
@@ -317,75 +331,47 @@ const styles = StyleSheet.create({
   },
   reactionsContainer: {
     flexDirection: "row",
-    width: "95%",
+    width: '95%',
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: 'center',
     paddingTop: 10,
   },
+  smallRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '10%',
+    justifyContent: 'space-evenly'
+  },
+  smallNumber: {
+    fontSize: 11,
+  },
   shareContainer: {
-    flexDirection: "column",
-    width: "100%",
+    flexDirection: 'column',
+    width: '100%',
   },
   shareOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: 10,
-    width: "100%",
-    height: "40%",
+    width: '100%',
+    height: '40%',
   },
   optionText: {
     marginLeft: 10,
     fontSize: 18,
   },
-  commentContainer: {
-    flexDirection: "column",
-    paddingTop: 20,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    padding: 10,
-  },
-  commentOP: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  commentPic: {
-    borderRadius: 25,
-    width: 25,
-    height: 25,
-    margin: 10,
-  },
-  commentOGPost: {
-    flexDirection: "row",
-    marginVertical: 5,
-    maxHeight: "55%",
-  },
-  line: {
-    backgroundColor: "#bebebe",
-    width: 3,
-    borderRadius: 25,
-    marginHorizontal: 21,
-  },
-  commentScroll: {
-    maxWidth: "80%",
-    paddingRight: 10,
-  },
-  smallRow: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    width: "10%",
-    justifyContent: "space-evenly",
-  },
-  smallNumber: {
-    fontSize: 11,
+  deleteContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
   row: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+
   },
 });

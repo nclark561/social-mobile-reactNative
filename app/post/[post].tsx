@@ -35,6 +35,7 @@ export default function PostPage({ post }: { post: Post }) {
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
+  const deleteMenuRef = useRef<BottomSheetModal>(null); // Reference for delete menu
   const local = useLocalSearchParams<any>()
   const { setLoginToggle, myInfo, loggedIn, getUser } = useContext<any>(MyContext);
 
@@ -42,6 +43,7 @@ export default function PostPage({ post }: { post: Post }) {
   const handleOpenComment = () => commentModalRef.current?.present();
   const handleCloseComment = () => commentModalRef.current?.dismiss();
   const handleOpenRepost = () => repostModalRef.current?.present();
+  const handleOpenDeleteMenu = () => deleteMenuRef.current?.present(); // Open delete menu
 
   const likePost = () => {
     setLiked((prev) => !prev);
@@ -71,6 +73,27 @@ export default function PostPage({ post }: { post: Post }) {
     }
   };
 
+  const deletePost = async (postId: string) => {
+    
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deletePost`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ postId }),
+        }
+      );
+      const result = await response.json();      
+      if (result) {                
+        router.navigate('/(tabs)/');
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
 
   const addComment = async (
     comment: string,
@@ -144,6 +167,9 @@ export default function PostPage({ post }: { post: Post }) {
     }
   };
 
+  
+console.log(thisPost)
+
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.icon}>
@@ -152,8 +178,7 @@ export default function PostPage({ post }: { post: Post }) {
             <Ionicons size={20} name="arrow-back-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
           </Link>
         </Pressable>
-      </ThemedView>
-      {/* <ThemedText>Post</ThemedText> */}
+      </ThemedView>      
       <ThemedView
         style={[
           styles.mainPostContainer,
@@ -210,6 +235,7 @@ export default function PostPage({ post }: { post: Post }) {
           size={20}
           name="ellipsis-horizontal"
           style={styles.ellipsis}
+          onPress={handleOpenDeleteMenu} // Open delete menu on click
           color={colorScheme === "dark" ? "white" : "black"}
         />
         <CustomBottomSheet snapPercs={["25%"]} ref={shareModalRef} title="Share">
@@ -257,9 +283,22 @@ export default function PostPage({ post }: { post: Post }) {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
+        
+        {/* Delete Menu */}
+        <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
+          <ThemedView style={styles.deleteContainer}>
+            <Button
+              title="Delete Post"
+              color="red"
+              onPress={() => {
+                deletePost(thisPost?.id);
+                deleteMenuRef.current?.dismiss();
+              }}
+            />
+          </ThemedView>
+        </CustomBottomSheet>
       </ThemedView>
       {thisPost?.comments?.map((comment: any) => {
-
         return <Post key={comment.id} isComment post={comment} user={myInfo?.email} />
       })}
     </ThemedView>
@@ -406,6 +445,13 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 10
-  }
-
+  },
+  deleteContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
 });
+
+

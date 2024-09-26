@@ -35,9 +35,8 @@ export default function HomeScreen() {
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -72,7 +71,7 @@ export default function HomeScreen() {
     }, [myInfo])
   );
 
-  // console.log(myInfo, 'my info')
+  console.log(forYouPosts, 'my info')
 
   return (
     <ThemedView style={styles.pageContainer}>
