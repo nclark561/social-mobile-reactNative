@@ -17,25 +17,22 @@ type Message = {
   date: Date;
 };
 
+type User = {
+  id: string
+}
+
 const Chat: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const channel = useRef<RealtimeChannel | null>(null);
-  const {  person, setPerson, getConvos, addMessage } = useContext(MessageContext);
   const navigation = useNavigation(); // Replaces useHistory
-  const [recipient, setRecipient] = useState<string | undefined>();
+  const [recipientSearch, setRecipientSearch] = useState('');
+  const [ recipient, setRecipient ] = useState<User | undefined>()
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn } = context;
-  const [userName, setUserName] = useState<string | null>(myInfo.username);
-  const [roomName, setRoomName] = useState<string>("");
   const colorScheme = useColorScheme()
 
   const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe"
   const color = colorScheme === "dark" ? 'white' : "black"
-
-  useEffect(() => {
-    setRoomName(`${myInfo.username}${recipient}`);
-  }, [recipient]);
 
   useEffect(() => {
     if (messages.length === 1) {
@@ -46,20 +43,16 @@ const Chat: React.FC = () => {
 
   const createConversation = async () => {
     try {
+      if (!myInfo.id || !recipient?.id) throw new Error('User missing')
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createConversation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: {
-            message,
-            userName,
-            recipient,
-          },
-          me: myInfo.username,
-          roomName: `${myInfo.username}${recipient}`,
-          recipient,
+          message,
+          myId: myInfo.id,
+          recipientId: recipient.id,
         }),
       });
 
@@ -70,7 +63,8 @@ const Chat: React.FC = () => {
       const data = await response.json();
       router.navigate(`/MessageComponents/${data.update.id}`);
       setMessage("");
-      setRecipient("");
+      setRecipientSearch("");
+      setRecipient(undefined)
     } catch (error) {
       console.error("Failed to create conversation", error);
     }
@@ -85,20 +79,12 @@ const Chat: React.FC = () => {
         </TouchableOpacity>
         <TextInput
           style={[styles.recipientInput, { borderColor: fadedColor, color }]}
-          onChangeText={(text) => setRecipient(text)}
-          value={recipient}
+          onChangeText={(text) => setRecipientSearch(text)}
+          value={recipientSearch}
           placeholder="Who to?"
         />
       </ThemedView>
       <ScrollView style={styles.messagesContainer}>
-        {messages.map((msg, index) => (
-          <View key={index} style={myInfo.username === msg.userName ? styles.myMessage : styles.otherMessage}>
-            <Text style={styles.messageText}>
-              {messages[index - 1]?.userName === msg.userName ? "" : `${msg.userName}: `}
-              {msg.message}
-            </Text>
-          </View>
-        ))}
       </ScrollView>
       <ThemedView style={[styles.inputArea, { borderColor: fadedColor }]}>
         <TextInput
