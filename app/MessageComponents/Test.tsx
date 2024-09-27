@@ -1,20 +1,17 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   StyleSheet,
-  Alert,
   useColorScheme,
-  Animated,
-  PanResponder
+  Pressable
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import MyContext from "../../components/providers/MyContext";
+import { router } from "expo-router";
 
 interface TestProps {
   conversationId: string;
@@ -26,42 +23,39 @@ interface TestProps {
 }
 
 const Test = (props: TestProps) => {
-  const navigation = useNavigation();
-  const { deleteConvos, myUsername } = useContext<any>(MyContext);
+  const { myUsername } = useContext<any>(MyContext);
   const colorScheme = useColorScheme();
   const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
   const color = colorScheme === "dark" ? 'white' : "black";
 
-
-
+  const navigateToConversation = () => {
+    router.push(`/MessageComponents/${props.conversationId}`);
+  };
 
   return (
-  
-      <ThemedView style={styles.messageContent}>
-        <View style={styles.statusDot}>
-          {props.status === "Delivered" && props.userName !== myUsername ? (
-            <View style={styles.blueDot}></View>
-          ) : (
-            <View style={styles.blueDotNothing}></View>
-          )}
-        </View>
-        <Image
-          source={{ uri: "https://ionicframework.com/docs/img/demos/avatar.svg" }}
-          style={styles.userIcon}
-        />
-        <TouchableOpacity style={styles.messageText}>
-          <ThemedView style={styles.flexTime}>
-            <ThemedText style={styles.title}>
-              {props.recipient === myUsername ? props.userName : props.recipient}
-            </ThemedText>
-            <Text style={styles.graySub}>{props.time}</Text>
-            <Ionicons name="chevron-forward" size={16} color="gray" />
-          </ThemedView>
-          <Text style={styles.smallGray}>{props.message}</Text>
-        </TouchableOpacity>
-      </ThemedView>
-      
-    
+    <Pressable onPress={navigateToConversation} style={styles.messageContent}>
+      <View style={styles.statusDot}>
+        {props.status === "Delivered" && props.userName !== myUsername ? (
+          <View style={styles.blueDot}></View>
+        ) : (
+          <View style={styles.blueDotNothing}></View>
+        )}
+      </View>
+      <Image
+        source={{ uri: "https://ionicframework.com/docs/img/demos/avatar.svg" }}
+        style={styles.userIcon}
+      />
+      <View style={styles.messageText}>
+        <ThemedView style={styles.flexTime}>
+          <ThemedText style={styles.title}>
+            {props.recipient === myUsername ? props.userName : props.recipient}
+          </ThemedText>
+          <Text style={styles.graySub}>{props.time}</Text>
+          <Ionicons name="chevron-forward" size={16} color="gray" />
+        </ThemedView>
+        <Text style={styles.smallGray}>{props.message}</Text>
+      </View>
+    </Pressable>
   );
 };
 
@@ -78,6 +72,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     backgroundColor: "white",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
   },
   statusDot: {
     justifyContent: "center",

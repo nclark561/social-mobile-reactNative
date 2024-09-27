@@ -18,9 +18,7 @@ interface ContextProps {
     id: string,
     conversationId: string,
     message: string,
-    userName: string,
-    status: string,
-    recipient: string,
+    userName: string,     
   ) => void;
 }
 
@@ -82,9 +80,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
     id: string,
     conversationId: string,
     message: string,
-    userName: string,
-    status: string,
-    recipient: string
+    userName: string,        
   ) => {
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addMessage`, {
@@ -96,9 +92,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
           id,
           messages: message,
           userName,
-          conversationId,
-          status,
-          recipient,
+          conversationId,            
         }),
       });
 

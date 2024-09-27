@@ -9,6 +9,7 @@ import {
   PanResponder,
   Animated,
   Dimensions,
+  Text
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -47,7 +48,7 @@ const MessageHome: React.FC = () => {
     getConvos();
   }, []);
 
-  const getConvos = async () => {
+  const getConvos = async () => {    
     try {
       const convos = await fetch(
         `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?id=${myInfo.id}`,
@@ -59,17 +60,15 @@ const MessageHome: React.FC = () => {
         }
       );
       const userInfo = await convos.json();
-      
       setMyConvos([...userInfo.user.conversations]);
     } catch (error) {
-      // console.log(error, "this is convo error");
     }
   };
 
   const getConvoData = async () => {
     try {
       const result = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvoData?ids=${myConvos?.map((convo) => convo.id)}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvoData?ids=${myConvos?.map((convo) => convo.conversationId)}`,
         {
           method: "GET",
           headers: {
@@ -79,9 +78,8 @@ const MessageHome: React.FC = () => {
       );
       const allData = await result.json();
       setMessageData(allData.Posts);
-      
     } catch (error) {
-      
+
     }
   };
 
@@ -90,7 +88,7 @@ const MessageHome: React.FC = () => {
   }, [myConvos]);
 
   useFocusEffect(() => {
-    const intervalId = setInterval(getConvos, 5000);
+    const intervalId = setInterval(getConvos, 3000);
     return () => clearInterval(intervalId);
   });
 
@@ -108,30 +106,32 @@ const MessageHome: React.FC = () => {
     );
   };
 
+
+
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
         <ThemedText style={styles.title}>{myInfo?.username}</ThemedText>
       </ThemedView>
       <FlatList
-        style={{ flex: 1 }}
         data={messageData}
         renderItem={renderItem}
-        keyExtractor={(item) => item.conversationId}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
       />
       <ThemedView style={styles.center}>
-        <ThemedText>Create A Conversation</ThemedText>
+        {messageData?.length > 1 ? null : <ThemedText>Create A Message</ThemedText>}
         <TouchableOpacity onPress={() => router.navigate("/MessageComponents/newChat")}>
           <Ionicons name="add-circle-outline" size={32} color={colorScheme === 'dark' ? 'white' : 'black'} />
         </TouchableOpacity>
       </ThemedView>
-    </ThemedView>
+    </View>
   );
 };
 
 const SwipeableItem = ({ item, onDelete }: { item: MessageData, onDelete: () => void }) => {
+  
   const translateX = useRef(new Animated.Value(0)).current;
-
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (evt, gestureState) =>
       Math.abs(gestureState.dx) > 20,
@@ -169,10 +169,10 @@ const SwipeableItem = ({ item, onDelete }: { item: MessageData, onDelete: () => 
           message={item.message}
           status={item.status}
           userName={item.userName}
-          recipient={item.recipient}
         />
       </ThemedView>
     </Animated.View>
+
   );
 };
 
@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
   },
+
 });
 
 export default MessageHome;

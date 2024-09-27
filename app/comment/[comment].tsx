@@ -154,6 +154,9 @@ export default function CommentPage() {
     }
   }, [thisPost]);
 
+
+  console.log(thisPost, 'this is this post')
+
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.icon}>

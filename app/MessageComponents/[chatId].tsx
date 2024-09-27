@@ -19,6 +19,7 @@ import { supabase } from "../../components/Supabase";
 import MyContext from "@/components/providers/MyContext";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import { useLocalSearchParams } from "expo-router";
 
 type MessageStatus = "Delivered" | "Read";
 
@@ -51,6 +52,7 @@ const CurrentChat: React.FC = () => {
   const { id } = route.params as { id: string };
   const channel = useRef<RealtimeChannel | null>(null);
   const colorScheme = useColorScheme();
+  const local = useLocalSearchParams<any>()
 
   const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const color = colorScheme === "dark" ? "white" : "black";
@@ -69,6 +71,7 @@ const CurrentChat: React.FC = () => {
         .on("broadcast", { event: "message" }, ({ payload }: any) => {
           payload.message.date = new Date();
           payload.message.status = "Delivered";
+          console.log(messages.conversations.messages, 'these are messages')
           setMessages((prevMessages) => [...prevMessages, payload.message]);
           if (payload.message.userName !== myInfo.username) {
             updateMessageStatus(payload.message.id, "Read");
@@ -83,9 +86,11 @@ const CurrentChat: React.FC = () => {
   }, [id, myInfo.username]);
 
   useEffect(() => {
-    getConvoDetails();
+    // getConvoDetails();
     getConvoMessages();
-  }, [id]);
+  }, [local.chatId]);
+
+
 
   const updateMessageStatus = async (
     messageId: string,
@@ -107,10 +112,11 @@ const CurrentChat: React.FC = () => {
     }
   };
 
+
   const getConvoMessages = async () => {
     try {
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvo?id=${id}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvo?id=${local.chatId}`,
         {
           method: "GET",
           headers: {
@@ -119,40 +125,40 @@ const CurrentChat: React.FC = () => {
         }
       );
       const data = await response.json();
-      setMessages(data.Posts);
+      
+      setMessages(data);
     } catch (error) {
       console.error("Failed to fetch messages", error);
     }
   };
 
-  const getConvoDetails = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getSingleConvo?id=${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      console.log(data)
-      setInfo(data.Posts);
-    } catch (error) {
-      console.error("Failed to fetch conversation details", error);
-    }
-  };
+
+  // const getConvoDetails = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getSingleConvo?id=${local.chatId}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     const data = await response.json();
+  //     setInfo(data);
+  //   } catch (error) {
+  //     console.error("Failed to fetch conversation details", error);
+  //   }
+  // };
+
 
   const onSend = () => {
     if (!message.trim()) return;
-
     const messageId = createId();
-    const recipient =
-      myInfo.username === info?.recipient ? info?.me : info?.recipient;
+    
 
-    if (userName && recipient && channel.current) {
-      addMessage(messageId, id, message, userName, "Delivered", recipient);
+    if (userName && channel.current) {
+      addMessage(messageId, messages?.messages.conversationId, message, myInfo.id);
 
       channel.current.send({
         type: "broadcast",
@@ -173,13 +179,15 @@ const CurrentChat: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+
+  console.log(messages, 'these are messages')
+  
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ThemedView style={styles.container}>
-        {/* Header */}
         <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -188,12 +196,14 @@ const CurrentChat: React.FC = () => {
             <Ionicons name="arrow-back" size={24} color={color} />
           </TouchableOpacity>
           <ThemedText style={styles.title}>
-            {myInfo.username === info?.me ? info?.recipient : info?.me}
+            {messages?.users?.filter((user: any) => user.user.id !== myInfo.id) 
+              .map((user: any) => user.user.username)               
+            }
           </ThemedText>
         </ThemedView>
 
         <ScrollView ref={messagesEndRef} style={styles.messagesContainer}>
-          {messages.map((msg, i) => (
+          {messages.messages?.map((msg, i) => (
             <ThemedView
               key={`${msg.id}-${i}`}
               style={
