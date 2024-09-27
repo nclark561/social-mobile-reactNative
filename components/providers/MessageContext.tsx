@@ -17,8 +17,7 @@ interface ContextProps {
   addMessage: (
     id: string,
     conversationId: string,
-    message: string,
-    userName: string,     
+    message: string,    
   ) => void;
 }
 
@@ -77,10 +76,10 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addMessage = async (
-    id: string,
     conversationId: string,
     message: string,
-    userName: string,        
+    id: string,
+    
   ) => {
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addMessage`, {
@@ -89,10 +88,9 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id,
-          messages: message,
-          userName,
           conversationId,            
+          messages: message,
+          id,          
         }),
       });
 

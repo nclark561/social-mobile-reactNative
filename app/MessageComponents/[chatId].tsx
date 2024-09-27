@@ -44,7 +44,7 @@ const CurrentChat: React.FC = () => {
   const { addMessage, myConvos } = useContext(MessageContext);
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn } = context;
-  const [userName, setUserName] = useState<string | null>(myInfo.username);
+  const [userName, setUserName] = useState<string | null>(myInfo?.username);
   const [info, setInfo] = useState<ConvoInfo | null>(null);
   const messagesEndRef = useRef<ScrollView | null>(null);
   const navigation = useNavigation();
@@ -71,11 +71,12 @@ const CurrentChat: React.FC = () => {
         .on("broadcast", { event: "message" }, ({ payload }: any) => {
           payload.message.date = new Date();
           payload.message.status = "Delivered";
-          console.log(messages.conversations.messages, 'these are messages')
-          setMessages((prevMessages) => [...prevMessages, payload.message]);
-          if (payload.message.userName !== myInfo.username) {
-            updateMessageStatus(payload.message.id, "Read");
-          }
+          console.log(messages?.messages.length, 'messages length')          
+          setMessages([messages?.messages, payload.message]);
+
+          // if (payload.message.userName !== myInfo.username) {
+          //   updateMessageStatus(payload.message.id, "Read");
+          // }
         })
         .subscribe();
     }
@@ -83,7 +84,7 @@ const CurrentChat: React.FC = () => {
       channel.current?.unsubscribe();
       channel.current = null;
     };
-  }, [id, myInfo.username]);
+  }, [id, myInfo?.username]);
 
   useEffect(() => {
     // getConvoDetails();
@@ -125,7 +126,7 @@ const CurrentChat: React.FC = () => {
         }
       );
       const data = await response.json();
-      
+
       setMessages(data);
     } catch (error) {
       console.error("Failed to fetch messages", error);
@@ -155,10 +156,10 @@ const CurrentChat: React.FC = () => {
   const onSend = () => {
     if (!message.trim()) return;
     const messageId = createId();
-    
+
 
     if (userName && channel.current) {
-      addMessage(messageId, messages?.messages.conversationId, message, myInfo.id);
+      addMessage( messages?.messages.conversationId, message, myInfo.id);
 
       channel.current.send({
         type: "broadcast",
@@ -178,10 +179,11 @@ const CurrentChat: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-
-  console.log(messages, 'these are messages')
   
+
+  
+
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -196,8 +198,8 @@ const CurrentChat: React.FC = () => {
             <Ionicons name="arrow-back" size={24} color={color} />
           </TouchableOpacity>
           <ThemedText style={styles.title}>
-            {messages?.users?.filter((user: any) => user.user.id !== myInfo.id) 
-              .map((user: any) => user.user.username)               
+            {messages?.users?.filter((user: any) => user.user.id !== myInfo.id)
+              .map((user: any) => user?.user.username)
             }
           </ThemedText>
         </ThemedView>
@@ -207,7 +209,7 @@ const CurrentChat: React.FC = () => {
             <ThemedView
               key={`${msg.id}-${i}`}
               style={
-                userName === msg.userName
+                userName === msg?.userName
                   ? styles.myMessage
                   : styles.otherMessage
               }
