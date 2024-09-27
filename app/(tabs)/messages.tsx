@@ -27,6 +27,7 @@ interface MessageData {
   status: string;
   userName: string;
   recipient?: string;
+  time: any
 }
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -49,7 +50,7 @@ const MessageHome: React.FC = () => {
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?email=${myInfo.username}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?id=${myInfo.id}`,
         {
           method: "GET",
           headers: {
@@ -59,7 +60,7 @@ const MessageHome: React.FC = () => {
       );
       const userInfo = await convos.json();
       
-      setMyConvos([...userInfo.Posts]);
+      setMyConvos([...userInfo.user.conversations]);
     } catch (error) {
       // console.log(error, "this is convo error");
     }
@@ -89,7 +90,7 @@ const MessageHome: React.FC = () => {
   }, [myConvos]);
 
   useFocusEffect(() => {
-    const intervalId = setInterval(getConvos, 1000);
+    const intervalId = setInterval(getConvos, 5000);
     return () => clearInterval(intervalId);
   });
 

@@ -12,7 +12,7 @@ export default function SignIn({ setLogin }: { setLogin: (value: boolean) => voi
     const [email, setEmail] = useState<string>(''); // Initialize with an empty string    
     const [password, setPassword] = useState<string>(''); // Initialize with an empty string
     const colorScheme = useColorScheme()
-    const context = useContext(MyContext);
+    const context = useContext<any>(MyContext);
     const { setLoginToggle, getUser } = context
 
 
@@ -48,7 +48,7 @@ export default function SignIn({ setLogin }: { setLogin: (value: boolean) => voi
                 <TextInput
                     onChangeText={(text) => setEmail(text)}
                     placeholderTextColor={'rgb(140, 138, 143)'}
-                    placeholder='Username'
+                    placeholder='Email'
                     style={[styles.loginInput, { color }]}
                 />
 
