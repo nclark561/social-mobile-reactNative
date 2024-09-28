@@ -31,11 +31,26 @@ interface MessageData {
   time: any
 }
 
+interface User {
+  id: string,
+  username: string,
+}
+
+interface UserData {
+  user: User
+}
+
+interface ConversationData {
+  id: string,
+  date: Date,
+  users: UserData[],
+  messages: MessageData[]
+}
+
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const MessageHome: React.FC = () => {
-  const [messageData, setMessageData] = useState<MessageData[]>([]);
-  const [myConvos, setMyConvos] = useState<any[]>([]);
+  const [myConvos, setMyConvos] = useState<ConversationData[]>([]);
   const { deleteConvos, myUsername } = useContext<any>(MessageContext);
   const navigation = useNavigation();
   const context = useContext<any>(MyContext);
@@ -45,7 +60,7 @@ const MessageHome: React.FC = () => {
   const deleteThreshold = -SCREEN_WIDTH / 3; // Threshold for deleting an item
 
   useEffect(() => {
-    getConvos();
+    getConvos(); 
   }, []);
 
   const getConvos = async () => {    
@@ -59,49 +74,28 @@ const MessageHome: React.FC = () => {
           },
         }
       );
-      const userInfo = await convos.json();
-      setMyConvos([...userInfo.user.conversations]);
+      const { conversations } = await convos.json();
+      setMyConvos(conversations);
+      console.log(conversations[0].users[0].user, 'this is the recipient')
     } catch (error) {
     }
   };
-
-  const getConvoData = async () => {
-    try {
-      const result = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvoData?ids=${myConvos?.map((convo) => convo.conversationId)}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const allData = await result.json();
-      setMessageData(allData.Posts);
-    } catch (error) {
-
-    }
-  };
-
-  useEffect(() => {
-    getConvoData();
-  }, [myConvos]);
 
   useFocusEffect(() => {
-    const intervalId = setInterval(getConvos, 3000);
+    const intervalId = setInterval(getConvos, 5000);
     return () => clearInterval(intervalId);
   });
 
   const handleDelete = (conversationId: string) => {
-    setMessageData((prevData) => prevData.filter((item) => item.conversationId !== conversationId));
+    setMyConvos((prevData) => prevData.filter((item) => item.id !== conversationId));
     deleteConvos(conversationId)
   };
 
-  const renderItem = ({ item }: { item: MessageData }) => {
+  const renderItem = ({ item }: { item: ConversationData }) => {
     return (
       <SwipeableItem
         item={item}
-        onDelete={() => handleDelete(item.conversationId)}
+        onDelete={() => handleDelete(item.id)}
       />
     );
   };
@@ -109,27 +103,27 @@ const MessageHome: React.FC = () => {
 
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
         <ThemedText style={styles.title}>{myInfo?.username}</ThemedText>
       </ThemedView>
       <FlatList
-        data={messageData}
+        data={myConvos}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
       />
       <ThemedView style={styles.center}>
-        {messageData?.length > 1 ? null : <ThemedText>Create A Message</ThemedText>}
+        {myConvos?.length > 1 ? null : <ThemedText>Create A Message</ThemedText>}
         <TouchableOpacity onPress={() => router.navigate("/MessageComponents/newChat")}>
           <Ionicons name="add-circle-outline" size={32} color={colorScheme === 'dark' ? 'white' : 'black'} />
         </TouchableOpacity>
       </ThemedView>
-    </View>
+    </ThemedView>
   );
 };
 
-const SwipeableItem = ({ item, onDelete }: { item: MessageData, onDelete: () => void }) => {
+const SwipeableItem = ({ item, onDelete }: { item: ConversationData, onDelete: () => void }) => {
   
   const translateX = useRef(new Animated.Value(0)).current;
   const panResponder = PanResponder.create({
@@ -163,12 +157,12 @@ const SwipeableItem = ({ item, onDelete }: { item: MessageData, onDelete: () => 
     >
       <ThemedView style={styles.itemContainer}>
         <Test
-          key={item.conversationId}
-          time={item?.time}
-          conversationId={item.conversationId}
-          message={item.message}
-          status={item.status}
-          userName={item.userName}
+          key={item.id}
+          time={item?.messages[0]?.time}
+          conversationId={item.id}
+          message={item.messages[0].message}
+          status={item.messages[0].status}
+          user={item.users[0].user}
         />
       </ThemedView>
     </Animated.View>
@@ -201,7 +195,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   animatedItem: {
-    backgroundColor: "white",
     borderBottomWidth: 1,
     borderColor: "#ccc",
   },
@@ -211,7 +204,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
   },
-
+  list: {}
 });
 
 export default MessageHome;

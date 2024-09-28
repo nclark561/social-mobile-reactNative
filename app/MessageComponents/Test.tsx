@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -17,7 +17,7 @@ interface TestProps {
   conversationId: string;
   message: string;
   status: string;
-  userName: string;
+  user: any;
   recipient?: string;
   time: string;
 }
@@ -25,8 +25,12 @@ interface TestProps {
 const Test = (props: TestProps) => {
   const { myUsername } = useContext<any>(MyContext);
   const colorScheme = useColorScheme();
+  const [ imageUri, setImageUri ] =  useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${props.user.id}.jpg?${Date.now()}`)
   const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
   const color = colorScheme === "dark" ? 'white' : "black";
+
+  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg';
+  const handleError = () => setImageUri(mortyUrl);
 
   const navigateToConversation = () => {
     router.push(`/MessageComponents/${props.conversationId}`);
@@ -35,20 +39,21 @@ const Test = (props: TestProps) => {
   return (
     <Pressable onPress={navigateToConversation} style={styles.messageContent}>
       <View style={styles.statusDot}>
-        {props.status === "Delivered" && props.userName !== myUsername ? (
+        {props.status === "Delivered" && props.user.username !== myUsername ? (
           <View style={styles.blueDot}></View>
         ) : (
           <View style={styles.blueDotNothing}></View>
         )}
       </View>
       <Image
-        source={{ uri: "https://ionicframework.com/docs/img/demos/avatar.svg" }}
+        source={{ uri: imageUri }} 
+        onError={handleError}
         style={styles.userIcon}
       />
       <View style={styles.messageText}>
         <ThemedView style={styles.flexTime}>
           <ThemedText style={styles.title}>
-            {props.recipient === myUsername ? props.userName : props.recipient}
+            {props.recipient === myUsername ? props.user.username : props.recipient}
           </ThemedText>
           <Text style={styles.graySub}>{props.time}</Text>
           <Ionicons name="chevron-forward" size={16} color="gray" />
@@ -71,7 +76,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-    backgroundColor: "white",
     padding: 10,
     borderBottomWidth: 1,
     borderColor: '#ccc',
