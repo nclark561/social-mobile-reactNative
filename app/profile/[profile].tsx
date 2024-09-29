@@ -25,6 +25,7 @@ export default function TabTwoScreen() {
   const local = useLocalSearchParams()
   const [profileImageUri, setProfileImageUri] = useState('')
   const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+  const colorScheme = useColorScheme()
 
 
   const handleError = () => {
@@ -43,8 +44,8 @@ export default function TabTwoScreen() {
   );
 
   useEffect(() => {
-    if (myInfo?.id) {
-        const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+    if (user.id) {
+        const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user?.id}.jpg?${Date.now()}`;
         setProfileImageUri(newProfileImageUri);
     }
 }, [myInfo]);
@@ -138,11 +139,12 @@ export default function TabTwoScreen() {
           {loggedIn ? <Image
             style={styles.profilePic}
             source={{ uri: profileImageUri }}
+            onError={handleError}
           /> : <ThemedText>Empty Photo</ThemedText>}
           {user && myInfo && myInfo.email !== user.email ? (
             isFollowed(user.followers) ? (
               <Pressable onPress={handleUnfollow}>
-                <Ionicons size={25} style={styles.followIcon} name={'checkmark-done-circle-outline'}></Ionicons>
+                <Ionicons size={25} style={styles.followIcon} name={'checkmark-done-circle-outline'} color={colorScheme === 'dark' ? 'white' : 'black'}></Ionicons>
               </Pressable>
             ) : (              
                 <Pressable onPress={() => {
@@ -292,4 +294,5 @@ const styles = StyleSheet.create({
     width: '110%',
     zIndex: -1,
   },
+  followIcon: {}
 });
