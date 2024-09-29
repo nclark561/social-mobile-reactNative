@@ -28,6 +28,14 @@ interface Message {
   userName: string;
   message: string;
   status: MessageStatus;
+  date: Date;
+  conversationId: string
+  user: any
+}
+
+interface MessageData {
+  messages: Message[];
+  users: any
 }
 
 interface ConvoInfo {
@@ -40,7 +48,7 @@ interface ConvoInfo {
 
 const CurrentChat: React.FC = () => {
   const [message, setMessage] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageData | null>(null);
   const { addMessage, myConvos } = useContext(MessageContext);
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn } = context;
@@ -52,7 +60,7 @@ const CurrentChat: React.FC = () => {
   const { id } = route.params as { id: string };
   const channel = useRef<RealtimeChannel | null>(null);
   const colorScheme = useColorScheme();
-  const local = useLocalSearchParams<any>()
+  const local = useLocalSearchParams<any>();
 
   const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const color = colorScheme === "dark" ? "white" : "black";
@@ -68,16 +76,23 @@ const CurrentChat: React.FC = () => {
       });
 
       channel.current
-        .on("broadcast", { event: "message" }, ({ payload }: any) => {
-          payload.message.date = new Date();
-          payload.message.status = "Delivered";
-          console.log(messages?.messages.length, 'messages length')          
-          setMessages([messages?.messages, payload.message]);
+        .on(
+          "broadcast",
+          { event: "message" },
+          ({ payload }: { payload: { message: Message } }) => {
+            payload.message.date = new Date();
+            payload.message.status = "Delivered";
+            console.log(messages?.messages.length, "messages length");
+            setMessages((prev) => {
+              if(prev) return { ...prev, messages: [...prev.messages, payload.message] };
+              return prev
+            });
 
-          // if (payload.message.userName !== myInfo.username) {
-          //   updateMessageStatus(payload.message.id, "Read");
-          // }
-        })
+            // if (payload.message.userName !== myInfo.username) {
+            //   updateMessageStatus(payload.message.id, "Read");
+            // }
+          }
+        )
         .subscribe();
     }
     return () => {
@@ -90,8 +105,6 @@ const CurrentChat: React.FC = () => {
     // getConvoDetails();
     getConvoMessages();
   }, [local.chatId]);
-
-
 
   const updateMessageStatus = async (
     messageId: string,
@@ -113,7 +126,6 @@ const CurrentChat: React.FC = () => {
     }
   };
 
-
   const getConvoMessages = async () => {
     try {
       const response = await fetch(
@@ -128,11 +140,11 @@ const CurrentChat: React.FC = () => {
       const data = await response.json();
 
       setMessages(data);
+      console.log(messages?.messages[0].user);
     } catch (error) {
       console.error("Failed to fetch messages", error);
     }
   };
-
 
   // const getConvoDetails = async () => {
   //   try {
@@ -152,19 +164,18 @@ const CurrentChat: React.FC = () => {
   //   }
   // };
 
-
   const onSend = () => {
     if (!message.trim()) return;
     const messageId = createId();
 
-
     if (userName && channel.current) {
-      addMessage( messages?.messages.conversationId, message, myInfo.id);
+      if (!messages) return
+      addMessage(messages?.messages[0].conversationId, message, myInfo.id);
 
       channel.current.send({
         type: "broadcast",
         event: "message",
-        payload: { message: { message, userName, id: messageId } },
+        payload: { message: { message, user: {username: userName}, id: messageId } },
       });
 
       setMessage("");
@@ -179,10 +190,6 @@ const CurrentChat: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-  
-
-  
-
 
   return (
     <KeyboardAvoidingView
@@ -198,15 +205,14 @@ const CurrentChat: React.FC = () => {
             <Ionicons name="arrow-back" size={24} color={color} />
           </TouchableOpacity>
           <ThemedText style={styles.title}>
-            {messages?.users?.filter((user: any) => user.user.id !== myInfo.id)
-              .map((user: any) => user?.user.username)
-            }
+            {messages?.users
+              ?.filter((user: any) => user.user.id !== myInfo.id)
+              .map((user: any) => user?.user.username)}
           </ThemedText>
         </ThemedView>
 
         <ScrollView ref={messagesEndRef} style={styles.messagesContainer}>
-          {messages.messages?.map((msg, i) =>          
-           (
+          {messages?.messages?.map((msg, i) => (
             <ThemedView
               key={`${msg.id}-${i}`}
               style={
@@ -220,7 +226,9 @@ const CurrentChat: React.FC = () => {
           ))}
         </ScrollView>
 
-        <ThemedView style={[styles.inputContainer, { borderColor: fadedColor }]}>
+        <ThemedView
+          style={[styles.inputContainer, { borderColor: fadedColor }]}
+        >
           <TextInput
             style={[styles.input, { borderColor: fadedColor, color }]}
             placeholder="Type your message"
