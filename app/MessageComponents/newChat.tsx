@@ -40,6 +40,7 @@ const Chat: React.FC = () => {
   const color = colorScheme === "dark" ? "white" : "black";
 
   const handlePickUser = (user: User) => {
+    console.log('hitting pick user')
     setRecipient(user)
     setRecipientSearch(user.username)
     setToggleList(false)
@@ -110,7 +111,7 @@ const Chat: React.FC = () => {
           value={recipientSearch}
           placeholder="Who to?"
           onFocus={() => setToggleList(true)}
-          onBlur={() => setToggleList(false)}
+          // onBlur={() => setToggleList(false)}
         />
       </ThemedView>
       {toggleList && (
@@ -118,7 +119,7 @@ const Chat: React.FC = () => {
           <ScrollView style={styles.usersView}>
             {searchResults?.length > 0 ? (
               searchResults.map((e: any) => (
-                <Pressable onPress={() => handlePickUser(e)}>
+                <Pressable style={styles.border} onPress={() => handlePickUser(e)}>
                   <ThemedText style={styles.user} key={e.id}>
                     {e.username}
                   </ThemedText>
@@ -224,7 +225,11 @@ const styles = StyleSheet.create({
   user: {},
   usersView: {
     flexDirection: "column",
+    height: 50 
   },
+  border: {
+    backgroundColor: 'black'
+  }
 });
 
 export default Chat;

@@ -205,11 +205,12 @@ const CurrentChat: React.FC = () => {
         </ThemedView>
 
         <ScrollView ref={messagesEndRef} style={styles.messagesContainer}>
-          {messages.messages?.map((msg, i) => (
+          {messages.messages?.map((msg, i) =>          
+           (
             <ThemedView
               key={`${msg.id}-${i}`}
               style={
-                userName === msg?.userName
+                userName === msg.user.username
                   ? styles.myMessage
                   : styles.otherMessage
               }
