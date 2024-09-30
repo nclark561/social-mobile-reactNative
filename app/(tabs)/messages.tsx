@@ -29,6 +29,7 @@ interface MessageData {
   userName: string;
   recipient?: string;
   time: any
+  userId: string
 }
 
 interface User {
@@ -149,6 +150,7 @@ const SwipeableItem = ({ item, onDelete }: { item: ConversationData, onDelete: (
       }
     },
   });
+  console.log(item.messages[0], 'this is the item message')
 
   return (
     <Animated.View
@@ -161,6 +163,7 @@ const SwipeableItem = ({ item, onDelete }: { item: ConversationData, onDelete: (
           time={item?.messages[0]?.time}
           conversationId={item.id}
           message={item.messages[0].message}
+          messageUser={item.messages[0].userId}
           status={item.messages[0].status}
           user={item.users[0].user}
         />

@@ -20,10 +20,11 @@ interface TestProps {
   user: any;
   recipient?: string;
   time: string;
+  messageUser: string
 }
 
 const Test = (props: TestProps) => {
-  const { myUsername } = useContext<any>(MyContext);
+  const { myUsername, myInfo } = useContext<any>(MyContext);
   const colorScheme = useColorScheme();
   const [ imageUri, setImageUri ] =  useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${props.user.id}.jpg?${Date.now()}`)
   const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
@@ -39,7 +40,7 @@ const Test = (props: TestProps) => {
   return (
     <Pressable onPress={navigateToConversation} style={styles.messageContent}>
       <View style={styles.statusDot}>
-        {props.status === "Delivered" && props.user.username !== myUsername ? (
+        {(props.status === "Delivered" && props.messageUser !== myInfo.id) ? (
           <View style={styles.blueDot}></View>
         ) : (
           <View style={styles.blueDotNothing}></View>

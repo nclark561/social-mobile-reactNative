@@ -19,7 +19,7 @@ import { supabase } from "../../components/Supabase";
 import MyContext from "@/components/providers/MyContext";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useFocusEffect } from "expo-router";
 
 type MessageStatus = "Delivered" | "Read";
 
@@ -107,18 +107,18 @@ const CurrentChat: React.FC = () => {
   }, [local.chatId]);
 
   const updateMessageStatus = async (
-    messageId: string,
-    status: MessageStatus
+    conversationId: string,
+    userId: string
   ) => {
     try {
       await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/updateMessage`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/updateMessageRead`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id: messageId, status }),
+          body: JSON.stringify({ conversationId, userId }),
         }
       );
     } catch (error) {
@@ -186,6 +186,10 @@ const CurrentChat: React.FC = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollToEnd({ animated: true });
   };
+
+  useFocusEffect(() => {
+    updateMessageStatus( local.chatId, myInfo?.id )
+  })
 
   useEffect(() => {
     scrollToBottom();
