@@ -251,24 +251,17 @@ export default function CommentPage() {
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
             <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
-              <Ionicons
-                size={25}
-                name="git-compare-outline"
-                color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>Repost</ThemedText>
-            </ThemedView>
-            <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
-              <Ionicons
-                size={25}
-                name="pencil-outline"
-                color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>Quote</ThemedText>
-            </ThemedView>
+              <Pressable>
+                <Ionicons
+                  size={25}
+                  name="git-compare-outline"
+                  color={colorScheme === "dark" ? "white" : "black"}
+                ></Ionicons>
+                <ThemedText style={styles.optionText}>Repost</ThemedText>
+              </Pressable>
+            </ThemedView>            
           </ThemedView>
         </CustomBottomSheet>
-        
         {/* Delete Menu */}
         <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
           <ThemedView style={styles.deleteContainer}>

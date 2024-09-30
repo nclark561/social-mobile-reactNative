@@ -37,7 +37,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
                     },
                 },
             );
-            const fetchedPosts = await result.json();
+            const fetchedPosts = await result.json();            
             setPosts(fetchedPosts);
         } catch (error) {
             console.log(error, "this is the get user error");

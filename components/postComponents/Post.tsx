@@ -173,7 +173,28 @@ export default function Post({ post, isComment, user }: PostProps) {
     }
   };
 
-  console.log(post, 'this is postInfo')
+
+
+  const repost = async (userId: string, postId: string) => {
+    try {
+      const test = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addReposts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            postId,
+          }),
+        }
+      );
+      await getForYouPosts();
+      await getUserPosts(user);
+    } catch (error) {
+      console.log(error, "this is the create user error");
+    }
+  };
 
 
   return (
@@ -251,10 +272,10 @@ export default function Post({ post, isComment, user }: PostProps) {
         >
           <ThemedView style={styles.deleteMenu}>
             <Button
-            
+
               title="Delete Post"
               color="red"
-              onPress={() => {if(isComment) {deleteComment(post.id)} else {deletePost(post.id)}}} // Delete the post on button press
+              onPress={() => { if (isComment) { deleteComment(post.id) } else { deletePost(post.id) } }} // Delete the post on button press
             />
           </ThemedView>
         </CustomBottomSheet>
@@ -361,12 +382,16 @@ export default function Post({ post, isComment, user }: PostProps) {
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
             <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
-              <Ionicons
-                size={25}
-                name="git-compare-outline"
-                color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>Repost</ThemedText>
+              <Pressable onPress={() => {
+                repost(myInfo?.id, post.id)
+              }}>
+                <Ionicons
+                  size={25}
+                  name="git-compare-outline"
+                  color={colorScheme === "dark" ? "white" : "black"}
+                ></Ionicons>
+                <ThemedText style={styles.optionText}>Repost</ThemedText>
+              </Pressable>
             </ThemedView>
             <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
               <Ionicons
