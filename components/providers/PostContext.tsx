@@ -24,7 +24,6 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     
 
 
-
     const getUserPosts = async (email: string) => {
         console.log(email, 'hitting get user posts')
         try {
@@ -56,7 +55,8 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
                     },
                 },
             );
-            const fetchedPosts = await result.json();            
+            const fetchedPosts = await result.json(); 
+            console.log(fetchedPosts)           
             setForYouPosts(fetchedPosts.Posts);
         } catch (error) {
             console.log(error, "this is the get for you posts error");

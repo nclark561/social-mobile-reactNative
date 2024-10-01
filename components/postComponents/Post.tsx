@@ -28,12 +28,13 @@ interface Post {
 }
 
 interface PostProps {
+  repostLength?: number,
   isComment?: boolean;
   post: Post;
   user: string;
 }
 
-export default function Post({ post, isComment, user }: PostProps) {
+export default function Post({ post, isComment, user, repostLength }: PostProps) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
@@ -197,6 +198,7 @@ export default function Post({ post, isComment, user }: PostProps) {
   };
 
 
+
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
       <ThemedView
@@ -232,12 +234,15 @@ export default function Post({ post, isComment, user }: PostProps) {
                 {post?.comments?.length}
               </ThemedText>
             </ThemedView>
-            <Ionicons
-              size={15}
-              name="git-compare-outline"
-              onPress={handleOpenRepost}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
+            <ThemedView style={styles.smallRow}>
+              <Ionicons
+                size={15}
+                name="git-compare-outline"
+                onPress={handleOpenRepost}
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
+              <ThemedText style={styles.smallNumber}>{repostLength? repostLength : post?.reposts?.length }</ThemedText>
+            </ThemedView>
             <ThemedView style={styles.smallRow}>
               <Ionicons
                 size={15}

@@ -60,15 +60,24 @@ export default function TabTwoScreen() {
         return (
           <Animated.ScrollView style={{ height: '72%' }}>
             <ThemedView>
-              {Array.isArray(posts.Posts) &&
-                posts?.Posts?.map((post: any) => {
+              {Array.isArray(posts) &&
+                posts?.map((post: any) => {
                   return <Post key={post.id} post={post} user={myInfo?.email} />;
                 })}
             </ThemedView>
           </Animated.ScrollView>
         );
-      case "Likes":
-        return <ThemedText>Reposts</ThemedText>;
+      case "Reposts":
+        return (
+          <Animated.ScrollView style={{ height: '72%' }}>
+          <ThemedView>
+            {Array.isArray(posts) &&
+              posts[0]?.reposts.map((post: any) => {
+                return <Post repostLength={posts[0]?.reposts.length} key={post.id} post={post.post} user={myInfo?.email} />;
+              })}
+          </ThemedView>
+        </Animated.ScrollView>
+        );
       case "Replies":
         return (
           <Animated.ScrollView style={{ height: '72%' }}>
@@ -92,9 +101,7 @@ export default function TabTwoScreen() {
     Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
   };
   
-  
-  
-
+    
   return (
     <ThemedView style={{ flex: 1, marginTop: -70 }}>
       <ThemedView style={styles.header}>
@@ -102,8 +109,7 @@ export default function TabTwoScreen() {
           <ThemedView style={[styles.backgroundColor, { backgroundColor: myInfo?.color || '#fff' }]}></ThemedView>
           <ThemedView style={styles.row}>
             {loggedIn ? (
-              <Image
-              
+              <Image              
                 style={styles.profilePic}
                 source={{
                   uri: profileImageUri,
@@ -114,7 +120,6 @@ export default function TabTwoScreen() {
             ) : (
               <ThemedText>Empty Photo</ThemedText>
             )}
-
             <TouchableOpacity style={[styles.button, { borderColor: fadedTextColor }]} onPress={handleOpenEditProfile}>
               <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
             </TouchableOpacity>
@@ -145,7 +150,6 @@ export default function TabTwoScreen() {
               <ThemedText style={styles.smallGray}>
                 {myInfo?.following?.length} Following
               </ThemedText>
-
             </>
           ) : (
             <ThemedText></ThemedText>
@@ -219,8 +223,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "90%",
-    marginLeft: 10,
+    width: "100%",
+    borderColor: 'rgb(232,232,232)',
+    borderBottomWidth: .5,    
   },
   optionText: {
     fontSize: 16,
