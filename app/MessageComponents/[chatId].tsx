@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useRef, useContext, useEffect, useCallback } from "react";
 import {
   View,
   TextInput,
@@ -8,7 +8,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,
+  useColorScheme,  
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // For icons
 import { useNavigation, useRoute } from "@react-navigation/native"; // For navigation
@@ -84,7 +84,7 @@ const CurrentChat: React.FC = () => {
             payload.message.status = "Delivered";
             console.log(messages?.messages.length, "messages length");
             setMessages((prev) => {
-              if(prev) return { ...prev, messages: [...prev.messages, payload.message] };
+              if (prev) return { ...prev, messages: [...prev.messages, payload.message] };
               return prev
             });
 
@@ -175,7 +175,7 @@ const CurrentChat: React.FC = () => {
       channel.current.send({
         type: "broadcast",
         event: "message",
-        payload: { message: { message, user: {username: userName}, id: messageId } },
+        payload: { message: { message, user: { username: userName }, id: messageId } },
       });
 
       setMessage("");
@@ -187,9 +187,13 @@ const CurrentChat: React.FC = () => {
     messagesEndRef.current?.scrollToEnd({ animated: true });
   };
 
-  useFocusEffect(() => {
-    updateMessageStatus( local.chatId, myInfo?.id )
-  })
+  useFocusEffect(
+    useCallback(() => {
+      updateMessageStatus(local.chatId, myInfo?.id)
+    }, [local.chatId])    
+  );
+
+  
 
   useEffect(() => {
     scrollToBottom();
@@ -208,11 +212,13 @@ const CurrentChat: React.FC = () => {
           >
             <Ionicons name="arrow-back" size={24} color={color} />
           </TouchableOpacity>
-          <ThemedText style={styles.title}>
-            {messages?.users
-              ?.filter((user: any) => user.user.id !== myInfo.id)
-              .map((user: any) => user?.user.username)}
-          </ThemedText>
+          <ThemedView style={styles.center}>
+            <ThemedText style={styles.title}>
+              {messages?.users
+                ?.filter((user: any) => user.user.id !== myInfo.id)
+                .map((user: any) => user?.user.username)}
+            </ThemedText>
+          </ThemedView>
         </ThemedView>
 
         <ScrollView ref={messagesEndRef} style={styles.messagesContainer}>
@@ -282,6 +288,8 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: "#f0f0f0",
     padding: 10,
+    margin: 10,
+    marginTop: 10,
     borderRadius: 10,
     marginVertical: 5,
     maxWidth: "80%",
@@ -307,6 +315,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
+  center: {
+    display: 'flex',
+    alignItems: 'center',    
+    width: '80%'
+  }
 });
 
 export default CurrentChat;

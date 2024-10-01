@@ -87,7 +87,7 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
       await getForYouPosts();
       await getUserPosts(user);
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is the add like error in post");
     }
   };
 
@@ -193,7 +193,7 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
       await getForYouPosts();
       await getUserPosts(user);
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is the repost error in post");
     }
   };
 

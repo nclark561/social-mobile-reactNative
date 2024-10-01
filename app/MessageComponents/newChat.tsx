@@ -31,7 +31,7 @@ const Chat: React.FC = () => {
   const [recipientSearch, setRecipientSearch] = useState("");
   const [recipient, setRecipient] = useState<User | undefined>();
   const context = useContext<any>(MyContext);
-  const { setLoginToggle, myInfo, loggedIn } = context;
+  const { setLoginToggle, myInfo, loggedIn, myConvos } = context;
   const colorScheme = useColorScheme();
   const [toggleList, setToggleList] = useState(false);
   const [searchResults, setSearchResults] = useState<any>(null);
@@ -46,7 +46,7 @@ const Chat: React.FC = () => {
     setToggleList(false)
   }
 
-  const createConversation = async () => {
+  const createConversation = async () => {    
     try {
       if (!myInfo.id || !recipient?.id) throw new Error("User missing");
       const response = await fetch(

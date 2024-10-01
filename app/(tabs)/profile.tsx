@@ -39,8 +39,7 @@ export default function TabTwoScreen() {
   };
 
   useFocusEffect(
-    useCallback(() => {
-      console.log(myInfo?.email, 'this is email on profile apge')
+    useCallback(() => {      
       getUserPosts(myInfo?.email, myInfo?.id);
     }, [myInfo])
   );

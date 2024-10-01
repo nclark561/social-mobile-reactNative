@@ -13,22 +13,54 @@ interface MyInfo {
 
 export interface UserContextType {
     myInfo: MyInfo | undefined;
+    myConvos: ConversationData[];
+    setMyConvos: React.Dispatch<React.SetStateAction<ConversationData[]>>;  // Add setMyConvos to the UserContextType
     setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
     loggedIn: boolean;
     updateUser: (links: string, email: string, location: string, bio?: string, username?: string, following?: string[]) => Promise<void>;
     getUser: () => Promise<void>;
+    getConvos: () => Promise<void>;
     updateFollowers: (
         followeeId: string,
         followerId: string,
         followers: string[],
         following: string[]
-    ) => Promise<void>;  // Add updateFollowers to the UserContextType interface
+    ) => Promise<void>;
+}
+
+interface ConversationData {
+    id: string;
+    date: Date;
+    users: UserData[];
+    messages: MessageData[];
+}
+
+interface User {
+    id: string;
+    username: string;
+}
+
+interface UserData {
+    user: User;
+}
+
+interface MessageData {
+    conversationId: string;
+    date: string;
+    id: string;
+    message: string;
+    status: string;
+    userName: string;
+    recipient?: string;
+    time: any;
+    userId: string;
 }
 
 const MyContext = createContext<UserContextType | undefined>(undefined);
 
 export const MyProvider = ({ children }: { children: ReactNode }) => {
     const [myInfo, setMyInfo] = useState<MyInfo>();
+    const [myConvos, setMyConvos] = useState<ConversationData[]>([]);
     const [loginToggle, setLoginToggle] = useState(false);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
@@ -37,12 +69,15 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     }, [loggedIn, loginToggle]);
 
     async function getSession() {
+        console.log('hitting get session')
         try {
             const { data, error } = await supabase.auth.getUser();
             if (error) {
+                console.log(error, 'get session error')
                 setLoggedIn(false);
                 return null;
             }
+            console.log(data, 'get session data')
             setLoggedIn(true);
             return data;
         } catch (err) {
@@ -51,12 +86,35 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
+    const getConvos = async () => {
+        try {
+            const convos = await fetch(
+                `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?id=${myInfo?.id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            const { conversations } = await convos.json();
+            setMyConvos(conversations);
+        } catch (error) {
+            console.error('Failed to fetch conversations:', error);
+        }
+    };
+
+    useEffect(() => {
+        getConvos(); 
+      }, [myInfo]);
+
+
     const getUser = async () => {
         try {
             const userEmail = await AsyncStorage.getItem("user");
             if (!userEmail) throw new Error('User not logged in');
-            const email = JSON.parse(userEmail);  
-            console.log(email, 'this is the email')         
+            const email = JSON.parse(userEmail);
+            console.log(email, 'this is the email');
             const result = await fetch(
                 `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/myInfo?email=${email}`,
                 {
@@ -68,7 +126,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
             );
             const text = await result.text();
             const userInfo = JSON.parse(text);
-            console.log(userInfo, 'user info ')
+            console.log(userInfo, 'user info');
             setMyInfo(userInfo.user);
         } catch (error) {
             console.log(error, 'this is the get user error');
@@ -111,7 +169,6 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         theirFollowers: string[],
         myFollowing: string[]
     ) => {
-        
         try {
             const bodyData: any = {};
             if (myId) bodyData.myId = myId;
@@ -135,7 +192,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <MyContext.Provider value={{ myInfo, setLoginToggle, loggedIn, updateUser, getUser, updateFollowers }}>
+        <MyContext.Provider value={{ myInfo, myConvos, setMyConvos, setLoginToggle, loggedIn, updateUser, getUser, getConvos, updateFollowers }}>
             {children}
         </MyContext.Provider>
     );

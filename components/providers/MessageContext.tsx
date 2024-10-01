@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState, ReactNode, useEffect } from "react";
+import { useContext } from "react";
+import MyContext from "./MyContext";
 // import { post } from "../utils/fetch";
 
 interface ContextProps {
@@ -37,12 +39,14 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const [person, setPerson] = useState<string>("");
   const [myConvos, setMyConvos] = useState<any[]>([]);
   const [convoId, setConvoId] = useState<any[]>([]);
+  
+  const { myInfo } = useContext<any>(MyContext);
 
 
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?email=${AsyncStorage.getItem("user")}`,
+        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?id=${myInfo.id}`,
         {
           method: "GET",
           headers: {
@@ -50,10 +54,10 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
           },
         },
       );
-      const userInfo = await convos.json();
-      setMyConvos([...userInfo.Posts]);
+      const userInfo = await convos.json();      
+      setMyConvos([...userInfo]);
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is the gete convos error");
     }
   };
 
@@ -103,10 +107,10 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
 
       getConvos(); // Call the getConvos function to update the conversation data
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is the add message error");
     }
   };
-
+  
 
   return (
     <MessageContext.Provider

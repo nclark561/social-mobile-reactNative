@@ -14,7 +14,7 @@ import Post from '@/components/postComponents/Post';
 import { Link } from 'expo-router';
 
 
-export default function TabTwoScreen() {
+export default function ExternalProfile() {
   const navigation = useNavigation();
   const [selectedOption, setSelectedOption] = useState('Posts'); // Track selected option
   const [user, setUser] = useState<any>();
@@ -44,7 +44,7 @@ export default function TabTwoScreen() {
   );
 
   useEffect(() => {
-    if (user.id) {
+    if (user?.id) {
         const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user?.id}.jpg?${Date.now()}`;
         setProfileImageUri(newProfileImageUri);
     }
@@ -74,7 +74,7 @@ export default function TabTwoScreen() {
         return <ThemedView>
           {Array.isArray(user?.posts) && user?.posts?.map((post: any) => {
             return (
-              <Post key={post.id} post={post} user={myInfo.email} />
+              <Post key={post?.id} post={post} user={myInfo.email} />
             )
           })}
         </ThemedView>;
@@ -84,7 +84,7 @@ export default function TabTwoScreen() {
         return <ThemedView>
           {user?.comments?.map((comment: any) => {
             return (
-              <ThemedView key={comment.id || comment.content}>
+              <ThemedView key={comment?.id || comment.content}>
                 <ThemedText style={styles.content}>{comment?.comment}</ThemedText>
               </ThemedView>
             )
@@ -117,7 +117,7 @@ export default function TabTwoScreen() {
         },
         {
           text: 'Unfollow',
-          onPress: () => updateFollowers(myInfo.id, user.id, user.followers, myInfo.following),
+          onPress: () => updateFollowers(myInfo?.id, user?.id, user.followers, myInfo.following),
         },
       ],
       { cancelable: false }

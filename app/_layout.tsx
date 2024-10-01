@@ -41,9 +41,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <MessageProvider>
-            <PostProvider>
-              <MyProvider>
+          <MyProvider>
+            <MessageProvider>
+              <PostProvider>
                 <SafeAreaView style={{ flex: 1, backgroundColor }}>
                   <Drawer drawerContent={(props) => <MyCustomDrawer {...props} />}>
                     <Drawer.Screen
@@ -133,9 +133,9 @@ export default function RootLayout() {
                     />
                   </Drawer>
                 </SafeAreaView>
-              </MyProvider>
-            </PostProvider>
-          </MessageProvider>
+              </PostProvider>
+            </MessageProvider>
+          </MyProvider>
         </ThemeProvider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

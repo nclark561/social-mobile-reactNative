@@ -65,7 +65,7 @@ export default function CommentPage() {
       );
       await getForYouPosts();
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is the add like error");
     }
   };
 

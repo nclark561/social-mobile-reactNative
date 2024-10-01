@@ -18,7 +18,6 @@ interface TestProps {
   message: string;
   status: string;
   user: any;
-  recipient?: string;
   time: string;
   messageUser: string
 }
@@ -26,7 +25,7 @@ interface TestProps {
 const Test = (props: TestProps) => {
   const { myUsername, myInfo } = useContext<any>(MyContext);
   const colorScheme = useColorScheme();
-  const [ imageUri, setImageUri ] =  useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${props.user.id}.jpg?${Date.now()}`)
+  const [imageUri, setImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${props.user.id}.jpg?${Date.now()}`)
   const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
   const color = colorScheme === "dark" ? 'white' : "black";
 
@@ -37,9 +36,33 @@ const Test = (props: TestProps) => {
     router.push(`/MessageComponents/${props.conversationId}`);
   };
 
+  function convertToTime(string: string) {
+
+    const date = new Date(string);
+
+    let hours = date.getUTCHours();
+    let minutes = date.getUTCMinutes();
+
+
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;  // Convert 24-hour format to 12-hour format
+    minutes = minutes < 10 ? '0' + minutes : minutes;  // Add leading zero to minutes
+
+
+    return `${hours}:${minutes} ${ampm}`;
+  }
+
+  function shortenMessage(message: string): string {
+    if (message.length > 50) {
+      return message.substring(0, 50) + "...";
+    }
+    return message;
+  }
+  
+
   return (
     <Pressable onPress={navigateToConversation} style={styles.messageContent}>
-      <View style={styles.statusDot}>
+      <View>
         {(props.status === "Delivered" && props.messageUser !== myInfo.id) ? (
           <View style={styles.blueDot}></View>
         ) : (
@@ -47,19 +70,19 @@ const Test = (props: TestProps) => {
         )}
       </View>
       <Image
-        source={{ uri: imageUri }} 
+        source={{ uri: imageUri }}
         onError={handleError}
         style={styles.userIcon}
       />
       <View style={styles.messageText}>
         <ThemedView style={styles.flexTime}>
           <ThemedText style={styles.title}>
-            {props.recipient === myUsername ? props.user.username : props.recipient}
+            {props?.recipient === myUsername ? props.user.username : props?.recipient}
           </ThemedText>
-          <Text style={styles.graySub}>{props.time}</Text>
+          <Text style={styles.graySub}>{convertToTime(props.time)}</Text>
           <Ionicons name="chevron-forward" size={16} color="gray" />
         </ThemedView>
-        <Text style={styles.smallGray}>{props.message}</Text>
+        <Text style={styles.smallGray}>{shortenMessage(props.message)}</Text>
       </View>
     </Pressable>
   );
@@ -75,26 +98,20 @@ const styles = StyleSheet.create({
   },
   messageContent: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "center",    
     flex: 1,
     padding: 10,
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
   },
-  statusDot: {
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 5,
-  },
+  
   blueDot: {
-    width: 10,
-    height: 10,
+    width: 5,
+    height: 5,
     borderRadius: 5,
     backgroundColor: "#26a7de",
   },
   blueDotNothing: {
-    width: 10,
-    height: 10,
+    width: 5,
+    height: 5,
     borderRadius: 5,
     backgroundColor: "transparent",
   },

@@ -60,7 +60,7 @@ export default function HomeScreen() {
       );
       await getForYouPosts();
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is the create post error");
     }
   };
 
@@ -71,8 +71,7 @@ export default function HomeScreen() {
     }, [myInfo])
   );
 
-  
-  console.log(forYouPosts, 'my for you posts')
+    
 
   return (
     <ThemedView style={styles.pageContainer}>

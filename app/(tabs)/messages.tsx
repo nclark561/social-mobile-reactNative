@@ -48,11 +48,12 @@ interface ConversationData {
   messages: MessageData[]
 }
 
+
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const MessageHome: React.FC = () => {
-  const [myConvos, setMyConvos] = useState<ConversationData[]>([]);
-  const { deleteConvos, myUsername } = useContext<any>(MessageContext);
+  
+  const { deleteConvos, myUsername, getConvos, setMyConvos, myConvos } = useContext<any>(MessageContext);
   const navigation = useNavigation();
   const context = useContext<any>(MyContext);
   const { myInfo } = context;
@@ -60,37 +61,19 @@ const MessageHome: React.FC = () => {
   const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
   const deleteThreshold = -SCREEN_WIDTH / 3; // Threshold for deleting an item
 
-  useEffect(() => {
-    getConvos(); 
-  }, []);
 
-  const getConvos = async () => {    
-    try {
-      const convos = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?id=${myInfo.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const { conversations } = await convos.json();
-      setMyConvos(conversations);
-      console.log(conversations[0].users[0].user, 'this is the recipient')
-    } catch (error) {
-    }
-  };
 
   useFocusEffect(() => {
-    const intervalId = setInterval(getConvos, 5000);
+    const intervalId = setInterval(getConvos, 3000);    
     return () => clearInterval(intervalId);
   });
 
+
   const handleDelete = (conversationId: string) => {
-    setMyConvos((prevData) => prevData.filter((item) => item.id !== conversationId));
+    setMyConvos((prevData: any) => prevData.filter((item: any) => item.id !== conversationId));
     deleteConvos(conversationId)
   };
+
 
   const renderItem = ({ item }: { item: ConversationData }) => {
     return (
@@ -100,13 +83,12 @@ const MessageHome: React.FC = () => {
       />
     );
   };
-
-
+  
 
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
-        <ThemedText style={styles.title}>{myInfo?.username}</ThemedText>
+        <ThemedText style={styles.title}>Messages</ThemedText>
       </ThemedView>
       <FlatList
         data={myConvos}
@@ -150,7 +132,7 @@ const SwipeableItem = ({ item, onDelete }: { item: ConversationData, onDelete: (
       }
     },
   });
-  console.log(item.messages[0], 'this is the item message')
+  
 
   return (
     <Animated.View
@@ -159,13 +141,13 @@ const SwipeableItem = ({ item, onDelete }: { item: ConversationData, onDelete: (
     >
       <ThemedView style={styles.itemContainer}>
         <Test
-          key={item.id}
-          time={item?.messages[0]?.time}
-          conversationId={item.id}
-          message={item.messages[0].message}
-          messageUser={item.messages[0].userId}
-          status={item.messages[0].status}
-          user={item.users[0].user}
+          key={item?.id}
+          time={item?.messages[0]?.date}
+          conversationId={item?.id}
+          message={item?.messages[0].message}
+          messageUser={item?.messages[0].userId}
+          status={item?.messages[0].status}
+          user={item?.users[0].user}
         />
       </ThemedView>
     </Animated.View>

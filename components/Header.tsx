@@ -35,6 +35,7 @@ export default function Header({ name }: HeaderProps) {
     }, [myInfo]);
       
 
+
     return (
         <ThemedView style={styles.page}>
             {loggedIn ? (

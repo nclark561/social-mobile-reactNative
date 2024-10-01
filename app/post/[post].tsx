@@ -69,7 +69,7 @@ export default function PostPage({ post }: { post: Post }) {
       await getForYouPosts()
       await getPost(local.post)
     } catch (error) {
-      console.log(error, "this is the create user error");
+      console.log(error, "this is the add like error in [post]");
     }
   };
 
