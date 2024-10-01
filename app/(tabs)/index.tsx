@@ -67,7 +67,7 @@ export default function HomeScreen() {
   useFocusEffect(
     useCallback(() => {
       getForYouPosts();
-      getUserPosts(myInfo?.email);
+      getUserPosts(myInfo?.email, myInfo?.id);
     }, [myInfo])
   );
 

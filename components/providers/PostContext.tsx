@@ -3,9 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from "../../components/Supabase";
 
 type PostContextType = {
-    getUserPosts: (id: string) => Promise<void>;
+    getUserPosts: (email: string, userId: string) => Promise<void>;
     getForYouPosts: () => Promise<void>;
-    posts: any[];
+    posts: any;
     forYouPosts: any[];
     forYouPostsToggle: boolean;
     setForYouPostsToggle: (value: boolean) => void
@@ -24,11 +24,11 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     
 
 
-    const getUserPosts = async (email: string) => {
+    const getUserPosts = async (email: string, userId: string) => {
         console.log(email, 'hitting get user posts')
         try {
             const result = await fetch(
-                `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getMyPosts?email=${email}`,
+                `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getMyPosts?email=${email}&id=${userId}`,
                 {
                     method: "GET",
                     headers: {
