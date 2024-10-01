@@ -12,11 +12,13 @@ import Animated from 'react-native-reanimated';
 const noah = {
   email: 'Noah Clark',
   username: 'nclark561',
+  id: 'cm1jrrymy0000boszjdsbtabc'
 }
 
 const kale = {
-  email: 'Kale Hamm',
+  email: 'kaleckh@gmail.com',
   username: 'kaethebae',
+  id: 'cm1k2x8jp0000z0ygxfrgi631'
 }
 
 export default function TabTwoScreen() {
@@ -81,7 +83,7 @@ export default function TabTwoScreen() {
         <>
           <ThemedText style={styles.title} type='title'>Results</ThemedText>
           <Animated.ScrollView>
-            {searchResults.length > 0 ? searchResults.map((e: any) => <ProfileDisplay key={e.id} user={e} />) : <ThemedText>No results found</ThemedText>}
+            {searchResults.length > 0 ? searchResults.map((e: any) => <ProfileDisplay key={e.id} user={e} />) : <ThemedText style={styles.center}>No results found</ThemedText>}
           </Animated.ScrollView>
         </>
       )}
@@ -120,5 +122,8 @@ const styles = StyleSheet.create({
   },
   title: {
     margin: 10
+  },
+  center: {
+    marginLeft: 12
   }
 });

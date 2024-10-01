@@ -49,6 +49,7 @@ const Chat: React.FC = () => {
   const createConversation = async () => {    
     try {
       if (!myInfo.id || !recipient?.id) throw new Error("User missing");
+  
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createConversation`,
         {
@@ -63,21 +64,27 @@ const Chat: React.FC = () => {
           }),
         }
       );
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
-      router.navigate(`/MessageComponents/${data.update.id}`);
+        
+      if (data.conversationId) {
+        router.navigate(`/MessageComponents/${data.conversationId}`);
+      }
+        
       setMessage("");
       setRecipientSearch("");
       setRecipient(undefined);
-      setSearchResults(null)
+      setSearchResults(null);
+      
     } catch (error) {
       console.error("Failed to create conversation", error);
     }
   };
+  
 
   const searchUsers = async () => {
     try {

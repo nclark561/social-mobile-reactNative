@@ -64,7 +64,7 @@ const MessageHome: React.FC = () => {
 
 
   useFocusEffect(() => {
-    const intervalId = setInterval(getConvos, 3000);    
+    const intervalId = setInterval(getConvos, 2000);    
     return () => clearInterval(intervalId);
   });
 

@@ -101,8 +101,7 @@ const CurrentChat: React.FC = () => {
     };
   }, [id, myInfo?.username]);
 
-  useEffect(() => {
-    // getConvoDetails();
+  useEffect(() => {    
     getConvoMessages();
   }, [local.chatId]);
 
