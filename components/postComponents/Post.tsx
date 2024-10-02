@@ -25,6 +25,7 @@ interface Post {
   userName: string;
   userId?: string;
   owner: any;
+  reposts: any
 }
 
 interface PostProps {

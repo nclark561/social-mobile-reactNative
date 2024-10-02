@@ -19,6 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"; // Import 
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "@/components/providers/MyContext";
 import { useFocusEffect } from "expo-router";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function HomeScreen() {
   const newPostRef = useRef<BottomSheetModal>(null);
@@ -26,7 +27,7 @@ export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, forYouPosts, getForYouPosts } = postContext;
-
+  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
   const context = useContext<any>(MyContext);
   const { myInfo } = context;
 
@@ -35,8 +36,9 @@ export default function HomeScreen() {
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${
+        process.env.EXPO_PUBLIC_SUPABASE_URL
+      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -71,16 +73,21 @@ export default function HomeScreen() {
     }, [myInfo])
   );
 
-    
-
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name="Posts" />
       <Animated.ScrollView>
         {Array.isArray(forYouPosts) &&
-          forYouPosts.map((post, i) => (
-            <Post key={i} post={post} isComment={false} />
-          ))}
+          forYouPosts.map((post, i) => {
+            if(post.postId) return (
+              <ThemedView style={{ flexDirection: 'column' }}>
+                <ThemedText style={{ color: fadedTextColor }}>Reposted by {post.user.username}</ThemedText>
+                <Post key={post.id} post={post.post} isComment={false}/>
+              </ThemedView>
+            )
+
+            return <Post key={post.id} post={post} isComment={false} />;
+          })}
       </Animated.ScrollView>
       <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
         <Ionicons size={30} color={"white"} name="add" />
