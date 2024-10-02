@@ -5,16 +5,15 @@ import { useFocusEffect } from "expo-router";
 
 export default function Page() {
   const context = useContext<any>(MyContext);
-  const { loggedIn } = context
+  const { loggedIn } = context;
 
   useFocusEffect(() => {
     if (loggedIn) {
-      router.push('/(tabs)');
+      router.push("/(tabs)");
     } else {
-      router.push('/login');
+      router.push("/login");
     }
   });
 
-  return <></>
+  return <></>;
 }
-

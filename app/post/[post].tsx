@@ -15,15 +15,14 @@ import MyContext from "@/components/providers/MyContext";
 import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 import Post from "@/components/postComponents/Post";
 
-
 interface Post {
   id: string;
   content: string;
   date: Date;
-  comments: any,
-  email: string,
-  likes: any,
-  profilePic: string
+  comments: any;
+  email: string;
+  likes: any;
+  profilePic: string;
 }
 
 export default function PostPage({ post }: { post: Post }) {
@@ -31,13 +30,14 @@ export default function PostPage({ post }: { post: Post }) {
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
   const [commentInput, setCommentInput] = useState("");
-  const { getForYouPosts } = useContext<any>(PostContext);
+  const { getForYouPosts, getBaseUrl } = useContext<any>(PostContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Reference for delete menu
-  const local = useLocalSearchParams<any>()
-  const { setLoginToggle, myInfo, loggedIn, getUser } = useContext<any>(MyContext);
+  const local = useLocalSearchParams<any>();
+  const { setLoginToggle, myInfo, loggedIn, getUser } =
+    useContext<any>(MyContext);
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
@@ -49,46 +49,42 @@ export default function PostPage({ post }: { post: Post }) {
     setLiked((prev) => !prev);
   };
 
-  const addLike = async (
-    userId: string,
-    postId: string,
-    comment: boolean
-  ) => {
-
+  const addLike = async (userId: string, postId: string, comment: boolean) => {
     try {
-      const test = await fetch(comment ? `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addCommentLike` : `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addLike`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const test = await fetch(
+        comment
+          ? `${getBaseUrl()}/api/addCommentLike`
+          : `${getBaseUrl()}/api/addLike`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            postId,
+          }),
         },
-        body: JSON.stringify({
-          userId,
-          postId
-        }),
-      });
-      await getForYouPosts()
-      await getPost(local.post)
+      );
+      await getForYouPosts();
+      await getPost(local.post);
     } catch (error) {
       console.log(error, "this is the add like error in [post]");
     }
   };
 
   const deletePost = async (postId: string) => {
-    
     try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deletePost`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ postId }),
-        }
-      );
-      const result = await response.json();      
-      if (result) {                
-        router.navigate('/(tabs)/');
+      const response = await fetch(`${getBaseUrl()}/api/deletePost`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postId }),
+      });
+      const result = await response.json();
+      if (result) {
+        router.navigate("/(tabs)/");
       }
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -103,41 +99,34 @@ export default function PostPage({ post }: { post: Post }) {
     commentId?: string,
   ) => {
     try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addComment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment,
-            userName,
-            postId,
-            userId,
-            commentId,
-          }),
+      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          comment,
+          userName,
+          postId,
+          userId,
+          commentId,
+        }),
+      });
       const post = await response.json();
-
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
   const getPost = async (id: string) => {
-    console.log(id, 'calling this post')
+    console.log(id, "calling this post");
     try {
-      const result = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getPost?id=${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const result = await fetch(`${getBaseUrl()}/api/getPost?id=${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+      });
       const userData = await result.json();
       setThisPost(userData.post);
     } catch (error) {
@@ -153,9 +142,9 @@ export default function PostPage({ post }: { post: Post }) {
     useCallback(() => {
       getPost(local.post);
       return () => {
-        setThisPost('');
+        setThisPost("");
       };
-    }, [local.post])
+    }, [local.post]),
   );
 
   const profileImage = (id: string) => {
@@ -167,18 +156,21 @@ export default function PostPage({ post }: { post: Post }) {
     }
   };
 
-  
-console.log(thisPost)
+  console.log(thisPost);
 
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.icon}>
         <Pressable>
           <Link href="/(tabs)/">
-            <Ionicons size={20} name="arrow-back-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
+            <Ionicons
+              size={20}
+              name="arrow-back-outline"
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
           </Link>
         </Pressable>
-      </ThemedView>      
+      </ThemedView>
       <ThemedView
         style={[
           styles.mainPostContainer,
@@ -190,10 +182,15 @@ console.log(thisPost)
         <ThemedView style={styles.postContent}>
           <ThemedView style={styles.row}>
             <ThemedView style={styles.flex}>
-              <Image style={styles.mainProfilePic} source={{ uri: `${profileImage(thisPost?.owner?.id)}` }} />
+              <Image
+                style={styles.mainProfilePic}
+                source={{ uri: `${profileImage(thisPost?.owner?.id)}` }}
+              />
             </ThemedView>
             <Link href={`/profile/${thisPost?.email}`}>
-              <ThemedText style={styles.postUser}>{thisPost?.userName}</ThemedText>
+              <ThemedText style={styles.postUser}>
+                {thisPost?.userName}
+              </ThemedText>
             </Link>
           </ThemedView>
           <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
@@ -205,7 +202,9 @@ console.log(thisPost)
                 onPress={handleOpenComment}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{thisPost?.comments?.length}</ThemedText>
+              <ThemedText style={styles.smallNumber}>
+                {thisPost?.comments?.length}
+              </ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -216,11 +215,17 @@ console.log(thisPost)
             <ThemedView style={styles.smallRow}>
               <Ionicons
                 size={15}
-                name={isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"}
-                onPress={() => { addLike(myInfo?.id, thisPost?.id, false) }}
+                name={
+                  isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
+                }
+                onPress={() => {
+                  addLike(myInfo?.id, thisPost?.id, false);
+                }}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{thisPost?.likes?.length}</ThemedText>
+              <ThemedText style={styles.smallNumber}>
+                {thisPost?.likes?.length}
+              </ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -238,7 +243,11 @@ console.log(thisPost)
           onPress={handleOpenDeleteMenu} // Open delete menu on click
           color={colorScheme === "dark" ? "white" : "black"}
         />
-        <CustomBottomSheet snapPercs={["25%"]} ref={shareModalRef} title="Share">
+        <CustomBottomSheet
+          snapPercs={["25%"]}
+          ref={shareModalRef}
+          title="Share"
+        >
           <ThemedView style={styles.shareContainer}>
             <ThemedView style={styles.shareOption}>
               <Ionicons
@@ -283,7 +292,7 @@ console.log(thisPost)
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        
+
         {/* Delete Menu */}
         <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
           <ThemedView style={styles.deleteContainer}>
@@ -299,7 +308,14 @@ console.log(thisPost)
         </CustomBottomSheet>
       </ThemedView>
       {thisPost?.comments?.map((comment: any) => {
-        return <Post key={comment.id} isComment post={comment} user={myInfo?.email} />
+        return (
+          <Post
+            key={comment.id}
+            isComment
+            post={comment}
+            user={myInfo?.email}
+          />
+        );
       })}
     </ThemedView>
   );
@@ -311,7 +327,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderBottomWidth: 0.3,
     paddingBottom: 2,
-    borderColor: 'gray'
+    borderColor: "gray",
   },
   mainPostContainer: {
     flexDirection: "row",
@@ -350,7 +366,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     flexShrink: 1,
-    fontSize: 13
+    fontSize: 13,
   },
   ellipsis: {
     position: "absolute",
@@ -359,9 +375,9 @@ const styles = StyleSheet.create({
   },
   reactionsContainer: {
     flexDirection: "row",
-    width: '95%',
+    width: "95%",
     justifyContent: "space-between",
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 10,
   },
   smallWidth: {
@@ -428,30 +444,27 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   smallRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '10%',
-    justifyContent: 'space-evenly'
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "10%",
+    justifyContent: "space-evenly",
   },
   smallNumber: {
-    fontSize: 11
+    fontSize: 11,
   },
   row: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   icon: {
-    padding: 10
+    padding: 10,
   },
   deleteContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
   },
 });
-
-

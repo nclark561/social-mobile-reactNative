@@ -6,7 +6,7 @@ import {
   Image,
   useColorScheme,
   TouchableOpacity,
-  Linking
+  Linking,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -18,7 +18,6 @@ import Post from "@/components/postComponents/Post";
 import Animated from "react-native-reanimated";
 import EditProfileSheet from "@/components/profileComponents/EditProfileSheet";
 
-
 export default function TabTwoScreen() {
   const editProfileRef = useRef<BottomSheetModal>(null);
   const colorScheme = useColorScheme();
@@ -26,11 +25,12 @@ export default function TabTwoScreen() {
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn, updateUser } = context;
   const postContext = useContext<any>(PostContext);
-  const { getUserPosts, posts } = postContext;
-  const [profileImageUri, setProfileImageUri] = useState(``)
+  const { getUserPosts, posts, getBaseUrl } = postContext;
+  const [profileImageUri, setProfileImageUri] = useState(``);
 
-  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
-  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
+  const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
+  const mortyUrl =
+    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
 
   const handleOpenEditProfile = () => editProfileRef?.current?.present();
 
@@ -39,50 +39,64 @@ export default function TabTwoScreen() {
   };
 
   useFocusEffect(
-    useCallback(() => {      
+    useCallback(() => {
       getUserPosts(myInfo?.email, myInfo?.id);
-    }, [myInfo])
+    }, [myInfo]),
   );
-
 
   useEffect(() => {
     if (myInfo?.id) {
-        const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
-        setProfileImageUri(newProfileImageUri);
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+      setProfileImageUri(newProfileImageUri);
     }
   }, [myInfo]);
-
 
   const renderContent = () => {
     switch (selectedOption) {
       case "Posts":
         return (
-          <Animated.ScrollView style={{ height: '72%' }}>
+          <Animated.ScrollView style={{ height: "72%" }}>
             <ThemedView>
               {Array.isArray(posts.posts) &&
                 posts?.posts?.map((post: any) => {
-                  return <Post key={post.id} post={post} user={myInfo?.email} />;
+                  return (
+                    <Post key={post.id} post={post} user={myInfo?.email} />
+                  );
                 })}
             </ThemedView>
           </Animated.ScrollView>
         );
       case "Reposts":
         return (
-          <Animated.ScrollView style={{ height: '72%' }}>
-          <ThemedView>
-            {Array.isArray(posts.reposts) &&
-              posts?.reposts?.map((post: any) => {
-                return <Post repostLength={posts?.reposts.length} key={post.id} post={post.post} user={post.post.email} />;
-              })}
-          </ThemedView>
-        </Animated.ScrollView>
+          <Animated.ScrollView style={{ height: "72%" }}>
+            <ThemedView>
+              {Array.isArray(posts.reposts) &&
+                posts?.reposts?.map((post: any) => {
+                  return (
+                    <Post
+                      repostLength={posts?.reposts.length}
+                      key={post.id}
+                      post={post.post}
+                      user={post.post.email}
+                    />
+                  );
+                })}
+            </ThemedView>
+          </Animated.ScrollView>
         );
       case "Replies":
         return (
-          <Animated.ScrollView style={{ height: '72%' }}>
+          <Animated.ScrollView style={{ height: "72%" }}>
             <ThemedView>
               {myInfo?.comments?.map((comment: any) => {
-                return <Post user={myInfo?.email} key={comment.id} isComment post={comment} />;
+                return (
+                  <Post
+                    user={myInfo?.email}
+                    key={comment.id}
+                    isComment
+                    post={comment}
+                  />
+                );
               })}
             </ThemedView>
           </Animated.ScrollView>
@@ -94,34 +108,47 @@ export default function TabTwoScreen() {
 
   const openLink = (url: string) => {
     // Check if the URL starts with "http" or "https"
-    if (!url.startsWith('http')) {
-      url = 'https://' + url; // Add protocol if not present
+    if (!url.startsWith("http")) {
+      url = "https://" + url; // Add protocol if not present
     }
-    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+    Linking.openURL(url).catch((err) =>
+      console.error("Couldn't load page", err),
+    );
   };
-  
-    
+
   return (
     <ThemedView style={{ flex: 1, marginTop: -70 }}>
       <ThemedView style={styles.header}>
         <ThemedView style={styles.close}>
-          <ThemedView style={[styles.backgroundColor, { backgroundColor: myInfo?.color || '#fff' }]}></ThemedView>
+          <ThemedView
+            style={[
+              styles.backgroundColor,
+              { backgroundColor: myInfo?.color || "#fff" },
+            ]}
+          ></ThemedView>
           <ThemedView style={styles.row}>
             {loggedIn ? (
-              <Image              
+              <Image
                 style={styles.profilePic}
                 source={{
                   uri: profileImageUri,
-                  cache: 'reload'
+                  cache: "reload",
                 }}
                 onError={handleError}
               />
             ) : (
-              <ThemedText>Empty Photo</ThemedText>
+              <ThemedText>Login </ThemedText>
             )}
-            <TouchableOpacity style={[styles.button, { borderColor: fadedTextColor }]} onPress={handleOpenEditProfile}>
-              <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
-            </TouchableOpacity>
+            {loggedIn ? (
+              <TouchableOpacity
+                style={[styles.button, { borderColor: fadedTextColor }]}
+                onPress={handleOpenEditProfile}
+              >
+                <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
+              </TouchableOpacity>
+            ) : (
+              <ThemedText>Login</ThemedText>
+            )}
           </ThemedView>
           {loggedIn ? (
             <ThemedView style={styles.columnLeftPadding}>
@@ -131,13 +158,16 @@ export default function TabTwoScreen() {
               {/* <ThemedText style={styles.tag}>@{myInfo?.userName}</ThemedText> */}
               <ThemedText style={styles.bio}>{myInfo?.bio}</ThemedText>
               {myInfo?.links && (
-                <ThemedText style={styles.link} onPress={() => openLink(myInfo.links)}>
+                <ThemedText
+                  style={styles.link}
+                  onPress={() => openLink(myInfo.links)}
+                >
                   {myInfo.links}
                 </ThemedText>
               )}
             </ThemedView>
           ) : (
-            <ThemedText>Login </ThemedText>
+            <ThemedText> </ThemedText>
           )}
         </ThemedView>
         <ThemedView style={styles.followersRow}>
@@ -173,7 +203,11 @@ export default function TabTwoScreen() {
         ))}
       </ThemedView>
       <ThemedView style={styles.content}>{renderContent()}</ThemedView>
-      <EditProfileSheet setProfileImageUri={setProfileImageUri} currProfileImage={profileImageUri} editProfileRef={editProfileRef} />
+      <EditProfileSheet
+        setProfileImageUri={setProfileImageUri}
+        currProfileImage={profileImageUri}
+        editProfileRef={editProfileRef}
+      />
     </ThemedView>
   );
 }
@@ -182,7 +216,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "column",
     paddingTop: 20,
-    paddingBottom: 20,        
+    paddingBottom: 20,
     justifyContent: "space-between",
     alignItems: "baseline",
     width: "100%",
@@ -207,7 +241,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "40%",
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   close: {
     display: "flex",
@@ -223,8 +257,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    borderColor: 'rgb(232,232,232)',
-    borderBottomWidth: .5,    
+    borderColor: "rgb(232,232,232)",
+    borderBottomWidth: 0.5,
   },
   optionText: {
     fontSize: 16,
@@ -243,11 +277,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: "95%",
-    backgroundColor: 'rgba(255, 255, 255, 0)',
-    paddingLeft: 10
+    backgroundColor: "rgba(255, 255, 255, 0)",
+    paddingLeft: 10,
   },
   columnLeftPadding: {
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   button: {
     borderRadius: 15,
@@ -255,7 +289,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 5,
-    marginTop: 90
+    marginTop: 90,
   },
   bottomSheetContent: {
     padding: 20,
@@ -275,18 +309,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   link: {
-    color: '#0000EE',
-    fontSize: 10
+    color: "#0000EE",
+    fontSize: 10,
   },
   bio: {
-    fontSize: 13
+    fontSize: 13,
   },
   backgroundColor: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
-    height: '40%',
-    width: '110%',
+    height: "40%",
+    width: "110%",
     zIndex: -1,
   },
 });

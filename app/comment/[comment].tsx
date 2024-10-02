@@ -28,7 +28,7 @@ export default function CommentPage() {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
-  const { getForYouPosts } = useContext<any>(PostContext);
+  const { getForYouPosts, getBaseUrl } = useContext<any>(PostContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
@@ -43,26 +43,24 @@ export default function CommentPage() {
   const handleOpenRepost = () => repostModalRef.current?.present();
   const handleOpenDeleteMenu = () => deleteMenuRef.current?.present(); // Open delete menu
 
-  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg';
+  const mortyUrl =
+    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const handleError = () => setProfileImageUri(mortyUrl);
 
   const likePost = () => setLiked((prev) => !prev);
 
   const addLike = async (userId: string, postId: string) => {
     try {
-      const test = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addLike`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            postId,
-          }),
-        }
-      );
+      const test = await fetch(`${getBaseUrl()}/api/addLike`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          postId,
+        }),
+      });
       await getForYouPosts();
     } catch (error) {
       console.log(error, "this is the add like error");
@@ -74,25 +72,22 @@ export default function CommentPage() {
     userName: string,
     postId: string,
     userId: string,
-    commentId?: string
+    commentId?: string,
   ) => {
     try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addComment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment,
-            userName,
-            postId,
-            userId,
-            commentId,
-          }),
-        }
-      );
+      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          comment,
+          userName,
+          postId,
+          userId,
+          commentId,
+        }),
+      });
       const post = await response.json();
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -101,19 +96,16 @@ export default function CommentPage() {
 
   const deletePost = async (id: string) => {
     try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deleteComment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
+      const response = await fetch(`${getBaseUrl()}/api/deleteComment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
       const result = await response.json();
       if (result) {
-        router.navigate('/(tabs)/');
+        router.navigate("/(tabs)/");
       }
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -123,13 +115,13 @@ export default function CommentPage() {
   const getPost = async () => {
     try {
       const result = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getSingleComment?id=${local.comment}`,
+        `${getBaseUrl()}/api/getSingleComment?id=${local.comment}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
       const userData = await result.json();
       setThisPost(userData.comment);
@@ -144,7 +136,7 @@ export default function CommentPage() {
       return () => {
         setThisPost("");
       };
-    }, [local.comment])
+    }, [local.comment]),
   );
 
   useEffect(() => {
@@ -154,15 +146,18 @@ export default function CommentPage() {
     }
   }, [thisPost]);
 
-
-  console.log(thisPost, 'this is this post')
+  console.log(thisPost, "this is this post");
 
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView style={styles.icon}>
         <Pressable>
           <Link href="/(tabs)/">
-            <Ionicons size={20} name="arrow-back-outline" color={colorScheme === 'dark' ? 'white' : 'black'} />
+            <Ionicons
+              size={20}
+              name="arrow-back-outline"
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
           </Link>
         </Pressable>
       </ThemedView>
@@ -177,10 +172,16 @@ export default function CommentPage() {
         <ThemedView style={styles.postContent}>
           <ThemedView style={styles.row}>
             <ThemedView style={styles.flex}>
-              <Image style={styles.mainProfilePic} source={{ uri: profileImageUri }} onError={handleError} />
+              <Image
+                style={styles.mainProfilePic}
+                source={{ uri: profileImageUri }}
+                onError={handleError}
+              />
             </ThemedView>
             <Link href={`/profile/${thisPost?.email}`}>
-              <ThemedText style={styles.postUser}>{thisPost?.userName}</ThemedText>
+              <ThemedText style={styles.postUser}>
+                {thisPost?.userName}
+              </ThemedText>
             </Link>
           </ThemedView>
           <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
@@ -192,7 +193,9 @@ export default function CommentPage() {
                 onPress={handleOpenComment}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{thisPost?.replies?.length}</ThemedText>
+              <ThemedText style={styles.smallNumber}>
+                {thisPost?.replies?.length}
+              </ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -223,7 +226,11 @@ export default function CommentPage() {
           onPress={handleOpenDeleteMenu} // Open delete menu on click
           color={colorScheme === "dark" ? "white" : "black"}
         />
-        <CustomBottomSheet snapPercs={["25%"]} ref={shareModalRef} title="Share">
+        <CustomBottomSheet
+          snapPercs={["25%"]}
+          ref={shareModalRef}
+          title="Share"
+        >
           <ThemedView style={styles.shareContainer}>
             <ThemedView style={styles.shareOption}>
               <Ionicons
@@ -259,7 +266,7 @@ export default function CommentPage() {
                 ></Ionicons>
                 <ThemedText style={styles.optionText}>Repost</ThemedText>
               </Pressable>
-            </ThemedView>            
+            </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
         {/* Delete Menu */}
@@ -327,47 +334,46 @@ const styles = StyleSheet.create({
   },
   reactionsContainer: {
     flexDirection: "row",
-    width: '95%',
+    width: "95%",
     justifyContent: "space-between",
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 10,
   },
   smallRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '10%',
-    justifyContent: 'space-evenly'
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "10%",
+    justifyContent: "space-evenly",
   },
   smallNumber: {
     fontSize: 11,
   },
   shareContainer: {
-    flexDirection: 'column',
-    width: '100%',
+    flexDirection: "column",
+    width: "100%",
   },
   shareOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
     paddingHorizontal: 10,
-    width: '100%',
-    height: '40%',
+    width: "100%",
+    height: "40%",
   },
   optionText: {
     marginLeft: 10,
     fontSize: 18,
   },
   deleteContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
   },
   row: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

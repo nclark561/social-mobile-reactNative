@@ -5,7 +5,7 @@ import {
   Image,
   StyleSheet,
   useColorScheme,
-  Pressable
+  Pressable,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -19,17 +19,20 @@ interface TestProps {
   status: string;
   user: any;
   time: string;
-  messageUser: string
+  messageUser: string;
 }
 
 const Test = (props: TestProps) => {
   const { myUsername, myInfo } = useContext<any>(MyContext);
   const colorScheme = useColorScheme();
-  const [imageUri, setImageUri] = useState(`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${props.user.id}.jpg?${Date.now()}`)
-  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
-  const color = colorScheme === "dark" ? 'white' : "black";
+  const [imageUri, setImageUri] = useState(
+    `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${props.user.id}.jpg?${Date.now()}`,
+  );
+  const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
+  const color = colorScheme === "dark" ? "white" : "black";
 
-  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg';
+  const mortyUrl =
+    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const handleError = () => setImageUri(mortyUrl);
 
   const navigateToConversation = () => {
@@ -37,17 +40,14 @@ const Test = (props: TestProps) => {
   };
 
   function convertToTime(string: string) {
-
     const date = new Date(string);
 
     let hours = date.getUTCHours();
     let minutes = date.getUTCMinutes();
 
-
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;  // Convert 24-hour format to 12-hour format
-    minutes = minutes < 10 ? '0' + minutes : minutes;  // Add leading zero to minutes
-
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12; // Convert 24-hour format to 12-hour format
+    minutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero to minutes
 
     return `${hours}:${minutes} ${ampm}`;
   }
@@ -58,12 +58,11 @@ const Test = (props: TestProps) => {
     }
     return message;
   }
-  
 
   return (
     <Pressable onPress={navigateToConversation} style={styles.messageContent}>
       <View>
-        {(props.status === "Delivered" && props.messageUser !== myInfo.id) ? (
+        {props.status === "Delivered" && props.messageUser !== myInfo.id ? (
           <View style={styles.blueDot}></View>
         ) : (
           <View style={styles.blueDotNothing}></View>
@@ -77,7 +76,9 @@ const Test = (props: TestProps) => {
       <View style={styles.messageText}>
         <ThemedView style={styles.flexTime}>
           <ThemedText style={styles.title}>
-            {props?.recipient === myUsername ? props.user.username : props?.recipient}
+            {props?.recipient === myUsername
+              ? props.user.username
+              : props?.recipient}
           </ThemedText>
           <Text style={styles.graySub}>{convertToTime(props.time)}</Text>
           <Ionicons name="chevron-forward" size={16} color="gray" />
@@ -98,11 +99,11 @@ const styles = StyleSheet.create({
   },
   messageContent: {
     flexDirection: "row",
-    alignItems: "center",    
+    alignItems: "center",
     flex: 1,
     padding: 10,
   },
-  
+
   blueDot: {
     width: 5,
     height: 5,

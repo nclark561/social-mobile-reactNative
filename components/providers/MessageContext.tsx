@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { useContext } from "react";
 import MyContext from "./MyContext";
+import { Platform } from "react-native";
 // import { post } from "../utils/fetch";
 
 interface ContextProps {
@@ -16,20 +17,16 @@ interface ContextProps {
   }[];
   getConvos: () => void;
   deleteConvos: (id: string) => void;
-  addMessage: (
-    id: string,
-    conversationId: string,
-    message: string,    
-  ) => void;
+  addMessage: (id: string, conversationId: string, message: string) => void;
 }
 
 const MessageContext = createContext<ContextProps>({
   person: "",
-  setPerson: () => { },
+  setPerson: () => {},
   myConvos: [],
-  getConvos: () => { },
-  deleteConvos: () => { },
-  addMessage: () => { },
+  getConvos: () => {},
+  deleteConvos: () => {},
+  addMessage: () => {},
 });
 
 export const MessageProvider = ({ children }: { children: ReactNode }) => {
@@ -39,14 +36,30 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const [person, setPerson] = useState<string>("");
   const [myConvos, setMyConvos] = useState<any[]>([]);
   const [convoId, setConvoId] = useState<any[]>([]);
-  
+
   const { myInfo } = useContext<any>(MyContext);
 
+  const getBaseUrl = () => {
+    if (Platform.OS === "web") {
+      if (
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+      ) {
+        return process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL; // Use local env variable
+      } else {
+        // Production environment for web
+        return process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL; // Use production env variable
+      }
+    } else {
+      // Native app environment (iOS/Android)
+      return process.env.EXPO_PUBLIC_SERVER_BASE_URL;
+    }
+  };
 
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvos?id=${myInfo.id}`,
+        `${getBaseUrl()}/api/getConvos?id=${myInfo.id}`,
         {
           method: "GET",
           headers: {
@@ -54,7 +67,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
           },
         },
       );
-      const userInfo = await convos.json();      
+      const userInfo = await convos.json();
       setMyConvos([...userInfo]);
     } catch (error) {
       console.log(error, "this is the gete convos error");
@@ -62,9 +75,9 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteConvos = async (id: string) => {
-    console.log(id, 'hitting delete convo')
+    console.log(id, "hitting delete convo");
     try {
-      await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deleteConvo`, {
+      await fetch(`${getBaseUrl()}/api/deleteConvo`, {
         method: "POST",
         body: JSON.stringify({
           id: id,
@@ -83,18 +96,17 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
     conversationId: string,
     message: string,
     id: string,
-    
   ) => {
     try {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addMessage`, {
+      const response = await fetch(`${getBaseUrl()}/api/addMessage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          conversationId,            
+          conversationId,
           messages: message,
-          id,          
+          id,
         }),
       });
 
@@ -110,7 +122,6 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
       console.log(error, "this is the add message error");
     }
   };
-  
 
   return (
     <MessageContext.Provider

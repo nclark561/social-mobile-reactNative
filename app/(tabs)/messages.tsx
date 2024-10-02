@@ -9,7 +9,7 @@ import {
   PanResponder,
   Animated,
   Dimensions,
-  Text
+  Text,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,62 +28,53 @@ interface MessageData {
   status: string;
   userName: string;
   recipient?: string;
-  time: any
-  userId: string
+  time: any;
+  userId: string;
 }
 
 interface User {
-  id: string,
-  username: string,
+  id: string;
+  username: string;
 }
 
 interface UserData {
-  user: User
+  user: User;
 }
 
 interface ConversationData {
-  id: string,
-  date: Date,
-  users: UserData[],
-  messages: MessageData[]
+  id: string;
+  date: Date;
+  users: UserData[];
+  messages: MessageData[];
 }
-
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const MessageHome: React.FC = () => {
-  
-  const { deleteConvos, myUsername, getConvos, setMyConvos, myConvos } = useContext<any>(MessageContext);
+  const { deleteConvos, myUsername, getConvos, setMyConvos, myConvos } =
+    useContext<any>(MessageContext);
   const navigation = useNavigation();
   const context = useContext<any>(MyContext);
   const { myInfo } = context;
   const colorScheme = useColorScheme();
-  const fadedColor = colorScheme === "dark" ? '#525252' : "#bebebe";
+  const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const deleteThreshold = -SCREEN_WIDTH / 3; // Threshold for deleting an item
 
-
-
   useFocusEffect(() => {
-    const intervalId = setInterval(getConvos, 2000);    
+    const intervalId = setInterval(getConvos, 2000);
     return () => clearInterval(intervalId);
   });
 
-
   const handleDelete = (conversationId: string) => {
-    setMyConvos((prevData: any) => prevData.filter((item: any) => item.id !== conversationId));
-    deleteConvos(conversationId)
+    setMyConvos((prevData: any) =>
+      prevData.filter((item: any) => item.id !== conversationId),
+    );
+    deleteConvos(conversationId);
   };
-
 
   const renderItem = ({ item }: { item: ConversationData }) => {
-    return (
-      <SwipeableItem
-        item={item}
-        onDelete={() => handleDelete(item.id)}
-      />
-    );
+    return <SwipeableItem item={item} onDelete={() => handleDelete(item.id)} />;
   };
-  
 
   return (
     <ThemedView style={styles.container}>
@@ -97,17 +88,30 @@ const MessageHome: React.FC = () => {
         contentContainerStyle={styles.list}
       />
       <ThemedView style={styles.center}>
-        {myConvos?.length > 1 ? null : <ThemedText>Create A Message</ThemedText>}
-        <TouchableOpacity onPress={() => router.navigate("/MessageComponents/newChat")}>
-          <Ionicons name="add-circle-outline" size={32} color={colorScheme === 'dark' ? 'white' : 'black'} />
+        {myConvos?.length > 1 ? null : (
+          <ThemedText>Create A Message</ThemedText>
+        )}
+        <TouchableOpacity
+          onPress={() => router.navigate("/MessageComponents/newChat")}
+        >
+          <Ionicons
+            name="add-circle-outline"
+            size={32}
+            color={colorScheme === "dark" ? "white" : "black"}
+          />
         </TouchableOpacity>
       </ThemedView>
     </ThemedView>
   );
 };
 
-const SwipeableItem = ({ item, onDelete }: { item: ConversationData, onDelete: () => void }) => {
-  
+const SwipeableItem = ({
+  item,
+  onDelete,
+}: {
+  item: ConversationData;
+  onDelete: () => void;
+}) => {
   const translateX = useRef(new Animated.Value(0)).current;
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (evt, gestureState) =>
@@ -132,7 +136,6 @@ const SwipeableItem = ({ item, onDelete }: { item: ConversationData, onDelete: (
       }
     },
   });
-  
 
   return (
     <Animated.View
@@ -151,7 +154,6 @@ const SwipeableItem = ({ item, onDelete }: { item: ConversationData, onDelete: (
         />
       </ThemedView>
     </Animated.View>
-
   );
 };
 
@@ -171,11 +173,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    textAlign: 'center'
+    textAlign: "center",
   },
   center: {
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
     alignItems: "center",
     marginVertical: 20,
   },
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
   },
-  list: {}
+  list: {},
 });
 
 export default MessageHome;

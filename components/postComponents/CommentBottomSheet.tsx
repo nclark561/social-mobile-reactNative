@@ -1,4 +1,12 @@
-import { StyleSheet, Button, Pressable, Image, useColorScheme, View, Text } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  Pressable,
+  Image,
+  useColorScheme,
+  View,
+  Text,
+} from "react-native";
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { ThemedView } from "../ThemedView";
 import { ThemedText } from "../ThemedText";
@@ -6,19 +14,26 @@ import { useState, useRef, useContext, useEffect } from "react";
 import MyContext from "../providers/MyContext";
 import { ScrollView } from "react-native-gesture-handler";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import PostContext from "../providers/PostContext";
 
 interface CommentBottomSheetProps {
   isComment?: boolean;
   post: any;
-  commentModalRef: any
+  commentModalRef: any;
 }
 
-const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomSheetProps) => {
+const CommentBottomSheet = ({
+  isComment,
+  post,
+  commentModalRef,
+}: CommentBottomSheetProps) => {
   const [commentInput, setCommentInput] = useState("");
+  const { getUserPosts, posts, getBaseUrl } = useContext<any>(PostContext);
   const { myInfo } = useContext<any>(MyContext);
-  const [profileImageUri, setProfileImageUri] = useState('')
-  const mortyUrl = 'https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg'
-  const colorScheme = useColorScheme()
+  const [profileImageUri, setProfileImageUri] = useState("");
+  const mortyUrl =
+    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
+  const colorScheme = useColorScheme();
 
   const handleCloseComment = () => commentModalRef.current?.dismiss();
 
@@ -27,32 +42,28 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
     userName: string,
     postId: string,
     userId: string,
-    parentId?: string
+    parentId?: string,
   ) => {
     try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addComment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment,
-            userName,
-            postId,
-            userId,
-            parentId,
-          }),
-        }
-      );
+      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          comment,
+          userName,
+          postId,
+          userId,
+          parentId,
+        }),
+      });
       const post = await response.json();
-      handleCloseComment()
+      handleCloseComment();
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
-
 
   // useEffect(() => {
   //   if (myInfo?.id) {
@@ -60,7 +71,6 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
   //     setProfileImageUri(newProfileImageUri);
   //   }
   // }, [myInfo]);
-
 
   return (
     <CustomBottomSheet
@@ -80,7 +90,7 @@ const CommentBottomSheet = ({ isComment, post, commentModalRef }: CommentBottomS
                   myInfo.username,
                   post.postId,
                   myInfo.id,
-                  post.id
+                  post.id,
                 );
               } else {
                 addComment(commentInput, myInfo.username, post.id, myInfo.id);

@@ -1,73 +1,95 @@
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useState, ReactNode, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../../components/Supabase";
+import { Platform } from "react-native";
 
 type PostContextType = {
-    getUserPosts: (email: string, userId: string) => Promise<void>;
-    getForYouPosts: () => Promise<void>;
-    posts: any;
-    forYouPosts: any[];
-    forYouPostsToggle: boolean;
-    setForYouPostsToggle: (value: boolean) => void
+  getUserPosts: (email: string, userId: string) => Promise<void>;
+  getForYouPosts: () => Promise<void>;
+  posts: any;
+  forYouPosts: any[];
+  forYouPostsToggle: boolean;
+  setForYouPostsToggle: (value: boolean) => void;
+  getBaseUrl: () => void;
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
-    const [posts, setPosts] = useState<any[]>([]);
-    const [forYouPosts, setForYouPosts] = useState<any[]>([]);
-    const [forYouPostsToggle, setForYouPostsToggle] = useState<boolean>(false);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [forYouPosts, setForYouPosts] = useState<any[]>([]);
+  const [forYouPostsToggle, setForYouPostsToggle] = useState<boolean>(false);
 
-    useEffect(() => {
-        getForYouPosts()
-    }, [forYouPostsToggle])
-    
+  const getBaseUrl = () => {
+    if (Platform.OS === "web") {
+      if (
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+      ) {
+        return process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL; // Use local env variable
+      } else {
+        // Production environment for web
+        return process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL; // Use production env variable
+      }
+    } else {
+      // Native app environment (iOS/Android)
+      return process.env.EXPO_PUBLIC_SERVER_BASE_URL;
+    }
+  };
 
+  useEffect(() => {
+    getForYouPosts();
+  }, [forYouPostsToggle]);
 
-    const getUserPosts = async (email: string, userId: string) => {        
-        try {
-            const result = await fetch(
-                `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getMyPosts?email=${email}&id=${userId}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                },
-            );
-            const fetchedPosts = await result.json();            
-            setPosts(fetchedPosts);
-        } catch (error) {
-            console.log(error, "this is the get user error");
-        }
-    };
+  const getUserPosts = async (email: string, userId: string) => {
+    try {
+      const result = await fetch(
+        `${getBaseUrl()}/api/getMyPosts?email=${email}&id=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const fetchedPosts = await result.json();
+      setPosts(fetchedPosts);
+    } catch (error) {
+      console.log(error, "this is the get user error");
+    }
+  };
 
+  const getForYouPosts = async () => {
+    try {
+      const result = await fetch(`${getBaseUrl()}/api/getPosts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const fetchedPosts = await result.json();
+      // console.log(JSON.stringify(fetchedPosts, null, 2));
+      setForYouPosts(fetchedPosts.Posts);
+    } catch (error) {
+      console.log(error, "this is the get for you posts error");
+    }
+  };
 
-    const getForYouPosts = async () => {        
-        try {
-            const result = await fetch(
-                `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getPosts`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                },
-            );
-            const fetchedPosts = await result.json(); 
-            console.log(fetchedPosts)           
-            setForYouPosts(fetchedPosts.Posts);
-        } catch (error) {
-            console.log(error, "this is the get for you posts error");
-        }
-    };
-
-
-    return (
-        <PostContext.Provider value={{ getUserPosts, posts, getForYouPosts, forYouPosts, forYouPostsToggle, setForYouPostsToggle }}>
-            {children}
-        </PostContext.Provider>
-    );
+  return (
+    <PostContext.Provider
+      value={{
+        getUserPosts,
+        posts,
+        getForYouPosts,
+        forYouPosts,
+        forYouPostsToggle,
+        setForYouPostsToggle,
+        getBaseUrl,
+      }}
+    >
+      {children}
+    </PostContext.Provider>
+  );
 };
 
 export default PostContext;

@@ -7,6 +7,7 @@ import {
   Image,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
+
 import { useContext, useCallback } from "react";
 import Animated from "react-native-reanimated";
 import Post from "@/components/postComponents/Post";
@@ -26,8 +27,8 @@ export default function HomeScreen() {
   const [postInput, setPostInput] = useState("");
   const colorScheme = useColorScheme();
   const postContext = useContext<any>(PostContext);
-  const { getUserPosts, forYouPosts, getForYouPosts } = postContext;
-  const fadedTextColor = colorScheme === "dark" ? '#525252' : "#bebebe"
+  const { getUserPosts, forYouPosts, getForYouPosts, getBaseUrl } = postContext;
+  const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const context = useContext<any>(MyContext);
   const { myInfo } = context;
 
@@ -46,20 +47,17 @@ export default function HomeScreen() {
   const createPost = async (content: string, userName: string) => {
     const userEmail = await AsyncStorage.getItem("user");
     try {
-      const test = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createPost`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            content,
-            email: userEmail,
-            userName,
-          }),
-        }
-      );
+      const test = await fetch(`${getBaseUrl()}/api/createPost`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content,
+          email: userEmail,
+          userName,
+        }),
+      });
       await getForYouPosts();
     } catch (error) {
       console.log(error, "this is the create post error");
@@ -70,21 +68,27 @@ export default function HomeScreen() {
     useCallback(() => {
       getForYouPosts();
       getUserPosts(myInfo?.email, myInfo?.id);
-    }, [myInfo])
+    }, [myInfo]),
   );
 
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name="Posts" />
-      <Animated.ScrollView>
+      <Animated.ScrollView contentContainerStyle={{ paddingBottom: 70 }}>
         {Array.isArray(forYouPosts) &&
           forYouPosts.map((post, i) => {
-            if(post.postId) return (
-              <ThemedView style={{ flexDirection: 'column' }}>
-                <ThemedText style={{ color: fadedTextColor }}>Reposted by {post.user.username}</ThemedText>
-                <Post key={post.id} post={post.post} isComment={false}/>
-              </ThemedView>
-            )
+            if (post.postId)
+              return (
+                <ThemedView style={{ flexDirection: "column" }}>
+                  <ThemedView style={styles.row}>
+                    <Ionicons name="git-compare-outline" size={15} />
+                    <ThemedText style={styles.repost}>
+                      {post.user.username} Reposted
+                    </ThemedText>
+                  </ThemedView>
+                  <Post key={post.id} post={post.post} isComment={false} />
+                </ThemedView>
+              );
 
             return <Post key={post.id} post={post} isComment={false} />;
           })}
@@ -135,7 +139,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: "column",
-    height: "110%",
   },
   addButton: {
     position: "absolute",
@@ -176,5 +179,15 @@ const styles = StyleSheet.create({
   postInput: {
     maxWidth: "80%",
     paddingTop: 15,
+  },
+  repost: {
+    fontSize: 12,
+  },
+  row: {
+    display: "flex",
+    width: "40%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
 });

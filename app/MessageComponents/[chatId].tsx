@@ -1,4 +1,10 @@
-import React, { useState, useRef, useContext, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
 import {
   View,
   TextInput,
@@ -8,7 +14,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,  
+  useColorScheme,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // For icons
 import { useNavigation, useRoute } from "@react-navigation/native"; // For navigation
@@ -20,6 +26,7 @@ import MyContext from "@/components/providers/MyContext";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { useLocalSearchParams, useFocusEffect } from "expo-router";
+import PostContext from "@/components/providers/PostContext";
 
 type MessageStatus = "Delivered" | "Read";
 
@@ -29,13 +36,13 @@ interface Message {
   message: string;
   status: MessageStatus;
   date: Date;
-  conversationId: string
-  user: any
+  conversationId: string;
+  user: any;
 }
 
 interface MessageData {
   messages: Message[];
-  users: any
+  users: any;
 }
 
 interface ConvoInfo {
@@ -50,8 +57,8 @@ const CurrentChat: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<MessageData | null>(null);
   const { addMessage, myConvos } = useContext(MessageContext);
-  const context = useContext<any>(MyContext);
-  const { setLoginToggle, myInfo, loggedIn } = context;
+  const { setLoginToggle, myInfo, loggedIn } = useContext<any>(MyContext);
+  const { getBaseUrl } = useContext<any>(PostContext);
   const [userName, setUserName] = useState<string | null>(myInfo?.username);
   const [info, setInfo] = useState<ConvoInfo | null>(null);
   const messagesEndRef = useRef<ScrollView | null>(null);
@@ -84,14 +91,18 @@ const CurrentChat: React.FC = () => {
             payload.message.status = "Delivered";
             console.log(messages?.messages.length, "messages length");
             setMessages((prev) => {
-              if (prev) return { ...prev, messages: [...prev.messages, payload.message] };
-              return prev
+              if (prev)
+                return {
+                  ...prev,
+                  messages: [...prev.messages, payload.message],
+                };
+              return prev;
             });
 
             // if (payload.message.userName !== myInfo.username) {
             //   updateMessageStatus(payload.message.id, "Read");
             // }
-          }
+          },
         )
         .subscribe();
     }
@@ -101,25 +112,22 @@ const CurrentChat: React.FC = () => {
     };
   }, [id, myInfo?.username]);
 
-  useEffect(() => {    
+  useEffect(() => {
     getConvoMessages();
   }, [local.chatId]);
 
   const updateMessageStatus = async (
     conversationId: string,
-    userId: string
+    userId: string,
   ) => {
     try {
-      await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/updateMessageRead`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ conversationId, userId }),
-        }
-      );
+      await fetch(`${getBaseUrl()}/api/updateMessageRead`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ conversationId, userId }),
+      });
     } catch (error) {
       console.error("Failed to update message status", error);
     }
@@ -128,13 +136,13 @@ const CurrentChat: React.FC = () => {
   const getConvoMessages = async () => {
     try {
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getConvo?id=${local.chatId}`,
+        `${getBaseUrl()}/api/getConvo?id=${local.chatId}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
       const data = await response.json();
 
@@ -148,7 +156,7 @@ const CurrentChat: React.FC = () => {
   // const getConvoDetails = async () => {
   //   try {
   //     const response = await fetch(
-  //       `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/getSingleConvo?id=${local.chatId}`,
+  //       `${getBaseUrl()}/api/getSingleConvo?id=${local.chatId}`,
   //       {
   //         method: "GET",
   //         headers: {
@@ -168,13 +176,15 @@ const CurrentChat: React.FC = () => {
     const messageId = createId();
 
     if (userName && channel.current) {
-      if (!messages) return
+      if (!messages) return;
       addMessage(messages?.messages[0].conversationId, message, myInfo.id);
 
       channel.current.send({
         type: "broadcast",
         event: "message",
-        payload: { message: { message, user: { username: userName }, id: messageId } },
+        payload: {
+          message: { message, user: { username: userName }, id: messageId },
+        },
       });
 
       setMessage("");
@@ -188,11 +198,9 @@ const CurrentChat: React.FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      updateMessageStatus(local.chatId, myInfo?.id)
-    }, [local.chatId])    
+      updateMessageStatus(local.chatId, myInfo?.id);
+    }, [local.chatId]),
   );
-
-  
 
   useEffect(() => {
     scrollToBottom();
@@ -315,10 +323,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   center: {
-    display: 'flex',
-    alignItems: 'center',    
-    width: '80%'
-  }
+    display: "flex",
+    alignItems: "center",
+    width: "80%",
+  },
 });
 
 export default CurrentChat;

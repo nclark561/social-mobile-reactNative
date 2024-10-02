@@ -19,10 +19,11 @@ import MyContext from "@/components/providers/MyContext";
 import { router } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import PostContext from "@/components/providers/PostContext";
 
 type User = {
   id: string;
-  username: string
+  username: string;
 };
 
 const Chat: React.FC = () => {
@@ -30,8 +31,9 @@ const Chat: React.FC = () => {
   const navigation = useNavigation(); // Replaces useHistory
   const [recipientSearch, setRecipientSearch] = useState("");
   const [recipient, setRecipient] = useState<User | undefined>();
-  const context = useContext<any>(MyContext);
-  const { setLoginToggle, myInfo, loggedIn, myConvos } = context;
+  const { setLoginToggle, myInfo, loggedIn, myConvos } =
+    useContext<any>(MyContext);
+  const { getBaseUrl } = useContext<any>(PostContext);
   const colorScheme = useColorScheme();
   const [toggleList, setToggleList] = useState(false);
   const [searchResults, setSearchResults] = useState<any>(null);
@@ -40,56 +42,51 @@ const Chat: React.FC = () => {
   const color = colorScheme === "dark" ? "white" : "black";
 
   const handlePickUser = (user: User) => {
-    console.log('hitting pick user')
-    setRecipient(user)
-    setRecipientSearch(user.username)
-    setToggleList(false)
-  }
+    console.log("hitting pick user");
+    setRecipient(user);
+    setRecipientSearch(user.username);
+    setToggleList(false);
+  };
 
-  const createConversation = async () => {    
+  const createConversation = async () => {
     try {
       if (!myInfo.id || !recipient?.id) throw new Error("User missing");
-  
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/createConversation`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message,
-            myId: myInfo.id,
-            recipientId: recipient.id,
-          }),
-        }
-      );
-  
+
+      const response = await fetch(`${getBaseUrl()}/api/createConversation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+          myId: myInfo.id,
+          recipientId: recipient.id,
+        }),
+      });
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const data = await response.json();
-        
+
       if (data.conversationId) {
         router.navigate(`/MessageComponents/${data.conversationId}`);
       }
-        
+
       setMessage("");
       setRecipientSearch("");
       setRecipient(undefined);
       setSearchResults(null);
-      
     } catch (error) {
       console.error("Failed to create conversation", error);
     }
   };
-  
 
   const searchUsers = async () => {
     try {
       const result = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/searchUsers?username=${recipientSearch}`
+        `${getBaseUrl()}/api/searchUsers?username=${recipientSearch}`,
       );
       const users = await result.json();
       console.log(users);
@@ -126,7 +123,10 @@ const Chat: React.FC = () => {
           <ScrollView style={styles.usersView}>
             {searchResults?.length > 0 ? (
               searchResults.map((e: any) => (
-                <Pressable style={styles.border} onPress={() => handlePickUser(e)}>
+                <Pressable
+                  style={styles.border}
+                  onPress={() => handlePickUser(e)}
+                >
                   <ThemedText style={styles.user} key={e.id}>
                     {e.username}
                   </ThemedText>
@@ -232,11 +232,11 @@ const styles = StyleSheet.create({
   user: {},
   usersView: {
     flexDirection: "column",
-    height: 50 
+    height: 50,
   },
   border: {
-    backgroundColor: 'black'
-  }
+    backgroundColor: "black",
+  },
 });
 
 export default Chat;

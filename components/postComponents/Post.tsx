@@ -25,17 +25,22 @@ interface Post {
   userName: string;
   userId?: string;
   owner: any;
-  reposts: any
+  reposts: any;
 }
 
 interface PostProps {
-  repostLength?: number,
+  repostLength?: number;
   isComment?: boolean;
   post: Post;
   user: string;
 }
 
-export default function Post({ post, isComment, user, repostLength }: PostProps) {
+export default function Post({
+  post,
+  isComment,
+  user,
+  repostLength,
+}: PostProps) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
@@ -45,7 +50,8 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const link = isComment ? "comment" : "post";
 
-  const { getForYouPosts, getUserPosts } = useContext<any>(PostContext);
+  const { getForYouPosts, getUserPosts, getBaseUrl } =
+    useContext<any>(PostContext);
   const { setLoginToggle, myInfo, loggedIn, getUser } =
     useContext<any>(MyContext);
 
@@ -72,8 +78,8 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
     try {
       const test = await fetch(
         !isComment
-          ? `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addLike`
-          : `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addCommentLike`,
+          ? `${getBaseUrl()}/api/addLike`
+          : `${getBaseUrl()}/api/addCommentLike`,
         {
           method: "POST",
           headers: {
@@ -83,7 +89,7 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
             userId,
             postId,
           }),
-        }
+        },
       );
       await getForYouPosts();
       await getUserPosts(user);
@@ -94,18 +100,15 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
 
   const deletePost = async (postId: string) => {
     try {
-      await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deletePost`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            postId,
-          }),
-        }
-      );
+      await fetch(`${getBaseUrl()}/api/deletePost`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId,
+        }),
+      });
       await getForYouPosts();
       await getUserPosts(user);
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
@@ -116,18 +119,15 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
 
   const deleteComment = async (id: string) => {
     try {
-      await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/deleteComment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-          }),
-        }
-      );
+      await fetch(`${getBaseUrl()}/api/deleteComment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      });
       await getForYouPosts();
       await getUserPosts(user);
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
@@ -141,25 +141,22 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
     userName: string,
     postId: string,
     userId: string,
-    commentId?: string
+    commentId?: string,
   ) => {
     try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addComment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment,
-            userName,
-            postId,
-            userId,
-            commentId,
-          }),
-        }
-      );
+      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          comment,
+          userName,
+          postId,
+          userId,
+          commentId,
+        }),
+      });
       const post = await response.json();
       handleCloseComment();
     } catch (error) {
@@ -169,36 +166,31 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${
+        process.env.EXPO_PUBLIC_SUPABASE_URL
+      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
       return newProfileImageUri;
     }
   };
 
-
-
   const repost = async (userId: string, postId: string) => {
     try {
-      const test = await fetch(`${process.env.EXPO_PUBLIC_SERVER_BASE_URL}/api/addReposts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            postId,
-          }),
-        }
-      );
+      const test = await fetch(`${getBaseUrl()}/api/addReposts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          postId,
+        }),
+      });
       await getForYouPosts();
       await getUserPosts(user);
     } catch (error) {
       console.log(error, "this is the repost error in post");
     }
   };
-
-
 
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
@@ -242,7 +234,9 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
                 onPress={handleOpenRepost}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{repostLength? repostLength : post?.reposts?.length }</ThemedText>
+              <ThemedText style={styles.smallNumber}>
+                {repostLength ? repostLength : post?.reposts?.length}
+              </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
               <Ionicons
@@ -278,10 +272,15 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
         >
           <ThemedView style={styles.deleteMenu}>
             <Button
-
               title="Delete Post"
               color="red"
-              onPress={() => { if (isComment) { deleteComment(post.id) } else { deletePost(post.id) } }} // Delete the post on button press
+              onPress={() => {
+                if (isComment) {
+                  deleteComment(post.id);
+                } else {
+                  deletePost(post.id);
+                }
+              }} // Delete the post on button press
             />
           </ThemedView>
         </CustomBottomSheet>
@@ -328,14 +327,14 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
                       myInfo.username,
                       post.postId,
                       myInfo.id,
-                      post.id
+                      post.id,
                     );
                   } else {
                     addComment(
                       commentInput,
                       myInfo.username,
                       post.id,
-                      myInfo.id
+                      myInfo.id,
                     );
                   }
                 }}
@@ -388,9 +387,11 @@ export default function Post({ post, isComment, user, repostLength }: PostProps)
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
             <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
-              <Pressable onPress={() => {
-                repost(myInfo?.id, post.id)
-              }}>
+              <Pressable
+                onPress={() => {
+                  repost(myInfo?.id, post.id);
+                }}
+              >
                 <Ionicons
                   size={25}
                   name="git-compare-outline"
