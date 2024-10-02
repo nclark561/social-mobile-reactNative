@@ -35,6 +35,7 @@ export default function TabLayout() {
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
               color={color}
+              size={20}
             />
           ),
         }}
@@ -47,6 +48,7 @@ export default function TabLayout() {
             <TabBarIcon
               name={focused ? "search" : "search-outline"}
               color={color}
+              size={20}
             />
           ),
         }}
@@ -59,6 +61,7 @@ export default function TabLayout() {
             <TabBarIcon
               name={focused ? "mail" : "mail-outline"}
               color={color}
+              size={20}
             />
           ),
         }}
@@ -71,6 +74,7 @@ export default function TabLayout() {
             <TabBarIcon
               name={focused ? "person" : "person-outline"}
               color={color}
+              size={20}
             />
           ),
         }}
