@@ -6,6 +6,7 @@ import {
   useColorScheme,
   Pressable,
 } from "react-native";
+import { useMemo } from "react";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation, router } from "expo-router";
@@ -35,15 +36,10 @@ export default function TabTwoScreen() {
   const { getBaseUrl } = useContext<any>(PostContext);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [profileImageUri, setProfileImageUri] = useState(
-    `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`,
-  );
+
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
 
-  const handleError = () => {
-    setProfileImageUri(mortyUrl);
-  };
 
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
@@ -63,6 +59,15 @@ export default function TabTwoScreen() {
   useEffect(() => {
     if (searchInput.length > 0) searchUsers();
   }, [searchInput]);
+
+ 
+  const profileImageUri = useMemo(() => {
+    if (myInfo?.id) {
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+    }
+    return mortyUrl; // Fallback URL
+  }, [myInfo?.id]);
+
 
   return (
     <ThemedView style={{ flex: 1, flexDirection: "column" }}>

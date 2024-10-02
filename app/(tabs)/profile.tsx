@@ -7,6 +7,7 @@ import {
   useColorScheme,
   TouchableOpacity,
   Linking,
+  Platform,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -246,6 +247,9 @@ const styles = StyleSheet.create({
   close: {
     display: "flex",
     flexDirection: "column",
+    ...(Platform.OS === 'web' && {
+      width: '100%'
+    })
   },
   smallGray: {
     fontSize: 11,

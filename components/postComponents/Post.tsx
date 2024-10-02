@@ -10,6 +10,8 @@ import CustomBottomSheet from "../util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
 import { Link, router } from "expo-router";
+import { Platform } from "react-native";
+import ProfileImage from "../ProfileImage";
 
 interface Post {
   id: string;
@@ -166,9 +168,8 @@ export default function Post({
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -203,12 +204,7 @@ export default function Post({
         ]}
       >
         <ThemedView style={styles.flex}>
-          <Image
-            style={styles.profilePic}
-            source={{
-              uri: `${profileImage(post?.owner?.id || post?.userId)}`,
-            }}
-          />
+          <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId)}/>          
         </ThemedView>
         <ThemedView style={styles.postContent}>
           <Link href={`/profile/${post.email}`} style={styles.link}>
@@ -438,11 +434,17 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexShrink: 1,
     margin: 5,
+    ...(Platform.OS === 'web' && {
+      width: '90%'
+    })
   },
   postUser: {
     fontWeight: "bold",
     fontSize: 15,
     paddingBottom: 2,
+    ...(Platform.OS === 'web' && {
+      fontSize: 13
+    }) 
   },
   postText: {
     flexShrink: 1,

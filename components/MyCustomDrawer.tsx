@@ -1,5 +1,5 @@
 // components/MyCustomDrawer.js
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { StyleSheet, Image, Button, View, Pressable } from "react-native";
 import {
   DrawerContentScrollView,
@@ -12,9 +12,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyContext from "./providers/MyContext";
 
 export default function MyCustomDrawer(props: any) {
-  const context = useContext<any>(MyContext);
-  const { setLoginToggle, myInfo, loggedIn } = context;
-  const [profileImageUri, setProfileImageUri] = useState("");
+  const { setLoginToggle, myInfo, loggedIn } = useContext<any>(MyContext);
+  
   // const router = useRouter();
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
@@ -33,18 +32,16 @@ export default function MyCustomDrawer(props: any) {
     }
   };
 
-  useEffect(() => {
-    if (myInfo?.id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
-      setProfileImageUri(newProfileImageUri);
-    }
-  }, [myInfo]);
 
-  const handleError = () => {
-    console.log("Image failed to load. URI:", profileImageUri); // Log the problematic URI
-    console.log("Fallback to default image.");
-    setProfileImageUri(mortyUrl);
-  };
+
+
+  const profileImageUri = useMemo(() => {
+    if (myInfo?.id) {
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`;
+    }
+    return mortyUrl; // Fallback URL
+  }, [myInfo?.id]);
+
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
@@ -55,8 +52,7 @@ export default function MyCustomDrawer(props: any) {
             source={{
               uri: profileImageUri,
               cache: "reload",
-            }}
-            onError={handleError}
+            }}            
           />
         ) : (
           <Pressable

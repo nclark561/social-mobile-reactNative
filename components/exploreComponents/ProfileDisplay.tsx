@@ -1,5 +1,5 @@
 import { StyleSheet, Image } from "react-native";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useFocusEffect } from "expo-router";
 import { ThemedView } from "../ThemedView";
 import { ThemedText } from "../ThemedText";
@@ -19,23 +19,23 @@ interface ProfileDisplayProps {
 
 const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
   const colorScheme = useColorScheme();
-  const [profileImageUri, setProfileImageUri] = useState(
-    `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user.id}.jpg?${Date.now()}`,
-  );
+
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const { myInfo } = useContext<any>(MyContext);
 
-  const handleError = () => {
-    setProfileImageUri(mortyUrl);
-  };
+ 
 
-  useFocusEffect(
-    useCallback(() => {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user?.id}.jpg?${Date.now()}`;
-      setProfileImageUri(newProfileImageUri);
-    }, []),
-  );
+
+
+
+  const profileImageUri = useMemo(() => {
+    if (user?.id) {
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user.id}.jpg?${Date.now()}`;
+    }
+    return mortyUrl; // Fallback URL
+  }, [user?.id]);
+
 
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
@@ -43,8 +43,7 @@ const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
     <ThemedView style={styles.previewContainer}>
       <Image
         style={styles.profilePic}
-        source={{ uri: profileImageUri }}
-        onError={handleError}
+        source={{ uri: profileImageUri }}        
       />
       <ThemedView style={styles.profileInfo}>
         <ThemedText>{user.username}</ThemedText>

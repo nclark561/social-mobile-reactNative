@@ -8,7 +8,7 @@ import {
   useColorScheme,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
 import { useNavigation } from "expo-router";
@@ -26,20 +26,20 @@ export default function Header({ name }: HeaderProps) {
   const context = useContext<any>(MyContext);
   const { setLoginToggle, myInfo, loggedIn } = context;
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
-  const [profileImageUri, setProfileImageUri] = useState("");
+  
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
 
-  const handleError = () => {
-    setProfileImageUri(mortyUrl);
-  };
+  
 
-  useEffect(() => {
+  
+
+  const profileImageUri = useMemo(() => {
     if (myInfo?.id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
-      setProfileImageUri(newProfileImageUri);
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`;
     }
-  }, [myInfo]);
+    return mortyUrl; // Fallback URL
+  }, [myInfo?.id]);
 
   return (
     <ThemedView style={styles.page}>
@@ -51,7 +51,7 @@ export default function Header({ name }: HeaderProps) {
               uri: profileImageUri,
               cache: "reload",
             }}
-            onError={handleError}
+            
           />
         </Pressable>
       ) : (

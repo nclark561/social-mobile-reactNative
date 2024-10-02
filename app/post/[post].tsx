@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Button, Pressable, Text, View } from "react-native";
+import { StyleSheet, Image, Button, Pressable, Text, View, Platform } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useContext, useCallback } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -358,6 +358,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexShrink: 1,
     margin: 5,
+    ...(Platform.OS === 'web' && {
+      width: '100%'
+    })
   },
   postUser: {
     fontWeight: "bold",

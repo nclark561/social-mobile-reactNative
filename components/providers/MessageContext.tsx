@@ -45,13 +45,13 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1"
       ) {
-        return process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL; // Use local env variable
+        return process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL; // local 
       } else {
-        // Production environment for web
+        // Prod for web
         return process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL; // Use production env variable
       }
     } else {
-      // Native app environment (iOS/Android)
+      //(iOS/Android)
       return process.env.EXPO_PUBLIC_SERVER_BASE_URL;
     }
   };

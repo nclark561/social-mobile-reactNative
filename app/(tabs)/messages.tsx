@@ -10,6 +10,7 @@ import {
   Animated,
   Dimensions,
   Text,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -190,6 +191,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
+    ...(Platform.OS === 'web' && {
+      padding: 5
+    })
   },
   list: {},
 });
