@@ -12,30 +12,6 @@ interface MyInfo {
   username: string;
 }
 
-export interface UserContextType {
-  myInfo: MyInfo | undefined;
-  myConvos: ConversationData[];
-  setMyConvos: React.Dispatch<React.SetStateAction<ConversationData[]>>; // Add setMyConvos to the UserContextType
-  setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
-  loggedIn: boolean;
-  updateUser: (
-    links: string,
-    email: string,
-    location: string,
-    bio?: string,
-    username?: string,
-    following?: string[],
-  ) => Promise<void>;
-  getUser: () => Promise<void>;
-  getConvos: () => Promise<void>;
-  updateFollowers: (
-    followeeId: string,
-    followerId: string,
-    followers: string[],
-    following: string[],
-  ) => Promise<void>;
-}
-
 interface ConversationData {
   id: string;
   date: Date;
@@ -64,27 +40,43 @@ interface MessageData {
   userId: string;
 }
 
+export interface UserContextType {
+  myInfo: MyInfo | undefined;
+  myConvos: ConversationData[];
+  setMyConvos: React.Dispatch<React.SetStateAction<ConversationData[]>>;
+  setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
+  loggedIn: boolean;
+  updateUser: (
+    email: string,
+    links?: string,
+    location?: string,
+    bio?: string,
+    color?: string
+  ) => Promise<void>;
+  getUser: () => Promise<void>;
+  getConvos: () => Promise<void>;
+  updateFollowers: (
+    myId: string,
+    theirId: string,
+    theirFollowers: string[],
+    myFollowing: string[]
+  ) => Promise<void>;
+}
+
 const MyContext = createContext<UserContextType | undefined>(undefined);
 
 export const MyProvider = ({ children }: { children: ReactNode }) => {
-  const [myInfo, setMyInfo] = useState<MyInfo>();
+  const [myInfo, setMyInfo] = useState<MyInfo | undefined>();
   const [myConvos, setMyConvos] = useState<ConversationData[]>([]);
   const [loginToggle, setLoginToggle] = useState(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   const getBaseUrl = () => {
     if (Platform.OS === "web") {
-      if (
-        window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1"
-      ) {
-        return process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL; // local 
-      } else {
-        // Prod for web
-        return process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL; // Use production env variable
-      }
+      return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+        ? process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL
+        : process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL;
     } else {
-      // (iOS/Android)
       return process.env.EXPO_PUBLIC_SERVER_BASE_URL;
     }
   };
@@ -93,16 +85,16 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     getSession();
   }, [loggedIn, loginToggle]);
 
-  async function getSession() {    
+  async function getSession() {
     try {
       const { data, error } = await supabase.auth.getUser();
       if (error) {
-        console.log(error, "get session error");
+        console.log("Error fetching session:", error);
         setLoggedIn(false);
         return null;
       }
-      console.log(data, "get session data");
       setLoggedIn(true);
+      console.log(data, "session data");
       return data;
     } catch (err) {
       console.error("Unexpected error:", err);
@@ -111,17 +103,18 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const getConvos = async () => {
+    if (!myInfo?.id) return;
     try {
-      const convos = await fetch(
-        `${getBaseUrl()}/api/getConvos?id=${myInfo?.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const response = await fetch(`${getBaseUrl()}/api/getConvos?id=${myInfo?.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
-      const { conversations } = await convos.json();
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch conversations.");
+      }
+      const { conversations } = await response.json();
       setMyConvos(conversations);
     } catch (error) {
       console.error("Failed to fetch conversations:", error);
@@ -129,27 +122,36 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    getConvos();
+    if (myInfo) {
+      getConvos();
+    }
   }, [myInfo]);
+  
 
   const getUser = async () => {
     try {
-      const userEmail = await AsyncStorage.getItem("user");
+      let userEmail;
+      if (Platform.OS === "web") {
+        userEmail = localStorage.getItem("user");
+      } else {
+        userEmail = await AsyncStorage.getItem("user");
+      }
       if (!userEmail) throw new Error("User not logged in");
+
       const email = JSON.parse(userEmail);
-      console.log(email, "this is the email");
       const result = await fetch(`${getBaseUrl()}/api/myInfo?email=${email}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      const text = await result.text();
-      const userInfo = JSON.parse(text);
-      console.log(userInfo, "user info");
+
+      if (!result.ok) throw new Error("Failed to fetch user info.");
+
+      const userInfo = await result.json();
       setMyInfo(userInfo.user);
     } catch (error) {
-      console.log(error, "this is the get user error");
+      console.error("Error fetching user info:", error);
     }
   };
 
@@ -158,15 +160,10 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     links?: string,
     location?: string,
     bio?: string,
-    color?: string,
+    color?: string
   ) => {
     try {
-      const bodyData: any = {};
-      if (email) bodyData.email = email;
-      if (links) bodyData.links = links;
-      if (location) bodyData.location = location;
-      if (bio) bodyData.bio = bio;
-      if (color) bodyData.color = color;
+      const bodyData: any = { email, links, location, bio, color };
 
       const response = await fetch(`${getBaseUrl()}/api/updateUser`, {
         method: "POST",
@@ -176,7 +173,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify(bodyData),
       });
 
-      await response.json();
+      if (!response.ok) throw new Error("Failed to update user info.");
+
       await getUser(); // Refresh the user info after update
     } catch (error) {
       console.error("Failed to update user:", error);
@@ -187,14 +185,10 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     myId: string,
     theirId: string,
     theirFollowers: string[],
-    myFollowing: string[],
+    myFollowing: string[]
   ) => {
     try {
-      const bodyData: any = {};
-      if (myId) bodyData.myId = myId;
-      if (theirId) bodyData.theirId = theirId;
-      if (theirFollowers) bodyData.theirFollowers = theirFollowers;
-      if (myFollowing) bodyData.myFollowing = myFollowing;
+      const bodyData = { myId, theirId, theirFollowers, myFollowing };
 
       const response = await fetch(`${getBaseUrl()}/api/updateUserFollow`, {
         method: "POST",
@@ -204,7 +198,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify(bodyData),
       });
 
-      await response.json();
+      if (!response.ok) throw new Error("Failed to update followers.");
+
       await getUser(); // Refresh the user info after update
     } catch (error) {
       console.error("Failed to update followers:", error);

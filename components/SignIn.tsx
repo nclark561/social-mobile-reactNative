@@ -12,6 +12,7 @@ import { supabase } from "./Supabase";
 import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import MyContext from "./providers/MyContext";
+import { Platform } from "react-native";
 
 export default function SignIn({
   setLogin,
@@ -36,7 +37,11 @@ export default function SignIn({
         console.log(error, "this is the login error");
       }
       if (data) {
-        await AsyncStorage.setItem("user", JSON.stringify(email));
+        if(Platform.OS === 'web') {
+          await localStorage.setItem("user", JSON.stringify(email));
+        } else {
+          await AsyncStorage.setItem("user", JSON.stringify(email));
+        }
 
         setLogin(true);
         setLoginToggle(true);
