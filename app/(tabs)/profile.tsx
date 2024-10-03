@@ -134,8 +134,7 @@ export default function TabTwoScreen() {
                 source={{
                   uri: profileImageUri,
                   cache: "reload",
-                }}
-                onError={handleError}
+                }}                
               />
             ) : (
               <ThemedText>Login </ThemedText>

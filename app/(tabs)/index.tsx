@@ -182,12 +182,14 @@ const styles = StyleSheet.create({
   },
   repost: {
     fontSize: 12,
+    
   },
   row: {
     display: "flex",
     width: "40%",
     flexDirection: "row",
     alignItems: "center",
+    marginLeft: 5,
     justifyContent: "space-evenly",
   },
 });

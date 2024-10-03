@@ -44,9 +44,9 @@ export default function Post({
   repostLength,
 }: PostProps) {
   const colorScheme = useColorScheme();
-  const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [profileImageUri, setProfileImageUri] = useState("");
+  const [optimisticLike, setOptimisticLike] = useState(post.likes.length);
   const [menuVisible, setMenuVisible] = useState(false); // State for menu visibility
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
@@ -73,10 +73,18 @@ export default function Post({
   };
 
   const isLikedByUser = (likes: string[]): boolean => {
-    return likes.includes(myInfo?.id);
+    if (!myInfo?.id) return false; // If user info is not available, return false
+    return likes.includes(myInfo.id); // Check if the user's ID is in the likes array
   };
 
+  const [liked, setLiked] = useState(isLikedByUser(post.likes));
+
+
   const addLike = async (userId: string, postId: string) => {
+    setLiked((prevLiked) => !prevLiked); 
+    const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
+    setOptimisticLike(updatedLikesCount); 
+
     try {
       const test = await fetch(
         !isComment
@@ -204,7 +212,7 @@ export default function Post({
         ]}
       >
         <ThemedView style={styles.flex}>
-          <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId)}/>          
+          <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId)} />
         </ThemedView>
         <ThemedView style={styles.postContent}>
           <Link href={`/profile/${post.email}`} style={styles.link}>
@@ -235,16 +243,18 @@ export default function Post({
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
-              <Ionicons
-                size={15}
-                name={isLikedByUser(post.likes) ? "heart" : "heart-outline"}
-                onPress={() => {
-                  addLike(myInfo?.id, post.id);
-                }}
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
+              <Pressable onPress={() => { likePost() }}>
+                <Ionicons
+                  size={15}
+                  name={liked ? "heart" : "heart-outline"}
+                  onPress={() => {
+                    addLike(myInfo?.id, post.id);
+                  }}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+              </Pressable>
               <ThemedText style={styles.smallNumber}>
-                {post?.likes.length}
+                {optimisticLike}
               </ThemedText>
             </ThemedView>
             <Ionicons
@@ -444,7 +454,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     ...(Platform.OS === 'web' && {
       fontSize: 13
-    }) 
+    })
   },
   postText: {
     flexShrink: 1,
