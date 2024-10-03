@@ -37,9 +37,8 @@ export default function HomeScreen() {
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -74,7 +73,7 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name="Posts" />
-      <Animated.ScrollView contentContainerStyle={{ paddingBottom: 70 }}>
+      <Animated.ScrollView showsVerticalScrollIndicator={false}>
         {Array.isArray(forYouPosts) &&
           forYouPosts.map((post, i) => {
             if (post.postId)
@@ -139,6 +138,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: "column",
+    flex: 1
   },
   addButton: {
     position: "absolute",
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
   repost: {
     fontSize: 12,
-    
+
   },
   row: {
     display: "flex",
