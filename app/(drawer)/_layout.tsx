@@ -76,7 +76,7 @@ import {
                         }}
                       />
                       <Drawer.Screen
-                        name="conversation/[conversation]"
+                        name="conversation"
                         options={{
                           drawerLabel: () => null, // Hides it from the drawer
                           drawerItemStyle: { display: "none" }, // Prevents it from appearing in the drawer
@@ -92,7 +92,7 @@ import {
                         }}
                       />
                       <Drawer.Screen
-                        name="post/[post]"
+                        name="post"
                         options={{
                           drawerLabel: () => null, // Hide index route
                           drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
@@ -100,7 +100,7 @@ import {
                         }}
                       />
                       <Drawer.Screen
-                        name="profile/[profile]"
+                        name="profile"
                         options={{
                           drawerLabel: () => null, // Hide index route
                           drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
@@ -108,31 +108,15 @@ import {
                         }}
                       />
                       <Drawer.Screen
-                        name="comment/[comment]"
+                        name="comment"
                         options={{
                           drawerLabel: () => null, // Hide index route
                           drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
                           headerShown: false,
                         }}
-                      />
+                      />                                   
                       <Drawer.Screen
-                        name="MessageComponents/[chatId]"
-                        options={{
-                          drawerLabel: () => null, // Hide index route
-                          drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
-                          headerShown: false,
-                        }}
-                      />
-                      <Drawer.Screen
-                        name="MessageComponents/newChat"
-                        options={{
-                          drawerLabel: () => null, // Hide index route
-                          drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
-                          headerShown: false,
-                        }}
-                      />
-                      <Drawer.Screen
-                        name="MessageComponents/Test"
+                        name="MessageComponents"
                         options={{
                           drawerLabel: () => null, // Hide index route
                           drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
