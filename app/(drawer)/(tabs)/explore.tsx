@@ -12,7 +12,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useNavigation, router } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
 import { useContext, useState, useEffect } from "react";
-import MyContext from "../../components/providers/MyContext";
+import MyContext from "../../../components/providers/MyContext";
 import ProfileDisplay from "@/components/exploreComponents/ProfileDisplay";
 import Animated from "react-native-reanimated";
 import PostContext from "@/components/providers/PostContext";

@@ -12,8 +12,8 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useState, useEffect } from "react";
-import MyContext from "../../components/providers/MyContext";
-import PostContext from "../../components/providers/PostContext";
+import MyContext from "../../../components/providers/MyContext";
+import PostContext from "../../../components/providers/PostContext";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Post from "@/components/postComponents/Post";
 import Animated from "react-native-reanimated";

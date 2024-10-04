@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import Test from "../MessageComponents/Test";
+import Test from "../../MessageComponents/Test";
 import MyContext from "@/components/providers/MyContext";
 import { router, useFocusEffect } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
