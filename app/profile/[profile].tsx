@@ -14,16 +14,19 @@ import {
 } from "react-native"; // Import Alert
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useNavigation } from "expo-router";
+import { useNavigation as useExpoNavigation } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import MyContext from "../../components/providers/MyContext";
 import PostContext from "../../components/providers/PostContext";
 import Post from "@/components/postComponents/Post";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ExternalProfile() {
-  const navigation = useNavigation();
+  const navigation = useExpoNavigation();
+  const router = useRouter();
+  const back = useNavigation()
   const [selectedOption, setSelectedOption] = useState("Posts"); // Track selected option
   const [user, setUser] = useState<any>();
   const { setLoginToggle, myInfo, loggedIn, updateUser, updateFollowers } =
@@ -75,6 +78,9 @@ export default function ExternalProfile() {
     }
   };
 
+  
+  
+
   const renderContent = () => {
     switch (selectedOption) {
       case "Posts":
@@ -82,7 +88,7 @@ export default function ExternalProfile() {
           <ThemedView>
             {Array.isArray(user?.posts) &&
               user?.posts?.map((post: any) => {
-                return <Post key={post?.id} post={post} user={myInfo.email} />;
+                return <Post key={post?.id} post={post} user={myInfo?.email} />;
               })}
           </ThemedView>
         );
@@ -152,10 +158,8 @@ export default function ExternalProfile() {
         <ThemedView
           style={[styles.icon, { backgroundColor: `${user?.color}` }]}
         >
-          <Pressable>
-            <Link href="/(tabs)/">
-              <Ionicons size={25} name="arrow-back-outline" />
-            </Link>
+          <Pressable onPress={() => {router.back()}}>            
+              <Ionicons size={25} name="arrow-back-outline" />            
           </Pressable>
         </ThemedView>
         <ThemedView

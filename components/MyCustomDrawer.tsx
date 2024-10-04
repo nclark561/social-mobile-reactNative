@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyContext from "./providers/MyContext";
 
 export default function MyCustomDrawer(props: any) {
-  const { setLoginToggle, myInfo, loggedIn } = useContext<any>(MyContext);
+  const { setLoginToggle, myInfo, loggedIn, getUser, setLoggedIn } = useContext<any>(MyContext);
   
   // const router = useRouter();
   const mortyUrl =
@@ -25,8 +25,10 @@ export default function MyCustomDrawer(props: any) {
       if (error) {
         console.log("this is logout error", error);
       }
+      await getUser()
       router.navigate("/login");
       setLoginToggle(false);
+      setLoggedIn(false)
     } catch (error) {
       console.log(error);
     }

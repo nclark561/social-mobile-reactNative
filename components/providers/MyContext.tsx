@@ -46,6 +46,7 @@ export interface UserContextType {
   setMyConvos: React.Dispatch<React.SetStateAction<ConversationData[]>>;
   setLoginToggle: React.Dispatch<React.SetStateAction<boolean>>;
   loggedIn: boolean;
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   updateUser: (
     email: string,
     links?: string,
@@ -62,6 +63,7 @@ export interface UserContextType {
     myFollowing: string[]
   ) => Promise<void>;
 }
+
 
 const MyContext = createContext<UserContextType | undefined>(undefined);
 
@@ -94,7 +96,9 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         return null;
       }
       setLoggedIn(true);
-      console.log(data, "session data");
+      if(data) {
+        getUser()
+      }
       return data;
     } catch (err) {
       console.error("Unexpected error:", err);
@@ -147,11 +151,12 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (!result.ok) throw new Error("Failed to fetch user info.");
-
       const userInfo = await result.json();
+      console.log(userInfo, 'this is user info')
       setMyInfo(userInfo.user);
     } catch (error) {
       console.error("Error fetching user info:", error);
+      setMyInfo(undefined)
     }
   };
 
@@ -214,6 +219,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         setMyConvos,
         setLoginToggle,
         loggedIn,
+        setLoggedIn,
         updateUser,
         getUser,
         getConvos,

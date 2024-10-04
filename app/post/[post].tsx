@@ -14,6 +14,7 @@ import { Link, router } from "expo-router";
 import MyContext from "@/components/providers/MyContext";
 import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 import Post from "@/components/postComponents/Post";
+import { useRoute } from '@react-navigation/native';
 
 interface Post {
   id: string;
@@ -25,8 +26,10 @@ interface Post {
   profilePic: string;
 }
 
-export default function PostPage({ post }: { post: Post }) {
+export default function PostPage() {
+  const route = useRoute();
   const colorScheme = useColorScheme();
+  const { post } = route.params as { post: Post };
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
   const [commentInput, setCommentInput] = useState("");
@@ -149,9 +152,8 @@ export default function PostPage({ post }: { post: Post }) {
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
       return newProfileImageUri;
     }
   };

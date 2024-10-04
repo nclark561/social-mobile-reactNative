@@ -18,7 +18,7 @@ import Animated from "react-native-reanimated";
 import PostContext from "@/components/providers/PostContext";
 
 const noah = {
-  email: "Noah Clark",
+  email: "noahammon00@gmail.com",
   username: "nclark561",
   id: "cm1jrrymy0000boszjdsbtabc",
 };

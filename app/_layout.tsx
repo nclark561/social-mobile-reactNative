@@ -18,6 +18,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { MyProvider } from "../components/providers/MyContext";
 import { PostProvider } from "../components/providers/PostContext";
 import { MessageProvider } from "@/components/providers/MessageContext";
+import { NavigationContainer } from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 

@@ -1,6 +1,6 @@
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet, Image, Pressable } from "react-native";
 import { useCallback, useMemo } from "react";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { ThemedView } from "../ThemedView";
 import { ThemedText } from "../ThemedText";
 import { useColorScheme } from "react-native";
@@ -24,7 +24,7 @@ const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const { myInfo } = useContext<any>(MyContext);
 
- 
+
 
 
 
@@ -40,16 +40,18 @@ const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   return (
-    <ThemedView style={styles.previewContainer}>
-      <Image
-        style={styles.profilePic}
-        source={{ uri: profileImageUri }}        
-      />
-      <ThemedView style={styles.profileInfo}>
-        <ThemedText>{user.username}</ThemedText>
-        <ThemedText style={{ color: fadedTextColor }}>@{user.email}</ThemedText>
+    <Pressable onPress={() => {router.navigate(`/profile/${user.email}`)}}>
+      <ThemedView style={styles.previewContainer}>
+        <Image
+          style={styles.profilePic}
+          source={{ uri: profileImageUri }}
+        />
+        <ThemedView style={styles.profileInfo}>
+          <ThemedText>{user.username}</ThemedText>
+          <ThemedText style={{ color: fadedTextColor }}>@{user.email}</ThemedText>
+        </ThemedView>
       </ThemedView>
-    </ThemedView>
+    </Pressable>
   );
 };
 
