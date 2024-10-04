@@ -78,14 +78,14 @@ export default function HomeScreen() {
           forYouPosts.map((post, i) => {
             if (post.postId)
               return (
-                <ThemedView style={{ flexDirection: "column" }}>
+                <ThemedView key={post.id} style={{ flexDirection: "column" }}>
                   <ThemedView style={styles.row}>
-                    <Ionicons name="git-compare-outline" size={15} />
+                    <Ionicons name="git-compare-outline" size={15} color={colorScheme === 'dark' ? 'white' : 'black'}/>
                     <ThemedText style={styles.repost}>
                       {post.user.username} Reposted
                     </ThemedText>
                   </ThemedView>
-                  <Post key={post.id} post={post.post} isComment={false} />
+                  <Post post={post.post} isComment={false} />
                 </ThemedView>
               );
 
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 90,
+    bottom: 10,
     right: 10,
     borderRadius: 25,
     height: 40,

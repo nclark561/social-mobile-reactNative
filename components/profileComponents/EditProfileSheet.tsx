@@ -53,7 +53,7 @@ const EditProfileSheet = ({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: .3,
+      quality: 0.1,
     });
 
     if (!result.canceled) {
@@ -90,13 +90,13 @@ const EditProfileSheet = ({
       const result = await uploadResponse.json();
       console.log("Upload successful:", result);
       setProfileImageUri(
-        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`,
+        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`
       );
       setProfileImage(null);
     } catch (error) {
       console.error(
         "Error uploading image:",
-        error instanceof Error ? error.message : error,
+        error instanceof Error ? error.message : error
       );
     }
   }
