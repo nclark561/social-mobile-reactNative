@@ -77,7 +77,7 @@ const EditProfileSheet = ({
       } as any);
 
       // Make the POST request with fetch
-      const uploadResponse = await fetch(`${getBaseUrl()}/api/supabase-s3`, {
+      const uploadResponse = await fetch(`${getBaseUrl()}/api/supabase-s3?id=${myInfo.id}`, {
         method: "POST",
         body: formData,
       });

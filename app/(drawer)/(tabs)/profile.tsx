@@ -3,7 +3,6 @@ import { useFocusEffect, router } from "expo-router";
 import { useContext } from "react";
 import {
   StyleSheet,
-  Image,
   useColorScheme,
   TouchableOpacity,
   Linking,
@@ -18,6 +17,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Post from "@/components/postComponents/Post";
 import Animated from "react-native-reanimated";
 import EditProfileSheet from "@/components/profileComponents/EditProfileSheet";
+import { Image } from "expo-image";
 
 export default function TabTwoScreen() {
   const editProfileRef = useRef<BottomSheetModal>(null);
@@ -106,7 +106,7 @@ export default function TabTwoScreen() {
         return null;
     }
   };
-
+  const blurhash = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
   const openLink = (url: string) => {
     // Check if the URL starts with "http" or "https"
     if (!url.startsWith("http")) {
@@ -133,8 +133,9 @@ export default function TabTwoScreen() {
                 style={styles.profilePic}
                 source={{
                   uri: profileImageUri,
-                  cache: "reload",
-                }}                
+                }}
+                placeholder={{blurhash}}
+                transition={500}                
               />
             ) : (
               <ThemedText>Login </ThemedText>

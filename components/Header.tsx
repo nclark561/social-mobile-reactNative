@@ -4,7 +4,6 @@ import {
   TextInput,
   StyleSheet,
   Pressable,
-  Image,
   useColorScheme,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -15,6 +14,7 @@ import { useNavigation } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
 import { Link, router } from "expo-router";
 import MyContext from "./providers/MyContext";
+import { Image } from "expo-image";
 
 interface HeaderProps {
   name: string;
@@ -40,7 +40,7 @@ export default function Header({ name }: HeaderProps) {
     }
     return mortyUrl; // Fallback URL
   }, [myInfo?.id]);
-
+  const blurhash =  myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
   return (
     <ThemedView style={styles.page}>
       {loggedIn ? (
@@ -49,9 +49,8 @@ export default function Header({ name }: HeaderProps) {
             style={styles.profilePic}
             source={{
               uri: profileImageUri,
-              cache: "reload",
             }}
-            
+            placeholder={{blurhash}}
           />
         </Pressable>
       ) : (

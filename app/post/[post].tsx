@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Button, Pressable, Text, View, Platform } from "react-native";
+import { StyleSheet, Button, Pressable, Text, View, Platform } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useContext, useCallback } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -15,6 +15,7 @@ import MyContext from "@/components/providers/MyContext";
 import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 import Post from "@/components/postComponents/Post";
 import { useRoute } from '@react-navigation/native';
+import { Image } from "expo-image";
 
 interface Post {
   id: string;
@@ -150,6 +151,8 @@ export default function PostPage() {
     }, [local.post]),
   );
 
+  const blurhash = thisPost?.owner?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+
   const profileImage = (id: string) => {
     if (id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
@@ -187,6 +190,7 @@ export default function PostPage() {
               <Image
                 style={styles.mainProfilePic}
                 source={{ uri: `${profileImage(thisPost?.owner?.id)}` }}
+                placeholder={{blurhash}}
               />
             </ThemedView>
             <Link href={`/profile/${thisPost?.email}`}>
@@ -310,6 +314,7 @@ export default function PostPage() {
         </CustomBottomSheet>
       </ThemedView>
       {thisPost?.comments?.map((comment: any) => {
+        console.log(comment)
         return (
           <Post
             key={comment.id}

@@ -88,7 +88,7 @@ export default function ExternalProfile() {
           <ThemedView>
             {Array.isArray(user?.posts) &&
               user?.posts?.map((post: any) => {
-                return <Post key={post?.id} post={post} user={myInfo?.email} />;
+                return <Post key={post?.id} post={post} user={myInfo?.email}  />;
               })}
           </ThemedView>
         );

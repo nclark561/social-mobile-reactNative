@@ -8,6 +8,10 @@ export default function CommentLayout() {
         headerShown: false,
         animation: "slide_from_right",
       }}
-    />
+    >
+      <Stack.Screen
+        name='[comment]'
+      />
+    </Stack>
   );
 }

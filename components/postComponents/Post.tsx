@@ -28,6 +28,7 @@ interface Post {
   userId?: string;
   owner: any;
   reposts: any;
+  user: { blurhash: string }
 }
 
 interface PostProps {
@@ -200,6 +201,7 @@ export default function Post({
       console.log(error, "this is the repost error in post");
     }
   };
+  const blurhash = isComment ? post.user.blurhash : post?.owner?.blurhash
 
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
@@ -212,7 +214,7 @@ export default function Post({
         ]}
       >
         <ThemedView style={styles.flex}>
-          <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId)} />
+          <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId)} blurhash={blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'} />
         </ThemedView>
         <ThemedView style={styles.postContent}>
           <Link href={`/profile/${post.email}`} style={styles.link}>
