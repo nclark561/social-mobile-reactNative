@@ -395,15 +395,16 @@ export default function Post({
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
+        <CustomBottomSheet snapPercs={["25%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
-            <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+            <ThemedView >
               <Pressable
                 onPress={() => {
                   repost(myInfo?.id, post.id);
                 }}
+                style={[styles.shareOption, { marginTop: 10 }]}
               >
                 <Ionicons
                   size={25}
@@ -413,7 +414,7 @@ export default function Post({
                 <ThemedText style={styles.optionText}>Repost</ThemedText>
               </Pressable>
             </ThemedView>
-            <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+            <ThemedView style={[styles.shareOption, { marginTop: 10, backgroundColor: 'transparent' }]}>
               <Ionicons
                 size={25}
                 name="pencil-outline"
@@ -492,7 +493,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: 10,
     width: "100%",
-    height: "40%",
+    height: "50%",
   },
   optionText: {
     marginLeft: 10,
