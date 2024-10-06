@@ -8,7 +8,7 @@ import {
 import { ThemedView } from "@/components/ThemedView";
 import { Image } from "expo-image";
 
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, useEffect } from "react";
 import Animated from "react-native-reanimated";
 import Post from "@/components/postComponents/Post";
 import Header from "@/components/Header";
@@ -65,14 +65,13 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      if (myInfo?.id) {
-        getForYouPosts(myInfo?.id);
-      } else {
-        getForYouPosts()
-      }
       getUserPosts(myInfo?.email, myInfo?.id);
     }, [myInfo]),
   );
+
+  useEffect(() => {
+    getForYouPosts(myInfo?.id)
+  }, [myInfo])
 
   const blurhash =  myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
   return (
