@@ -65,7 +65,11 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      getForYouPosts();
+      if (myInfo?.id) {
+        getForYouPosts(myInfo?.id);
+      } else {
+        getForYouPosts()
+      }
       getUserPosts(myInfo?.email, myInfo?.id);
     }, [myInfo]),
   );

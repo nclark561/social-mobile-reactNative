@@ -59,9 +59,9 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getForYouPosts = async () => {
+  const getForYouPosts = async (userId?: string) => {
     try {
-      const result = await fetch(`${getBaseUrl()}/api/getPosts`, {
+      const result = await fetch(`${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ''}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
