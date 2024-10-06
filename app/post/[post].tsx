@@ -275,7 +275,7 @@ export default function PostPage() {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} />
+        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} user={thisPost?.owner}/>
         <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}

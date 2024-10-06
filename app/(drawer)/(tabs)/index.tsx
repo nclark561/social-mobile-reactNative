@@ -4,9 +4,9 @@ import {
   Button,
   useColorScheme,
   Text,
-  Image,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
+import { Image } from "expo-image";
 
 import { useContext, useCallback } from "react";
 import Animated from "react-native-reanimated";
@@ -74,6 +74,7 @@ export default function HomeScreen() {
     }, [myInfo]),
   );
 
+  const blurhash =  myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name="Posts" />
@@ -119,6 +120,8 @@ export default function HomeScreen() {
               source={{
                 uri: `${profileImage(myInfo?.id)}`,
               }}
+              placeholder={{ blurhash }}
+              transition={500}
             />
             <BottomSheetTextInput
               autoFocus

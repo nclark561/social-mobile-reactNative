@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef } from "react";
-import { StyleSheet, Image, Button, Pressable, Text, View } from "react-native";
+import { StyleSheet, Button, Pressable, Text, View } from "react-native";
 import MyContext from "../providers/MyContext";
 import PostContext from "../providers/PostContext";
 import { ThemedText } from "../ThemedText";
@@ -12,6 +12,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Link, router } from "expo-router";
 import { Platform } from "react-native";
 import ProfileImage from "../ProfileImage";
+import { Image } from "expo-image";
 
 interface Post {
   id: string;
@@ -102,7 +103,7 @@ export default function Post({
           }),
         },
       );
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
     } catch (error) {
       console.log(error, "this is the add like error in post");
@@ -120,7 +121,7 @@ export default function Post({
           postId,
         }),
       });
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
     } catch (error) {
@@ -139,7 +140,7 @@ export default function Post({
           id,
         }),
       });
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
     } catch (error) {
@@ -195,14 +196,14 @@ export default function Post({
           postId,
         }),
       });
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
     } catch (error) {
       console.log(error, "this is the repost error in post");
     }
   };
   const blurhash = isComment ? post.user.blurhash : post?.owner?.blurhash
-
+  const blurhash2 = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
       <ThemedView
@@ -357,6 +358,8 @@ export default function Post({
                 source={{
                   uri: `${profileImage(post?.owner?.id || post?.userId)}`,
                 }}
+                placeholder={{blurhash: blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'}}
+                transition={500}
               />
               <ThemedText style={styles.postUser}>
                 {post.email || post.userName}
@@ -374,6 +377,8 @@ export default function Post({
                 source={{
                   uri: `${profileImage(myInfo?.id)}`,
                 }}
+                placeholder={{blurhash: blurhash2}}
+                transition={500}
               />
               <BottomSheetTextInput
                 autoFocus
