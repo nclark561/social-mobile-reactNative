@@ -10,6 +10,7 @@ interface MyInfo {
   followers: string[];
   following: string[];
   username: string;
+  blurhash?: string
 }
 
 interface ConversationData {

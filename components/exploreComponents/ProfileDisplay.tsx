@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Pressable } from "react-native";
+import { StyleSheet, Pressable } from "react-native";
 import { useCallback, useMemo } from "react";
 import { router, useFocusEffect } from "expo-router";
 import { ThemedView } from "../ThemedView";
@@ -6,11 +6,13 @@ import { ThemedText } from "../ThemedText";
 import { useColorScheme } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import MyContext from "../providers/MyContext";
+import { Image } from "expo-image";
 
 interface user {
   email: string;
   username: string;
   id?: string;
+  blurhash?: string
 }
 
 interface ProfileDisplayProps {
@@ -39,12 +41,16 @@ const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
 
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
+  const blurhash = user.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+
   return (
     <Pressable onPress={() => {router.navigate(`/profile/${user.email}`)}}>
       <ThemedView style={styles.previewContainer}>
         <Image
           style={styles.profilePic}
           source={{ uri: profileImageUri }}
+          placeholder={{blurhash}}
+          transition={500}
         />
         <ThemedView style={styles.profileInfo}>
           <ThemedText>{user.username}</ThemedText>

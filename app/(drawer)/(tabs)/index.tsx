@@ -90,11 +90,14 @@ export default function HomeScreen() {
 
 
   useFocusEffect(
-    useCallback(() => {
-      getForYouPosts();
+    useCallback(() => {      
       getUserPosts(myInfo?.email, myInfo?.id);
     }, [myInfo]),
   );
+  
+  useEffect(() => {
+    getForYouPosts(myInfo?.id)
+  }, [myInfo])
 
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";

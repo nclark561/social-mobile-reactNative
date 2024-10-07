@@ -1,15 +1,19 @@
 import React from "react";
-import { Image, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { Image } from "expo-image";
 
 interface ProfileImageProps {
   profileUri?: string;
+  blurhash?: string
 }
 
-const ProfileImage = React.memo(({ profileUri }: ProfileImageProps) => {
+const ProfileImage = React.memo(({ profileUri, blurhash }: ProfileImageProps) => {
   return (
     <Image
       style={styles.profilePic}
       source={{ uri: profileUri }} 
+      placeholder={{ blurhash }}
+      transition={1000}
     />
   );
 });

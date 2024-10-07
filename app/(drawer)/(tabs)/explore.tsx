@@ -1,7 +1,6 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   StyleSheet,
-  Image,
   TextInput,
   useColorScheme,
   Pressable,
@@ -16,6 +15,7 @@ import MyContext from "../../../components/providers/MyContext";
 import ProfileDisplay from "@/components/exploreComponents/ProfileDisplay";
 import Animated from "react-native-reanimated";
 import PostContext from "@/components/providers/PostContext";
+import { Image } from "expo-image";
 
 const noah = {
   email: "noahammon00@gmail.com",
@@ -68,6 +68,7 @@ export default function TabTwoScreen() {
     return mortyUrl; // Fallback URL
   }, [myInfo?.id]);
 
+  const blurhash = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
 
   return (
     <ThemedView style={{ flex: 1, flexDirection: "column" }}>
@@ -77,6 +78,7 @@ export default function TabTwoScreen() {
             <Image
               style={styles.profilePic}
               source={{ uri: profileImageUri }}
+              placeholder={{blurhash}}
             />
           </Pressable>
         ) : (

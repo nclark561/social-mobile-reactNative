@@ -8,6 +8,10 @@ export default function PostLayout() {
         headerShown: false,
         animation: "slide_from_right",
       }}
-    />
+    >
+      <Stack.Screen
+        name='[post]'
+      />
+    </Stack>
   );
 }
