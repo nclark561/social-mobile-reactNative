@@ -13,7 +13,6 @@ import { useContext, useCallback, useEffect } from "react";
 import Animated from "react-native-reanimated";
 import Post from "@/components/postComponents/Post";
 import Header from "@/components/Header";
-import ProfileDisplay from "@/components/exploreComponents/ProfileDisplay";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
@@ -21,21 +20,12 @@ import { useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "@/components/providers/MyContext";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, Link } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
+import DesktopRouting from "@/components/desktopComponents/desktopRouting";
+import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
 
 
-const noah = {
-  email: "noahammon00@gmail.com",
-  username: "nclark561",
-  id: "cm1jrrymy0000boszjdsbtabc",
-};
-
-const kale = {
-  email: "kaleckh@gmail.com",
-  username: "kaethebae",
-  id: "cm1k2x8jp0000z0ygxfrgi631",
-};
 
 export default function HomeScreen() {
   const newPostRef = useRef<BottomSheetModal>(null);
@@ -90,11 +80,11 @@ export default function HomeScreen() {
 
 
   useFocusEffect(
-    useCallback(() => {      
+    useCallback(() => {
       getUserPosts(myInfo?.email, myInfo?.id);
     }, [myInfo]),
   );
-  
+
   useEffect(() => {
     getForYouPosts(myInfo?.id)
   }, [myInfo])
@@ -108,26 +98,9 @@ export default function HomeScreen() {
       <ThemedView style={styles.desktopCenter}>
         <Header name="Posts" />
         <ThemedView style={styles.desktopRow}>
-          <ThemedView style={styles.desktopHidden}>
-            <ThemedView style={styles.iconRow}>
-              <Ionicons size={20} style={{ padding: 10 }} name="home-outline"></Ionicons>
-              <ThemedText style={styles.iconSelection}>Home</ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.iconRow}>
-              <Ionicons size={20} style={{ padding: 10 }} name="person-outline"></Ionicons>
-              <ThemedText style={styles.iconSelection}>Profile</ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.iconRow}>
-              <Ionicons size={20} style={{ padding: 10 }} name="mail-outline"></Ionicons>
-              <ThemedText style={styles.iconSelection}>Messages</ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.iconRow}>
-              <Ionicons size={20} style={{ padding: 10 }} name="moon-outline"></Ionicons>
-              <ThemedText style={styles.iconSelection}>Dark Mode</ThemedText>
-            </ThemedView>
-          </ThemedView>
+          <DesktopRouting/>
           <ThemedView style={styles.postContainer}>
-            <ThemedView>
+            <ThemedView style={styles.desktopHiddenFullscreen}>
               <ThemedView style={styles.row}>
                 <Image
                   style={[styles.profilePic, { margin: 20 }]}
@@ -157,13 +130,7 @@ export default function HomeScreen() {
                 })}
             </Animated.ScrollView>
           </ThemedView>
-          <ThemedView style={styles.desktopHiddenBorder}>
-            <ThemedText style={{ textAlign: 'center', fontWeight: '800', fontSize: 20 }}>Who To Follow</ThemedText>
-            <ProfileDisplay user={noah} />
-            <ProfileDisplay user={kale} />
-            {/* <ThemedText>Simulator Demo Video</ThemedText>
-            <ThemedText>Hire Us!</ThemedText> */}
-          </ThemedView>
+          <DesktopSuggestedProfiles/>
         </ThemedView>
         <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
           <Ionicons size={30} color={"white"} name="add" />
@@ -286,6 +253,9 @@ const styles = StyleSheet.create({
     display: width > 600 ? 'flex' : 'none',
     height: '50%',
     justifyContent: 'space-evenly'
+  },
+  desktopHiddenFullscreen: {
+    display: width > 600 ? 'flex' : 'none',
   },
   desktopHiddenBorder: {
     display: width > 600 ? 'flex' : 'none',
