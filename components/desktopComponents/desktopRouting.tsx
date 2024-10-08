@@ -42,8 +42,10 @@ export default function DesktopRouting() {
                 </Link>
             </ThemedView>
             <ThemedView style={styles.iconRow}>
-                <Ionicons size={20} style={{ padding: 10 }} name="search-outline"></Ionicons>
-                <ThemedText style={styles.iconSelection}>Search</ThemedText>
+                <Link href={'/(tabs)/explore'}>
+                    <Ionicons size={20} style={{ padding: 10 }} name="search-outline"></Ionicons>
+                    <ThemedText style={styles.iconSelection}>Search</ThemedText>
+                </Link>
             </ThemedView>
         </ThemedView>
     );
@@ -56,11 +58,11 @@ const styles = StyleSheet.create({
         display: width > 600 ? 'flex' : 'none',
         height: '50%',
         justifyContent: 'space-evenly'
-      },
-      desktopHiddenFullscreen: {
+    },
+    desktopHiddenFullscreen: {
         display: width > 600 ? 'flex' : 'none',
-      },
-      desktopHiddenBorder: {
+    },
+    desktopHiddenBorder: {
         display: width > 600 ? 'flex' : 'none',
         height: '50%',
         justifyContent: 'space-evenly',
@@ -68,13 +70,13 @@ const styles = StyleSheet.create({
         borderColor: 'rgb(232,232,232)',
         borderRadius: 10,
         padding: 15
-      },
-      iconRow: {
+    },
+    iconRow: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
-      },
-      iconSelection: {
+    },
+    iconSelection: {
         fontSize: 20
-      },
+    },
 });
