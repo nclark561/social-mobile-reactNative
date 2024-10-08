@@ -7,7 +7,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useContext } from "react";
 import MyContext from "@/components/providers/MyContext";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, Dimensions, useWindowDimensions, Platform } from "react-native";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -15,6 +15,7 @@ export default function TabLayout() {
 
   const context = useContext<any>(MyContext);
   const { loggedIn } = context;
+  const { width } = useWindowDimensions();
 
   return (
     <Tabs
@@ -24,6 +25,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor,
           borderTopWidth: 1,
+          display: Platform.OS === 'web' && width > 1000 ? 'none' : 'flex'
         },
       }}
     >

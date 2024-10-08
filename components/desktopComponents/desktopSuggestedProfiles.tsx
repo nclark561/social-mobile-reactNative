@@ -59,12 +59,13 @@ const styles = StyleSheet.create({
     },
     desktopHiddenBorder: {
         display: width > 600 ? 'flex' : 'none',
-        height: '50%',
+        height: '35%',
         justifyContent: 'space-evenly',
         borderWidth: 1,
         borderColor: 'rgb(232,232,232)',
         borderRadius: 10,
-        padding: 15
+        padding: 15,
+        margin: 10
     },
     iconRow: {
         display: 'flex',

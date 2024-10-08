@@ -6,7 +6,8 @@ import {
   Text,
   Image,
   Dimensions,
-  TextInput
+  TextInput,
+  Linking
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { useContext, useCallback, useEffect } from "react";
@@ -24,6 +25,8 @@ import { useFocusEffect, Link } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import DesktopRouting from "@/components/desktopComponents/desktopRouting";
 import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
+import StackLogos from "@/components/desktopComponents/stackLogos";
+import Projects from "@/components/desktopComponents/projects";
 
 
 
@@ -98,7 +101,10 @@ export default function HomeScreen() {
       <ThemedView style={styles.desktopCenter}>
         <Header name="Posts" />
         <ThemedView style={styles.desktopRow}>
-          <DesktopRouting/>
+          <ThemedView style={styles.column}>
+            <DesktopRouting />
+            <StackLogos />
+          </ThemedView>
           <ThemedView style={styles.postContainer}>
             <ThemedView style={styles.desktopHiddenFullscreen}>
               <ThemedView style={styles.row}>
@@ -130,7 +136,33 @@ export default function HomeScreen() {
                 })}
             </Animated.ScrollView>
           </ThemedView>
-          <DesktopSuggestedProfiles/>
+          <ThemedView>
+            <DesktopSuggestedProfiles />
+            <ThemedView style={styles.desktopHiddenBorder}>
+              <ThemedText style={styles.sectionHeader}>Connect with Us</ThemedText>
+              <ThemedView style={styles.profileCard}>
+                <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
+                <ThemedText style={styles.profileCardText}>
+                  Connect with Kale on LinkedIn
+                </ThemedText>
+
+                <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/kaleck-hamm-692a54a1/')} style={[styles.profileButton]}>
+                  <Text style={styles.buttonText}>Profile</Text>
+                </Pressable>
+
+              </ThemedView>
+              <ThemedView style={styles.profileCard}>
+                <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
+                <ThemedText style={styles.profileCardText}>
+                  Connect with Noah on LinkedIn
+                </ThemedText>
+                <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/noah-clark-62532426b/do ')} style={[styles.profileButton]}>
+                  <Text style={styles.buttonText}>Profile</Text>
+                </Pressable>
+              </ThemedView>
+              <Projects/>
+            </ThemedView>
+          </ThemedView>
         </ThemedView>
         <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
           <Ionicons size={30} color={"white"} name="add" />
@@ -259,7 +291,7 @@ const styles = StyleSheet.create({
   },
   desktopHiddenBorder: {
     display: width > 600 ? 'flex' : 'none',
-    height: '50%',
+    
     justifyContent: 'space-evenly',
     borderWidth: 1,
     borderColor: 'rgb(232,232,232)',
@@ -285,4 +317,40 @@ const styles = StyleSheet.create({
     color: 'gray',
     padding: 10
   },
+  sectionHeader: {
+    textAlign: 'center',
+    fontWeight: '800',
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  profileCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    borderRadius: 8,
+    marginVertical: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  profileCardText: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  profileButton: {
+    backgroundColor: 'rgb(38,102,193)', // LinkedIn Blue
+    padding: 5,
+    margin: 5,
+    borderRadius: 5,
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    
+  }
 });

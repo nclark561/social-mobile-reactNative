@@ -41,14 +41,12 @@ const EditProfileSheet = ({
 
   const handleCloseEditProfile = () => editProfileRef?.current?.dismiss();
 
-  const colors = ["#FFB6C1", "#ADD8E6", "#90EE90", "#FFD700", "#FFA07A"]; // 5 color options
-
+  const colors = ["#FFB6C1", "#ADD8E6", "#90EE90", "#FFD700", "#FFA07A"]; 
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
   };
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+  const pickImage = async () => {    
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,

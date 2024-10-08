@@ -42,8 +42,8 @@ export default function DesktopRouting() {
                 </Link>
             </ThemedView>
             <ThemedView style={styles.iconRow}>
-                <Ionicons size={20} style={{ padding: 10 }} name="moon-outline"></Ionicons>
-                <ThemedText style={styles.iconSelection}>Dark Mode</ThemedText>
+                <Ionicons size={20} style={{ padding: 10 }} name="search-outline"></Ionicons>
+                <ThemedText style={styles.iconSelection}>Search</ThemedText>
             </ThemedView>
         </ThemedView>
     );
