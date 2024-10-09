@@ -128,135 +128,138 @@ export default function TabTwoScreen() {
   return (
     <ThemedView style={[{ flex: 1 }, Platform.OS === 'web' ? { marginTop: 0 } : { marginTop: -70 }, styles.pageContainer]}>
       <ThemedView style={styles.desktopCenter}>
-        <ThemedView style={styles.header}>
-          <ThemedView style={styles.close}>
-            <ThemedView
-              style={[
-                styles.backgroundColor,
-                { backgroundColor: myInfo?.color || "#fff" },
-              ]}
-            ></ThemedView>
-            <ThemedView style={styles.row}>
-              {loggedIn ? (
-                <Image
-                  style={styles.profilePic}
-                  source={{
-                    uri: profileImageUri,
-                  }}
-                  placeholder={{ blurhash }}
-                  transition={500}
-                />
-              ) : (
-                <Image
-                  style={styles.profilePic}
-                  source={{
-                    uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAACUCAMAAADbGilTAAAAM1BMVEXk5ueutLeqsLPO0tTn6erh4+Tq7O3a3d6xt7rU19m/xMbEyMvJzc/d4OG5vsG9wcSkq6+UDpwhAAAD9ElEQVR4nO2b13LcMAwAWSBWibr//9pQvhJdZxNAj7l5iJOnHRiEWADGBoPBYDAYDAaDwWAw+LsAAGPTxvnHbgGYtJy9WyPOS6tZr7oA0gXDhRA8sv1lgtOgqL2eAKbXs+Q9gruF9RVcsOsL0bOtcLajVFDLyt+pnmM7dSILzH8QvSC7kAUdvqtysXYQWrAmQTXKGk0uK1NEz7aWVhbmpKD2IAsyQzViKVWzTGNkyXIWbF5UN1miagAs1zQSSFQZuOywxsB6EtW5IKxEKTuZIldu8DeJKmET8DqwM3pgp1OZagzsgqwKa6kq5zOyqi5X5WbCdS3N1g2Bu5ktLQKXwKKWgvyv611gMVeXensSTMMjBhbqVLlBTNil0pVrNNXCrcAOvEqgQqWq8GiuUFWxNhza52Cpdg1YrmCrXdH2L2BrVfEKQfbxldK1umRxgXVTMFyHawvXUQdeuP6i+sp0/XcL73j4e/YDTNW6It7AKVcbV7x7ooJL4nsM5stB8WXWBcSbl9qEXTHP3JnvLw/gPh4tVWEVuDewJW8FN1W8U+xG1ZYAbeNypXx1CYesWlNi0Z9lVbFqQH/bKA7sCfcG/izri1QF5t3rjbKbIrzd4J6yLCDqdyh4OkR+gtmT+yAnHF0XSebTkVjJTDfSGp6uUSVVhSWlkeymStyhNaU+dQlP3/mmElu0uugoBPs9D0Sg79D7ASb/5awoZvrf/5W4xD6prtSL6g5Q1r0sX0IY38mv/z/AFhkeO7aFWOXSUQP0DmDa775kwduufvmPKAWTthE9gepZdMvbO3qUhZ+BkklL6d0agol/QnB+llt4+8nXaLJoK33g4iQe1lb8d/xPs85Wb860ogoW69eo+fnDFZXN6qWmy2BQes5rejAkExwxOa3np/wzjAgSdz4GwPqnup+sa5ycsM7dCmT4NP7y3ZYbj2EbV70vjehe9xTs0Vsv0K4qpHvdII9MXMWamf4Q7GGZ8HVLnU08LhwRW2Ay53ydbOuX5rIw1fa6vZM1jRMBWM48Ua5taBnaGNTjVLd6266jRCWOvlXQ6i05a56sEGHauDavVK9lW5x2K1uzk2nwTn/oqrqjcgIJpsNX1V62KrLH1qpnKmQBWbViSKJoSK+Swk8YRl19ouyprmrsqZiyPoiJQrXsta52PKec7HNYi17MQrLfFuvHHcrJzAKSGnAlt+GUzjR3eSmCr8BeNisJSFWzRpNVWStLOzK+XnUTpS1IzljC2noho9OgZqi4Dclliz4F0mdQNHlY05t4KL9ZN9IuuaonSltwSgurwri7+EZiPy/04Jp4w6W7cHVJCWu3d1Vy0jp6teyBxAILXZDmOvhb/AN6bzfTexgP5QAAAABJRU5ErkJggg==',
-                  }}
-                  placeholder={{ blurhash }}
-                  transition={500}
-                />
-              )}
-              {loggedIn ? (
-                <TouchableOpacity
-                  style={[styles.button, { borderColor: fadedTextColor }]}
-                  onPress={handleOpenEditProfile}
-                >
-                  <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
-                </TouchableOpacity>
-              ) : (
-                <ThemedText></ThemedText>
-              )}
-            </ThemedView>
-            {loggedIn ? (
-              <ThemedView style={styles.columnLeftPadding}>
-                <ThemedText style={styles.userName}>
-                  {myInfo?.username}
-                </ThemedText>
-                {/* <ThemedText style={styles.tag}>@{myInfo?.userName}</ThemedText> */}
-                <ThemedText style={styles.bio}>{myInfo?.bio}</ThemedText>
-                {myInfo?.links && (
-                  <ThemedText
-                    style={styles.link}
-                    onPress={() => openLink(myInfo.links)}
-                  >
-                    {myInfo.links}
-                  </ThemedText>
-                )}
-              </ThemedView>
-            ) : (
-              <ThemedText style={styles.bio}>
-                <TouchableOpacity onPress={() => router.push('/login')}>
-                  <ThemedText style={styles.linkText}>Create </ThemedText>
-                </TouchableOpacity>{" "}
-                an account or{" "}
-                <TouchableOpacity onPress={() => router.push('/login')}>
-                  <ThemedText style={styles.linkText}>Login</ThemedText>
-                </TouchableOpacity>{" "}
-                to see full functionality!
-              </ThemedText>
-
-            )}
-          </ThemedView>
-          <ThemedView style={styles.followersRow}>
-            {loggedIn ? (
-              <>
-                <ThemedText style={styles.smallGray}>
-                  {myInfo?.followers?.length} Followers
-                </ThemedText>
-                <ThemedText style={styles.smallGray}>
-                  {myInfo?.following?.length} Following
-                </ThemedText>
-              </>
-            ) : (
-              <ThemedText></ThemedText>
-            )}
-          </ThemedView>
-        </ThemedView>
         <ThemedView style={styles.desktopRow}>
-          <ThemedView style={styles.column}>
+          <ThemedView style={styles.realColumn}>
             <DesktopRouting />
             <StackLogos />
           </ThemedView>
-          {loggedIn ? <ThemedView style={styles.column}>
-            {["Posts", "Reposts", "Replies"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                onPress={() => setSelectedOption(option)}
-              >
-                <ThemedText
+          <ThemedView style={styles.contentMiddle}>
+            <ThemedView style={styles.header}>
+              <ThemedView style={styles.close}>
+                <ThemedView
                   style={[
-                    styles.optionText,
-                    selectedOption === option && styles.underline,
+                    styles.backgroundColor,
+                    { backgroundColor: myInfo?.color || "#fff" },
                   ]}
-                >
-                  {option}
-                </ThemedText>
-              </TouchableOpacity>
-            ))}
-          </ThemedView> : <ThemedView style={styles.column}>
-            {["Posts", "Reposts", "Replies"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                onPress={() => setSelectedOption(option)}
-              >
-                <ThemedText
-                  style={[
-                    styles.optionText,
-                    selectedOption === option && styles.underline,
-                  ]}
-                >
-                  {option}
-                </ThemedText>
-              </TouchableOpacity>
-            ))}
-          </ThemedView>}
+                ></ThemedView>
+                <ThemedView style={styles.row}>
+                  {loggedIn ? (
+                    <Image
+                      style={styles.profilePic}
+                      source={{
+                        uri: profileImageUri,
+                      }}
+                      placeholder={{ blurhash }}
+                      transition={500}
+                    />
+                  ) : (
+                    <Image
+                      style={styles.profilePic}
+                      source={{
+                        uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAACUCAMAAADbGilTAAAAM1BMVEXk5ueutLeqsLPO0tTn6erh4+Tq7O3a3d6xt7rU19m/xMbEyMvJzc/d4OG5vsG9wcSkq6+UDpwhAAAD9ElEQVR4nO2b13LcMAwAWSBWibr//9pQvhJdZxNAj7l5iJOnHRiEWADGBoPBYDAYDAaDwWAw+LsAAGPTxvnHbgGYtJy9WyPOS6tZr7oA0gXDhRA8sv1lgtOgqL2eAKbXs+Q9gruF9RVcsOsL0bOtcLajVFDLyt+pnmM7dSILzH8QvSC7kAUdvqtysXYQWrAmQTXKGk0uK1NEz7aWVhbmpKD2IAsyQzViKVWzTGNkyXIWbF5UN1miagAs1zQSSFQZuOywxsB6EtW5IKxEKTuZIldu8DeJKmET8DqwM3pgp1OZagzsgqwKa6kq5zOyqi5X5WbCdS3N1g2Bu5ktLQKXwKKWgvyv611gMVeXensSTMMjBhbqVLlBTNil0pVrNNXCrcAOvEqgQqWq8GiuUFWxNhza52Cpdg1YrmCrXdH2L2BrVfEKQfbxldK1umRxgXVTMFyHawvXUQdeuP6i+sp0/XcL73j4e/YDTNW6It7AKVcbV7x7ooJL4nsM5stB8WXWBcSbl9qEXTHP3JnvLw/gPh4tVWEVuDewJW8FN1W8U+xG1ZYAbeNypXx1CYesWlNi0Z9lVbFqQH/bKA7sCfcG/izri1QF5t3rjbKbIrzd4J6yLCDqdyh4OkR+gtmT+yAnHF0XSebTkVjJTDfSGp6uUSVVhSWlkeymStyhNaU+dQlP3/mmElu0uugoBPs9D0Sg79D7ASb/5awoZvrf/5W4xD6prtSL6g5Q1r0sX0IY38mv/z/AFhkeO7aFWOXSUQP0DmDa775kwduufvmPKAWTthE9gepZdMvbO3qUhZ+BkklL6d0agol/QnB+llt4+8nXaLJoK33g4iQe1lb8d/xPs85Wb860ogoW69eo+fnDFZXN6qWmy2BQes5rejAkExwxOa3np/wzjAgSdz4GwPqnup+sa5ycsM7dCmT4NP7y3ZYbj2EbV70vjehe9xTs0Vsv0K4qpHvdII9MXMWamf4Q7GGZ8HVLnU08LhwRW2Ay53ydbOuX5rIw1fa6vZM1jRMBWM48Ua5taBnaGNTjVLd6266jRCWOvlXQ6i05a56sEGHauDavVK9lW5x2K1uzk2nwTn/oqrqjcgIJpsNX1V62KrLH1qpnKmQBWbViSKJoSK+Swk8YRl19ouyprmrsqZiyPoiJQrXsta52PKec7HNYi17MQrLfFuvHHcrJzAKSGnAlt+GUzjR3eSmCr8BeNisJSFWzRpNVWStLOzK+XnUTpS1IzljC2noho9OgZqi4Dclliz4F0mdQNHlY05t4KL9ZN9IuuaonSltwSgurwri7+EZiPy/04Jp4w6W7cHVJCWu3d1Vy0jp6teyBxAILXZDmOvhb/AN6bzfTexgP5QAAAABJRU5ErkJggg==',
+                      }}
+                      placeholder={{ blurhash }}
+                      transition={500}
+                    />
+                  )}
+                  {loggedIn ? (
+                    <TouchableOpacity
+                      style={[styles.button, { borderColor: fadedTextColor }]}
+                      onPress={handleOpenEditProfile}
+                    >
+                      <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
+                    </TouchableOpacity>
+                  ) : (
+                    <ThemedText></ThemedText>
+                  )}
+                </ThemedView>
+                {loggedIn ? (
+                  <ThemedView style={styles.columnLeftPadding}>
+                    <ThemedText style={styles.userName}>
+                      {myInfo?.username}
+                    </ThemedText>
+                    {/* <ThemedText style={styles.tag}>@{myInfo?.userName}</ThemedText> */}
+                    <ThemedText style={styles.bio}>{myInfo?.bio}</ThemedText>
+                    {myInfo?.links && (
+                      <ThemedText
+                        style={styles.link}
+                        onPress={() => openLink(myInfo.links)}
+                      >
+                        {myInfo.links}
+                      </ThemedText>
+                    )}
+                  </ThemedView>
+                ) : (
+                  <ThemedText style={styles.bio}>
+                    <TouchableOpacity onPress={() => router.push('/login')}>
+                      <ThemedText style={styles.linkText}>Create </ThemedText>
+                    </TouchableOpacity>{" "}
+                    an account or{" "}
+                    <TouchableOpacity onPress={() => router.push('/login')}>
+                      <ThemedText style={styles.linkText}>Login</ThemedText>
+                    </TouchableOpacity>{" "}
+                    to see full functionality!
+                  </ThemedText>
 
-          <ThemedView style={styles.content}>{renderContent()}</ThemedView>
+                )}
+              </ThemedView>
+              <ThemedView style={styles.followersRow}>
+                {loggedIn ? (
+                  <>
+                    <ThemedText style={styles.smallGray}>
+                      {myInfo?.followers?.length} Followers
+                    </ThemedText>
+                    <ThemedText style={styles.smallGray}>
+                      {myInfo?.following?.length} Following
+                    </ThemedText>
+                  </>
+                ) : (
+                  <ThemedText></ThemedText>
+                )}
+              </ThemedView>
+            </ThemedView>
+            {loggedIn ? <ThemedView style={styles.column}>
+              {["Posts", "Reposts", "Replies"].map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  onPress={() => setSelectedOption(option)}
+                >
+                  <ThemedText
+                    style={[
+                      styles.optionText,
+                      selectedOption === option && styles.underline,
+                    ]}
+                  >
+                    {option}
+                  </ThemedText>
+                </TouchableOpacity>
+              ))}
+            </ThemedView> : <ThemedView style={styles.column}>
+              {["Posts", "Reposts", "Replies"].map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  onPress={() => setSelectedOption(option)}
+                >
+                  <ThemedText
+                    style={[
+                      styles.optionText,
+                      selectedOption === option && styles.underline,
+                    ]}
+                  >
+                    {option}
+                  </ThemedText>
+                </TouchableOpacity>
+              ))}
+
+            </ThemedView>}
+          </ThemedView>
+
+          {/* <ThemedView style={styles.content}>{renderContent()}</ThemedView>
           <EditProfileSheet
             setProfileImageUri={setProfileImageUri}
             currProfileImage={profileImageUri}
             editProfileRef={editProfileRef}
-          />
+          /> */}
           <ThemedView>
             <DesktopSuggestedProfiles />
             <ThemedView style={styles.desktopHiddenBorder}>
@@ -302,7 +305,7 @@ const styles = StyleSheet.create({
   },
   profilePic: {
     borderRadius: 25,
-    marginTop: width < 700 ? 0 : 60,
+    // marginTop: width < 700 ? 0 : 60,
     width: 55,
     height: 55,
   },
@@ -341,6 +344,10 @@ const styles = StyleSheet.create({
     borderColor: "rgb(232,232,232)",
     borderBottomWidth: 0.5,
   },
+  realColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   optionText: {
     fontSize: 16,
     padding: 10,
@@ -351,6 +358,9 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 10,
+  },
+  contentMiddle: {
+    width: '49.5%'
   },
   row: {
     display: "flex",
@@ -397,19 +407,19 @@ const styles = StyleSheet.create({
     fontSize: 13,
     padding: 5
   },
-  backgroundColor: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: "40%",
-    width: "110%",
-    zIndex: -1,
-  },
+  // backgroundColor: {
+  //   position: "absolute",
+  //   top: 0,
+  //   left: 0,
+  //   height: "40%",
+  //   width: "110%",
+  //   zIndex: -1,
+  // },
   center: {
 
   },
   desktopHiddenBorder: {
-    display: width > 600 ? 'flex' : 'none',    
+    display: width > 600 ? 'flex' : 'none',
     justifyContent: 'space-evenly',
     borderWidth: 1,
     borderColor: 'rgb(232,232,232)',
@@ -440,7 +450,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   desktopCenter: {
-    width: width > 600 ? '40%' : '100%'
+    width: width > 600 ? '75%' : '100%'
   },
   pageContainer: {
     flexDirection: "column",

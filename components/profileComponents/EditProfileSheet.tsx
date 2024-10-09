@@ -70,19 +70,12 @@ const EditProfileSheet = ({
       const formData = new FormData();
 
       formData.append("image", {
-<<<<<<< HEAD
-        uri: imageUri, 
-        type: "image/jpg",
-        name: `${myInfo.id}.jpg`,
-      } as any);      
-=======
         uri: imageUri, // The local URI of the image
         type: profileImage.mimeType,
         name: `${myInfo.id}`,
       } as any)
 
       // Make the POST request with fetch
->>>>>>> 540ba52d145f6cb8a1744db85a3b7e009f7e9c80
       const uploadResponse = await fetch(`${getBaseUrl()}/api/supabase-s3?id=${myInfo.id}`, {
         method: "POST",
         body: formData,

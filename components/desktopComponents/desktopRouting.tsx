@@ -38,6 +38,12 @@ export default function DesktopRouting() {
                     <ThemedText style={styles.iconSelection}>Search</ThemedText>
                 </Link>
             </ThemedView>
+            <ThemedView style={styles.iconRow}>
+                <Link href={'/(drawer)/login'}>
+                    <Ionicons size={20} style={{ padding: 10 }} name="search-outline" color={colorScheme === 'dark' ? 'white' : 'black'}></Ionicons>
+                    <ThemedText style={styles.iconSelection}>Login</ThemedText>
+                </Link>
+            </ThemedView>
         </ThemedView>
     );
 }

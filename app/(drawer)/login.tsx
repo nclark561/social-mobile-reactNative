@@ -14,14 +14,11 @@ export default function Login() {
   return (
     <ThemedView style={styles.pageContainer}>
       <ThemedView style={styles.desktopCenter}>
-        <ThemedView style={styles.desktopRow}>
-          {/* Left Column with DesktopRouting and StackLogos */}
+        <ThemedView style={styles.desktopRow}>          
           <ThemedView style={styles.column}>
             <DesktopRouting />
             <StackLogos />
-          </ThemedView>
-
-          {/* Main Content Section */}
+          </ThemedView>          
           <ThemedView style={styles.mainContent}>
             {login ? (
               <SignIn setLogin={setLogin} />
@@ -29,8 +26,6 @@ export default function Login() {
               <CreateAccount setLoginToggle={setLogin} />
             )}
           </ThemedView>
-
-          {/* Right Column with Suggested Profiles and Projects */}
           <ThemedView style={styles.column}>
             <DesktopSuggestedProfiles />
             <ThemedView style={styles.desktopHiddenBorder}>
@@ -46,8 +41,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center',    
   },
   desktopCenter: {
     width: Dimensions.get('window').width > 600 ? '80%' : '100%',
@@ -75,5 +69,9 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 });
+
+
+
+
 
 
