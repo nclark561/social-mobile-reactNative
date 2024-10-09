@@ -55,7 +55,7 @@ export default function TabTwoScreen() {
 
   useEffect(() => {
     if (myInfo?.id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}?${Date.now()}`;
       setProfileImageUri(newProfileImageUri);
     }
   }, [myInfo]);

@@ -179,7 +179,7 @@ export default function Post({
   const profileImage = (id: string) => {
     if (id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+        }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -202,7 +202,7 @@ export default function Post({
       console.log(error, "this is the repost error in post");
     }
   };
-  const blurhash = isComment ? post.user.blurhash : post?.owner?.blurhash
+  const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash
   const blurhash2 = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>

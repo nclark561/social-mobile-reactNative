@@ -141,7 +141,7 @@ export default function CommentPage() {
 
   useEffect(() => {
     if (thisPost) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}?${Date.now()}`;
       setProfileImageUri(newProfileImageUri);
     }
   }, [thisPost]);

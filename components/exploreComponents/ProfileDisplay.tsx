@@ -33,7 +33,7 @@ const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
 
   const profileImageUri = useMemo(() => {
     if (user?.id) {
-      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user.id}.jpg?${Date.now()}`;
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user.id}?${Date.now()}`;
     }
     return mortyUrl; // Fallback URL
   }, [user?.id]);

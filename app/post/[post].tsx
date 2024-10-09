@@ -156,7 +156,7 @@ export default function PostPage() {
   const profileImage = (id: string) => {
     if (id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+        }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
       return newProfileImageUri;
     }
   };

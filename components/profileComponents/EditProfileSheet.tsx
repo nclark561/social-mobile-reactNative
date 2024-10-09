@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   View,
+  Platform
 } from "react-native";
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { ThemedView } from "../ThemedView";
@@ -55,7 +56,7 @@ const EditProfileSheet = ({
     });
 
     if (!result.canceled) {
-      setProfileImage(result.assets[0].uri);
+      setProfileImage(result.assets[0]);
     }
   };
 
@@ -69,10 +70,19 @@ const EditProfileSheet = ({
       const formData = new FormData();
 
       formData.append("image", {
+<<<<<<< HEAD
         uri: imageUri, 
         type: "image/jpg",
         name: `${myInfo.id}.jpg`,
       } as any);      
+=======
+        uri: imageUri, // The local URI of the image
+        type: profileImage.mimeType,
+        name: `${myInfo.id}`,
+      } as any)
+
+      // Make the POST request with fetch
+>>>>>>> 540ba52d145f6cb8a1744db85a3b7e009f7e9c80
       const uploadResponse = await fetch(`${getBaseUrl()}/api/supabase-s3?id=${myInfo.id}`, {
         method: "POST",
         body: formData,
@@ -84,7 +94,7 @@ const EditProfileSheet = ({
       const result = await uploadResponse.json();
       console.log("Upload successful:", result);
       setProfileImageUri(
-        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`
+        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}?${Date.now()}`
       );
       setProfileImage(null);
     } catch (error) {
@@ -96,7 +106,7 @@ const EditProfileSheet = ({
   }
 
   const handleSave = async () => {
-    if (profileImage) await uploadProfileImage(profileImage);
+    if (profileImage?.uri) await uploadProfileImage(profileImage.uri);
     updateUser(myInfo.email, links, location, bio, selectedColor);
     handleCloseEditProfile();
   };
@@ -128,7 +138,7 @@ const EditProfileSheet = ({
           <ThemedView style={{ flexDirection: "column", alignItems: "center" }}>
             <Image
               style={styles.profilePic}
-              source={{ uri: profileImage || currProfileImage }}
+              source={{ uri: profileImage?.uri || currProfileImage }}
               defaultSource={{ uri: mortyUrl }}
             />
             <TouchableOpacity
