@@ -69,22 +69,18 @@ const EditProfileSheet = ({
       const formData = new FormData();
 
       formData.append("image", {
-        uri: imageUri, // The local URI of the image
+        uri: imageUri, 
         type: "image/jpg",
         name: `${myInfo.id}.jpg`,
-      } as any);
-
-      // Make the POST request with fetch
+      } as any);      
       const uploadResponse = await fetch(`${getBaseUrl()}/api/supabase-s3?id=${myInfo.id}`, {
         method: "POST",
         body: formData,
-      });
-      // Check if the upload was successful
+      });      
       if (!uploadResponse.ok) {
-        const errorText = await uploadResponse.text(); // Get the error text if the response is not ok
+        const errorText = await uploadResponse.text(); 
         throw new Error(`Upload failed: ${errorText}`);
-      }
-      // Parse the JSON response from the server
+      }      
       const result = await uploadResponse.json();
       console.log("Upload successful:", result);
       setProfileImageUri(

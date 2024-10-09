@@ -145,11 +145,9 @@ export default function HomeScreen() {
                 <ThemedText style={styles.profileCardText}>
                   Connect with Kale on LinkedIn
                 </ThemedText>
-
                 <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/kaleck-hamm-692a54a1/')} style={[styles.profileButton]}>
                   <Text style={styles.buttonText}>Profile</Text>
                 </Pressable>
-
               </ThemedView>
               <ThemedView style={styles.profileCard}>
                 <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
@@ -290,8 +288,7 @@ const styles = StyleSheet.create({
     display: width > 600 ? 'flex' : 'none',
   },
   desktopHiddenBorder: {
-    display: width > 600 ? 'flex' : 'none',
-    
+    display: width > 600 ? 'flex' : 'none',    
     justifyContent: 'space-evenly',
     borderWidth: 1,
     borderColor: 'rgb(232,232,232)',
