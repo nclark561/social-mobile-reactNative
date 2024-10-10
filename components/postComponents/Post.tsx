@@ -83,9 +83,9 @@ export default function Post({
 
 
   const addLike = async (userId: string, postId: string) => {
-    setLiked((prevLiked) => !prevLiked); 
+    setLiked((prevLiked) => !prevLiked);
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
-    setOptimisticLike(updatedLikesCount); 
+    setOptimisticLike(updatedLikesCount);
 
     try {
       const test = await fetch(
@@ -273,25 +273,25 @@ export default function Post({
           name="ellipsis-horizontal"
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
-          onPress={handleOpenDeleteMenu} // Open the delete menu on click
+          onPress={handleOpenDeleteMenu}
         />
         <CustomBottomSheet
-          snapPercs={["30%"]}
-          ref={deleteMenuRef} // Reference for the delete menu
+          snapPercs={["20%"]}
+          ref={deleteMenuRef} 
         >
-          <ThemedView style={styles.deleteMenu}>
-            <Button
-              title="Delete Post"
-              color="red"
-              onPress={() => {
-                if (isComment) {
-                  deleteComment(post.id);
-                } else {
-                  deletePost(post.id);
-                }
-              }} // Delete the post on button press
-            />
-          </ThemedView>
+          <Pressable
+            style={styles.deleteButton}
+            onPress={() => {
+              if (isComment) {
+                deleteComment(post.id);
+              } else {
+                deletePost(post.id);
+              }
+            }}
+          >
+            <Text style={styles.deleteButtonText}>Delete Post</Text>
+          </Pressable>
+
         </CustomBottomSheet>
         <CustomBottomSheet
           snapPercs={["25%"]}
@@ -320,13 +320,15 @@ export default function Post({
           </ThemedView>
         </CustomBottomSheet>
         <CustomBottomSheet
-          snapPercs={["70%"]}
+          snapPercs={["20%, 40%"]}
           ref={commentModalRef}
           hideCancelButton
         >
           <ThemedView style={styles.commentContainer}>
             <ThemedView style={styles.buttonContainer}>
-              <Button title="Cancel" onPress={handleCloseComment}></Button>
+              <Pressable onPress={handleCloseComment} style={styles.cancelButton}>
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </Pressable>
               <Pressable
                 onPress={() => {
                   if (isComment) {
@@ -386,7 +388,7 @@ export default function Post({
                 multiline
                 placeholder="Post your reply"
                 style={[
-                  { paddingTop: 15, maxWidth: "80%" },
+                  { paddingTop: 15, maxWidth: "80%", width: '100%' },
                   colorScheme === "dark"
                     ? { color: "#bebebe" }
                     : { color: "#525252" },
@@ -395,7 +397,11 @@ export default function Post({
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
+<<<<<<< HEAD
+        <CustomBottomSheet snapPercs={["15%"]} ref={repostModalRef}>
+=======
         <CustomBottomSheet snapPercs={["25%"]} ref={repostModalRef}>
+>>>>>>> d9831b6890efcb93c925fa927f9aeda7ddd16418
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
@@ -498,14 +504,16 @@ const styles = StyleSheet.create({
   optionText: {
     marginLeft: 10,
     fontSize: 18,
+    padding: 10
   },
   commentContainer: {
     flexDirection: "column",
     paddingTop: 20,
+    width: '100%'
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     width: "100%",
     padding: 10,
   },
@@ -563,4 +571,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  
+  deleteButton: {
+    backgroundColor: '#ff4d4d', 
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+
 });

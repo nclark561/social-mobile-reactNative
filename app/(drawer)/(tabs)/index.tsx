@@ -98,6 +98,67 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.pageContainer}>
+<<<<<<< HEAD
+      <Header name="Posts" />
+      <Animated.ScrollView showsVerticalScrollIndicator={false}>
+        {Array.isArray(forYouPosts) &&
+          forYouPosts.map((post, i) => {
+            if (post.postId)
+              return (
+                <ThemedView key={post.id} style={{ flexDirection: "column" }}>
+                  <ThemedView style={styles.row}>
+                    <Ionicons name="git-compare-outline" size={15} color={colorScheme === 'dark' ? 'white' : 'black'} />
+                    <ThemedText style={styles.repost}>
+                      {post.user.username} Reposted
+                    </ThemedText>
+                  </ThemedView>
+                  <Post post={post.post} isComment={false} />
+                </ThemedView>
+              );
+
+            return <Post key={post.id} post={post} isComment={false} />;
+          })}
+      </Animated.ScrollView>
+      <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
+        <Ionicons size={30} color={"white"} name="add" />
+      </Pressable>
+      <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["30%, 55%"]}>
+        <ThemedView style={styles.commentContainer}>
+          <ThemedView style={styles.buttonContainer}>
+            <Pressable onPress={handleCloseNewPost} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                createPost(postInput, myInfo.username);
+                handleCloseNewPost();
+              }}
+              style={styles.postButton}
+            >
+              <Text style={styles.buttonText}>Post</Text>
+            </Pressable>
+          </ThemedView>
+          <ThemedView style={{ flexDirection: "row" }}>
+            <Image
+              style={styles.commentPic}
+              source={{
+                uri: `${profileImage(myInfo?.id)}`,
+              }}
+            />
+            <BottomSheetTextInput
+              autoFocus
+              onChangeText={(input) => setPostInput(input)}
+              multiline
+              placeholder="Type your post here"
+              style={[
+                styles.postInput,
+                colorScheme === "dark"
+                  ? { color: "#bebebe" }
+                  : { color: "#525252" },
+              ]}
+            />
+          </ThemedView>
+=======
       <ThemedView style={styles.desktopCenter}>
         {/* <Header name="Posts" /> */}
         <ThemedView style={styles.desktopRow}>
@@ -163,6 +224,7 @@ export default function HomeScreen() {
               <Projects/>
             </ThemedView>
           </ThemedView> */}
+>>>>>>> d9831b6890efcb93c925fa927f9aeda7ddd16418
         </ThemedView>
         <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
           <Ionicons size={30} color={"white"} name="add" />
@@ -233,6 +295,9 @@ const styles = StyleSheet.create({
   commentContainer: {
     flexDirection: "column",
     paddingTop: 20,
+    height: 'auto',
+    maxHeight: '90%',
+    width: '100%'
   },
   buttonContainer: {
     flexDirection: "row",
@@ -242,8 +307,8 @@ const styles = StyleSheet.create({
   },
   postButton: {
     borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     backgroundColor: "#26a7de",
   },
   buttonText: {
@@ -256,8 +321,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   postInput: {
-    maxWidth: "80%",
+    maxWidth: "100%",
     paddingTop: 15,
+    
   },
   repost: {
     fontSize: 12,
