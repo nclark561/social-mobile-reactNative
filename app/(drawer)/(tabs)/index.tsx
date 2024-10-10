@@ -100,11 +100,7 @@ export default function HomeScreen() {
     <ThemedView style={styles.pageContainer}>
       <ThemedView style={styles.desktopCenter}>
         {/* <Header name="Posts" /> */}
-        <ThemedView style={styles.desktopRow}>
-          {/* <ThemedView style={styles.column}>
-            <DesktopRouting />
-            <StackLogos />
-          </ThemedView> */}
+        <ThemedView style={styles.desktopRow}>      
           <ThemedView style={styles.postContainer}>
             <ThemedView style={styles.desktopHiddenFullscreen}>
               <ThemedView style={styles.row}>
@@ -136,33 +132,6 @@ export default function HomeScreen() {
                 })}
             </Animated.ScrollView>
           </ThemedView>
-          {/* <ThemedView>
-            <DesktopSuggestedProfiles />
-            <ThemedView style={styles.desktopHiddenBorder}>
-              <ThemedText style={styles.sectionHeader}>Connect with Us</ThemedText>
-              <ThemedView style={styles.profileCard}>
-                <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
-                <ThemedText style={styles.profileCardText}>
-                  Connect with Kale on LinkedIn
-                </ThemedText>
-
-                <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/kaleck-hamm-692a54a1/')} style={[styles.profileButton]}>
-                  <Text style={styles.buttonText}>Profile</Text>
-                </Pressable>
-
-              </ThemedView>
-              <ThemedView style={styles.profileCard}>
-                <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
-                <ThemedText style={styles.profileCardText}>
-                  Connect with Noah on LinkedIn
-                </ThemedText>
-                <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/noah-clark-62532426b/do ')} style={[styles.profileButton]}>
-                  <Text style={styles.buttonText}>Profile</Text>
-                </Pressable>
-              </ThemedView>
-              <Projects/>
-            </ThemedView>
-          </ThemedView> */}
         </ThemedView>
         <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
           <Ionicons size={30} color={"white"} name="add" />
@@ -261,7 +230,7 @@ const styles = StyleSheet.create({
   postInput: {
     maxWidth: "100%",
     paddingTop: 15,
-    
+
   },
   repost: {
     fontSize: 12,
@@ -294,14 +263,7 @@ const styles = StyleSheet.create({
   desktopHiddenFullscreen: {
     display: width > 600 ? 'flex' : 'none',
   },
-  desktopHiddenBorder: {
-    display: width > 600 ? 'flex' : 'none',
-    justifyContent: 'space-evenly',
-    borderWidth: 1,
-    borderColor: 'rgb(232,232,232)',
-    borderRadius: 10,
-    padding: 15
-  },
+
   desktopCenter: {
     width: width > 600 ? '80%' : '100%'
   },
@@ -355,6 +317,6 @@ const styles = StyleSheet.create({
   column: {
     display: 'flex',
     flexDirection: 'column',
-    
+
   }
 });

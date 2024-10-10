@@ -48,18 +48,26 @@ export default function RootLayout() {
             <MessageProvider>
               <PostProvider>
                 <SafeAreaView style={{ flex: 1, backgroundColor }}>
-                  <ThemedView style={styles.row}>
-                    <ThemedView style={styles.content}>
-                      <ThemedView style={styles.column}>
-                        <DesktopRouting />
-                        <StackLogos />
+                  {width > 1000 ? (
+                    <ThemedView style={styles.row}>
+                      <ThemedView style={styles.content}>
+                        <ThemedView style={styles.column}>
+                          <DesktopRouting />
+                          <StackLogos />
+                        </ThemedView>
+                        <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+                          <Stack.Screen name="(drawer)" />
+                        </Stack>
+                        <ThemedView style={styles.none}>
+                          <LinkedinProfiles />
+                        </ThemedView>
                       </ThemedView>
-                      <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-                        <Stack.Screen name="(drawer)" />
-                      </Stack>
-                      <LinkedinProfiles/>
                     </ThemedView>
-                  </ThemedView>
+                  ) : (
+                    <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+                      <Stack.Screen name="(drawer)" />
+                    </Stack>
+                  )}
                 </SafeAreaView>
               </PostProvider>
             </MessageProvider>
@@ -75,8 +83,12 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
 
   column: {
-    display: 'flex',
+    display: width > 1000 ? 'flex' : 'none',
     flexDirection: 'column',
+  },
+  none: {
+    display: width > 1000 ? 'flex' : 'none',
+    // flexDirection: 'column',
   },
   row: {
     display: 'flex',
