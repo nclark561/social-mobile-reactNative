@@ -1,56 +1,104 @@
 import {
-    DarkTheme,
-    DefaultTheme,
-    ThemeProvider,
-  } from "@react-navigation/native";
-  import { useFonts } from "expo-font";
-  import { Colors } from "@/constants/Colors";
-  import * as SplashScreen from "expo-splash-screen";
-  import { useEffect } from "react";
-  import "react-native-reanimated";
-  import { GestureHandlerRootView } from "react-native-gesture-handler";
-  import { useColorScheme } from "@/hooks/useColorScheme";
-  import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-  import { SafeAreaView } from "react-native";
-  import { Drawer } from "expo-router/drawer";
-  import MyCustomDrawer from "@/components/MyCustomDrawer";
-  import { useThemeColor } from "@/hooks/useThemeColor";
-  import { MyProvider } from "../../components/providers/MyContext";
-  import { PostProvider } from "../../components/providers/PostContext";
-  import { MessageProvider } from "@/components/providers/MessageContext";
-  import { NavigationContainer } from "@react-navigation/native";
-  
-  SplashScreen.preventAutoHideAsync();
-  
-  export default function RootLayout() {
-    const colorScheme = useColorScheme();
-  
-    // const [loaded] = useFonts({
-    //   SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    // });
-  
-    const backgroundColor = useThemeColor({}, "background");
-  
-    // useEffect(() => {
-    //   if (loaded) {
-    //     SplashScreen.hideAsync();
-    //   }
-    // }, [loaded]);
-  
-    // if (!loaded) {
-    //   return null;
-    // }
-  
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <MyProvider>
-              <MessageProvider>
-                <PostProvider>
-                  <SafeAreaView style={{ flex: 1, backgroundColor }}>
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Colors } from "@/constants/Colors";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { SafeAreaView, Platform, Dimensions } from "react-native";
+import { Drawer } from "expo-router/drawer";
+import { Stack } from "expo-router";
+import MyCustomDrawer from "@/components/MyCustomDrawer";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { MyProvider } from "../../components/providers/MyContext";
+import { PostProvider } from "../../components/providers/PostContext";
+import { MessageProvider } from "@/components/providers/MessageContext";
+
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
+  const colorScheme = useColorScheme();
+  const backgroundColor = useThemeColor({}, "background");
+
+  const windowWidth = Dimensions.get("window").width;
+  const isDesktop = Platform.OS === "web" && windowWidth >= 1024;
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <MyProvider>
+            <MessageProvider>
+              <PostProvider>
+                <SafeAreaView style={{ flex: 1, backgroundColor }}>
+                  {isDesktop ? (
+                    // Use Stack Navigator on desktop
+                    <Stack>
+                      <Stack.Screen
+                        name="(tabs)"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="settings"
+                        options={{
+                          title: "Settings",
+                        }}
+                      />
+                      <Stack.Screen
+                        name="login"
+                        options={{
+                          title: "Login",
+                        }}
+                      />
+                      <Stack.Screen
+                        name="conversation"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="index"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="post"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="profile"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="comment"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="MessageComponents"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                    </Stack>
+                  ) : (
+                    // Use Drawer Navigator on mobile and other platforms
                     <Drawer
                       drawerContent={(props) => <MyCustomDrawer {...props} />}
                     >
@@ -79,7 +127,7 @@ import {
                         name="conversation"
                         options={{
                           drawerLabel: () => null, // Hides it from the drawer
-                          drawerItemStyle: { display: "none" }, // Prevents it from appearing in the drawer
+                          drawerItemStyle: { display: "none" }, // Hides from drawer
                           headerShown: false,
                         }}
                       />
@@ -87,52 +135,50 @@ import {
                         name="index"
                         options={{
                           drawerLabel: () => null, // Hide index route
-                          drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
+                          drawerItemStyle: { display: "none" }, // Hides from drawer
                           headerShown: false,
                         }}
                       />
                       <Drawer.Screen
                         name="post"
                         options={{
-                          drawerLabel: () => null, // Hide index route
-                          drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
+                          drawerLabel: () => null, // Hide post route
+                          drawerItemStyle: { display: "none" }, // Hides from drawer
                           headerShown: false,
                         }}
                       />
                       <Drawer.Screen
                         name="profile"
                         options={{
-                          drawerLabel: () => null, // Hide index route
-                          drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
+                          drawerLabel: () => null, // Hide profile route
+                          drawerItemStyle: { display: "none" }, // Hides from drawer
                           headerShown: false,
                         }}
                       />
                       <Drawer.Screen
                         name="comment"
                         options={{
-                          drawerLabel: () => null, // Hide index route
-                          drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
+                          drawerLabel: () => null, // Hide comment route
+                          drawerItemStyle: { display: "none" }, // Hides from drawer
                           headerShown: false,
                         }}
-                      />                                   
+                      />
                       <Drawer.Screen
                         name="MessageComponents"
                         options={{
-                          drawerLabel: () => null, // Hide index route
-                          drawerItemStyle: { display: "none" }, // Prevents index route from appearing in the drawer
+                          drawerLabel: () => null, // Hide message components
+                          drawerItemStyle: { display: "none" }, // Hides from drawer
                           headerShown: false,
                         }}
                       />
                     </Drawer>
-                  </SafeAreaView>
-                </PostProvider>
-              </MessageProvider>
-            </MyProvider>
-          </ThemeProvider>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-    );
-  }
-  
-  
-  
+                  )}
+                </SafeAreaView>
+              </PostProvider>
+            </MessageProvider>
+          </MyProvider>
+        </ThemeProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
+  );
+}
