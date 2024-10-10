@@ -80,7 +80,7 @@ export default function HomeScreen() {
               return (
                 <ThemedView key={post.id} style={{ flexDirection: "column" }}>
                   <ThemedView style={styles.row}>
-                    <Ionicons name="git-compare-outline" size={15} color={colorScheme === 'dark' ? 'white' : 'black'}/>
+                    <Ionicons name="git-compare-outline" size={15} color={colorScheme === 'dark' ? 'white' : 'black'} />
                     <ThemedText style={styles.repost}>
                       {post.user.username} Reposted
                     </ThemedText>
@@ -95,10 +95,12 @@ export default function HomeScreen() {
       <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
         <Ionicons size={30} color={"white"} name="add" />
       </Pressable>
-      <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["95%"]}>
+      <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["30%, 55%"]}>
         <ThemedView style={styles.commentContainer}>
           <ThemedView style={styles.buttonContainer}>
-            <Button title="Cancel" onPress={handleCloseNewPost}></Button>
+            <Pressable onPress={handleCloseNewPost} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </Pressable>
             <Pressable
               onPress={() => {
                 createPost(postInput, myInfo.username);
@@ -154,6 +156,9 @@ const styles = StyleSheet.create({
   commentContainer: {
     flexDirection: "column",
     paddingTop: 20,
+    height: 'auto',
+    maxHeight: '90%',
+    width: '100%'
   },
   buttonContainer: {
     flexDirection: "row",
@@ -163,8 +168,8 @@ const styles = StyleSheet.create({
   },
   postButton: {
     borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     backgroundColor: "#26a7de",
   },
   buttonText: {
@@ -177,8 +182,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   postInput: {
-    maxWidth: "80%",
+    maxWidth: "100%",
     paddingTop: 15,
+    
   },
   repost: {
     fontSize: 12,
