@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Button,
   Pressable,
-  Image,
   useColorScheme,
   View,
   Text,
@@ -15,24 +14,26 @@ import MyContext from "../providers/MyContext";
 import { ScrollView } from "react-native-gesture-handler";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import PostContext from "../providers/PostContext";
+import { Image } from "expo-image";
 
 interface CommentBottomSheetProps {
   isComment?: boolean;
   post: any;
   commentModalRef: any;
+  user: any
 }
 
 const CommentBottomSheet = ({
   isComment,
   post,
   commentModalRef,
+  user
 }: CommentBottomSheetProps) => {
   const [commentInput, setCommentInput] = useState("");
   const { getUserPosts, posts, getBaseUrl } = useContext<any>(PostContext);
   const { myInfo } = useContext<any>(MyContext);
   const [profileImageUri, setProfileImageUri] = useState("");
-  const mortyUrl =
-    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
+  const [ userProfileImageUri, setUserProfileImageUri ] = useState('')
   const colorScheme = useColorScheme();
 
   const handleCloseComment = () => commentModalRef.current?.dismiss();
@@ -65,13 +66,20 @@ const CommentBottomSheet = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (myInfo?.id) {
-  //     const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
-  //     setProfileImageUri(newProfileImageUri);
-  //   }
-  // }, [myInfo]);
-
+  useEffect(() => {
+    if (myInfo?.id) {
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}?${Date.now()}`;
+      setProfileImageUri(newProfileImageUri);
+    }
+  }, [myInfo]);
+  useEffect(() => {
+    if (user?.id) {
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user.id}?${Date.now()}`;
+      setUserProfileImageUri(newProfileImageUri);
+    }
+  }, [user]);
+  const blurhash =  myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+  const blurhash2 =  user?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
   return (
     <CustomBottomSheet
       snapPercs={["70%"]}
@@ -105,8 +113,10 @@ const CommentBottomSheet = ({
           <Image
             style={styles.commentPic}
             source={{
-              uri: "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg",
+              uri: userProfileImageUri,
             }}
+            placeholder={{ blurhash: blurhash2 }}
+            transition={500}
           />
           <ThemedText style={styles.postUser}>{post?.userName}</ThemedText>
         </ThemedView>
@@ -120,8 +130,10 @@ const CommentBottomSheet = ({
           <Image
             style={styles.commentPic}
             source={{
-              uri: "https://avatars.githubusercontent.com/u/125314332?v=4",
+              uri: profileImageUri,
             }}
+            placeholder={{ blurhash }}
+            transition={500}
           />
           <BottomSheetTextInput
             autoFocus

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef } from "react";
-import { StyleSheet, Image, Button, Pressable, Text, View } from "react-native";
+import { StyleSheet, Button, Pressable, Text, View } from "react-native";
 import MyContext from "../providers/MyContext";
 import PostContext from "../providers/PostContext";
 import { ThemedText } from "../ThemedText";
@@ -12,6 +12,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Link, router } from "expo-router";
 import { Platform } from "react-native";
 import ProfileImage from "../ProfileImage";
+import { Image } from "expo-image";
 
 interface Post {
   id: string;
@@ -102,7 +103,7 @@ export default function Post({
           }),
         },
       );
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
     } catch (error) {
       console.log(error, "this is the add like error in post");
@@ -120,7 +121,7 @@ export default function Post({
           postId,
         }),
       });
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
     } catch (error) {
@@ -139,7 +140,7 @@ export default function Post({
           id,
         }),
       });
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
     } catch (error) {
@@ -178,7 +179,7 @@ export default function Post({
   const profileImage = (id: string) => {
     if (id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+        }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -195,14 +196,14 @@ export default function Post({
           postId,
         }),
       });
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
     } catch (error) {
       console.log(error, "this is the repost error in post");
     }
   };
-  const blurhash = isComment ? post.user.blurhash : post?.owner?.blurhash
-
+  const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash
+  const blurhash2 = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
       <ThemedView
@@ -359,6 +360,8 @@ export default function Post({
                 source={{
                   uri: `${profileImage(post?.owner?.id || post?.userId)}`,
                 }}
+                placeholder={{blurhash: blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'}}
+                transition={500}
               />
               <ThemedText style={styles.postUser}>
                 {post.email || post.userName}
@@ -376,6 +379,8 @@ export default function Post({
                 source={{
                   uri: `${profileImage(myInfo?.id)}`,
                 }}
+                placeholder={{blurhash: blurhash2}}
+                transition={500}
               />
               <BottomSheetTextInput
                 autoFocus
@@ -392,15 +397,20 @@ export default function Post({
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
+<<<<<<< HEAD
         <CustomBottomSheet snapPercs={["15%"]} ref={repostModalRef}>
+=======
+        <CustomBottomSheet snapPercs={["25%"]} ref={repostModalRef}>
+>>>>>>> d9831b6890efcb93c925fa927f9aeda7ddd16418
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
-            <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+            <ThemedView >
               <Pressable
                 onPress={() => {
                   repost(myInfo?.id, post.id);
                 }}
+                style={[styles.shareOption, { marginTop: 10 }]}
               >
                 <Ionicons
                   size={25}
@@ -410,7 +420,7 @@ export default function Post({
                 <ThemedText style={styles.optionText}>Repost</ThemedText>
               </Pressable>
             </ThemedView>
-            <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+            <ThemedView style={[styles.shareOption, { marginTop: 10, backgroundColor: 'transparent' }]}>
               <Ionicons
                 size={25}
                 name="pencil-outline"
@@ -489,7 +499,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: 10,
     width: "100%",
-    height: "40%",
+    height: "50%",
   },
   optionText: {
     marginLeft: 10,

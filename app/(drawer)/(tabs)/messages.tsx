@@ -1,18 +1,14 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import {
-  View,
   FlatList,
   TouchableOpacity,
   StyleSheet,
   useColorScheme,
-  Pressable,
   PanResponder,
   Animated,
   Dimensions,
-  Text,
   Platform,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import Test from "../../MessageComponents/Test";
 import MyContext from "@/components/providers/MyContext";
@@ -20,46 +16,20 @@ import { router, useFocusEffect } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import MessageContext from "@/components/providers/MessageContext";
-
-interface MessageData {
-  conversationId: string;
-  date: string;
-  id: string;
-  message: string;
-  status: string;
-  userName: string;
-  recipient?: string;
-  time: any;
-  userId: string;
-}
-
-interface User {
-  id: string;
-  username: string;
-}
-
-interface UserData {
-  user: User;
-}
-
-interface ConversationData {
-  id: string;
-  date: Date;
-  users: UserData[];
-  messages: MessageData[];
-}
+import DesktopRouting from "@/components/desktopComponents/desktopRouting";
+import StackLogos from "@/components/desktopComponents/stackLogos";
+import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
+import Projects from "@/components/desktopComponents/projects";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const MessageHome: React.FC = () => {
   const { deleteConvos, myUsername, getConvos, setMyConvos, myConvos } =
     useContext<any>(MessageContext);
-  const navigation = useNavigation();
   const context = useContext<any>(MyContext);
   const { myInfo } = context;
   const colorScheme = useColorScheme();
   const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
-  const deleteThreshold = -SCREEN_WIDTH / 3; // Threshold for deleting an item
 
   useFocusEffect(() => {
     const intervalId = setInterval(getConvos, 2000);
@@ -78,29 +48,50 @@ const MessageHome: React.FC = () => {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
-        <ThemedText style={styles.title}>Messages</ThemedText>
-      </ThemedView>
-      <FlatList
-        data={myConvos}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-      />
-      <ThemedView style={styles.center}>
-        {myConvos?.length > 1 ? null : (
-          <ThemedText>Create A Message</ThemedText>
-        )}
-        <TouchableOpacity
-          onPress={() => router.navigate("/MessageComponents/newChat")}
-        >
-          <Ionicons
-            name="add-circle-outline"
-            size={32}
-            color={colorScheme === "dark" ? "white" : "black"}
-          />
-        </TouchableOpacity>
+    <ThemedView style={styles.pageContainer}>
+      <ThemedView style={styles.desktopCenter}>
+        <ThemedView style={styles.desktopRow}>
+          {/* Left Column with DesktopRouting and StackLogos */}
+          <ThemedView style={styles.column}>
+            <DesktopRouting />
+            <StackLogos />
+          </ThemedView>
+
+          {/* Main Content Section */}
+          <ThemedView style={styles.mainContent}>
+            <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
+              <ThemedText style={styles.title}>Messages</ThemedText>
+            </ThemedView>
+            <FlatList
+              data={myConvos}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.list}
+            />
+            <ThemedView style={styles.center}>
+              {myConvos?.length > 1 ? null : (
+                <ThemedText>Create A Message</ThemedText>
+              )}
+              <TouchableOpacity
+                onPress={() => router.navigate("/MessageComponents/newChat")}
+              >
+                <Ionicons
+                  name="add-circle-outline"
+                  size={32}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+              </TouchableOpacity>
+            </ThemedView>
+          </ThemedView>
+
+          {/* Right Column with Suggested Profiles and Projects */}
+          <ThemedView style={styles.column}>
+            <DesktopSuggestedProfiles />
+            <ThemedView style={styles.desktopHiddenBorder}>
+              <Projects />
+            </ThemedView>
+          </ThemedView>
+        </ThemedView>
       </ThemedView>
     </ThemedView>
   );
@@ -158,10 +149,29 @@ const SwipeableItem = ({
   );
 };
 
+const { width } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
-  container: {
+  pageContainer: {
+    display: 'flex',
+    alignItems: 'center',
     flex: 1,
     paddingTop: 20,
+  },
+  desktopCenter: {
+    width: width > 600 ? '80%' : '100%',
+  },
+  desktopRow: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-evenly',
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  mainContent: {
+    width: width > 600 ? '40%' : '100%',
   },
   header: {
     flexDirection: "row",
@@ -193,9 +203,17 @@ const styles = StyleSheet.create({
     padding: 10,
     ...(Platform.OS === 'web' && {
       padding: 5
-    })
+    }),
   },
   list: {},
+  desktopHiddenBorder: {
+    display: width > 600 ? 'flex' : 'none',
+    justifyContent: 'space-evenly',
+    borderWidth: 1,
+    borderColor: 'rgb(232,232,232)',
+    borderRadius: 10,
+    padding: 15,
+  },
 });
 
 export default MessageHome;

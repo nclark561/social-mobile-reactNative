@@ -30,13 +30,9 @@ export default function Header({ name }: HeaderProps) {
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
 
-  
-
-  
-
   const profileImageUri = useMemo(() => {
     if (myInfo?.id) {
-      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`;
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}?${Date.now()}`;
     }
     return mortyUrl; // Fallback URL
   }, [myInfo?.id]);

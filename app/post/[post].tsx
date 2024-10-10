@@ -1,4 +1,4 @@
-import { StyleSheet, Button, Pressable, Text, View, Platform } from "react-native";
+import { StyleSheet, Button, Pressable, Text, View, Platform, Dimensions, Linking } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useContext, useCallback } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -16,6 +16,11 @@ import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 import Post from "@/components/postComponents/Post";
 import { useRoute } from '@react-navigation/native';
 import { Image } from "expo-image";
+import DesktopRouting from "@/components/desktopComponents/desktopRouting";
+import StackLogos from "@/components/desktopComponents/stackLogos";
+import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
+import Projects from "@/components/desktopComponents/projects";
+
 
 interface Post {
   id: string;
@@ -156,7 +161,7 @@ export default function PostPage() {
   const profileImage = (id: string) => {
     if (id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+        }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -164,169 +169,202 @@ export default function PostPage() {
   console.log(thisPost);
 
   return (
-    <ThemedView style={{ flex: 1 }}>
-      <ThemedView style={styles.icon}>
-        <Pressable>
-          <Link href="/(tabs)/">
-            <Ionicons
-              size={20}
-              name="arrow-back-outline"
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-          </Link>
-        </Pressable>
+    <ThemedView style={styles.realRow}>
+      <ThemedView style={styles.column}>
+        <DesktopRouting />
+        <StackLogos />
       </ThemedView>
-      <ThemedView
-        style={[
-          styles.mainPostContainer,
-          colorScheme === "dark"
-            ? { borderColor: "#525252" }
-            : { borderColor: "#bebebe" },
-        ]}
-      >
-        <ThemedView style={styles.postContent}>
-          <ThemedView style={styles.row}>
-            <ThemedView style={styles.flex}>
-              <Image
-                style={styles.mainProfilePic}
-                source={{ uri: `${profileImage(thisPost?.owner?.id)}` }}
-                placeholder={{blurhash}}
+      <ThemedView style={[styles.content, { flex: 1 }]}>
+        <ThemedView style={styles.icon}>
+          <Pressable>
+            <Link href="/(tabs)/">
+              <Ionicons
+                size={20}
+                name="arrow-back-outline"
+                color={colorScheme === "dark" ? "white" : "black"}
               />
-            </ThemedView>
-            <Link href={`/profile/${thisPost?.email}`}>
-              <ThemedText style={styles.postUser}>
-                {thisPost?.userName}
-              </ThemedText>
             </Link>
-          </ThemedView>
-          <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
-          <ThemedView style={styles.reactionsContainer}>
-            <ThemedView style={styles.smallRow}>
-              <Ionicons
-                size={15}
-                name="chatbubble-outline"
-                onPress={handleOpenComment}
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
-              <ThemedText style={styles.smallNumber}>
-                {thisPost?.comments?.length}
-              </ThemedText>
-            </ThemedView>
-            <Ionicons
-              size={15}
-              name="git-compare-outline"
-              onPress={handleOpenRepost}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-            <ThemedView style={styles.smallRow}>
-              <Ionicons
-                size={15}
-                name={
-                  isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
-                }
-                onPress={() => {
-                  addLike(myInfo?.id, thisPost?.id, false);
-                }}
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
-              <ThemedText style={styles.smallNumber}>
-                {thisPost?.likes?.length}
-              </ThemedText>
-            </ThemedView>
-            <Ionicons
-              size={15}
-              name="share-outline"
-              onPress={handleOpenShare}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-          </ThemedView>
+          </Pressable>
         </ThemedView>
-
-        <Ionicons
-          size={20}
-          name="ellipsis-horizontal"
-          style={styles.ellipsis}
-          onPress={handleOpenDeleteMenu} // Open delete menu on click
-          color={colorScheme === "dark" ? "white" : "black"}
-        />
-        <CustomBottomSheet
-          snapPercs={["25%"]}
-          ref={shareModalRef}
-          title="Share"
+        <ThemedView
+          style={[
+            styles.mainPostContainer,
+            colorScheme === "dark"
+              ? { borderColor: "#525252" }
+              : { borderColor: "#bebebe" },
+          ]}
         >
-          <ThemedView style={styles.shareContainer}>
-            <ThemedView style={styles.shareOption}>
-              <Ionicons
-                size={25}
-                name="mail-outline"
-                color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>
-                Send via Direct Message
-              </ThemedText>
+          <ThemedView style={styles.postContent}>
+            <ThemedView style={styles.row}>
+              <ThemedView style={styles.flex}>
+                <Image
+                  style={styles.mainProfilePic}
+                  source={{ uri: `${profileImage(thisPost?.owner?.id)}` }}
+                  placeholder={{ blurhash }}
+                />
+              </ThemedView>
+              <Link href={`/profile/${thisPost?.email}`}>
+                <ThemedText style={styles.postUser}>
+                  {thisPost?.userName}
+                </ThemedText>
+              </Link>
             </ThemedView>
-            <ThemedView style={styles.shareOption}>
+            <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
+            <ThemedView style={styles.reactionsContainer}>
+              <ThemedView style={styles.smallRow}>
+                <Ionicons
+                  size={15}
+                  name="chatbubble-outline"
+                  onPress={handleOpenComment}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+                <ThemedText style={styles.smallNumber}>
+                  {thisPost?.comments?.length}
+                </ThemedText>
+              </ThemedView>
               <Ionicons
-                size={25}
-                name="copy-outline"
-                color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>Copy Link</ThemedText>
-            </ThemedView>
-          </ThemedView>
-        </CustomBottomSheet>
-        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} />
-        <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
-          <ThemedView
-            style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
-          >
-            <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
-              <Ionicons
-                size={25}
+                size={15}
                 name="git-compare-outline"
+                onPress={handleOpenRepost}
                 color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>Repost</ThemedText>
-            </ThemedView>
-            <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+              />
+              <ThemedView style={styles.smallRow}>
+                <Ionicons
+                  size={15}
+                  name={
+                    isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
+                  }
+                  onPress={() => {
+                    addLike(myInfo?.id, thisPost?.id, false);
+                  }}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+                <ThemedText style={styles.smallNumber}>
+                  {thisPost?.likes?.length}
+                </ThemedText>
+              </ThemedView>
               <Ionicons
-                size={25}
-                name="pencil-outline"
+                size={15}
+                name="share-outline"
+                onPress={handleOpenShare}
                 color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>Quote</ThemedText>
+              />
             </ThemedView>
           </ThemedView>
-        </CustomBottomSheet>
 
-        {/* Delete Menu */}
-        <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
-          <ThemedView style={styles.deleteContainer}>
-            <Button
-              title="Delete Post"
-              color="red"
-              onPress={() => {
-                deletePost(thisPost?.id);
-                deleteMenuRef.current?.dismiss();
-              }}
-            />
-          </ThemedView>
-        </CustomBottomSheet>
-      </ThemedView>
-      {thisPost?.comments?.map((comment: any) => {
-        console.log(comment)
-        return (
-          <Post
-            key={comment.id}
-            isComment
-            post={comment}
-            user={myInfo?.email}
+          <Ionicons
+            size={20}
+            name="ellipsis-horizontal"
+            style={styles.ellipsis}
+            onPress={handleOpenDeleteMenu} // Open delete menu on click
+            color={colorScheme === "dark" ? "white" : "black"}
           />
-        );
-      })}
+          <CustomBottomSheet
+            snapPercs={["25%"]}
+            ref={shareModalRef}
+            title="Share"
+          >
+            <ThemedView style={styles.shareContainer}>
+              <ThemedView style={styles.shareOption}>
+                <Ionicons
+                  size={25}
+                  name="mail-outline"
+                  color={colorScheme === "dark" ? "white" : "black"}
+                ></Ionicons>
+                <ThemedText style={styles.optionText}>
+                  Send via Direct Message
+                </ThemedText>
+              </ThemedView>
+              <ThemedView style={styles.shareOption}>
+                <Ionicons
+                  size={25}
+                  name="copy-outline"
+                  color={colorScheme === "dark" ? "white" : "black"}
+                ></Ionicons>
+                <ThemedText style={styles.optionText}>Copy Link</ThemedText>
+              </ThemedView>
+            </ThemedView>
+          </CustomBottomSheet>
+          <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} user={thisPost?.owner} />
+          <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
+            <ThemedView
+              style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
+            >
+              <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+                <Ionicons
+                  size={25}
+                  name="git-compare-outline"
+                  color={colorScheme === "dark" ? "white" : "black"}
+                ></Ionicons>
+                <ThemedText style={styles.optionText}>Repost</ThemedText>
+              </ThemedView>
+              <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+                <Ionicons
+                  size={25}
+                  name="pencil-outline"
+                  color={colorScheme === "dark" ? "white" : "black"}
+                ></Ionicons>
+                <ThemedText style={styles.optionText}>Quote</ThemedText>
+              </ThemedView>
+            </ThemedView>
+          </CustomBottomSheet>
+
+          {/* Delete Menu */}
+          <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
+            <ThemedView style={styles.deleteContainer}>
+              <Button
+                title="Delete Post"
+                color="red"
+                onPress={() => {
+                  deletePost(thisPost?.id);
+                  deleteMenuRef.current?.dismiss();
+                }}
+              />
+            </ThemedView>
+          </CustomBottomSheet>
+        </ThemedView>
+        {thisPost?.comments?.map((comment: any) => {
+          console.log(comment)
+          return (
+            <Post
+              key={comment.id}
+              isComment
+              post={comment}
+              user={myInfo?.email}
+            />
+          );
+        })}
+      </ThemedView>
+      <ThemedView>
+        <DesktopSuggestedProfiles />
+        <ThemedView style={styles.desktopHiddenBorder}>
+          <ThemedText style={styles.sectionHeader}>Connect with Us</ThemedText>
+          <ThemedView style={styles.profileCard}>
+            <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
+            <ThemedText style={styles.profileCardText}>
+              Connect with Kale on LinkedIn
+            </ThemedText>
+            <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/kaleck-hamm-692a54a1/')} style={[styles.profileButton]}>
+              <Text style={styles.buttonText}>Profile</Text>
+            </Pressable>
+          </ThemedView>
+          <ThemedView style={styles.profileCard}>
+            <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
+            <ThemedText style={styles.profileCardText}>
+              Connect with Noah on LinkedIn
+            </ThemedText>
+            <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/noah-clark-62532426b/do ')} style={[styles.profileButton]}>
+              <Text style={styles.buttonText}>Profile</Text>
+            </Pressable>
+          </ThemedView>
+          <Projects />
+        </ThemedView>
+      </ThemedView>
     </ThemedView>
   );
 }
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   postContainer: {
@@ -468,6 +506,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  realRow: {
+    display: "flex",
+    flexDirection: "row",
+    
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  content: {
+    width: '30%'
+  },
   icon: {
     padding: 10,
   },
@@ -476,5 +526,44 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: "100%",
+  },
+  desktopHiddenBorder: {
+    display: width > 600 ? 'flex' : 'none',
+    justifyContent: 'space-evenly',
+    borderWidth: 1,
+    borderColor: 'rgb(232,232,232)',
+    borderRadius: 10,
+    padding: 15
+  },
+  sectionHeader: {
+    textAlign: 'center',
+    fontWeight: '800',
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  profileCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    borderRadius: 8,
+    marginVertical: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  profileCardText: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  profileButton: {
+    backgroundColor: 'rgb(38,102,193)', // LinkedIn Blue
+    padding: 5,
+    margin: 5,
+    borderRadius: 5,
   },
 });

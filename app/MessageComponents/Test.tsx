@@ -26,7 +26,7 @@ const Test = (props: TestProps) => {
   const { myUsername, myInfo } = useContext<any>(MyContext);
   const colorScheme = useColorScheme();
   const [imageUri, setImageUri] = useState(
-    `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${props.user.id}.jpg?${Date.now()}`,
+    `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${props.user.id}?${Date.now()}`,
   );
   const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const color = colorScheme === "dark" ? "white" : "black";

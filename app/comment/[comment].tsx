@@ -141,7 +141,7 @@ export default function CommentPage() {
 
   useEffect(() => {
     if (thisPost) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}?${Date.now()}`;
       setProfileImageUri(newProfileImageUri);
     }
   }, [thisPost]);
@@ -252,7 +252,7 @@ export default function CommentPage() {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} />
+        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} user={thisPost.user}/>
         <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
