@@ -252,7 +252,7 @@ export default function CommentPage() {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} user={thisPost.user}/>
+        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} user={thisPost?.user}/>
         <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}

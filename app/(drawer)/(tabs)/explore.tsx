@@ -75,13 +75,6 @@ export default function TabTwoScreen() {
     <ThemedView style={styles.pageContainer}>
       <ThemedView style={styles.desktopCenter}>
         <ThemedView style={styles.desktopRow}>
-          {/* Left Column with DesktopRouting and StackLogos */}
-          <ThemedView style={styles.column}>
-            <DesktopRouting />
-            <StackLogos />
-          </ThemedView>
-
-          {/* Main Content Section */}
           <ThemedView style={styles.mainContent}>
             <ThemedView style={styles.header}>
               {loggedIn ? (
@@ -140,17 +133,6 @@ export default function TabTwoScreen() {
               </>
             )}
           </ThemedView>
-
-          {/* Right Column with Suggested Profiles and Projects */}
-          <ThemedView style={styles.column}>
-            <DesktopSuggestedProfiles />
-
-            
-            <ThemedView style={styles.desktopHiddenBorder}>
-              <ThemedText style={styles.sectionHeader}>Connect with Us</ThemedText>
-              <Projects />
-            </ThemedView>
-          </ThemedView>
         </ThemedView>
       </ThemedView>
     </ThemedView>
@@ -178,7 +160,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   mainContent: {
-    width: width > 600 ? '40%' : '100%',
+    width: width > 600 ? '100%' : '100%',
   },
   header: {
     flexDirection: "row",

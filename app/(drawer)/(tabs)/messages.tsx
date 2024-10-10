@@ -50,14 +50,7 @@ const MessageHome: React.FC = () => {
   return (
     <ThemedView style={styles.pageContainer}>
       <ThemedView style={styles.desktopCenter}>
-        <ThemedView style={styles.desktopRow}>
-          {/* Left Column with DesktopRouting and StackLogos */}
-          <ThemedView style={styles.column}>
-            <DesktopRouting />
-            <StackLogos />
-          </ThemedView>
-
-          {/* Main Content Section */}
+        <ThemedView style={styles.desktopRow}>          
           <ThemedView style={styles.mainContent}>
             <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
               <ThemedText style={styles.title}>Messages</ThemedText>
@@ -81,14 +74,6 @@ const MessageHome: React.FC = () => {
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
               </TouchableOpacity>
-            </ThemedView>
-          </ThemedView>
-
-          {/* Right Column with Suggested Profiles and Projects */}
-          <ThemedView style={styles.column}>
-            <DesktopSuggestedProfiles />
-            <ThemedView style={styles.desktopHiddenBorder}>
-              <Projects />
             </ThemedView>
           </ThemedView>
         </ThemedView>
@@ -171,7 +156,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   mainContent: {
-    width: width > 600 ? '40%' : '100%',
+    width: width > 600 ? '100%' : '100%',
   },
   header: {
     flexDirection: "row",

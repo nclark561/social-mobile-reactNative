@@ -98,67 +98,6 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.pageContainer}>
-<<<<<<< HEAD
-      <Header name="Posts" />
-      <Animated.ScrollView showsVerticalScrollIndicator={false}>
-        {Array.isArray(forYouPosts) &&
-          forYouPosts.map((post, i) => {
-            if (post.postId)
-              return (
-                <ThemedView key={post.id} style={{ flexDirection: "column" }}>
-                  <ThemedView style={styles.row}>
-                    <Ionicons name="git-compare-outline" size={15} color={colorScheme === 'dark' ? 'white' : 'black'} />
-                    <ThemedText style={styles.repost}>
-                      {post.user.username} Reposted
-                    </ThemedText>
-                  </ThemedView>
-                  <Post post={post.post} isComment={false} />
-                </ThemedView>
-              );
-
-            return <Post key={post.id} post={post} isComment={false} />;
-          })}
-      </Animated.ScrollView>
-      <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
-        <Ionicons size={30} color={"white"} name="add" />
-      </Pressable>
-      <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["30%, 55%"]}>
-        <ThemedView style={styles.commentContainer}>
-          <ThemedView style={styles.buttonContainer}>
-            <Pressable onPress={handleCloseNewPost} style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                createPost(postInput, myInfo.username);
-                handleCloseNewPost();
-              }}
-              style={styles.postButton}
-            >
-              <Text style={styles.buttonText}>Post</Text>
-            </Pressable>
-          </ThemedView>
-          <ThemedView style={{ flexDirection: "row" }}>
-            <Image
-              style={styles.commentPic}
-              source={{
-                uri: `${profileImage(myInfo?.id)}`,
-              }}
-            />
-            <BottomSheetTextInput
-              autoFocus
-              onChangeText={(input) => setPostInput(input)}
-              multiline
-              placeholder="Type your post here"
-              style={[
-                styles.postInput,
-                colorScheme === "dark"
-                  ? { color: "#bebebe" }
-                  : { color: "#525252" },
-              ]}
-            />
-          </ThemedView>
-=======
       <ThemedView style={styles.desktopCenter}>
         {/* <Header name="Posts" /> */}
         <ThemedView style={styles.desktopRow}>
@@ -224,7 +163,6 @@ export default function HomeScreen() {
               <Projects/>
             </ThemedView>
           </ThemedView> */}
->>>>>>> d9831b6890efcb93c925fa927f9aeda7ddd16418
         </ThemedView>
         <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
           <Ionicons size={30} color={"white"} name="add" />
@@ -331,7 +269,7 @@ const styles = StyleSheet.create({
   },
   row: {
     display: "flex",
-    width: "40%",
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     marginLeft: 5,
@@ -358,7 +296,6 @@ const styles = StyleSheet.create({
   },
   desktopHiddenBorder: {
     display: width > 600 ? 'flex' : 'none',
-    
     justifyContent: 'space-evenly',
     borderWidth: 1,
     borderColor: 'rgb(232,232,232)',
@@ -369,7 +306,7 @@ const styles = StyleSheet.create({
     width: width > 600 ? '80%' : '100%'
   },
   postContainer: {
-    width: width > 600 ? '40%' : '100%'
+    width: width > 600 ? '100%' : '100%'
   },
   iconRow: {
     display: 'flex',

@@ -397,11 +397,7 @@ export default function Post({
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-<<<<<<< HEAD
-        <CustomBottomSheet snapPercs={["15%"]} ref={repostModalRef}>
-=======
         <CustomBottomSheet snapPercs={["25%"]} ref={repostModalRef}>
->>>>>>> d9831b6890efcb93c925fa927f9aeda7ddd16418
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >

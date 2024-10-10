@@ -169,11 +169,7 @@ export default function PostPage() {
   console.log(thisPost);
 
   return (
-    <ThemedView style={styles.realRow}>
-      <ThemedView style={styles.column}>
-        <DesktopRouting />
-        <StackLogos />
-      </ThemedView>
+    <ThemedView style={styles.realRow}>      
       <ThemedView style={[styles.content, { flex: 1 }]}>
         <ThemedView style={styles.icon}>
           <Pressable>
@@ -334,32 +330,7 @@ export default function PostPage() {
             />
           );
         })}
-      </ThemedView>
-      <ThemedView>
-        <DesktopSuggestedProfiles />
-        <ThemedView style={styles.desktopHiddenBorder}>
-          <ThemedText style={styles.sectionHeader}>Connect with Us</ThemedText>
-          <ThemedView style={styles.profileCard}>
-            <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
-            <ThemedText style={styles.profileCardText}>
-              Connect with Kale on LinkedIn
-            </ThemedText>
-            <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/kaleck-hamm-692a54a1/')} style={[styles.profileButton]}>
-              <Text style={styles.buttonText}>Profile</Text>
-            </Pressable>
-          </ThemedView>
-          <ThemedView style={styles.profileCard}>
-            <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
-            <ThemedText style={styles.profileCardText}>
-              Connect with Noah on LinkedIn
-            </ThemedText>
-            <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/noah-clark-62532426b/do ')} style={[styles.profileButton]}>
-              <Text style={styles.buttonText}>Profile</Text>
-            </Pressable>
-          </ThemedView>
-          <Projects />
-        </ThemedView>
-      </ThemedView>
+      </ThemedView>      
     </ThemedView>
   );
 }
@@ -509,7 +480,8 @@ const styles = StyleSheet.create({
   realRow: {
     display: "flex",
     flexDirection: "row",
-    
+    height: '100%',
+    padding: 10
   },
   column: {
     display: 'flex',

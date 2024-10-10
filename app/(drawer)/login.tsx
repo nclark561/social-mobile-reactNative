@@ -14,24 +14,14 @@ export default function Login() {
   return (
     <ThemedView style={styles.pageContainer}>
       <ThemedView style={styles.desktopCenter}>
-        <ThemedView style={styles.desktopRow}>          
-          <ThemedView style={styles.column}>
-            <DesktopRouting />
-            <StackLogos />
-          </ThemedView>          
+        <ThemedView style={styles.desktopRow}>               
           <ThemedView style={styles.mainContent}>
             {login ? (
               <SignIn setLogin={setLogin} />
             ) : (
               <CreateAccount setLoginToggle={setLogin} />
             )}
-          </ThemedView>
-          <ThemedView style={styles.column}>
-            <DesktopSuggestedProfiles />
-            <ThemedView style={styles.desktopHiddenBorder}>
-              <Projects />
-            </ThemedView>
-          </ThemedView>
+          </ThemedView>          
         </ThemedView>
       </ThemedView>
     </ThemedView>
@@ -56,7 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   mainContent: {
-    width: Dimensions.get('window').width > 600 ? '40%' : '100%',
+    width: Dimensions.get('window').width > 600 ? '100%' : '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -17,6 +17,7 @@ import DesktopRouting from "@/components/desktopComponents/desktopRouting";
 import StackLogos from "@/components/desktopComponents/stackLogos";
 import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
 import Projects from "@/components/desktopComponents/projects";
+import LinkedinProfiles from "@/components/desktopComponents/linkedinProfiles";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -56,10 +57,7 @@ export default function RootLayout() {
                       <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
                         <Stack.Screen name="(drawer)" />
                       </Stack>
-                      <ThemedView style={styles.column}>
-                        <DesktopSuggestedProfiles />
-                        <Projects />
-                      </ThemedView>
+                      <LinkedinProfiles/>
                     </ThemedView>
                   </ThemedView>
                 </SafeAreaView>

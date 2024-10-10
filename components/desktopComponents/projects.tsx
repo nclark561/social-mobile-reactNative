@@ -15,15 +15,15 @@ export default function Projects() {
         return null;
     }
 
-    return (    
+    return (
         <ThemedView style={styles.desktopHiddenBorder}>
-            <ThemedText style={{ textAlign: 'center', fontWeight: '600', fontSize: 16 }}>Other Projects</ThemedText>                        
+            <ThemedText style={{ textAlign: 'center', fontWeight: '600', fontSize: 16 }}>Other Projects</ThemedText>
             <View style={styles.videoContainer}>
                 <iframe
                     width="100%"
                     height="315"
                     src="https://www.youtube.com/embed/nK6ggr6-on0"
-                    title="YouTube video player"                    
+                    title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                 ></iframe>
@@ -45,9 +45,7 @@ const styles = StyleSheet.create({
     },
     desktopHiddenBorder: {
         display: width > 600 ? 'flex' : 'none',
-        height: '50%',
         justifyContent: 'space-evenly',
-        borderWidth: 1,
         borderColor: 'rgb(232,232,232)',
         borderRadius: 10,
         padding: 15,

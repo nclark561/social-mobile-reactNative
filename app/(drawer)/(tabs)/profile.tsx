@@ -128,11 +128,7 @@ export default function TabTwoScreen() {
   return (
     <ThemedView style={[{ flex: 1 }, Platform.OS === 'web' ? { marginTop: 0 } : { marginTop: -70 }, styles.pageContainer]}>
       <ThemedView style={styles.desktopCenter}>
-        <ThemedView style={styles.desktopRow}>
-          <ThemedView style={styles.realColumn}>
-            <DesktopRouting />
-            <StackLogos />
-          </ThemedView>
+        <ThemedView style={styles.desktopRow}>          
           <ThemedView style={styles.contentMiddle}>
             <ThemedView style={styles.header}>
               <ThemedView style={styles.close}>
@@ -260,31 +256,7 @@ export default function TabTwoScreen() {
             currProfileImage={profileImageUri}
             editProfileRef={editProfileRef}
           /> */}
-          <ThemedView>
-            <DesktopSuggestedProfiles />
-            <ThemedView style={styles.desktopHiddenBorder}>
-              <ThemedText style={styles.sectionHeader}>Connect with Us</ThemedText>
-              <ThemedView style={styles.profileCard}>
-                <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
-                <ThemedText style={styles.profileCardText}>
-                  Connect with Kale on LinkedIn
-                </ThemedText>
-                <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/kaleck-hamm-692a54a1/')} style={[styles.profileButton]}>
-                  <Text style={styles.buttonText}>Profile</Text>
-                </Pressable>
-              </ThemedView>
-              <ThemedView style={styles.profileCard}>
-                <Ionicons name="logo-linkedin" size={24} color="#0077B5" />
-                <ThemedText style={styles.profileCardText}>
-                  Connect with Noah on LinkedIn
-                </ThemedText>
-                <Pressable onPress={() => Linking.openURL('https://www.linkedin.com/in/noah-clark-62532426b/do ')} style={[styles.profileButton]}>
-                  <Text style={styles.buttonText}>Profile</Text>
-                </Pressable>
-              </ThemedView>
-              <Projects />
-            </ThemedView>
-          </ThemedView>
+        
         </ThemedView>
       </ThemedView>
     </ThemedView>
@@ -321,7 +293,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "40%",
+    width: width > 1000 ? '100%' : '40%',
     paddingLeft: 10,
   },
   close: {
@@ -360,7 +332,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   contentMiddle: {
-    width: '49.5%'
+    width: width > 1000 ? '100%' : '49.5%'
   },
   row: {
     display: "flex",
