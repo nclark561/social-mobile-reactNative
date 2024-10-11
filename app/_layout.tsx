@@ -65,7 +65,7 @@ export default function RootLayout() {
                     </ThemedView>
                   ) : (
                     <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-                      <Stack.Screen name="(drawer)" />
+                      <Stack.Screen name="(drawer)"/>
                     </Stack>
                   )}
                 </SafeAreaView>

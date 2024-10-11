@@ -128,7 +128,7 @@ export default function TabTwoScreen() {
   return (
     <ThemedView style={[{ flex: 1 }, Platform.OS === 'web' ? { marginTop: 0 } : { marginTop: -70 }, styles.pageContainer]}>
       <ThemedView style={styles.desktopCenter}>
-        <ThemedView style={styles.desktopRow}>          
+        <ThemedView style={styles.desktopRow}>
           <ThemedView style={styles.contentMiddle}>
             <ThemedView style={styles.header}>
               <ThemedView style={styles.close}>
@@ -249,14 +249,12 @@ export default function TabTwoScreen() {
 
             </ThemedView>}
           </ThemedView>
-
-          {/* <ThemedView style={styles.content}>{renderContent()}</ThemedView>
+          <ThemedView style={styles.content}>{renderContent()}</ThemedView>
           <EditProfileSheet
             setProfileImageUri={setProfileImageUri}
             currProfileImage={profileImageUri}
             editProfileRef={editProfileRef}
-          /> */}
-        
+          />
         </ThemedView>
       </ThemedView>
     </ThemedView>
@@ -276,7 +274,8 @@ const styles = StyleSheet.create({
     borderColor: "#525252",
   },
   profilePic: {
-    borderRadius: 25,
+    borderRadius: 25,    
+    margin: 5,
     // marginTop: width < 700 ? 0 : 60,
     width: 55,
     height: 55,
@@ -293,7 +292,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: width > 1000 ? '100%' : '40%',
+    width: width > 1000 ? '100%' : '35%',
     paddingLeft: 10,
   },
   close: {
@@ -332,7 +331,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   contentMiddle: {
-    width: width > 1000 ? '100%' : '49.5%'
+    width: '100%'
   },
   row: {
     display: "flex",
@@ -391,7 +390,7 @@ const styles = StyleSheet.create({
 
   },
   desktopHiddenBorder: {
-    display: width > 600 ? 'flex' : 'none',
+    display: width > 600 ? 'flex' : 'none',    
     justifyContent: 'space-evenly',
     borderWidth: 1,
     borderColor: 'rgb(232,232,232)',
@@ -431,7 +430,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   desktopRow: {
-    flexDirection: 'row',
+    flexDirection: width > 600 ? 'row' : 'column',
     width: '100%',
     justifyContent: 'space-evenly'
   },

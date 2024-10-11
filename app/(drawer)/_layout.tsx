@@ -99,7 +99,6 @@ export default function RootLayout() {
                       />
                     </Stack>
                   ) : (
-                    // Use Drawer Navigator on mobile and other platforms
                     <Drawer
                       drawerContent={(props) => <MyCustomDrawer {...props} />}
                     >
@@ -127,48 +126,48 @@ export default function RootLayout() {
                       <Drawer.Screen
                         name="conversation"
                         options={{
-                          drawerLabel: () => null, // Hides it from the drawer
-                          drawerItemStyle: { display: "none" }, // Hides from drawer
+                          drawerLabel: () => null,
+                          drawerItemStyle: { display: "none" },
                           headerShown: false,
                         }}
                       />
                       <Drawer.Screen
                         name="index"
                         options={{
-                          drawerLabel: () => null, // Hide index route
-                          drawerItemStyle: { display: "none" }, // Hides from drawer
+                          drawerLabel: () => null,
+                          drawerItemStyle: { display: "none" },
                           headerShown: false,
                         }}
                       />
                       <Drawer.Screen
                         name="post"
                         options={{
-                          drawerLabel: () => null, // Hide post route
-                          drawerItemStyle: { display: "none" }, // Hides from drawer
+                          drawerLabel: () => null,
+                          drawerItemStyle: { display: "none" },
                           headerShown: false,
                         }}
                       />
                       <Drawer.Screen
                         name="profile"
                         options={{
-                          drawerLabel: () => null, // Hide profile route
-                          drawerItemStyle: { display: "none" }, // Hides from drawer
+                          drawerLabel: () => null,
+                          drawerItemStyle: { display: "none" },
                           headerShown: false,
                         }}
                       />
                       <Drawer.Screen
                         name="comment"
                         options={{
-                          drawerLabel: () => null, // Hide comment route
-                          drawerItemStyle: { display: "none" }, // Hides from drawer
+                          drawerLabel: () => null,
+                          drawerItemStyle: { display: "none" },
                           headerShown: false,
                         }}
                       />
                       <Drawer.Screen
                         name="MessageComponents"
                         options={{
-                          drawerLabel: () => null, // Hide message components
-                          drawerItemStyle: { display: "none" }, // Hides from drawer
+                          drawerLabel: () => null,
+                          drawerItemStyle: { display: "none" },
                           headerShown: false,
                         }}
                       />

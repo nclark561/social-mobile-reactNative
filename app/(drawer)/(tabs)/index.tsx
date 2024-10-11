@@ -98,9 +98,9 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.pageContainer}>
-      <ThemedView style={styles.desktopCenter}>
-        {/* <Header name="Posts" /> */}
-        <ThemedView style={styles.desktopRow}>      
+      <Header name={'Welcome'}/>
+      <ThemedView style={styles.desktopCenter}>        
+        <ThemedView style={styles.desktopRow}>
           <ThemedView style={styles.postContainer}>
             <ThemedView style={styles.desktopHiddenFullscreen}>
               <ThemedView style={styles.repostedRow}>
@@ -120,7 +120,7 @@ export default function HomeScreen() {
                     return (
                       <ThemedView style={{ flexDirection: "column", display: 'flex', justifyContent: 'center' }}>
                         <ThemedView style={styles.repostedRow}>
-                          <Ionicons style={{padding: 5, marginTop: 5}} name="git-compare-outline" size={15} />
+                          <Ionicons style={{ padding: 5, marginTop: 5 }} name="git-compare-outline" size={15} />
                           <ThemedText style={styles.repost}>
                             {post.user.username} Reposted
                           </ThemedText>
@@ -133,9 +133,7 @@ export default function HomeScreen() {
             </Animated.ScrollView>
           </ThemedView>
         </ThemedView>
-        <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
-          <Ionicons size={30} color={"white"} name="add" />
-        </Pressable>
+
         <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["95%"]}>
           <ThemedView style={styles.commentContainer}>
             <ThemedView style={styles.buttonContainer}>
@@ -173,6 +171,9 @@ export default function HomeScreen() {
           </ThemedView>
         </CustomBottomSheet>
       </ThemedView>
+      <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
+        <Ionicons size={30} color={"white"} name="add" />
+      </Pressable>
     </ThemedView>
   );
 }
@@ -184,8 +185,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1,
     display: 'flex',
-    alignItems: 'center',
-    width: '100%'
+    alignItems: 'center',   
   },
   addButton: {
     display: width > 600 ? 'none' : 'flex',
