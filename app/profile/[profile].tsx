@@ -55,10 +55,11 @@ export default function ExternalProfile() {
 
   useEffect(() => {
     if (user?.id) {
-      const newProfileImageUri = `${getBaseUrl()}/storage/v1/object/public/profile-images/${user?.id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user?.id}?${Date.now()}`;
+      console.log(newProfileImageUri)
       setProfileImageUri(newProfileImageUri);
     }
-  }, [myInfo]);
+  }, [user]);
 
   const getUser = async () => {
     try {
@@ -78,8 +79,8 @@ export default function ExternalProfile() {
     }
   };
 
-  
-  
+
+
 
   const renderContent = () => {
     switch (selectedOption) {
@@ -88,7 +89,7 @@ export default function ExternalProfile() {
           <ThemedView>
             {Array.isArray(user?.posts) &&
               user?.posts?.map((post: any) => {
-                return <Post key={post?.id} post={post} user={myInfo?.email}  />;
+                return <Post key={post?.id} post={post} user={user?.id} />;
               })}
           </ThemedView>
         );
@@ -105,8 +106,7 @@ export default function ExternalProfile() {
                   </ThemedText>
                 </ThemedView>
               );
-            })}
-            <ThemedText>kale</ThemedText>
+            })}            
           </ThemedView>
         );
       default:
@@ -158,8 +158,8 @@ export default function ExternalProfile() {
         <ThemedView
           style={[styles.icon, { backgroundColor: `${user?.color}` }]}
         >
-          <Pressable onPress={() => {router.back()}}>            
-              <Ionicons size={25} name="arrow-back-outline" />            
+          <Pressable onPress={() => { router.back() }}>
+            <Ionicons size={25} name="arrow-back-outline" />
           </Pressable>
         </ThemedView>
         <ThemedView
@@ -168,16 +168,12 @@ export default function ExternalProfile() {
             { backgroundColor: user?.color || "#fff" },
           ]}
         ></ThemedView>
-        <ThemedView style={styles.row}>
-          {loggedIn ? (
+        <ThemedView style={styles.row}>          
             <Image
               style={styles.profilePic}
               source={{ uri: profileImageUri }}
               onError={handleError}
-            />
-          ) : (
-            <ThemedText>Empty Photo</ThemedText>
-          )}
+            />          
           {user && myInfo && myInfo.email !== user.email ? (
             isFollowed(user.followers) ? (
               <Pressable onPress={handleUnfollow}>
@@ -204,18 +200,13 @@ export default function ExternalProfile() {
             )
           ) : null}
         </ThemedView>
-        <ThemedView style={styles.close}>
-          {loggedIn ? (
+        <ThemedView style={styles.close}>          
             <>
               <ThemedText style={styles.userName}>{user?.username}</ThemedText>
               <ThemedText style={styles.tag}>@{user?.email}</ThemedText>
-            </>
-          ) : (
-            <ThemedText>Login</ThemedText>
-          )}
+            </>          
         </ThemedView>
-        <ThemedView style={styles.followersRow}>
-          {loggedIn ? (
+        <ThemedView style={styles.followersRow}>          
             <>
               <ThemedText style={styles.smallGray}>
                 {user?.followers?.length} Followers
@@ -223,10 +214,7 @@ export default function ExternalProfile() {
               <ThemedText style={styles.smallGray}>
                 {user?.following?.length} Following
               </ThemedText>
-            </>
-          ) : (
-            <ThemedText></ThemedText>
-          )}
+            </>          
         </ThemedView>
       </ThemedView>
       <ThemedView style={styles.column}>

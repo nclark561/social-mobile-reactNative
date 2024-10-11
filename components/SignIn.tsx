@@ -55,6 +55,7 @@ export default function SignIn({
   };
 
   return (
+    
     <ThemedView style={styles.page}>
       <ThemedView style={styles.wide}>
         <ThemedText style={{fontSize: 30, padding: 20}}>Login</ThemedText>
@@ -64,7 +65,6 @@ export default function SignIn({
           placeholder="Email"
           style={[styles.loginInput, { color }]}
         />
-
         <TextInput
           onChangeText={(text) => setPassword(text)}
           placeholderTextColor={"rgb(140, 138, 143)"}
@@ -97,10 +97,10 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     justifyContent: "flex-start",
-    alignItems: "center",
-    
+    alignItems: "center",    
     width: "100%",
   },
+
   loginInput: {
     width: "90%",
     borderRadius: 0,
@@ -110,14 +110,17 @@ const styles = StyleSheet.create({
     padding: 12,
     marginVertical: 10, // Vertical margin between inputs
   },
+
   gray: {
     color: "gray",
   },
+
   wide: {
     width: "90%",
     alignItems: "center", // Centers content within this View
     marginBottom: 20, // Adds space between the input group and buttons
   },
+
   button: {
     backgroundColor: "rgb(63, 134, 196)",
     borderRadius: 5,
@@ -126,10 +129,12 @@ const styles = StyleSheet.create({
     alignItems: "center", // Centers the text within the button
     marginVertical: 10,
   },
+
   buttonText: {
     color: "#fff",
     fontSize: 16,
   },
+
   blueText: {
     color: " rgb(63, 134, 196)",
     paddingTop: 5,

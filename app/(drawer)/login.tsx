@@ -35,8 +35,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
         
   },
+  mainContent: {
+    width: Dimensions.get('window').width > 600 ? '100%' : '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   desktopCenter: {
     width: Dimensions.get('window').width > 600 ? '80%' : '100%',
+    marginBottom: 300
   },
   desktopRow: {
     flexDirection: 'row',
@@ -47,11 +53,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
-  mainContent: {
-    width: Dimensions.get('window').width > 600 ? '100%' : '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   desktopHiddenBorder: {
     display: Dimensions.get('window').width > 600 ? 'flex' : 'none',
     justifyContent: 'space-evenly',

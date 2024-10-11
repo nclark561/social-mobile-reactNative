@@ -70,7 +70,7 @@ export default function TabTwoScreen() {
   }, [myInfo?.id]);
 
   const blurhash = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe';
-
+  
   return (
     <ThemedView style={styles.pageContainer}>
       <ThemedView style={styles.desktopCenter}>

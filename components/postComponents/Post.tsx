@@ -204,6 +204,9 @@ export default function Post({
   };
   const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash
   const blurhash2 = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+
+  console.log(post, 'this is profile post')
+
   return (
     <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
       <ThemedView
@@ -215,7 +218,7 @@ export default function Post({
         ]}
       >
         <ThemedView style={styles.flex}>
-          <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId)} blurhash={blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'} />
+          <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId || user)} blurhash={blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'} />
         </ThemedView>
         <ThemedView style={styles.postContent}>
           <Link href={`/profile/${post.email}`} style={styles.link}>
