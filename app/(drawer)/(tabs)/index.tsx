@@ -103,7 +103,7 @@ export default function HomeScreen() {
         <ThemedView style={styles.desktopRow}>      
           <ThemedView style={styles.postContainer}>
             <ThemedView style={styles.desktopHiddenFullscreen}>
-              <ThemedView style={styles.row}>
+              <ThemedView style={styles.repostedRow}>
                 <Image
                   style={[styles.profilePic, { margin: 20 }]}
                   source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALAAAACUCAMAAAAEVFNMAAAAMFBMVEXk5ueutLe+wsXn6eqrsbTU19nh4+S4vcDHy820ubzR1Nbc3+DAxcfM0NLq7O3Z3N2JvUspAAAENklEQVR4nO2c23LjIAxAbYursfH//+2CkybNHZAi0R2fh047+3JGI4MAaYfh4ODg4ODg4ODg4ODg4ODvAjAMJnH+tW+SYdjm1S0Zt85bGHp2Btjc5Ed1ZbTTGnqNM8Dqx1GNt6S//dyjMgSn7mWv0inM0oK3gHEPsb1R9mtXyRy1f6e7K9stSmv+AMPySXdXXjqJMYSP4f0JcpB2zcDndLgY+00+yKBLdXdl+dWiyjcZC8e4Lr4Zv4n6br7SN+WxERQ2xd/bb2O59ThO9b7J2EmlMcwtvgktYwymOoHPIbZCaVy0IT81lkmKrVE3G0uEGJq+uLPwIrBSbO2+Cf4QR4sS5i81Dcp39NyVJjiU76hm5hAbixSeeLMYNM535P7sYMWlcAqxZhU2zbvcRZh3nWgtI37DuncEbIBTiFkjXH0yeiLMeVYCRyC8MoYYU/hc4CyAgOCbGydG4UghbDmFCXxHz5jDkSCFD+H/S5jAd7Scwn9tWQNk+b7DunFQbM2stymtt2q/hVlv2HCXEidh1jOSQfuOirWAxx6a8xUm720V+qtjLYcRd9lXYearn4DdOrgvtWFCBtjx+jY80N3B/sAION+JWRd9WcV9eZnBfHactfAFxMrGfju8Y5ofDdQk8uwFc3OEhV70W8t4ueaftqVNWSHd1ocDyTaalqOSzApxofrpgL2IuKP24lWuu+NClbFapHWHKmPpfDhR/uUxH4teEuei5irlhXp9HoFQkBZqkW9jvJIOpZ+UuwnvCRicf91Srrzrrw0ewmqfKitlu2uBPwFmW9Sdc/rTbaZL3R2IYZ78+fDkvV9WE/u1PQExT8torTczxO5t8/gJxCvQ37d2IbsZneeQJmut9+nHNOVxJGM6086iQa+LPQ8h3X5zO35a9RZMD9NfEYJ2J9e321z6Zz+5eRtEszqtCc7m6a4Pm9x1ifN20SDToZ3y4HHVLdO22rAPJoHRrjiyT5yXmXXKLhpn3w53FSj7ZeNSBrM8zvk1OI+Wo4BLu9jzEqfNWX+5zADQC5nurvzdwcCcDJS6u7L92sUKmNdTnzjlr7x3wFA+N1drrBx9Kqds+Ep4z8pWE29/Ed/g/AHSdg/Atwt/RFm6cx8E3AhEofE4EwU5BvK17IUyzc0mQX9+sTHF+yisbL77sAQ2yJGgf6rG2CJ3avz4Q7UxKsbsvsg8Rrx1YoybQwxBwDevbq3rMcV0SZNx68sCxShBE23j8AIf3A9tr9HIkUSccUMakzRhtxtXl26CCbFT3W8utUJcqDyaUrRgo6id30e3VuKNqxZj6QzOVLW2IfsUSagZEER3gpJQ0cIdKcY08JS3RBO05BNQfiZlPca9obiUJ5n4JKC4aMPPPBBReEPf8N8jfQe1FmYEwaARCWop25572OZOlNYT0oXPlULhSfVC4dbhpl4oFIZuKPPtm3+Mgjt8yd+5mgAAAABJRU5ErkJggg==' }}
@@ -118,9 +118,9 @@ export default function HomeScreen() {
                 forYouPosts.map((post, i) => {
                   if (post.postId)
                     return (
-                      <ThemedView style={{ flexDirection: "column" }}>
-                        <ThemedView style={styles.row}>
-                          <Ionicons name="git-compare-outline" size={15} />
+                      <ThemedView style={{ flexDirection: "column", display: 'flex', justifyContent: 'center' }}>
+                        <ThemedView style={styles.repostedRow}>
+                          <Ionicons style={{padding: 5, marginTop: 5}} name="git-compare-outline" size={15} />
                           <ThemedText style={styles.repost}>
                             {post.user.username} Reposted
                           </ThemedText>
@@ -244,6 +244,14 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     justifyContent: "space-evenly",
   },
+  repostedRow: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 5,
+    justifyContent: "flex-start",
+  },
   desktopRow: {
     flexDirection: 'row',
     width: '100%',
@@ -281,7 +289,8 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 20,
     color: 'gray',
-    padding: 10
+    padding: 10,
+    width: '100%'
   },
   sectionHeader: {
     textAlign: 'center',

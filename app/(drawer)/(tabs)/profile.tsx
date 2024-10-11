@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   bio: {
-    fontSize: 13,
+    fontSize: 17,
     padding: 5
   },
   // backgroundColor: {
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     color: '#007bff',
-    fontSize: 13,
+    fontSize: 17,
   },
   desktopCenter: {
     width: width > 600 ? '75%' : '100%'

@@ -13,6 +13,7 @@ import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import MyContext from "./providers/MyContext";
 import { Platform } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 export default function SignIn({
   setLogin,
@@ -56,6 +57,7 @@ export default function SignIn({
   return (
     <ThemedView style={styles.page}>
       <ThemedView style={styles.wide}>
+        <ThemedText style={{fontSize: 30, padding: 20}}>Login</ThemedText>
         <TextInput
           onChangeText={(text) => setEmail(text)}
           placeholderTextColor={"rgb(140, 138, 143)"}
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingTop: 50,
+    
     width: "100%",
   },
   loginInput: {

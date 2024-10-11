@@ -40,7 +40,7 @@ export default function DesktopRouting() {
             </ThemedView>
             <ThemedView style={styles.iconRow}>
                 <Link href={'/(drawer)/login'}>
-                    <Ionicons size={20} style={{ padding: 10 }} name="search-outline" color={colorScheme === 'dark' ? 'white' : 'black'}></Ionicons>
+                    <Ionicons size={20} style={{ padding: 10 }} name="log-in-outline" color={colorScheme === 'dark' ? 'white' : 'black'}></Ionicons>
                     <ThemedText style={styles.iconSelection}>Login</ThemedText>
                 </Link>
             </ThemedView>
@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
     iconRow: {
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        
     },
     iconSelection: {
         fontSize: 20

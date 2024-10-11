@@ -31,7 +31,9 @@ export default function Login() {
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    alignItems: 'center',    
+    alignItems: 'center',
+    justifyContent: 'center',
+        
   },
   desktopCenter: {
     width: Dimensions.get('window').width > 600 ? '80%' : '100%',

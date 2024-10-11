@@ -10,6 +10,7 @@ import React, { useContext, useState } from "react";
 import { ThemedView } from "./ThemedView";
 import { supabase } from "./Supabase";
 import PostContext from "./providers/PostContext";
+import { ThemedText } from "./ThemedText";
 
 export default function SignIn({
   setLoginToggle,
@@ -49,6 +50,7 @@ export default function SignIn({
   return (
     <ThemedView style={styles.page}>
       <ThemedView style={styles.wide}>
+        <ThemedText style={{fontSize: 30, padding: 20}}>Create Account</ThemedText>
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Username"
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingTop: 50,
+    
     width: "100%",
   },
   loginInput: {
