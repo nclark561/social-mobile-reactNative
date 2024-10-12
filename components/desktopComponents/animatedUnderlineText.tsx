@@ -1,9 +1,10 @@
 import { useState, useRef } from "react";
 import { ThemedText } from "../ThemedText";
-import { Pressable, StyleSheet, Animated } from "react-native";
+import { Pressable, StyleSheet, Animated, useColorScheme } from "react-native";
 
 const AnimatedUnderlineText = ({ ...rest }: any) => {
   const underlineWidth = useRef(new Animated.Value(0)).current;
+  const colorScheme = useColorScheme()
 
   const handleHoverIn = () => {
     Animated.timing(underlineWidth, {
@@ -30,7 +31,7 @@ const AnimatedUnderlineText = ({ ...rest }: any) => {
       <ThemedText
         {...rest}
       />
-      <Animated.View style={[styles.underline, { width: underlineWidth.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }]}/>
+      <Animated.View style={[styles.underline, { width: underlineWidth.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }, colorScheme === 'dark' ? { backgroundColor: 'white' } : { backgroundColor: 'black' }]}/>
     </Pressable>
   );
 };
@@ -38,7 +39,6 @@ const AnimatedUnderlineText = ({ ...rest }: any) => {
 const styles = StyleSheet.create({
   underline: {
     height: 2,
-    backgroundColor: "white",
     position: "absolute",
     bottom: 0,
     left: 0,
