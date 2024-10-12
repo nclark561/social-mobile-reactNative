@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useState, ReactNode, useEffect, SetStateAction } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../../components/Supabase";
 import { Platform } from "react-native";
