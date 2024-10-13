@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: width > 1000 ? '100%' : '35%',
+    width: '30%',
     paddingLeft: 10,
   },
   close: {
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   desktopRow: {
-    flexDirection: width > 600 ? 'row' : 'column',
+    flexDirection:  'column',
     width: '100%',
     justifyContent: 'space-evenly'
   },

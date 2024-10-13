@@ -205,10 +205,18 @@ export default function Post({
   const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash
   const blurhash2 = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
 
-  console.log(post, 'this is profile post')
+  const handleProfilePress = (event: any) => {
+    // Prevent parent Pressable from being triggered
+    event.stopPropagation();
+  };
+
+  const handlePostPress = () => {
+    router.push(`/${link}/${post.id}`);
+  };
+
 
   return (
-    <Pressable onPress={() => router.navigate(`/${link}/${post?.id}`)}>
+    <Pressable onPress={handlePostPress}>
       <ThemedView
         style={[
           styles.postContainer,
@@ -221,8 +229,12 @@ export default function Post({
           <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId || user)} blurhash={blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'} />
         </ThemedView>
         <ThemedView style={styles.postContent}>
-          <Link href={`/profile/${post.email}`} style={styles.link}>
-            <ThemedText style={styles.postUser}>{post?.userName}</ThemedText>
+          <Link
+            href={`/profile/${post.email}`}
+            style={styles.link}
+            onPress={handleProfilePress}  
+          >
+            <ThemedText style={styles.postUser}>{post.userName}</ThemedText>
           </Link>
           <ThemedText style={styles.postText}>{post?.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
@@ -280,7 +292,7 @@ export default function Post({
         />
         <CustomBottomSheet
           snapPercs={["20%"]}
-          ref={deleteMenuRef} 
+          ref={deleteMenuRef}
         >
           <Pressable
             style={styles.deleteButton}
@@ -363,7 +375,7 @@ export default function Post({
                 source={{
                   uri: `${profileImage(post?.owner?.id || post?.userId)}`,
                 }}
-                placeholder={{blurhash: blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'}}
+                placeholder={{ blurhash: blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe' }}
                 transition={500}
               />
               <ThemedText style={styles.postUser}>
@@ -382,7 +394,7 @@ export default function Post({
                 source={{
                   uri: `${profileImage(myInfo?.id)}`,
                 }}
-                placeholder={{blurhash: blurhash2}}
+                placeholder={{ blurhash: blurhash2 }}
                 transition={500}
               />
               <BottomSheetTextInput
@@ -463,6 +475,7 @@ const styles = StyleSheet.create({
   },
   postUser: {
     fontWeight: "bold",
+
     fontSize: 15,
     paddingBottom: 2,
     ...(Platform.OS === 'web' && {
@@ -563,6 +576,7 @@ const styles = StyleSheet.create({
   link: {
     alignSelf: "flex-start",
     flexShrink: 1,
+    padding: 3,
   },
   deleteMenu: {
     flexDirection: "row",
@@ -570,9 +584,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  
+
   deleteButton: {
-    backgroundColor: '#ff4d4d', 
+    backgroundColor: '#ff4d4d',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
