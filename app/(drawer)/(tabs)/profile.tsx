@@ -8,8 +8,6 @@ import {
   Linking,
   Platform,
   Dimensions,
-  Pressable,
-  Text
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -21,11 +19,7 @@ import Post from "@/components/postComponents/Post";
 import Animated from "react-native-reanimated";
 import EditProfileSheet from "@/components/profileComponents/EditProfileSheet";
 import { Image } from "expo-image";
-import DesktopRouting from "@/components/desktopComponents/desktopRouting";
-import StackLogos from "@/components/desktopComponents/stackLogos";
-import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
-import { Ionicons } from "@expo/vector-icons";
-import Projects from "@/components/desktopComponents/projects";
+import { ClipLoader } from "react-spinners";
 
 export default function TabTwoScreen() {
   const editProfileRef = useRef<BottomSheetModal>(null);
@@ -36,6 +30,7 @@ export default function TabTwoScreen() {
   const postContext = useContext<any>(PostContext);
   const { getUserPosts, posts, getBaseUrl } = postContext;
   const [profileImageUri, setProfileImageUri] = useState(``);
+  const [loading, setLoading] = useState(true);
 
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const mortyUrl =
@@ -47,9 +42,14 @@ export default function TabTwoScreen() {
     setProfileImageUri(mortyUrl);
   };
 
+  const handleLoading = async () => {
+    await getUserPosts(myInfo?.email, myInfo?.id);
+    setLoading(false)
+  }
+
   useFocusEffect(
     useCallback(() => {
-      getUserPosts(myInfo?.email, myInfo?.id);
+      handleLoading()
     }, [myInfo]),
   );
 
@@ -128,6 +128,13 @@ export default function TabTwoScreen() {
 
   return (
     <ThemedView style={[{ flex: 1 }, Platform.OS === 'web' ? { marginTop: 0 } : { marginTop: -70 }, styles.pageContainer]}>
+      {loading && (
+        <ThemedView
+          style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
+        >
+          <ClipLoader color="#26a7de" />
+        </ThemedView>
+      )} 
       <ThemedView style={styles.desktopCenter}>
         <ThemedView style={styles.desktopRow}>
           <ThemedView style={styles.contentMiddle}>
@@ -465,5 +472,16 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
     borderRadius: 5,
+  },
+  spinnerContainer: {
+    position: "absolute",
+    borderRadius: 35,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 20,
   },
 });

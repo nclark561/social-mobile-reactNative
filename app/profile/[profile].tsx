@@ -5,9 +5,7 @@ import { useContext } from "react";
 import {
   StyleSheet,
   Image,
-  TextInput,
   useColorScheme,
-  Animated,
   TouchableOpacity,
   Pressable,
   Alert,
@@ -22,6 +20,7 @@ import PostContext from "../../components/providers/PostContext";
 import Post from "@/components/postComponents/Post";
 import { Link, useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
+import { ClipLoader } from "react-spinners";
 
 export default function ExternalProfile() {
   const navigation = useExpoNavigation();
@@ -37,6 +36,9 @@ export default function ExternalProfile() {
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const colorScheme = useColorScheme();
+  const [loading, setLoading] = useState(true);
+
+  const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const handleError = () => {
     setProfileImageUri(mortyUrl);
@@ -44,9 +46,14 @@ export default function ExternalProfile() {
 
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
+  const handleLoading = async () => {
+    await getUser()
+    setLoading(false)
+  }
+
   useFocusEffect(
     useCallback(() => {
-      getUser();
+      handleLoading()
       return () => {
         setUser("");
       };
@@ -154,6 +161,13 @@ export default function ExternalProfile() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
+      {loading && (
+        <ThemedView
+          style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
+        >
+          <ClipLoader color="#26a7de" />
+        </ThemedView>
+      )} 
       <ThemedView style={styles.header}>
         <ThemedView
           style={[styles.icon, { backgroundColor: `${user?.color}` }]}
@@ -347,4 +361,15 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   followIcon: {},
+  spinnerContainer: {
+    position: "absolute",
+    borderRadius: 35,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 20,
+  },
 });
