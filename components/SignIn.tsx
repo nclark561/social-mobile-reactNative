@@ -9,7 +9,7 @@ import { useContext, useEffect } from "react";
 import { useState } from "react";
 import { ThemedView } from "./ThemedView";
 import { supabase } from "./Supabase";
-import { Link, router } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import MyContext from "./providers/MyContext";
 import { Platform } from "react-native";
@@ -24,7 +24,7 @@ export default function SignIn({
   const [password, setPassword] = useState<string>(""); // Initialize with an empty string
   const colorScheme = useColorScheme();
   const context = useContext<any>(MyContext);
-  const { setLoginToggle, getUser } = context;
+  const { setLoginToggle, getUser, setLoggedIn } = context; 
 
   const color = colorScheme === "dark" ? "white" : "black";
 
@@ -47,12 +47,23 @@ export default function SignIn({
         setLogin(true);
         setLoginToggle(true);
         await getUser();
-        router.navigate("/(tabs)/");
+        if (Platform.OS === 'web') {
+          location.reload()
+        } else {
+          router.navigate("/(drawer)/(tabs)/");
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  useFocusEffect(() => {
+    if(Platform.OS === 'web') {
+      const user = localStorage.getItem("user");
+      if (user) router.navigate('/(drawer)/(tabs)/')
+    } 
+  })
 
   return (
     
