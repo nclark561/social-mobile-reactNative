@@ -63,6 +63,7 @@ export interface UserContextType {
     theirFollowers: string[],
     myFollowing: string[]
   ) => Promise<void>;
+  setMyInfo: any
 }
 
 
@@ -225,6 +226,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         getUser,
         getConvos,
         updateFollowers,
+        setMyInfo
       }}
     >
       {children}

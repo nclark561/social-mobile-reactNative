@@ -3,10 +3,6 @@ import React, { useState } from "react";
 import CreateAccount from "@/components/CreateAccount";
 import SignIn from "@/components/SignIn";
 import { ThemedView } from "@/components/ThemedView";
-import DesktopRouting from "@/components/desktopComponents/desktopRouting";
-import StackLogos from "@/components/desktopComponents/stackLogos";
-import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
-import Projects from "@/components/desktopComponents/projects";
 
 export default function Login() {
   const [login, setLogin] = useState(true);
