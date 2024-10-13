@@ -12,6 +12,7 @@ import { supabase } from "./Supabase";
 import { Link, router, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import MyContext from "./providers/MyContext";
+import PostContext from "./providers/PostContext";
 import { Platform } from "react-native";
 import { ThemedText } from "./ThemedText";
 
@@ -25,6 +26,7 @@ export default function SignIn({
   const colorScheme = useColorScheme();
   const context = useContext<any>(MyContext);
   const { setLoginToggle, getUser, setLoggedIn } = context; 
+  const { setForYouPosts } = useContext<any>(PostContext)
 
   const color = colorScheme === "dark" ? "white" : "black";
 
@@ -46,6 +48,7 @@ export default function SignIn({
 
         setLogin(true);
         setLoginToggle(true);
+        setForYouPosts([])
         await getUser();
         if (Platform.OS === 'web') {
           location.reload()

@@ -11,6 +11,7 @@ type PostContextType = {
   forYouPostsToggle: boolean;
   setForYouPostsToggle: (value: boolean) => void;
   getBaseUrl: () => void;
+  setForYouPosts: any
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -85,6 +86,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         forYouPostsToggle,
         setForYouPostsToggle,
         getBaseUrl,
+        setForYouPosts
       }}
     >
       {children}
