@@ -22,7 +22,6 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, "background");
-  const color = colorScheme === 'dark' ? 'white': 'black'
 
   const windowWidth = Dimensions.get("window").width;
   const isDesktop = Platform.OS === "web" && windowWidth >= 1024;

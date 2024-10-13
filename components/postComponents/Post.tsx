@@ -53,6 +53,7 @@ export default function Post({
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const link = isComment ? "comment" : "post";
+  const postOwnerId = isComment ? post?.userId : post?.owner?.id
 
   const { getForYouPosts, getUserPosts, getBaseUrl } =
     useContext<any>(PostContext);
@@ -294,7 +295,7 @@ export default function Post({
           snapPercs={["20%"]}
           ref={deleteMenuRef}
         >
-          <Pressable
+          {myInfo?.id === postOwnerId && (<Pressable
             style={styles.deleteButton}
             onPress={() => {
               if (isComment) {
@@ -305,7 +306,7 @@ export default function Post({
             }}
           >
             <Text style={styles.deleteButtonText}>Delete Post</Text>
-          </Pressable>
+          </Pressable>)}
 
         </CustomBottomSheet>
         <CustomBottomSheet

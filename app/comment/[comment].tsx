@@ -283,14 +283,14 @@ export default function CommentPage() {
         {/* Delete Menu */}
         <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
           <ThemedView style={styles.deleteContainer}>
-            <Button
+            {myInfo?.id === thisPost?.userId && <Button
               title="Delete Post"
               color="red"
               onPress={() => {
                 deletePost(thisPost?.id);
                 deleteMenuRef.current?.dismiss();
               }}
-            />
+            />}
           </ThemedView>
         </CustomBottomSheet>
       </ThemedView>

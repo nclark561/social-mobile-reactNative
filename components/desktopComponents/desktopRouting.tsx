@@ -5,7 +5,6 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemedView } from ".././ThemedView";
-import { ThemedText } from ".././ThemedText";
 import { Link } from "expo-router";
 import AnimatedUnderlineText from "./animatedUnderlineText";
 

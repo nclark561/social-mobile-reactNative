@@ -316,14 +316,14 @@ export default function PostPage() {
           {/* Delete Menu */}
           <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
             <ThemedView style={styles.deleteContainer}>
-              <Button
+              {myInfo?.id === thisPost?.owner?.id && <Button
                 title="Delete Post"
                 color="red"
                 onPress={() => {
                   deletePost(thisPost?.id);
                   deleteMenuRef.current?.dismiss();
                 }}
-              />
+              />}
             </ThemedView>
           </CustomBottomSheet>
         </ThemedView>
