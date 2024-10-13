@@ -20,7 +20,7 @@ import { useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "@/components/providers/MyContext";
-import { useFocusEffect, Link } from "expo-router";
+import { useFocusEffect, Link, router } from "expo-router"
 import { ThemedText } from "@/components/ThemedText";
 import { ClipLoader } from "react-spinners";
 
@@ -91,6 +91,8 @@ export default function HomeScreen() {
   useEffect(() => {
     loadingPosts();
   }, [myInfo]);
+
+
 
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";

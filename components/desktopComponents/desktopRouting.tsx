@@ -7,10 +7,53 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemedView } from ".././ThemedView";
 import { Link } from "expo-router";
 import AnimatedUnderlineText from "./animatedUnderlineText";
+import MyContext from "../providers/MyContext";
+import { useContext, useEffect } from "react";
+import { supabase } from "../Supabase";
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 
 
 export default function DesktopRouting() {
     const colorScheme = useColorScheme()
+    const context = useContext<any>(MyContext);
+    const { myInfo, loggedIn, setLoginToggle, setLoggedIn, getUser } = context;
+
+    const handleLogout = async () => {
+        try {
+            const { error } = await supabase.auth.signOut();
+            await AsyncStorage.removeItem("user");
+            if (error) {
+                console.log("this is logout error", error);
+            }
+            await getUser();
+            setLoginToggle(false);
+            setLoggedIn(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            const checkUser = async () => {
+                try {
+                    const user = await AsyncStorage.getItem("user");
+                    console.log(user, "user");
+                    if (user) {
+                        setLoggedIn(true);
+                    }
+                } catch (error) {
+                    console.log("Error reading user from AsyncStorage", error);
+                }
+            };
+            checkUser();
+        }, [myInfo])
+    );
+
+    console.log(myInfo, 'we are logged in')
 
     return (
         <ThemedView style={styles.desktopHidden}>
@@ -39,10 +82,14 @@ export default function DesktopRouting() {
                 </Link>
             </ThemedView>
             <ThemedView style={styles.iconRow}>
-                <Link href={'/(drawer)/login'}>
+                {loggedIn ? <Link onPress={handleLogout} href={'/(drawer)/login'}>
+                    <Ionicons size={20} style={{ padding: 10 }} name="log-in-outline" color={colorScheme === 'dark' ? 'white' : 'black'}></Ionicons>
+                    <AnimatedUnderlineText style={styles.iconSelection}>Logout</AnimatedUnderlineText>
+                </Link> : <Link href={'/(drawer)/login'}>
                     <Ionicons size={20} style={{ padding: 10 }} name="log-in-outline" color={colorScheme === 'dark' ? 'white' : 'black'}></Ionicons>
                     <AnimatedUnderlineText style={styles.iconSelection}>Login</AnimatedUnderlineText>
-                </Link>
+                </Link>}
+
             </ThemedView>
         </ThemedView>
     );
@@ -72,7 +119,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        
+
     },
     iconSelection: {
         fontSize: 20
