@@ -1,6 +1,5 @@
 import {
-    Text,
-    View,
+    useColorScheme,
     StyleSheet,
     Dimensions,
     Platform,
@@ -10,6 +9,7 @@ import { ThemedView } from "../ThemedView";
 import { ThemedText } from "../ThemedText";
 
 export default function StackLogos() {
+    const colorScheme = useColorScheme()
 
     if (Platform.OS !== 'web') {
         return null;
@@ -20,17 +20,17 @@ export default function StackLogos() {
             <ThemedText style={{ textAlign: 'center', fontWeight: '600', fontSize: 16 }}>Tech Used</ThemedText>
             <ThemedView style={styles.space}>
                 <ThemedView style={styles.row}>
-                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/ts.png')}></Image>
-                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/rn.png')}></Image>
+                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/ts.png')} alt="typescript"/>
+                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/rn.png')} alt="react-native"/>
                     {/* <Image style={{ width: 60, height: 60 }}  source={require('../../assets/logos/node.png')}></Image> */}
-                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/pg.png')}></Image>
+                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/pg.png')} alt="pg"/>
                 </ThemedView>
                 <ThemedView style={styles.row}>
-                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/next.png')}></Image>
-                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/expo.png')}></Image>
-                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/sb.png')}></Image>
+                    <Image style={{ width: 60, height: 60, margin: 5 }} source={colorScheme === 'dark' ? require('../../assets/logos/nextjs-darkmode.webp') : require('../../assets/logos/next.png')} alt="nextjs"/>
+                    <Image style={{ width: 60, height: 60, margin: 5 }} source={colorScheme === 'dark' ? require('../../assets/logos/expo-darkmode.png') : require('../../assets/logos/expo.png')} alt="expo"/>
+                    <Image style={{ width: 60, height: 60, margin: 5 }} source={require('../../assets/logos/sb.png')} alt="supabase"/>
                 </ThemedView>
-                <Image style={{ width: 50, height: 50 }} source={require('../../assets/logos/prisma.png')}></Image>
+                <Image style={{ width: 50, height: 50 }} source={colorScheme === 'dark' ? require('../../assets/logos/prisma-darkmode.png') : require('../../assets/logos/prisma.png')} alt="prisma"/>
             </ThemedView>
         </ThemedView>
         // <ThemedView style={styles.desktopHiddenBorder}>
