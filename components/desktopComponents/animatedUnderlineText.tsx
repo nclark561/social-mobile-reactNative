@@ -1,38 +1,48 @@
 import { useState, useRef } from "react";
 import { ThemedText } from "../ThemedText";
-import { Pressable, StyleSheet, Animated, useColorScheme } from "react-native";
+import { StyleSheet, Animated, useColorScheme } from "react-native";
+import { GestureDetector, Gesture } from "react-native-gesture-handler";
+import { ThemedView } from "../ThemedView";
 
 const AnimatedUnderlineText = ({ ...rest }: any) => {
   const underlineWidth = useRef(new Animated.Value(0)).current;
-  const colorScheme = useColorScheme()
-
-  const handleHoverIn = () => {
-    Animated.timing(underlineWidth, {
+  const colorScheme = useColorScheme();
+  const hover = Gesture.Hover()
+    .onStart(() => {
+      Animated.timing(underlineWidth, {
         toValue: 1,
         duration: 300,
         useNativeDriver: false, // For better performance
       }).start();
-  }
-
-  const handleHoverOut = () => {
-    Animated.timing(underlineWidth, {
-      toValue: 0, // Animate back to no width
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
+    })
+    .onEnd(() => {
+      Animated.timing(underlineWidth, {
+        toValue: 0, // Animate back to no width
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    });
 
   return (
-    <Pressable
-      onHoverIn={handleHoverIn}
-      onHoverOut={handleHoverOut}
-      style={{flexDirection: 'column', position: 'relative'}}
-    >
-      <ThemedText
-        {...rest}
-      />
-      <Animated.View style={[styles.underline, { width: underlineWidth.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }, colorScheme === 'dark' ? { backgroundColor: 'white' } : { backgroundColor: 'black' }]}/>
-    </Pressable>
+    <GestureDetector gesture={hover}>
+      <ThemedView style={{ flexDirection: "column", position: "relative" }}>
+        <ThemedText {...rest} />
+        <Animated.View
+          style={[
+            styles.underline,
+            {
+              width: underlineWidth.interpolate({
+                inputRange: [0, 1],
+                outputRange: ["0%", "100%"],
+              }),
+            },
+            colorScheme === "dark"
+              ? { backgroundColor: "white" }
+              : { backgroundColor: "black" },
+          ]}
+        />
+      </ThemedView>
+    </GestureDetector>
   );
 };
 
