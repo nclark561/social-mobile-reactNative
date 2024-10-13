@@ -5,7 +5,8 @@ import {
   Image,
   TouchableOpacity,
   View,
-  Platform
+  Platform,
+  Dimensions
 } from "react-native";
 import CustomBottomSheet from "../util/CustomBottomSheet";
 import { ThemedView } from "../ThemedView";
@@ -115,6 +116,7 @@ const EditProfileSheet = ({
       hideCancelButton
       ref={editProfileRef}
       snapPercs={["60%"]}
+      
     >
       <ThemedView style={styles.bottomSheetContent}>
         <ThemedText style={styles.bottomSheetTitle}>Edit Profile</ThemedText>
@@ -186,10 +188,14 @@ const EditProfileSheet = ({
 
 export default EditProfileSheet;
 
+const { width, height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   bottomSheetContent: {
     padding: 20,
-    width: "90%",
+    width: width > 1000 ? '30%' : '90%',
+    marginRight: width > 1000 ? 100 : 0
+    
   },
   bottomSheetTitle: {
     fontSize: 18,

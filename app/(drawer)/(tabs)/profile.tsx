@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: "95%",
-    backgroundColor: "rgba(255, 255, 255, 0)",
+    backgroundColor: "transparent",
     paddingLeft: 10,
   },
   columnLeftPadding: {

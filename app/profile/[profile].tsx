@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "baseline",
     width: "100%",
+    
     borderColor: "#525252",
   },
   profilePic: {
@@ -313,6 +314,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    backgroundColor: 'transparent',
     width: "95%",
   },
   button: {
