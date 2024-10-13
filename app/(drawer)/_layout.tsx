@@ -3,13 +3,9 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { Colors } from "@/constants/Colors";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { SafeAreaView, Platform, Dimensions } from "react-native";
 import { Drawer } from "expo-router/drawer";
@@ -19,12 +15,14 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { MyProvider } from "../../components/providers/MyContext";
 import { PostProvider } from "../../components/providers/PostContext";
 import { MessageProvider } from "@/components/providers/MessageContext";
+import { useColorScheme } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, "background");
+  const color = colorScheme === 'dark' ? 'white': 'black'
 
   const windowWidth = Dimensions.get("window").width;
   const isDesktop = Platform.OS === "web" && windowWidth >= 1024;

@@ -13,6 +13,7 @@ import { Link, router } from "expo-router";
 import Post from "@/components/postComponents/Post";
 import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 import MyContext from "@/components/providers/MyContext";
+import { ClipLoader } from "react-spinners";
 
 interface Post {
   id: string;
@@ -36,6 +37,8 @@ export default function CommentPage() {
   const [profileImageUri, setProfileImageUri] = useState("");
   const local = useLocalSearchParams();
   const { myInfo } = useContext<any>(MyContext);
+  const [loading, setLoading] = useState(true);
+  const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
@@ -125,6 +128,7 @@ export default function CommentPage() {
       );
       const userData = await result.json();
       setThisPost(userData.comment);
+      setLoading(false)
     } catch (error) {
       console.log(error, "this is the get user error");
     }
@@ -150,6 +154,13 @@ export default function CommentPage() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
+      {loading && (
+        <ThemedView
+          style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
+        >
+          <ClipLoader color="#26a7de" />
+        </ThemedView>
+      )}
       <ThemedView style={styles.icon}>
         <Pressable>
           <Link href="/(tabs)/">
@@ -375,5 +386,16 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+  },
+  spinnerContainer: {
+    position: "absolute",
+    borderRadius: 35,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 20,
   },
 });

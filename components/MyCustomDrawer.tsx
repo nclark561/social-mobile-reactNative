@@ -1,6 +1,6 @@
 // components/MyCustomDrawer.js
 import React, { useContext, useState, useEffect, useMemo } from "react";
-import { StyleSheet, Image, Button, View, Pressable } from "react-native";
+import { StyleSheet, Image, Button, View, Pressable, useColorScheme } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -10,10 +10,13 @@ import { supabase } from "./Supabase";
 import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyContext from "./providers/MyContext";
+import { ThemedView } from "./ThemedView";
 
 export default function MyCustomDrawer(props: any) {
-  const { setLoginToggle, myInfo, loggedIn, getUser, setLoggedIn } = useContext<any>(MyContext);
-  
+  const { setLoginToggle, myInfo, loggedIn, getUser, setLoggedIn } =
+    useContext<any>(MyContext);
+    const colorScheme = useColorScheme()
+
   // const router = useRouter();
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
@@ -25,17 +28,14 @@ export default function MyCustomDrawer(props: any) {
       if (error) {
         console.log("this is logout error", error);
       }
-      await getUser()
+      await getUser();
       router.navigate("/login");
       setLoginToggle(false);
-      setLoggedIn(false)
+      setLoggedIn(false);
     } catch (error) {
       console.log(error);
     }
   };
-
-
-
 
   const profileImageUri = useMemo(() => {
     if (myInfo?.id) {
@@ -44,39 +44,42 @@ export default function MyCustomDrawer(props: any) {
     return mortyUrl; // Fallback URL
   }, [myInfo?.id]);
 
-
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
-      <View style={styles.header}>
-        {loggedIn ? (
-          <Image
-            style={styles.profilePic}
-            source={{
-              uri: profileImageUri,
-              cache: "reload",
-            }}            
-          />
-        ) : (
-          <Pressable
-            onPress={() => {
-              router.navigate("/login");
-            }}
-          >
-            <ThemedText>Login</ThemedText>
-          </Pressable>
-        )}
-        {loggedIn && (
-          <ThemedText style={styles.headerText}>{myInfo?.username}</ThemedText>
-        )}
-      </View>
-      <DrawerItemList {...props} />
-      <View style={styles.footer}>
-        {loggedIn ? (
-          <Button title="Logout" onPress={() => handleLogout()} />
-        ) : (
-          <></>
-        )}
-      </View>
+      <ThemedView style={{ flex: 1 }}>
+        <ThemedView style={styles.header}>
+          {loggedIn ? (
+            <Image
+              style={styles.profilePic}
+              source={{
+                uri: profileImageUri,
+                cache: "reload",
+              }}
+            />
+          ) : (
+            <Pressable
+              onPress={() => {
+                router.navigate("/login");
+              }}
+            >
+              <ThemedText>Login</ThemedText>
+            </Pressable>
+          )}
+          {loggedIn && (
+            <ThemedText style={styles.headerText}>
+              {myInfo?.username}
+            </ThemedText>
+          )}
+        </ThemedView>
+        <DrawerItemList {...props} style={colorScheme === 'dark' && { color: 'white'}}/>
+        <ThemedView style={styles.footer}>
+          {loggedIn ? (
+            <Button title="Logout" onPress={() => handleLogout()} />
+          ) : (
+            <></>
+          )}
+        </ThemedView>
+      </ThemedView>
     </DrawerContentScrollView>
   );
 }

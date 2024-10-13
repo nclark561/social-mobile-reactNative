@@ -16,10 +16,7 @@ import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 import Post from "@/components/postComponents/Post";
 import { useRoute } from '@react-navigation/native';
 import { Image } from "expo-image";
-import DesktopRouting from "@/components/desktopComponents/desktopRouting";
-import StackLogos from "@/components/desktopComponents/stackLogos";
-import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
-import Projects from "@/components/desktopComponents/projects";
+import { ClipLoader } from "react-spinners";
 
 
 interface Post {
@@ -47,6 +44,9 @@ export default function PostPage() {
   const local = useLocalSearchParams<any>();
   const { setLoginToggle, myInfo, loggedIn, getUser } =
     useContext<any>(MyContext);
+  const [loading, setLoading] = useState(true);
+
+  const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleOpenComment = () => commentModalRef.current?.present();
@@ -138,6 +138,7 @@ export default function PostPage() {
       });
       const userData = await result.json();
       setThisPost(userData.post);
+      setLoading(false)
     } catch (error) {
       console.log(error, "this is the get user error");
     }
@@ -169,7 +170,14 @@ export default function PostPage() {
   console.log(thisPost);
 
   return (
-    <ThemedView style={styles.realRow}>      
+    <ThemedView style={styles.realRow}>     
+      {loading && (
+        <ThemedView
+          style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
+        >
+          <ClipLoader color="#26a7de" />
+        </ThemedView>
+      )} 
       <ThemedView style={[styles.content, { flex: 1 }]}>
         <ThemedView style={styles.icon}>
           <Pressable>
@@ -537,5 +545,16 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
     borderRadius: 5,
+  },
+  spinnerContainer: {
+    position: "absolute",
+    borderRadius: 35,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 20,
   },
 });

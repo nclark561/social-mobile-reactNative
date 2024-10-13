@@ -15,10 +15,6 @@ import ProfileDisplay from "@/components/exploreComponents/ProfileDisplay";
 import Animated from "react-native-reanimated";
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "../../../components/providers/MyContext";
-import DesktopRouting from "@/components/desktopComponents/desktopRouting";
-import StackLogos from "@/components/desktopComponents/stackLogos";
-import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
-import Projects from "@/components/desktopComponents/projects";
 import { Image } from "expo-image";
 
 const noah = {

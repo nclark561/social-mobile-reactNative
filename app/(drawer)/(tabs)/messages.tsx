@@ -16,10 +16,6 @@ import { router, useFocusEffect } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import MessageContext from "@/components/providers/MessageContext";
-import DesktopRouting from "@/components/desktopComponents/desktopRouting";
-import StackLogos from "@/components/desktopComponents/stackLogos";
-import DesktopSuggestedProfiles from "@/components/desktopComponents/desktopSuggestedProfiles";
-import Projects from "@/components/desktopComponents/projects";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -43,7 +39,7 @@ const MessageHome: React.FC = () => {
     deleteConvos(conversationId);
   };
 
-  const renderItem = ({ item }: { item: ConversationData }) => {
+  const renderItem = ({ item }: { item: any }) => {
     return <SwipeableItem item={item} onDelete={() => handleDelete(item.id)} />;
   };
 
@@ -86,7 +82,7 @@ const SwipeableItem = ({
   item,
   onDelete,
 }: {
-  item: ConversationData;
+  item: any;
   onDelete: () => void;
 }) => {
   const translateX = useRef(new Animated.Value(0)).current;
