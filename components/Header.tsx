@@ -38,8 +38,6 @@ export default function Header({ name }: HeaderProps) {
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
-  // Toggle the logout modal
-  
 
   const handleLogout = async () => {
     try {
@@ -60,25 +58,19 @@ export default function Header({ name }: HeaderProps) {
   return (
     <ThemedView style={styles.page}>
       {loggedIn ? (
-        <>
-          
+        <>          
             <Image
               style={styles.profilePic}
               source={{
                 uri: profileImageUri,
               }}
               placeholder={{ blurhash }}
-            />
-          
-
-          {/* Conditional rendering for logout popup */}
+            />                    
           {showLogout && (
             <View style={styles.logoutPopup}>
               <Pressable
-                onPress={() => {
-                  // Add your logout logic here
-                  setLoginToggle(false);
-                  
+                onPress={() => {                  
+                  setLoginToggle(false);                  
                   router.replace("/login");
                 }}
               >
@@ -96,7 +88,6 @@ export default function Header({ name }: HeaderProps) {
           <ThemedText style={{ marginLeft: 5 }}>Login</ThemedText>
         </Pressable>
       )}
-
       <ThemedText style={styles.Title}>{name}</ThemedText>
       <ThemedView style={{ width: 35 }}></ThemedView>
     </ThemedView>

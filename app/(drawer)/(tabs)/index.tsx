@@ -175,7 +175,7 @@ export default function HomeScreen() {
                     return (
                       <ThemedView key={post.id} style={{ flexDirection: "column" }}>
                         <ThemedView style={styles.row}>
-                          <Ionicons  name="git-compare-outline" size={15} />
+                          <Ionicons name="git-compare-outline" size={15} />
                           <ThemedText style={styles.repost}>
                             {post.user.username} Reposted
                           </ThemedText>
@@ -266,11 +266,12 @@ const styles = StyleSheet.create({
     width: width > 600 ? "100%" : "100%",
   },
   row: {
+    marginLeft: 10,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
   },
   repost: {
-    marginLeft: 10
+    marginLeft: 5
   }
 });

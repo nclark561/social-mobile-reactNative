@@ -291,7 +291,7 @@ export default function Post({
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
           onPress={() => {
-            if (myInfo?.id !== postOwnerId) {
+            if (myInfo?.id === postOwnerId) {              
               handleOpenDeleteMenu();
             }
           }}

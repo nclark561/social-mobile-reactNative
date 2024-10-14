@@ -28,10 +28,10 @@ export default function SignIn({
 
   const handleSignUp = async (userName: string, email: string) => {
     try {
-      const { data, error } = await supabase.auth.signUp({
-          email: email,
-          password: password,
-      });
+      // const { data, error } = await supabase.auth.signUp({
+      //     email: email,
+      //     password: password,
+      // });
       if (error) {
         console.log(error, 'this is the signup error')
         setError(error.message)
