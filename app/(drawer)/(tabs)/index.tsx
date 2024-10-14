@@ -41,12 +41,11 @@ export default function HomeScreen() {
   const [isForYou, setIsForYou] = useState(true);
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
-  
+
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -151,16 +150,42 @@ export default function HomeScreen() {
             <Animated.ScrollView
               style={{ position: "relative" }}
               showsVerticalScrollIndicator={false}
-            >              
+            >
               {isForYou
                 ? Array.isArray(forYouPosts) &&
-                  forYouPosts.map((post, i) => (                   
-                    <Post key={post.id} post={post} isComment={false} />
-                  ))
+                forYouPosts.map((post, i) => {
+                  if (post.postId) {
+                    return (
+                      <ThemedView key={post.id} style={{ flexDirection: "column" }}>
+                        <ThemedView style={styles.row}>
+                          <Ionicons name="git-compare-outline" size={15} />
+                          <ThemedText style={styles.repost}>
+                            {post.user.username} Reposted
+                          </ThemedText>
+                        </ThemedView>
+                        <Post key={post.id} post={post.post} isComment={false} />
+                      </ThemedView>
+                    );
+                  }
+                  return <Post key={post.id} post={post} isComment={false} />;
+                })
                 : Array.isArray(forYouFollowingPosts) &&
-                  forYouFollowingPosts.map((post: any) => (                    
-                    <Post key={post.id} post={post} isComment={false} />
-                  ))}
+                forYouFollowingPosts.map((post, i) => {
+                  if (post.postId) {
+                    return (
+                      <ThemedView key={post.id} style={{ flexDirection: "column" }}>
+                        <ThemedView style={styles.row}>
+                          <Ionicons  name="git-compare-outline" size={15} />
+                          <ThemedText style={styles.repost}>
+                            {post.user.username} Reposted
+                          </ThemedText>
+                        </ThemedView>
+                        <Post key={post.id} post={post.post} isComment={false} />
+                      </ThemedView>
+                    );
+                  }
+                  return <Post key={post.id} post={post} isComment={false} />;
+                })}
             </Animated.ScrollView>
           </ThemedView>
         </ThemedView>
@@ -240,4 +265,12 @@ const styles = StyleSheet.create({
   postContainer: {
     width: width > 600 ? "100%" : "100%",
   },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  repost: {
+    marginLeft: 10
+  }
 });

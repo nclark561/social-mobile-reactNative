@@ -17,9 +17,9 @@ export default function SignIn({
 }: {
   setLoginToggle: (value: boolean) => void;
 }) {
-  const [email, setEmail] = useState<string>(""); // Initialize with an empty string
-  const [userName, setUsername] = useState<string>(""); // Initialize with an empty string
-  const [password, setPassword] = useState<string>(""); // Initialize with an empty string
+  const [email, setEmail] = useState<string>("");
+  const [userName, setUsername] = useState<string>(""); 
+  const [password, setPassword] = useState<string>(""); 
   const colorScheme = useColorScheme();
   const { getUserPosts, posts, getBaseUrl } = useContext<any>(PostContext);
   const [ error, setError ] = useState<any>()
@@ -62,22 +62,22 @@ export default function SignIn({
           placeholder="Username"
           style={[styles.loginInput, { color }]}
           value={userName}
-          onChangeText={setUsername} // Updates username state
+          onChangeText={setUsername} 
         />
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Email"
           style={[styles.loginInput, { color }]}
           value={email}
-          onChangeText={setEmail} // Updates email state
+          onChangeText={setEmail} 
         />
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Password"
           style={[styles.loginInput, { color }]}
           value={password}
-          onChangeText={setPassword} // Updates password state
-          secureTextEntry // Hides password input
+          onChangeText={setPassword} 
+          secureTextEntry 
         />
         {error && <ThemedText style={styles.error}>{error}</ThemedText>}
       </ThemedView>
@@ -118,22 +118,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgb(197, 191, 191)",
     padding: 12,
-    marginVertical: 10, // Vertical margin between inputs
+    marginVertical: 10, 
   },
   gray: {
     color: "gray",
   },
   wide: {
     width: "90%",
-    alignItems: "center", // Centers content within this View
-    marginBottom: 20, // Adds space between the input group and buttons
+    alignItems: "center",
+    marginBottom: 20, 
   },
   button: {
     backgroundColor: "rgb(63, 134, 196)",
     borderRadius: 5,
     padding: 10,
     width: "90%",
-    alignItems: "center", // Centers the text within the button
+    alignItems: "center", 
     marginVertical: 10,
   },
   buttonText: {
