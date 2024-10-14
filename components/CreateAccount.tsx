@@ -22,15 +22,21 @@ export default function SignIn({
   const [password, setPassword] = useState<string>(""); // Initialize with an empty string
   const colorScheme = useColorScheme();
   const { getUserPosts, posts, getBaseUrl } = useContext<any>(PostContext);
+  const [ error, setError ] = useState<any>()
 
   const color = colorScheme === "dark" ? "white" : "black";
 
   const handleSignUp = async (userName: string, email: string) => {
     try {
-      // const { data, error } = await supabase.auth.signUp({
-      //     email: email,
-      //     password: password,
-      // });
+      const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+      });
+      if (error) {
+        console.log(error, 'this is the signup error')
+        setError(error.message)
+        throw new Error('error with signup')
+      }
       const result = await fetch(`${getBaseUrl()}/api/createUser`, {
         method: "POST",
         headers: {
@@ -73,6 +79,7 @@ export default function SignIn({
           onChangeText={setPassword} // Updates password state
           secureTextEntry // Hides password input
         />
+        {error && <ThemedText style={styles.error}>{error}</ThemedText>}
       </ThemedView>
       <ThemedView style={styles.wide}>
         <Pressable
@@ -137,4 +144,7 @@ const styles = StyleSheet.create({
     color: "rgb(63, 134, 196)",
     paddingTop: 5,
   },
+  error: {
+    color: 'red'
+  }
 });

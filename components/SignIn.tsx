@@ -27,6 +27,7 @@ export default function SignIn({
   const context = useContext<any>(MyContext);
   const { setLoginToggle, getUser, setLoggedIn } = context; 
   const { setForYouPosts } = useContext<any>(PostContext)
+  const [ error, setError ] = useState<any>()
 
   const color = colorScheme === "dark" ? "white" : "black";
 
@@ -38,6 +39,8 @@ export default function SignIn({
       });
       if (error) {
         console.log(error, "this is the login error");
+        setError(error.message)
+        throw new Error('login error')
       }
       if (data) {
         if(Platform.OS === 'web') {
@@ -86,6 +89,7 @@ export default function SignIn({
           style={[styles.loginInput, { color }]}
           secureTextEntry={true} // Ensure password input is secure
         />
+        {error && <ThemedText style={styles.error}>{error}</ThemedText>}
       </ThemedView>
       <ThemedView style={styles.wide}>
         <Pressable
@@ -153,4 +157,7 @@ const styles = StyleSheet.create({
     color: " rgb(63, 134, 196)",
     paddingTop: 5,
   },
+  error: {
+    color: 'red'
+  }
 });
