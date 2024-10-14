@@ -16,6 +16,7 @@ import {
   Platform,
   useColorScheme,
 } from "react-native";
+import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons"; // For icons
 import { useNavigation, useRoute } from "@react-navigation/native"; // For navigation
 import { createClient, RealtimeChannel } from "@supabase/supabase-js"; // Supabase setup
@@ -213,12 +214,9 @@ const CurrentChat: React.FC = () => {
     >
       <ThemedView style={styles.container}>
         <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
+          <Link href={'/(drawer)/(tabs)/messages'}>
             <Ionicons name="arrow-back" size={24} color={color} />
-          </TouchableOpacity>
+          </Link>
           <ThemedView style={styles.center}>
             <ThemedText style={styles.title}>
               {messages?.users

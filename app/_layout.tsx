@@ -1,7 +1,7 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useColorScheme } from "react-native";
@@ -17,6 +17,7 @@ import DesktopRouting from "@/components/desktopComponents/desktopRouting";
 import StackLogos from "@/components/desktopComponents/stackLogos";
 import { useContext } from "react";
 import MyContext from "@/components/providers/MyContext";
+import { Link, router } from "expo-router";
 import LinkedinProfiles from "@/components/desktopComponents/linkedinProfiles";
 
 SplashScreen.preventAutoHideAsync();
@@ -39,6 +40,9 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
+
+
+
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -65,7 +69,7 @@ export default function RootLayout() {
                     </ThemedView>
                   ) : (
                     <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-                      <Stack.Screen name="(drawer)"/>
+                      <Stack.Screen name="(drawer)" />
                     </Stack>
                   )}
                 </SafeAreaView>
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     display: width > 1000 ? 'flex' : 'none',
     flexDirection: 'column',
     zIndex: 1000
-  
+
   },
   none: {
     display: width > 1000 ? 'flex' : 'none',

@@ -48,7 +48,7 @@ export default function Post({
   const colorScheme = useColorScheme();
   const [commentInput, setCommentInput] = useState("");
   const [profileImageUri, setProfileImageUri] = useState("");
-  const [optimisticLike, setOptimisticLike] = useState(post.likes.length);
+  const [optimisticLike, setOptimisticLike] = useState(post?.likes?.length);
   const [menuVisible, setMenuVisible] = useState(false); // State for menu visibility
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
@@ -69,7 +69,8 @@ export default function Post({
   const handleOpenComment = () => commentModalRef.current?.present();
   const handleCloseComment = () => commentModalRef.current?.dismiss();
   const handleOpenRepost = () => repostModalRef.current?.present();
-  const handleOpenDeleteMenu = () => deleteMenuRef.current?.present(); // Open delete menu
+  const handleOpenDeleteMenu = () => deleteMenuRef.current?.present(); 
+  const handleCloseDeleteMenu = () => deleteMenuRef.current?.dismiss(); 
 
   const likePost = () => {
     setLiked((prev) => !prev);
@@ -77,7 +78,7 @@ export default function Post({
 
   const isLikedByUser = (likes: string[]): boolean => {
     if (!myInfo?.id) return false; // If user info is not available, return false
-    return likes.includes(myInfo.id); // Check if the user's ID is in the likes array
+    return likes?.includes(myInfo.id); // Check if the user's ID is in the likes array
   };
 
   const [liked, setLiked] = useState(isLikedByUser(post.likes));
@@ -233,7 +234,7 @@ export default function Post({
           <Link
             href={`/profile/${post.email}`}
             style={styles.link}
-            onPress={handleProfilePress}  
+            onPress={handleProfilePress}
           >
             <ThemedText style={styles.postUser}>{post.userName}</ThemedText>
           </Link>
@@ -289,7 +290,11 @@ export default function Post({
           name="ellipsis-horizontal"
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
-          onPress={handleOpenDeleteMenu}
+          onPress={() => {
+            if (myInfo?.id !== postOwnerId) {
+              handleOpenDeleteMenu();
+            }
+          }}
         />
         <CustomBottomSheet
           snapPercs={["20%"]}
@@ -307,7 +312,9 @@ export default function Post({
           >
             <Text style={styles.deleteButtonText}>Delete Post</Text>
           </Pressable>)}
-
+          <Pressable onPress={handleCloseDeleteMenu}>
+            <Text style={styles.deleteButtonText}>Cancel</Text>
+          </Pressable>
         </CustomBottomSheet>
         <CustomBottomSheet
           snapPercs={["25%"]}

@@ -11,6 +11,7 @@ type PostContextType = {
   forYouPostsToggle: boolean;
   setForYouPostsToggle: (value: boolean) => void;
   getBaseUrl: () => void;
+  forYouFollowingPosts: String[]
   setForYouPosts: any
 };
 
@@ -18,6 +19,7 @@ const PostContext = createContext<PostContextType | undefined>(undefined);
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
   const [posts, setPosts] = useState<any[]>([]);
+  const [forYouFollowingPosts, setForYouFollowingPosts] = useState<any[]>([]);
   const [forYouPosts, setForYouPosts] = useState<any[]>([]);
   const [forYouPostsToggle, setForYouPostsToggle] = useState<boolean>(false);
 
@@ -40,7 +42,9 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     getForYouPosts();
+    getAllForYouPosts()
   }, [forYouPostsToggle]);
+
 
   const getUserPosts = async (email: string, userId: string) => {
     try {
@@ -61,6 +65,23 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getForYouPosts = async (userId?: string) => {
+    try {
+      const result = await fetch(`${getBaseUrl()}/api/getFollowingPosts${userId ? `?id=${userId}` : ''}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const fetchedPosts = await result.json();      
+      setForYouFollowingPosts(fetchedPosts.Posts);
+      
+    } catch (error) {
+      console.log(error, "this is the get for you posts error");
+    }
+  };
+
+
+  const getAllForYouPosts = async (userId?: string) => {
     try {
       const result = await fetch(`${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ''}`, {
         method: "GET",
@@ -86,7 +107,8 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         forYouPostsToggle,
         setForYouPostsToggle,
         getBaseUrl,
-        setForYouPosts
+        setForYouPosts,
+        forYouFollowingPosts
       }}
     >
       {children}
