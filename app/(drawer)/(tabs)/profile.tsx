@@ -33,6 +33,7 @@ export default function TabTwoScreen() {
   const [loading, setLoading] = useState(true);
 
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
+  const linkTextColor = colorScheme === "dark" ? "#26a7de" : "#0000EE";
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
 
@@ -142,7 +143,6 @@ export default function TabTwoScreen() {
               <ThemedView style={styles.close}>
                 <ThemedView
                   style={[
-                    styles.backgroundColor,
                     { backgroundColor: myInfo?.color || "#fff" },
                   ]}
                 ></ThemedView>
@@ -186,7 +186,7 @@ export default function TabTwoScreen() {
                     <ThemedText style={styles.bio}>{myInfo?.bio}</ThemedText>
                     {myInfo?.links && (
                       <ThemedText
-                        style={styles.link}
+                        style={[styles.link, { color: linkTextColor }]}
                         onPress={() => openLink(myInfo.links)}
                       >
                         {myInfo.links}
@@ -379,7 +379,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   link: {
-    color: "#0000EE",
     fontSize: 10,
   },
   bio: {
