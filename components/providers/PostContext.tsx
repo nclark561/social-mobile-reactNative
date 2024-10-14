@@ -11,8 +11,9 @@ type PostContextType = {
   forYouPostsToggle: boolean;
   setForYouPostsToggle: (value: boolean) => void;
   getBaseUrl: () => void;
-  forYouFollowingPosts: String[]
-  setForYouPosts: any
+  forYouFollowingPosts: any[]
+  setForYouPosts: any,
+  getAllForYouPosts: any
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -66,7 +67,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
   const getForYouPosts = async (userId?: string) => {
     try {
-      const result = await fetch(`${getBaseUrl()}/api/getFollowingPosts${userId ? `?id=${userId}` : ''}`, {
+      const result = await fetch(`${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ''}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -81,16 +82,15 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   };
 
 
-  const getAllForYouPosts = async (userId?: string) => {
+  const getAllForYouPosts = async () => {
     try {
-      const result = await fetch(`${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ''}`, {
+      const result = await fetch(`${getBaseUrl()}/api/getPosts`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
       const fetchedPosts = await result.json();
-      // console.log(JSON.stringify(fetchedPosts, null, 2));
       setForYouPosts(fetchedPosts.Posts);
     } catch (error) {
       console.log(error, "this is the get for you posts error");
@@ -108,7 +108,8 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         setForYouPostsToggle,
         getBaseUrl,
         setForYouPosts,
-        forYouFollowingPosts
+        forYouFollowingPosts,
+        getAllForYouPosts
       }}
     >
       {children}

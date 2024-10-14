@@ -36,7 +36,7 @@ interface PostProps {
   repostLength?: number;
   isComment?: boolean;
   post: Post;
-  user: string;
+  user?: string;
 }
 
 export default function Post({

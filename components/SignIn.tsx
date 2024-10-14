@@ -61,12 +61,12 @@ export default function SignIn({
     }
   };
 
-  // useEffect(() => {
-  //   if(Platform.OS === 'web') {
-  //     const user = localStorage.getItem("user");
-  //     if (user) router.navigate('/(drawer)/(tabs)/')
-  //   } 
-  // }, [])
+  useFocusEffect(() => {
+    if(Platform.OS === 'web') {
+      const user = localStorage.getItem("user");
+      if (user) router.navigate('/(drawer)/(tabs)/')
+    } 
+  })
 
   return (
     

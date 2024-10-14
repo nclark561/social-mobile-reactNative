@@ -7,9 +7,9 @@ export default function Page() {
   const context = useContext<any>(MyContext);
   const { loggedIn } = context;
 
-  // useFocusEffect(() => {
-  //     router.push("/(tabs)");
-  // });
+  useFocusEffect(() => {
+      router.push("/(tabs)");
+  });
 
   return <></>;
 }

@@ -31,7 +31,7 @@ export default function HomeScreen() {
   const [isFocused, setIsFocused] = useState(false);
   const colorScheme = useColorScheme();
   const postContext = useContext<any>(PostContext);
-  const { getUserPosts, forYouPosts, getForYouPosts, getBaseUrl, posts, forYouFollowingPosts } =
+  const { getUserPosts, forYouPosts, getForYouPosts, getBaseUrl, posts, forYouFollowingPosts, getAllForYouPosts } =
     postContext;
   const [profileImageUri, setProfileImageUri] = useState(``);
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
@@ -85,17 +85,14 @@ export default function HomeScreen() {
   );
 
   const loadingPosts = async () => {
-    if (isForYou) {
-      await getForYouPosts(myInfo?.id);
-    } else {
-      await getUserPosts(myInfo?.email, myInfo?.id); // Assuming getUserPosts fetches following posts
-    }
+    await getForYouPosts(myInfo?.id);
+    await getAllForYouPosts(myInfo?.id)
     setLoading(false);
   };
 
   useEffect(() => {
     loadingPosts();
-  }, [myInfo, isForYou]); // Refresh when switching between For You and Following
+  }, [myInfo]); // Refresh when switching between For You and Following
 
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
@@ -161,8 +158,8 @@ export default function HomeScreen() {
                   forYouPosts.map((post, i) => (                   
                     <Post key={post.id} post={post} isComment={false} />
                   ))
-                : Array.isArray(posts) &&
-                  forYouFollowingPosts.map((post, i) => (                    
+                : Array.isArray(forYouFollowingPosts) &&
+                  forYouFollowingPosts.map((post: any) => (                    
                     <Post key={post.id} post={post} isComment={false} />
                   ))}
             </Animated.ScrollView>
