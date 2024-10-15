@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
 
   column: {
     display: width > 1000 ? 'flex' : 'none',
+    height: '80%',
     flexDirection: 'column',
     zIndex: 1000
 
@@ -105,6 +106,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '70%'
+    width: '70%',
+    height: 900
   }
 });

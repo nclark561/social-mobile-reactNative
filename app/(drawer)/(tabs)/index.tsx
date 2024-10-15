@@ -31,6 +31,7 @@ export default function HomeScreen() {
   const [isFocused, setIsFocused] = useState(false);
   const colorScheme = useColorScheme();
   const postContext = useContext<any>(PostContext);
+  const { height } = Dimensions.get('window');
   const { getUserPosts, forYouPosts, getForYouPosts, getBaseUrl, posts, forYouFollowingPosts, getAllForYouPosts } =
     postContext;
   const [profileImageUri, setProfileImageUri] = useState(``);
@@ -82,6 +83,8 @@ export default function HomeScreen() {
       getUserPosts(myInfo?.email, myInfo?.id);
     }, [myInfo])
   );
+
+  
 
   const loadingPosts = async () => {
     await getForYouPosts(myInfo?.id);
@@ -176,7 +179,7 @@ export default function HomeScreen() {
             </ThemedView>
 
             <Animated.ScrollView
-              style={{ position: "relative", width: '100%' }}
+              style={{ width: '100%', flex: 1, height: height }}
               showsVerticalScrollIndicator={false}
             >
               {isForYou
@@ -266,7 +269,7 @@ export default function HomeScreen() {
   );
 }
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   pageContainer: {
@@ -381,14 +384,20 @@ const styles = StyleSheet.create({
   },
   desktopCenter: {
     width: width > 600 ? "80%" : "100%",
+    flex: 1,
+    // paddingBottom: 170    
   },
   desktopRow: {
     flexDirection: "row",
-    width: "100%",
+    width: "100%",    
     justifyContent: "space-evenly",
+    flex: 1
   },
   postContainer: {
     width: width > 600 ? "100%" : "100%",
+    flex: 1,
+    height: height,
+    paddingBottom: 170    
   },
   row: {
     marginLeft: 10,
