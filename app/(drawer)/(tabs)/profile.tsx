@@ -71,7 +71,7 @@ export default function TabTwoScreen() {
               {Array.isArray(posts.posts) &&
                 posts?.posts?.map((post: any) => {
                   return (
-                    <Post key={post.id} post={post} user={myInfo?.email} />
+                    <Post key={post.id} post={post} user={myInfo?.email} setLoading={setLoading}/>
                   );
                 })}
             </ThemedView>
@@ -89,6 +89,7 @@ export default function TabTwoScreen() {
                       key={post.id}
                       post={post.post}
                       user={post.post.email}
+                      setLoading={setLoading}
                     />
                   );
                 })}
@@ -106,6 +107,7 @@ export default function TabTwoScreen() {
                     key={comment.id}
                     isComment
                     post={comment}
+                    setLoading={setLoading}
                   />
                 );
               })}

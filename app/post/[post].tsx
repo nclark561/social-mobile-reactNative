@@ -335,6 +335,7 @@ export default function PostPage() {
               isComment
               post={comment}
               user={myInfo?.email}
+              setLoading={setLoading}
             />
           );
         })}

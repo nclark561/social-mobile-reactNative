@@ -174,48 +174,47 @@ export default function HomeScreen() {
                 </Pressable>
               </ThemedView>
             </ThemedView>
-            <ThemedView style={styles.pageContainer}>
-              <Animated.ScrollView
-                style={{ position: "relative", width: '100%' }}
-                showsVerticalScrollIndicator={false}
-              >
-                {isForYou
-                  ? Array.isArray(forYouPosts) &&
-                  forYouPosts.map((post, i) => {
-                    if (post.postId) {
-                      return (
-                        <ThemedView key={post.id} style={{ flexDirection: "column", flex: 1 }}>
-                          <ThemedView style={styles.row}>
-                            <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
-                            <ThemedText style={styles.repost}>
-                              {post.user.username} Reposted
-                            </ThemedText>
-                          </ThemedView>
-                          <Post key={post.id} post={post.post} isComment={false} />
+
+            <Animated.ScrollView
+              style={{ position: "relative", width: '100%' }}
+              showsVerticalScrollIndicator={false}
+            >
+              {isForYou
+                ? Array.isArray(forYouPosts) &&
+                forYouPosts.map((post, i) => {
+                  if (post.postId) {
+                    return (
+                      <ThemedView key={post.id} style={{ flexDirection: "column", flex: 1 }}>
+                        <ThemedView style={styles.row}>
+                          <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
+                          <ThemedText style={styles.repost}>
+                            {post.user.username} Reposted
+                          </ThemedText>
                         </ThemedView>
-                      );
-                    }
-                    return <Post key={post.id} post={post} isComment={false} />;
-                  })
-                  : Array.isArray(forYouFollowingPosts) &&
-                  forYouFollowingPosts.map((post, i) => {
-                    if (post.postId) {
-                      return (
-                        <ThemedView key={post.id} style={{ flexDirection: "column", flex: 1 }}>
-                          <ThemedView style={styles.row}>
-                            <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
-                            <ThemedText style={styles.repost}>
-                              {post.user.username} Reposted
-                            </ThemedText>
-                          </ThemedView>
-                          <Post key={post.id} post={post.post} isComment={false} />
+                        <Post key={post.id} post={post.post} isComment={false} />
+                      </ThemedView>
+                    );
+                  }
+                  return <Post key={post.id} post={post} isComment={false} />;
+                })
+                : Array.isArray(forYouFollowingPosts) &&
+                forYouFollowingPosts.map((post, i) => {
+                  if (post.postId) {
+                    return (
+                      <ThemedView key={post.id} style={{ flexDirection: "column", flex: 1 }}>
+                        <ThemedView style={styles.row}>
+                          <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
+                          <ThemedText style={styles.repost}>
+                            {post.user.username} Reposted
+                          </ThemedText>
                         </ThemedView>
-                      );
-                    }
-                    return <Post key={post.id} post={post} isComment={false} />;
-                  })}
-              </Animated.ScrollView>
-            </ThemedView>
+                        <Post key={post.id} post={post.post} isComment={false} />
+                      </ThemedView>
+                    );
+                  }
+                  return <Post key={post.id} post={post} isComment={false} />;
+                })}
+            </Animated.ScrollView>
           </ThemedView>
         </ThemedView>
       </ThemedView>

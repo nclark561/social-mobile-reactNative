@@ -295,7 +295,7 @@ export default function CommentPage() {
         </CustomBottomSheet>
       </ThemedView>
       {thisPost?.replies?.map((comment: any) => (
-        <Post key={comment.id} isComment post={comment} user={myInfo?.email} />
+        <Post key={comment.id} isComment post={comment} user={myInfo?.email} setLoading={setLoading}/>
       ))}
     </ThemedView>
   );
