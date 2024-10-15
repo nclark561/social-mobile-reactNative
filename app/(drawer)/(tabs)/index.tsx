@@ -4,7 +4,6 @@ import {
   Button,
   useColorScheme,
   Text,
-  Image,
   Dimensions,
   TextInput,
 } from "react-native";
@@ -21,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "@/components/providers/MyContext";
 import { useFocusEffect } from "expo-router";
+import { Image } from 'expo-image';
 import { ThemedText } from "@/components/ThemedText";
 import { ClipLoader } from "react-spinners";
 
@@ -45,7 +45,7 @@ export default function HomeScreen() {
   const profileImage = (id: string) => {
     if (id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}.jpg?${Date.now()}`;
+        }/storage/v1/object/public/profile-images/${id}${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -174,46 +174,48 @@ export default function HomeScreen() {
                 </Pressable>
               </ThemedView>
             </ThemedView>
-            <Animated.ScrollView
-              style={{ position: "relative" }}
-              showsVerticalScrollIndicator={false}
-            >
-              {isForYou
-                ? Array.isArray(forYouPosts) &&
-                forYouPosts.map((post, i) => {
-                  if (post.postId) {
-                    return (
-                      <ThemedView key={post.id} style={{ flexDirection: "column" }}>
-                        <ThemedView style={styles.row}>
-                          <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
-                          <ThemedText style={styles.repost}>
-                            {post.user.username} Reposted
-                          </ThemedText>
+            <ThemedView style={styles.pageContainer}>
+              <Animated.ScrollView
+                style={{ position: "relative", width: '100%' }}
+                showsVerticalScrollIndicator={false}
+              >
+                {isForYou
+                  ? Array.isArray(forYouPosts) &&
+                  forYouPosts.map((post, i) => {
+                    if (post.postId) {
+                      return (
+                        <ThemedView key={post.id} style={{ flexDirection: "column", flex: 1 }}>
+                          <ThemedView style={styles.row}>
+                            <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
+                            <ThemedText style={styles.repost}>
+                              {post.user.username} Reposted
+                            </ThemedText>
+                          </ThemedView>
+                          <Post key={post.id} post={post.post} isComment={false} />
                         </ThemedView>
-                        <Post key={post.id} post={post.post} isComment={false} />
-                      </ThemedView>
-                    );
-                  }
-                  return <Post key={post.id} post={post} isComment={false} />;
-                })
-                : Array.isArray(forYouFollowingPosts) &&
-                forYouFollowingPosts.map((post, i) => {
-                  if (post.postId) {
-                    return (
-                      <ThemedView key={post.id} style={{ flexDirection: "column" }}>
-                        <ThemedView style={styles.row}>
-                          <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
-                          <ThemedText style={styles.repost}>
-                            {post.user.username} Reposted
-                          </ThemedText>
+                      );
+                    }
+                    return <Post key={post.id} post={post} isComment={false} />;
+                  })
+                  : Array.isArray(forYouFollowingPosts) &&
+                  forYouFollowingPosts.map((post, i) => {
+                    if (post.postId) {
+                      return (
+                        <ThemedView key={post.id} style={{ flexDirection: "column", flex: 1 }}>
+                          <ThemedView style={styles.row}>
+                            <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
+                            <ThemedText style={styles.repost}>
+                              {post.user.username} Reposted
+                            </ThemedText>
+                          </ThemedView>
+                          <Post key={post.id} post={post.post} isComment={false} />
                         </ThemedView>
-                        <Post key={post.id} post={post.post} isComment={false} />
-                      </ThemedView>
-                    );
-                  }
-                  return <Post key={post.id} post={post} isComment={false} />;
-                })}
-            </Animated.ScrollView>
+                      );
+                    }
+                    return <Post key={post.id} post={post} isComment={false} />;
+                  })}
+              </Animated.ScrollView>
+            </ThemedView>
           </ThemedView>
         </ThemedView>
       </ThemedView>
@@ -231,9 +233,11 @@ export default function HomeScreen() {
               <Text style={styles.buttonText}>Post</Text>
             </Pressable>
           </ThemedView>
-          <ThemedView style={{ flexDirection: "row" }}>
+          <ThemedView style={{ flexDirection: "row", display: 'flex', padding: 20, width: '100%' }}>
+
             <Image
               style={styles.commentPic}
+
               source={{
                 uri: `${profileImage(myInfo?.id)}`,
               }}
@@ -255,10 +259,10 @@ export default function HomeScreen() {
           </ThemedView>
         </ThemedView>
       </CustomBottomSheet>
-
-      <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
+      {myInfo ? <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
         <Ionicons size={30} color={"white"} name="add" />
-      </Pressable>
+      </Pressable> : null}
+
     </ThemedView>
   );
 }
@@ -269,6 +273,7 @@ const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: "column",
     flex: 1,
+    width: '100%',
     display: "flex",
     alignItems: "center",
   },
@@ -288,7 +293,8 @@ const styles = StyleSheet.create({
     display: width > 600 ? "flex" : "none",
   },
   postInput: {
-    maxWidth: "80%",
+    maxWidth: "100%",
+    width: '100%',
     paddingTop: 15,
   },
   toggleContainer: {
@@ -299,12 +305,14 @@ const styles = StyleSheet.create({
   },
   commentContainer: {
     flexDirection: "column",
+    width: '100%',
+    alignItems: 'center',
     paddingTop: 20,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%",
+    width: "70%",
     padding: 10,
   },
   postButton: {
@@ -318,9 +326,10 @@ const styles = StyleSheet.create({
   },
   commentPic: {
     borderRadius: 25,
-    width: 25,
-    height: 25,
-    margin: 10,
+    marginRight: 30,
+    width: 45,
+    height: 45,
+
   },
   repostedRow: {
     display: "flex",
