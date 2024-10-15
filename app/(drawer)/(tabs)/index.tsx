@@ -406,6 +406,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   repost: {
-    marginLeft: 5
+    marginLeft: 5,
+    fontSize: 14
   }
 });

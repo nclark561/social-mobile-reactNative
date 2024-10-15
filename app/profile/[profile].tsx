@@ -10,6 +10,7 @@ import {
   Pressable,
   Alert,
 } from "react-native"; // Import Alert
+import { Dimensions } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation as useExpoNavigation } from "expo-router";
@@ -96,7 +97,7 @@ export default function ExternalProfile() {
           <ThemedView>
             {Array.isArray(user?.posts) &&
               user?.posts?.map((post: any) => {
-                return <Post key={post?.id} post={post} user={user?.id} setLoading={setLoading}/>;
+                return <Post key={post?.id} post={post} user={user?.id} setLoading={setLoading} />;
               })}
           </ThemedView>
         );
@@ -113,7 +114,7 @@ export default function ExternalProfile() {
                   </ThemedText>
                 </ThemedView>
               );
-            })}            
+            })}
           </ThemedView>
         );
       default:
@@ -160,67 +161,68 @@ export default function ExternalProfile() {
   };
 
   return (
-    <ThemedView style={{ flex: 1 }}>
+    <ThemedView style={[{ flex: 1 }, styles.pageContainer]}>
       {loading && (
         <ThemedView
           style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
         >
           <ClipLoader color="#26a7de" />
         </ThemedView>
-      )} 
-      <ThemedView style={styles.header}>
-        <ThemedView
-          style={[styles.icon, { backgroundColor: `${user?.color}` }]}
-        >
-          <Pressable onPress={() => { router.back() }}>
-            <Ionicons size={25} name="arrow-back-outline" />
-          </Pressable>
-        </ThemedView>
-        <ThemedView
-          style={[
-            styles.backgroundColor,
-            { backgroundColor: user?.color || "#fff" },
-          ]}
-        ></ThemedView>
-        <ThemedView style={styles.row}>          
+      )}
+      <ThemedView style={styles.desktopCenter}>
+        <ThemedView style={styles.header}>
+          <ThemedView
+            style={[styles.icon, { backgroundColor: `${user?.color}` }]}
+          >
+            <Pressable onPress={() => { router.back() }}>
+              <Ionicons size={25} name="arrow-back-outline" />
+            </Pressable>
+          </ThemedView>
+          <ThemedView
+            style={[
+              styles.backgroundColor,
+              { backgroundColor: user?.color || "#fff" },
+            ]}
+          ></ThemedView>
+          <ThemedView style={styles.row}>
             <Image
               style={styles.profilePic}
               source={{ uri: profileImageUri }}
               onError={handleError}
-            />          
-          {user && myInfo && myInfo.email !== user.email ? (
-            isFollowed(user.followers) ? (
-              <Pressable onPress={handleUnfollow}>
-                <Ionicons
-                  size={25}
-                  style={styles.followIcon}
-                  name={"checkmark-done-circle-outline"}
-                  color={colorScheme === "dark" ? "white" : "black"}
-                ></Ionicons>
-              </Pressable>
-            ) : (
-              <Pressable
-                onPress={() => {
-                  updateFollowers(
-                    myInfo.id,
-                    user.id,
-                    user.followers,
-                    myInfo.following,
-                  );
-                }}
-              >
-                <ThemedText style={styles.button}>Follow</ThemedText>
-              </Pressable>
-            )
-          ) : null}
-        </ThemedView>
-        <ThemedView style={styles.close}>          
+            />
+            {user && myInfo && myInfo.email !== user.email ? (
+              isFollowed(user.followers) ? (
+                <Pressable onPress={handleUnfollow}>
+                  <Ionicons
+                    size={25}
+                    style={styles.followIcon}
+                    name={"checkmark-done-circle-outline"}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  ></Ionicons>
+                </Pressable>
+              ) : (
+                <Pressable
+                  onPress={() => {
+                    updateFollowers(
+                      myInfo.id,
+                      user.id,
+                      user.followers,
+                      myInfo.following,
+                    );
+                  }}
+                >
+                  <ThemedText style={styles.button}>Follow</ThemedText>
+                </Pressable>
+              )
+            ) : null}
+          </ThemedView>
+          <ThemedView style={styles.close}>
             <>
               <ThemedText style={styles.userName}>{user?.username}</ThemedText>
               <ThemedText style={styles.tag}>@{user?.email}</ThemedText>
-            </>          
-        </ThemedView>
-        <ThemedView style={styles.followersRow}>          
+            </>
+          </ThemedView>
+          <ThemedView style={styles.followersRow}>
             <>
               <ThemedText style={styles.smallGray}>
                 {user?.followers?.length} Followers
@@ -228,32 +230,36 @@ export default function ExternalProfile() {
               <ThemedText style={styles.smallGray}>
                 {user?.following?.length} Following
               </ThemedText>
-            </>          
+            </>
+          </ThemedView>
         </ThemedView>
-      </ThemedView>
-      <ThemedView style={styles.column}>
-        {["Posts", "Reposts", "Replies"].map((option) => (
-          <TouchableOpacity
-            key={option}
-            onPress={() => setSelectedOption(option)}
-          >
-            <ThemedText
-              style={[
-                styles.optionText,
-                selectedOption === option && styles.underline,
-              ]}
+        <ThemedView style={styles.column}>
+          {["Posts", "Reposts", "Replies"].map((option) => (
+            <TouchableOpacity
+              key={option}
+              onPress={() => setSelectedOption(option)}
             >
-              {option}
-            </ThemedText>
-          </TouchableOpacity>
-        ))}
+              <ThemedText
+                style={[
+                  styles.optionText,
+                  selectedOption === option && styles.underline,
+                ]}
+              >
+                {option}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
+        </ThemedView>
+        <ThemedView style={styles.content}>{renderContent()}</ThemedView>
       </ThemedView>
-      <ThemedView style={styles.content}>{renderContent()}</ThemedView>
     </ThemedView>
   );
 }
 
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
+
+
   header: {
     flexDirection: "column",
     paddingTop: 20,
@@ -263,7 +269,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "baseline",
     width: "100%",
-    
+
     borderColor: "#525252",
   },
   profilePic: {
@@ -275,6 +281,12 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     fontWeight: "700",
+  },
+  pageContainer: {
+    flexDirection: "column",
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center'
   },
   tag: {
     fontSize: 10,
@@ -322,6 +334,8 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 10,
+    display: 'flex',
+    justifyContent: 'center'
   },
   row: {
     display: "flex",
@@ -330,6 +344,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: 'transparent',
     width: "95%",
+  },
+  desktopCenter: {
+    width: width > 600 ? '75%' : '100%'
   },
   button: {
     width: 55,
