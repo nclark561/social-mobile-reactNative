@@ -64,7 +64,9 @@ export default function HomeScreen() {
           userName,
         }),
       });
+      setPostInput('')
       await getForYouPosts();
+      await getAllForYouPosts()
     } catch (error) {
       console.log(error, "this is the create post error");
     }
