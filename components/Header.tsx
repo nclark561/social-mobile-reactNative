@@ -7,12 +7,13 @@ import {
 } from "react-native";
 import { useState, useContext, useMemo } from "react";
 import { ThemedView } from "./ThemedView";
-import { ThemedText } from "./ThemedText";
 import MyContext from "./providers/MyContext";
+import { useNavigation, router } from "expo-router";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { DrawerActions } from "@react-navigation/native";
 import { supabase } from "./Supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemedText } from "./ThemedText";
 
 interface HeaderProps {
   name: string;
@@ -20,7 +21,8 @@ interface HeaderProps {
 
 export default function Header({ name }: HeaderProps) {
   const colorScheme = useColorScheme();
-
+  const navigation = useNavigation();
+  const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
   const context = useContext<any>(MyContext);
   const { myInfo, loggedIn, setLoginToggle, setLoggedIn, getUser } = context;
 
@@ -58,19 +60,21 @@ export default function Header({ name }: HeaderProps) {
   return (
     <ThemedView style={styles.page}>
       {loggedIn ? (
-        <>          
+        <>
+          <Pressable onPress={handlePress}>
             <Image
               style={styles.profilePic}
               source={{
                 uri: profileImageUri,
               }}
               placeholder={{ blurhash }}
-            />                    
+            />
+          </Pressable>
           {showLogout && (
             <View style={styles.logoutPopup}>
               <Pressable
-                onPress={() => {                  
-                  setLoginToggle(false);                  
+                onPress={() => {
+                  setLoginToggle(false);
                   router.replace("/login");
                 }}
               >
