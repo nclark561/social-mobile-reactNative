@@ -52,6 +52,9 @@ export default function HomeScreen() {
   };
 
   const createPost = async (content: string, userName: string) => {
+    if(content.length < 1) return
+    setLoading(true)
+    setPostInput('')
     const userEmail = await AsyncStorage.getItem("user");
     try {
       await fetch(`${getBaseUrl()}/api/createPost`, {
@@ -65,9 +68,12 @@ export default function HomeScreen() {
           userName,
         }),
       });
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
+      await getAllForYouPosts()
+      setLoading(false)
     } catch (error) {
       console.log(error, "this is the create post error");
+      setLoading(false)
     }
   };
 
@@ -88,7 +94,7 @@ export default function HomeScreen() {
 
   const loadingPosts = async () => {
     await getForYouPosts(myInfo?.id);
-    await getAllForYouPosts(myInfo?.id)
+    await getAllForYouPosts()
     setLoading(false);
   };
 
@@ -194,11 +200,11 @@ export default function HomeScreen() {
                             {post.user.username} Reposted
                           </ThemedText>
                         </ThemedView>
-                        <Post key={post.id} post={post.post} isComment={false} />
+                        <Post key={post.id} post={post.post} isComment={false} setLoading={setLoading}/>
                       </ThemedView>
                     );
                   }
-                  return <Post key={post.id} post={post} isComment={false} />;
+                  return <Post key={post.id} post={post} isComment={false} setLoading={setLoading}/>;
                 })
                 : Array.isArray(forYouFollowingPosts) &&
                 forYouFollowingPosts.map((post, i) => {
@@ -211,11 +217,11 @@ export default function HomeScreen() {
                             {post.user.username} Reposted
                           </ThemedText>
                         </ThemedView>
-                        <Post key={post.id} post={post.post} isComment={false} />
+                        <Post key={post.id} post={post.post} isComment={false} setLoading={setLoading}/>
                       </ThemedView>
                     );
                   }
-                  return <Post key={post.id} post={post} isComment={false} />;
+                  return <Post key={post.id} post={post} isComment={false} setLoading={setLoading}/>;
                 })}
             </Animated.ScrollView>
           </ThemedView>
