@@ -52,6 +52,7 @@ export default function HomeScreen() {
 
   const createPost = async (content: string, userName: string) => {
     const userEmail = await AsyncStorage.getItem("user");
+    setLoading(true)
     try {
       await fetch(`${getBaseUrl()}/api/createPost`, {
         method: "POST",
@@ -67,8 +68,10 @@ export default function HomeScreen() {
       setPostInput('')
       await getForYouPosts();
       await getAllForYouPosts()
+      setLoading(false)
     } catch (error) {
       console.log(error, "this is the create post error");
+      setLoading(false)
     }
   };
 
