@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, SetStateAction } from "react";
 import { StyleSheet, Button, Pressable, Text, View } from "react-native";
 import MyContext from "../providers/MyContext";
 import PostContext from "../providers/PostContext";
@@ -29,7 +29,7 @@ interface Post {
   userId?: string;
   owner: any;
   reposts: any;
-  user: { blurhash: string }
+  user: { blurhash: string },
 }
 
 interface PostProps {
@@ -37,6 +37,7 @@ interface PostProps {
   isComment?: boolean;
   post: Post;
   user?: string;
+  setLoading: React.Dispatch<SetStateAction<boolean>>
 }
 
 export default function Post({
@@ -44,6 +45,7 @@ export default function Post({
   isComment,
   user,
   repostLength,
+  setLoading
 }: PostProps) {
   const colorScheme = useColorScheme();
   const [commentInput, setCommentInput] = useState("");
@@ -55,7 +57,7 @@ export default function Post({
   const link = isComment ? "comment" : "post";
   const postOwnerId = isComment ? post?.userId : post?.owner?.id
 
-  const { getForYouPosts, getUserPosts, getBaseUrl } =
+  const { getForYouPosts, getUserPosts, getBaseUrl, getAllForYouPosts } =
     useContext<any>(PostContext);
   const { setLoginToggle, myInfo, loggedIn, getUser } =
     useContext<any>(MyContext);
@@ -105,6 +107,7 @@ export default function Post({
           }),
         },
       );
+      await getAllForYouPosts()
       await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
     } catch (error) {
@@ -113,6 +116,7 @@ export default function Post({
   };
 
   const deletePost = async (postId: string) => {
+    setLoading(true)
     try {
       await fetch(`${getBaseUrl()}/api/deletePost`, {
         method: "POST",
@@ -123,15 +127,19 @@ export default function Post({
           postId,
         }),
       });
+      deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
+      await getAllForYouPosts()
       await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
-      deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
+      setLoading(false)
     } catch (error) {
       console.log(error, "this is the delete post error");
+      setLoading(false)
     }
   };
 
   const deleteComment = async (id: string) => {
+    setLoading(true)
     try {
       await fetch(`${getBaseUrl()}/api/deleteComment`, {
         method: "POST",
@@ -142,11 +150,14 @@ export default function Post({
           id,
         }),
       });
-      await getForYouPosts(myInfo?.id);
-      await getUserPosts(user);
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
+      await getForYouPosts(myInfo?.id);
+      await getAllForYouPosts()
+      await getUserPosts(user);
+      setLoading(false)
     } catch (error) {
       console.log(error, "this is the delete post error");
+      setLoading(false)
     }
   };
 

@@ -66,7 +66,7 @@ export default function HomeScreen() {
         }),
       });
       setPostInput('')
-      await getForYouPosts();
+      await getForYouPosts(myInfo?.id);
       await getAllForYouPosts()
       setLoading(false)
     } catch (error) {
@@ -90,7 +90,7 @@ export default function HomeScreen() {
 
   const loadingPosts = async () => {
     await getForYouPosts(myInfo?.id);
-    await getAllForYouPosts(myInfo?.id)
+    await getAllForYouPosts()
     setLoading(false);
   };
 
@@ -195,11 +195,11 @@ export default function HomeScreen() {
                             {post.user.username} Reposted
                           </ThemedText>
                         </ThemedView>
-                        <Post key={post.id} post={post.post} isComment={false} />
+                        <Post key={post.id} post={post.post} isComment={false} setLoading={setLoading}/>
                       </ThemedView>
                     );
                   }
-                  return <Post key={post.id} post={post} isComment={false} />;
+                  return <Post key={post.id} post={post} isComment={false} setLoading={setLoading}/>;
                 })
                 : Array.isArray(forYouFollowingPosts) &&
                 forYouFollowingPosts.map((post, i) => {
@@ -212,11 +212,11 @@ export default function HomeScreen() {
                             {post.user.username} Reposted
                           </ThemedText>
                         </ThemedView>
-                        <Post key={post.id} post={post.post} isComment={false} />
+                        <Post key={post.id} post={post.post} isComment={false} setLoading={setLoading}/>
                       </ThemedView>
                     );
                   }
-                  return <Post key={post.id} post={post} isComment={false} />;
+                  return <Post key={post.id} post={post} isComment={false} setLoading={setLoading}/>;
                 })}
             </Animated.ScrollView>
           </ThemedView>
