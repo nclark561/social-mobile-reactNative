@@ -28,14 +28,15 @@ export default function SignIn({
 
   const handleSignUp = async (userName: string, email: string) => {
     try {
-      // const { data, error } = await supabase.auth.signUp({
-      //     email: email,
-      //     password: password,
-      // });
+      const response = await fetch(`${getBaseUrl()}/api/getUserByUsername?username=${userName}`)
+      const { user } = await response.json()
+      if (user) throw new Error('username already taken')
+      const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+      });
       if (error) {
-        console.log(error, 'this is the signup error')
-        setError(error.message)
-        throw new Error('error with signup')
+        throw new Error(error.message)
       }
       const result = await fetch(`${getBaseUrl()}/api/createUser`, {
         method: "POST",
@@ -48,8 +49,8 @@ export default function SignIn({
         }),
       });
       setLoginToggle(true);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      setError(error.message)
     }
   };
 
