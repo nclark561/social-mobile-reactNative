@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     flexShrink: 1,
-    fontSize: 13,
+    fontSize: 14,
   },
   ellipsis: {
     position: "absolute",

@@ -22,6 +22,7 @@ import Post from "@/components/postComponents/Post";
 import { Link, useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import { ClipLoader } from "react-spinners";
+import Animated from "react-native-reanimated";
 
 export default function ExternalProfile() {
   const navigation = useExpoNavigation();
@@ -94,28 +95,32 @@ export default function ExternalProfile() {
     switch (selectedOption) {
       case "Posts":
         return (
-          <ThemedView>
-            {Array.isArray(user?.posts) &&
-              user?.posts?.map((post: any) => {
-                return <Post key={post?.id} post={post} user={user?.id} setLoading={setLoading} />;
-              })}
-          </ThemedView>
+          <Animated.ScrollView showsVerticalScrollIndicator={false} style={{ height: "100%", flex: 1 }}>
+            <ThemedView>
+              {Array.isArray(user?.posts) &&
+                user?.posts?.map((post: any) => {
+                  return <Post key={post?.id} post={post} user={user?.id} setLoading={setLoading} />;
+                })}
+            </ThemedView>
+          </Animated.ScrollView>
         );
       case "Likes":
         return <ThemedText>Reposts</ThemedText>;
       case "Replies":
         return (
-          <ThemedView>
-            {user?.comments?.map((comment: any) => {
-              return (
-                <ThemedView key={comment?.id || comment.content}>
-                  <ThemedText style={styles.content}>
-                    {comment?.comment}
-                  </ThemedText>
-                </ThemedView>
-              );
-            })}
-          </ThemedView>
+          <Animated.ScrollView showsVerticalScrollIndicator={false} style={{ height: "100%", flex: 1 }}>
+            <ThemedView>
+              {user?.comments?.map((comment: any) => {
+                return (
+                  <ThemedView key={comment?.id || comment.content}>
+                    <ThemedText style={styles.content}>
+                      {comment?.comment}
+                    </ThemedText>
+                  </ThemedView>
+                );
+              })}
+            </ThemedView>
+          </Animated.ScrollView>
         );
       default:
         return null;
@@ -250,7 +255,7 @@ export default function ExternalProfile() {
             </TouchableOpacity>
           ))}
         </ThemedView>
-        <ThemedView style={styles.content}>{renderContent()}</ThemedView>
+        {renderContent()}
       </ThemedView>
     </ThemedView>
   );
@@ -334,6 +339,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 10,
+    flex: 1,
     display: 'flex',
     justifyContent: 'center'
   },
@@ -346,7 +352,8 @@ const styles = StyleSheet.create({
     width: "95%",
   },
   desktopCenter: {
-    width: width > 600 ? '75%' : '100%'
+    width: width > 600 ? '75%' : '100%',
+    flex: 1
   },
   button: {
     width: 55,
