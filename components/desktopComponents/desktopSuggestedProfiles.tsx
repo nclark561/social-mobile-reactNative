@@ -22,14 +22,14 @@ import ProfileDisplay from "@/components/exploreComponents/ProfileDisplay";
 
 const noah = {
     email: "noahammon00@gmail.com",
-    username: "nclark561",
+    username: "Noah",
     id: "cm2axaly20001gays58jtdvde",
 };
 
 const kale = {
     email: "kaleckh@gmail.com",
-    username: "kaethebae",
-    id: "cm1y4d9bz0000c59jwng9w81o",
+    username: "Kale",
+    id: "cm2ce24380000kdozmec4f0d9",
 };
 
 

@@ -224,7 +224,7 @@ export default function ExternalProfile() {
           <ThemedView style={styles.close}>
             <>
               <ThemedText style={styles.userName}>{user?.username}</ThemedText>
-              {/* <ThemedText style={styles.tag}>@{user?.email}</ThemedText> */}
+              <ThemedText style={styles.tag}>{user?.bio}</ThemedText>
             </>
           </ThemedView>
           <ThemedView style={styles.followersRow}>
@@ -294,8 +294,10 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   tag: {
-    fontSize: 10,
+    fontSize: 14,
     marginLeft: 1,
+    paddingBottom: 5,
+    paddingTop: 5
   },
   locationRow: {
     display: "flex",

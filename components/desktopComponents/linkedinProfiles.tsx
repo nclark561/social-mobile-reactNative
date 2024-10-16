@@ -31,8 +31,8 @@ const noah = {
 
 const kale = {
     email: "kaleckh@gmail.com",
-    username: "kaethebae",
-    id: "cm1k2x8jp0000z0ygxfrgi631",
+    username: "Kale",
+    id: "cm2ce24380000kdozmec4f0d9",
 };
 
 

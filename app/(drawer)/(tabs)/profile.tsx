@@ -384,8 +384,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   bio: {
-    fontSize: 17,
-    padding: 5
+    fontSize: 15,
+    paddingBottom: 5,
+    paddingTop: 5    
   },
   // backgroundColor: {
   //   position: "absolute",
