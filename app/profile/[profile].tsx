@@ -224,7 +224,7 @@ export default function ExternalProfile() {
           <ThemedView style={styles.close}>
             <>
               <ThemedText style={styles.userName}>{user?.username}</ThemedText>
-              <ThemedText style={styles.tag}>@{user?.email}</ThemedText>
+              {/* <ThemedText style={styles.tag}>@{user?.email}</ThemedText> */}
             </>
           </ThemedView>
           <ThemedView style={styles.followersRow}>
