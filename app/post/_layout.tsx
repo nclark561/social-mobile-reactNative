@@ -9,9 +9,7 @@ export default function PostLayout() {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen
-        name='[post]'
-      />
+      <Stack.Screen name="[post]" />
     </Stack>
   );
 }

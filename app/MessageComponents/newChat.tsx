@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
-    width: '100%',
+    width: "100%",
     alignItems: "center",
   },
   header: {
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   inputArea: {
     flexDirection: "row",
     alignItems: "center",
-    width: '100%',
+    width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderTopWidth: 1,
@@ -226,23 +226,22 @@ const styles = StyleSheet.create({
   },
   userList: {
     maxHeight: "35%",
-    width: "75%",    
+    width: "75%",
     borderColor: "white",
     borderWidth: 0.5,
     top: -11,
   },
   user: {
     fontSize: 18,
-    padding: 5
+    padding: 5,
   },
   usersView: {
-    flexDirection: "column",        
-    
+    flexDirection: "column",
   },
   border: {
     backgroundColor: "white",
     borderBottomWidth: 1,
-    borderBottomColor: 'gray'    
+    borderBottomColor: "gray",
   },
 });
 

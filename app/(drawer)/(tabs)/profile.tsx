@@ -45,19 +45,19 @@ export default function TabTwoScreen() {
 
   const handleLoading = async () => {
     await getUserPosts(myInfo?.email, myInfo?.id);
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   useFocusEffect(
     useCallback(() => {
-      handleLoading()
+      handleLoading();
     }, [myInfo]),
   );
 
   useEffect(() => {
     if (myInfo?.id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}?${Date.now()}`;
-      console.log(newProfileImageUri)
+      console.log(newProfileImageUri);
       setProfileImageUri(newProfileImageUri);
     }
   }, [myInfo]);
@@ -66,12 +66,20 @@ export default function TabTwoScreen() {
     switch (selectedOption) {
       case "Posts":
         return (
-          <Animated.ScrollView showsVerticalScrollIndicator={false} style={{ flexDirection: "column", flex: 1 }}>
+          <Animated.ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ flexDirection: "column", flex: 1 }}
+          >
             <ThemedView>
               {Array.isArray(posts.posts) &&
                 posts?.posts?.map((post: any) => {
                   return (
-                    <Post key={post.id} post={post} user={myInfo?.email} setLoading={setLoading} />
+                    <Post
+                      key={post.id}
+                      post={post}
+                      user={myInfo?.email}
+                      setLoading={setLoading}
+                    />
                   );
                 })}
             </ThemedView>
@@ -79,7 +87,10 @@ export default function TabTwoScreen() {
         );
       case "Reposts":
         return (
-          <Animated.ScrollView showsVerticalScrollIndicator={false} style={{ flexDirection: "column", flex: 1 }}>
+          <Animated.ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ flexDirection: "column", flex: 1 }}
+          >
             <ThemedView>
               {Array.isArray(posts.reposts) &&
                 posts?.reposts?.map((post: any) => {
@@ -98,7 +109,10 @@ export default function TabTwoScreen() {
         );
       case "Replies":
         return (
-          <Animated.ScrollView showsVerticalScrollIndicator={false} style={{ height: "72%", flex: 1 }}>
+          <Animated.ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ height: "72%", flex: 1 }}
+          >
             <ThemedView>
               {myInfo?.comments?.map((comment: any) => {
                 return (
@@ -118,7 +132,7 @@ export default function TabTwoScreen() {
         return null;
     }
   };
-  const blurhash = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+  const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
   const openLink = (url: string) => {
     // Check if the URL starts with "http" or "https"
     if (!url.startsWith("http")) {
@@ -130,146 +144,154 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <ThemedView style={[{ flex: 1 }, Platform.OS === 'web' ? { marginTop: 0 } : { marginTop: -70 }, styles.pageContainer]}>
-      {loading && (
-        <ThemedView
-          style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
-        >
-          <ClipLoader color="#26a7de" />
-        </ThemedView>
-      )}
-      <ThemedView style={styles.header}>
-        <ThemedView style={styles.close}>
+    <ThemedView
+      style={[
+        { flex: 1 },
+        Platform.OS === "web" ? { marginTop: 0 } : { marginTop: -70 },
+        styles.pageContainer,
+      ]}
+    >
+      <ThemedView style={{width:'80%'}}>
+        {loading && (
           <ThemedView
-            style={[
-              { backgroundColor: myInfo?.color || "#fff" },
-            ]}
-          ></ThemedView>
-          <ThemedView style={styles.row}>
+            style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
+          >
+            <ClipLoader color="#26a7de" />
+          </ThemedView>
+        )}
+        <ThemedView style={styles.header}>
+          <ThemedView style={styles.close}>
+            <ThemedView
+              style={[{ backgroundColor: myInfo?.color || "#fff" }]}
+            ></ThemedView>
+            <ThemedView style={styles.row}>
+              {loggedIn ? (
+                <Image
+                  style={styles.profilePic}
+                  source={{
+                    uri: profileImageUri,
+                  }}
+                  placeholder={{ blurhash }}
+                  transition={500}
+                />
+              ) : (
+                <Image
+                  style={styles.profilePic}
+                  source={{
+                    uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAACUCAMAAADbGilTAAAAM1BMVEXk5ueutLeqsLPO0tTn6erh4+Tq7O3a3d6xt7rU19m/xMbEyMvJzc/d4OG5vsG9wcSkq6+UDpwhAAAD9ElEQVR4nO2b13LcMAwAWSBWibr//9pQvhJdZxNAj7l5iJOnHRiEWADGBoPBYDAYDAaDwWAw+LsAAGPTxvnHbgGYtJy9WyPOS6tZr7oA0gXDhRA8sv1lgtOgqL2eAKbXs+Q9gruF9RVcsOsL0bOtcLajVFDLyt+pnmM7dSILzH8QvSC7kAUdvqtysXYQWrAmQTXKGk0uK1NEz7aWVhbmpKD2IAsyQzViKVWzTGNkyXIWbF5UN1miagAs1zQSSFQZuOywxsB6EtW5IKxEKTuZIldu8DeJKmET8DqwM3pgp1OZagzsgqwKa6kq5zOyqi5X5WbCdS3N1g2Bu5ktLQKXwKKWgvyv611gMVeXensSTMMjBhbqVLlBTNil0pVrNNXCrcAOvEqgQqWq8GiuUFWxNhza52Cpdg1YrmCrXdH2L2BrVfEKQfbxldK1umRxgXVTMFyHawvXUQdeuP6i+sp0/XcL73j4e/YDTNW6It7AKVcbV7x7ooJL4nsM5stB8WXWBcSbl9qEXTHP3JnvLw/gPh4tVWEVuDewJW8FN1W8U+xG1ZYAbeNypXx1CYesWlNi0Z9lVbFqQH/bKA7sCfcG/izri1QF5t3rjbKbIrzd4J6yLCDqdyh4OkR+gtmT+yAnHF0XSebTkVjJTDfSGp6uUSVVhSWlkeymStyhNaU+dQlP3/mmElu0uugoBPs9D0Sg79D7ASb/5awoZvrf/5W4xD6prtSL6g5Q1r0sX0IY38mv/z/AFhkeO7aFWOXSUQP0DmDa775kwduufvmPKAWTthE9gepZdMvbO3qUhZ+BkklL6d0agol/QnB+llt4+8nXaLJoK33g4iQe1lb8d/xPs85Wb860ogoW69eo+fnDFZXN6qWmy2BQes5rejAkExwxOa3np/wzjAgSdz4GwPqnup+sa5ycsM7dCmT4NP7y3ZYbj2EbV70vjehe9xTs0Vsv0K4qpHvdII9MXMWamf4Q7GGZ8HVLnU08LhwRW2Ay53ydbOuX5rIw1fa6vZM1jRMBWM48Ua5taBnaGNTjVLd6266jRCWOvlXQ6i05a56sEGHauDavVK9lW5x2K1uzk2nwTn/oqrqjcgIJpsNX1V62KrLH1qpnKmQBWbViSKJoSK+Swk8YRl19ouyprmrsqZiyPoiJQrXsta52PKec7HNYi17MQrLfFuvHHcrJzAKSGnAlt+GUzjR3eSmCr8BeNisJSFWzRpNVWStLOzK+XnUTpS1IzljC2noho9OgZqi4Dclliz4F0mdQNHlY05t4KL9ZN9IuuaonSltwSgurwri7+EZiPy/04Jp4w6W7cHVJCWu3d1Vy0jp6teyBxAILXZDmOvhb/AN6bzfTexgP5QAAAABJRU5ErkJggg==",
+                  }}
+                  placeholder={{ blurhash }}
+                  transition={500}
+                />
+              )}
+              {loggedIn ? (
+                <TouchableOpacity
+                  style={[styles.button, { borderColor: fadedTextColor }]}
+                  onPress={handleOpenEditProfile}
+                >
+                  <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
+                </TouchableOpacity>
+              ) : (
+                <ThemedText></ThemedText>
+              )}
+            </ThemedView>
             {loggedIn ? (
-              <Image
-                style={styles.profilePic}
-                source={{
-                  uri: profileImageUri,
-                }}
-                placeholder={{ blurhash }}
-                transition={500}
-              />
+              <ThemedView style={styles.columnLeftPadding}>
+                <ThemedText style={styles.userName}>
+                  {myInfo?.username}
+                </ThemedText>
+                {/* <ThemedText style={styles.tag}>@{myInfo?.userName}</ThemedText> */}
+                <ThemedText style={styles.bio}>{myInfo?.bio}</ThemedText>
+                {myInfo?.links && (
+                  <ThemedText
+                    style={[styles.link, { color: linkTextColor }]}
+                    onPress={() => openLink(myInfo.links)}
+                  >
+                    {myInfo.links}
+                  </ThemedText>
+                )}
+              </ThemedView>
             ) : (
-              <Image
-                style={styles.profilePic}
-                source={{
-                  uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAACUCAMAAADbGilTAAAAM1BMVEXk5ueutLeqsLPO0tTn6erh4+Tq7O3a3d6xt7rU19m/xMbEyMvJzc/d4OG5vsG9wcSkq6+UDpwhAAAD9ElEQVR4nO2b13LcMAwAWSBWibr//9pQvhJdZxNAj7l5iJOnHRiEWADGBoPBYDAYDAaDwWAw+LsAAGPTxvnHbgGYtJy9WyPOS6tZr7oA0gXDhRA8sv1lgtOgqL2eAKbXs+Q9gruF9RVcsOsL0bOtcLajVFDLyt+pnmM7dSILzH8QvSC7kAUdvqtysXYQWrAmQTXKGk0uK1NEz7aWVhbmpKD2IAsyQzViKVWzTGNkyXIWbF5UN1miagAs1zQSSFQZuOywxsB6EtW5IKxEKTuZIldu8DeJKmET8DqwM3pgp1OZagzsgqwKa6kq5zOyqi5X5WbCdS3N1g2Bu5ktLQKXwKKWgvyv611gMVeXensSTMMjBhbqVLlBTNil0pVrNNXCrcAOvEqgQqWq8GiuUFWxNhza52Cpdg1YrmCrXdH2L2BrVfEKQfbxldK1umRxgXVTMFyHawvXUQdeuP6i+sp0/XcL73j4e/YDTNW6It7AKVcbV7x7ooJL4nsM5stB8WXWBcSbl9qEXTHP3JnvLw/gPh4tVWEVuDewJW8FN1W8U+xG1ZYAbeNypXx1CYesWlNi0Z9lVbFqQH/bKA7sCfcG/izri1QF5t3rjbKbIrzd4J6yLCDqdyh4OkR+gtmT+yAnHF0XSebTkVjJTDfSGp6uUSVVhSWlkeymStyhNaU+dQlP3/mmElu0uugoBPs9D0Sg79D7ASb/5awoZvrf/5W4xD6prtSL6g5Q1r0sX0IY38mv/z/AFhkeO7aFWOXSUQP0DmDa775kwduufvmPKAWTthE9gepZdMvbO3qUhZ+BkklL6d0agol/QnB+llt4+8nXaLJoK33g4iQe1lb8d/xPs85Wb860ogoW69eo+fnDFZXN6qWmy2BQes5rejAkExwxOa3np/wzjAgSdz4GwPqnup+sa5ycsM7dCmT4NP7y3ZYbj2EbV70vjehe9xTs0Vsv0K4qpHvdII9MXMWamf4Q7GGZ8HVLnU08LhwRW2Ay53ydbOuX5rIw1fa6vZM1jRMBWM48Ua5taBnaGNTjVLd6266jRCWOvlXQ6i05a56sEGHauDavVK9lW5x2K1uzk2nwTn/oqrqjcgIJpsNX1V62KrLH1qpnKmQBWbViSKJoSK+Swk8YRl19ouyprmrsqZiyPoiJQrXsta52PKec7HNYi17MQrLfFuvHHcrJzAKSGnAlt+GUzjR3eSmCr8BeNisJSFWzRpNVWStLOzK+XnUTpS1IzljC2noho9OgZqi4Dclliz4F0mdQNHlY05t4KL9ZN9IuuaonSltwSgurwri7+EZiPy/04Jp4w6W7cHVJCWu3d1Vy0jp6teyBxAILXZDmOvhb/AN6bzfTexgP5QAAAABJRU5ErkJggg==',
-                }}
-                placeholder={{ blurhash }}
-                transition={500}
-              />
+              <ThemedText style={styles.bio}>
+                <TouchableOpacity onPress={() => router.push("/login")}>
+                  <ThemedText style={styles.linkText}>Create </ThemedText>
+                </TouchableOpacity>{" "}
+                an account or{" "}
+                <TouchableOpacity onPress={() => router.push("/login")}>
+                  <ThemedText style={styles.linkText}>Login</ThemedText>
+                </TouchableOpacity>{" "}
+                to see full functionality!
+              </ThemedText>
             )}
+          </ThemedView>
+          <ThemedView style={styles.followersRow}>
             {loggedIn ? (
-              <TouchableOpacity
-                style={[styles.button, { borderColor: fadedTextColor }]}
-                onPress={handleOpenEditProfile}
-              >
-                <ThemedText style={{ fontSize: 12 }}>Edit Profile</ThemedText>
-              </TouchableOpacity>
+              <>
+                <ThemedText style={styles.smallGray}>
+                  {myInfo?.followers?.length} Followers
+                </ThemedText>
+                <ThemedText style={styles.smallGray}>
+                  {myInfo?.following?.length} Following
+                </ThemedText>
+              </>
             ) : (
               <ThemedText></ThemedText>
             )}
           </ThemedView>
-          {loggedIn ? (
-            <ThemedView style={styles.columnLeftPadding}>
-              <ThemedText style={styles.userName}>
-                {myInfo?.username}
-              </ThemedText>
-              {/* <ThemedText style={styles.tag}>@{myInfo?.userName}</ThemedText> */}
-              <ThemedText style={styles.bio}>{myInfo?.bio}</ThemedText>
-              {myInfo?.links && (
-                <ThemedText
-                  style={[styles.link, { color: linkTextColor }]}
-                  onPress={() => openLink(myInfo.links)}
-                >
-                  {myInfo.links}
-                </ThemedText>
-              )}
-            </ThemedView>
-          ) : (
-            <ThemedText style={styles.bio}>
-              <TouchableOpacity onPress={() => router.push('/login')}>
-                <ThemedText style={styles.linkText}>Create </ThemedText>
-              </TouchableOpacity>{" "}
-              an account or{" "}
-              <TouchableOpacity onPress={() => router.push('/login')}>
-                <ThemedText style={styles.linkText}>Login</ThemedText>
-              </TouchableOpacity>{" "}
-              to see full functionality!
-            </ThemedText>
-
-          )}
         </ThemedView>
-        <ThemedView style={styles.followersRow}>
-          {loggedIn ? (
-            <>
-              <ThemedText style={styles.smallGray}>
-                {myInfo?.followers?.length} Followers
-              </ThemedText>
-              <ThemedText style={styles.smallGray}>
-                {myInfo?.following?.length} Following
-              </ThemedText>
-            </>
-          ) : (
-            <ThemedText></ThemedText>
-          )}
+        <ThemedView style={styles.desktopRow}>
+          <ThemedView style={styles.contentMiddle}>
+            {loggedIn ? (
+              <ThemedView style={styles.column}>
+                {["Posts", "Reposts", "Replies"].map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={() => setSelectedOption(option)}
+                  >
+                    <ThemedText
+                      style={[
+                        styles.optionText,
+                        selectedOption === option && styles.underline,
+                      ]}
+                    >
+                      {option}
+                    </ThemedText>
+                  </TouchableOpacity>
+                ))}
+              </ThemedView>
+            ) : (
+              <ThemedView style={styles.column}>
+                {["Posts", "Reposts", "Replies"].map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={() => setSelectedOption(option)}
+                  >
+                    <ThemedText
+                      style={[
+                        styles.optionText,
+                        selectedOption === option && styles.underline,
+                      ]}
+                    >
+                      {option}
+                    </ThemedText>
+                  </TouchableOpacity>
+                ))}
+              </ThemedView>
+            )}
+          </ThemedView>
+          <EditProfileSheet
+            setProfileImageUri={setProfileImageUri}
+            currProfileImage={profileImageUri}
+            editProfileRef={editProfileRef}
+          />
         </ThemedView>
+        {renderContent()}
       </ThemedView>
-      <ThemedView style={styles.desktopRow}>
-        <ThemedView style={styles.contentMiddle}>
-          {loggedIn ? <ThemedView style={styles.column}>
-            {["Posts", "Reposts", "Replies"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                onPress={() => setSelectedOption(option)}
-              >
-                <ThemedText
-                  style={[
-                    styles.optionText,
-                    selectedOption === option && styles.underline,
-                  ]}
-                >
-                  {option}
-                </ThemedText>
-              </TouchableOpacity>
-            ))}
-          </ThemedView> : <ThemedView style={styles.column}>
-            {["Posts", "Reposts", "Replies"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                onPress={() => setSelectedOption(option)}
-              >
-                <ThemedText
-                  style={[
-                    styles.optionText,
-                    selectedOption === option && styles.underline,
-                  ]}
-                >
-                  {option}
-                </ThemedText>
-              </TouchableOpacity>
-            ))}
-
-          </ThemedView>}
-        </ThemedView>
-        <EditProfileSheet
-          setProfileImageUri={setProfileImageUri}
-          currProfileImage={profileImageUri}
-          editProfileRef={editProfileRef}
-        />
-      </ThemedView>
-      {renderContent()}
     </ThemedView>
   );
 }
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   header: {
@@ -282,8 +304,7 @@ const styles = StyleSheet.create({
     borderColor: "#525252",
   },
   profilePic: {
-    borderRadius: 25,
-    margin: 5,
+    borderRadius: 25,    
     // marginTop: width < 700 ? 0 : 60,
     width: 55,
     height: 55,
@@ -300,15 +321,14 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: '30%',
-    paddingLeft: 10,
+    width: "30%",    
   },
   close: {
     display: "flex",
     flexDirection: "column",
-    ...(Platform.OS === 'web' && {
-      width: '100%'
-    })
+    ...(Platform.OS === "web" && {
+      width: "100%",
+    }),
   },
   smallGray: {
     fontSize: 11,
@@ -324,8 +344,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   realColumn: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
   },
   optionText: {
     fontSize: 16,
@@ -337,11 +357,11 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 10,
-    flex: 1
+    flex: 1,
   },
   contentMiddle: {
-    width: '100%',
-    flex: 1
+    width: "100%",
+    flex: 1,
   },
   row: {
     display: "flex",
@@ -386,7 +406,7 @@ const styles = StyleSheet.create({
   bio: {
     fontSize: 15,
     paddingBottom: 5,
-    paddingTop: 5    
+    paddingTop: 5,
   },
   // backgroundColor: {
   //   position: "absolute",
@@ -396,69 +416,67 @@ const styles = StyleSheet.create({
   //   width: "110%",
   //   zIndex: -1,
   // },
-  center: {
-
-  },
+  center: {},
   desktopHiddenBorder: {
-    display: width > 600 ? 'flex' : 'none',
-    justifyContent: 'space-evenly',
+    display: width > 600 ? "flex" : "none",
+    justifyContent: "space-evenly",
     borderWidth: 1,
-    borderColor: 'rgb(232,232,232)',
+    borderColor: "rgb(232,232,232)",
     borderRadius: 10,
-    padding: 15
+    padding: 15,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: 20,
     gap: 10,
   },
   highlightButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 15,
     marginHorizontal: 5,
   },
   buttonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   linkText: {
-    color: '#007bff',
+    color: "#007bff",
     fontSize: 17,
   },
   desktopCenter: {
-    width: width > 600 ? '75%' : '100%',
-    flex: 1
+    width: width > 600 ? "75%" : "100%",
+    flex: 1,
   },
   pageContainer: {
     flexDirection: "column",
     flex: 1,
-    display: 'flex',
-    alignItems: 'center'
+    display: "flex",
+    alignItems: "center",
   },
   desktopRow: {
-    flexDirection: 'column',
-    width: '100%',
-    justifyContent: 'space-evenly'
+    flexDirection: "column",
+    width: "100%",
+    justifyContent: "space-evenly",
   },
   sectionHeader: {
-    textAlign: 'center',
-    fontWeight: '800',
+    textAlign: "center",
+    fontWeight: "800",
     fontSize: 20,
     marginBottom: 10,
   },
   profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
     padding: 10,
     borderRadius: 8,
     marginVertical: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -468,10 +486,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   profileButton: {
-    backgroundColor: 'rgb(38,102,193)', // LinkedIn Blue
+    backgroundColor: "rgb(38,102,193)", // LinkedIn Blue
     padding: 5,
     margin: 5,
     borderRadius: 5,
@@ -482,9 +500,9 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     zIndex: 20,
   },
 });

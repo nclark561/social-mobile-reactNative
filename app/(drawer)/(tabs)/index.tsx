@@ -11,6 +11,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useContext, useCallback, useEffect } from "react";
 import Animated from "react-native-reanimated";
 import Post from "@/components/postComponents/Post";
+import { Alert } from "react-native";
 import Header from "@/components/Header";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomBottomSheet from "@/components/util/CustomBottomSheet";
@@ -20,7 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "@/components/providers/MyContext";
 import { useFocusEffect } from "expo-router";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import { ThemedText } from "@/components/ThemedText";
 import { ClipLoader } from "react-spinners";
 
@@ -31,13 +32,20 @@ export default function HomeScreen() {
   const [isFocused, setIsFocused] = useState(false);
   const colorScheme = useColorScheme();
   const postContext = useContext<any>(PostContext);
-  const { height } = Dimensions.get('window');
-  const { getUserPosts, forYouPosts, getForYouPosts, getBaseUrl, posts, forYouFollowingPosts, getAllForYouPosts } =
-    postContext;
+  const { height } = Dimensions.get("window");
+  const {
+    getUserPosts,
+    forYouPosts,
+    getForYouPosts,
+    getBaseUrl,
+    posts,
+    forYouFollowingPosts,
+    getAllForYouPosts,
+  } = postContext;
   const [profileImageUri, setProfileImageUri] = useState(``);
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const context = useContext<any>(MyContext);
-  const { myInfo } = context;
+  const { myInfo, loggedIn } = context;
   const [loading, setLoading] = useState(true);
   const [isForYou, setIsForYou] = useState(true);
   const handleOpenNewPost = () => newPostRef?.current?.present();
@@ -45,16 +53,17 @@ export default function HomeScreen() {
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}${Date.now()}`;
+      const newProfileImageUri = `${
+        process.env.EXPO_PUBLIC_SUPABASE_URL
+      }/storage/v1/object/public/profile-images/${id}${Date.now()}`;
       return newProfileImageUri;
     }
   };
 
   const createPost = async (content: string, userName: string) => {
-    if (content.length < 1) return
-    setLoading(true)
-    setPostInput('')
+    if (content.length < 1) return;
+    setLoading(true);
+    setPostInput("");
     const userEmail = await AsyncStorage.getItem("user");
     try {
       await fetch(`${getBaseUrl()}/api/createPost`, {
@@ -69,11 +78,11 @@ export default function HomeScreen() {
         }),
       });
       await getForYouPosts(myInfo?.id);
-      await getAllForYouPosts()
-      setLoading(false)
+      await getAllForYouPosts();
+      setLoading(false);
     } catch (error) {
       console.log(error, "this is the create post error");
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -87,14 +96,12 @@ export default function HomeScreen() {
   useFocusEffect(
     useCallback(() => {
       getUserPosts(myInfo?.email, myInfo?.id);
-    }, [myInfo])
+    }, [myInfo]),
   );
-
-
 
   const loadingPosts = async () => {
     await getForYouPosts(myInfo?.id);
-    await getAllForYouPosts()
+    await getAllForYouPosts();
     setLoading(false);
   };
 
@@ -106,8 +113,7 @@ export default function HomeScreen() {
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const handleError = () => setProfileImageUri(mortyUrl);
 
-
-  const blurhash = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+  const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
   return (
     <ThemedView style={styles.pageContainer}>
@@ -116,33 +122,21 @@ export default function HomeScreen() {
       {/* Toggle for For You and Following */}
       <ThemedView style={styles.toggleContainer}>
         <Pressable
-          style={[
-            styles.toggleButton,
-            isForYou && styles.activeToggleButton,
-          ]}
+          style={[styles.toggleButton, isForYou && styles.activeToggleButton]}
           onPress={() => setIsForYou(true)}
         >
           <Text
-            style={[
-              styles.toggleText,
-              isForYou && styles.activeToggleText,
-            ]}
+            style={[styles.toggleText, isForYou && styles.activeToggleText]}
           >
             For You
           </Text>
         </Pressable>
         <Pressable
-          style={[
-            styles.toggleButton,
-            !isForYou && styles.activeToggleButton,
-          ]}
+          style={[styles.toggleButton, !isForYou && styles.activeToggleButton]}
           onPress={() => setIsForYou(false)}
         >
           <Text
-            style={[
-              styles.toggleText,
-              !isForYou && styles.activeToggleText,
-            ]}
+            style={[styles.toggleText, !isForYou && styles.activeToggleText]}
           >
             Following
           </Text>
@@ -161,74 +155,142 @@ export default function HomeScreen() {
           <ThemedView style={styles.postContainer}>
             <ThemedView style={styles.desktopHiddenFullscreen}>
               <ThemedView style={styles.repostedRow}>
-                <Image
-                  style={[styles.profilePic, { margin: 20 }]}
-                  source={{
-                    uri: profileImageUri
-                  }}
-                  onError={handleError}
-                />
+                {loggedIn ? (
+                  <Image
+                    style={[styles.profilePic, { margin: 20 }]}
+                    source={{
+                      uri: profileImageUri,
+                    }}
+                    onError={handleError}
+                  />
+                ) : (
+                  <Image
+                    style={[styles.profilePic, { margin: 20 }]}
+                    source={{
+                      uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAACUCAMAAADbGilTAAAAM1BMVEXk5ueutLeqsLPO0tTn6erh4+Tq7O3a3d6xt7rU19m/xMbEyMvJzc/d4OG5vsG9wcSkq6+UDpwhAAAD9ElEQVR4nO2b13LcMAwAWSBWibr//9pQvhJdZxNAj7l5iJOnHRiEWADGBoPBYDAYDAaDwWAw+LsAAGPTxvnHbgGYtJy9WyPOS6tZr7oA0gXDhRA8sv1lgtOgqL2eAKbXs+Q9gruF9RVcsOsL0bOtcLajVFDLyt+pnmM7dSILzH8QvSC7kAUdvqtysXYQWrAmQTXKGk0uK1NEz7aWVhbmpKD2IAsyQzViKVWzTGNkyXIWbF5UN1miagAs1zQSSFQZuOywxsB6EtW5IKxEKTuZIldu8DeJKmET8DqwM3pgp1OZagzsgqwKa6kq5zOyqi5X5WbCdS3N1g2Bu5ktLQKXwKKWgvyv611gMVeXensSTMMjBhbqVLlBTNil0pVrNNXCrcAOvEqgQqWq8GiuUFWxNhza52Cpdg1YrmCrXdH2L2BrVfEKQfbxldK1umRxgXVTMFyHawvXUQdeuP6i+sp0/XcL73j4e/YDTNW6It7AKVcbV7x7ooJL4nsM5stB8WXWBcSbl9qEXTHP3JnvLw/gPh4tVWEVuDewJW8FN1W8U+xG1ZYAbeNypXx1CYesWlNi0Z9lVbFqQH/bKA7sCfcG/izri1QF5t3rjbKbIrzd4J6yLCDqdyh4OkR+gtmT+yAnHF0XSebTkVjJTDfSGp6uUSVVhSWlkeymStyhNaU+dQlP3/mmElu0uugoBPs9D0Sg79D7ASb/5awoZvrf/5W4xD6prtSL6g5Q1r0sX0IY38mv/z/AFhkeO7aFWOXSUQP0DmDa775kwduufvmPKAWTthE9gepZdMvbO3qUhZ+BkklL6d0agol/QnB+llt4+8nXaLJoK33g4iQe1lb8d/xPs85Wb860ogoW69eo+fnDFZXN6qWmy2BQes5rejAkExwxOa3np/wzjAgSdz4GwPqnup+sa5ycsM7dCmT4NP7y3ZYbj2EbV70vjehe9xTs0Vsv0K4qpHvdII9MXMWamf4Q7GGZ8HVLnU08LhwRW2Ay53ydbOuX5rIw1fa6vZM1jRMBWM48Ua5taBnaGNTjVLd6266jRCWOvlXQ6i05a56sEGHauDavVK9lW5x2K1uzk2nwTn/oqrqjcgIJpsNX1V62KrLH1qpnKmQBWbViSKJoSK+Swk8YRl19ouyprmrsqZiyPoiJQrXsta52PKec7HNYi17MQrLfFuvHHcrJzAKSGnAlt+GUzjR3eSmCr8BeNisJSFWzRpNVWStLOzK+XnUTpS1IzljC2noho9OgZqi4Dclliz4F0mdQNHlY05t4KL9ZN9IuuaonSltwSgurwri7+EZiPy/04Jp4w6W7cHVJCWu3d1Vy0jp6teyBxAILXZDmOvhb/AN6bzfTexgP5QAAAABJRU5ErkJggg==",
+                    }}
+                    onError={handleError}
+                  />
+                )}
+
                 <TextInput
                   onFocus={() => setIsFocused(false)}
                   onBlur={() => setIsFocused(false)}
                   style={styles.input}
                   value={postInput}
                   multiline={true}
+                  textAlignVertical="center"
                   onChangeText={(text) => {
-                    setPostInput(text)
+                    setPostInput(text);
                   }}
                   placeholder="What's Happening!?"
                 ></TextInput>
-                <Pressable onPress={() => { createPost(postInput, myInfo.username) }}>
-                  <ThemedText style={styles.postButton}>Post!</ThemedText>
-                </Pressable>
+                {loggedIn ? (
+                  <Pressable
+                    onPress={() => {
+                      createPost(postInput, myInfo.username);
+                    }}
+                  >
+                    <ThemedText style={styles.postButton}>Post!</ThemedText>
+                  </Pressable>
+                ) : (
+                  <Pressable
+                    onPress={() => {
+                      Alert.alert("You aren't logged in");
+                    }}
+                  >
+                    <ThemedText style={styles.postButton}>Post!</ThemedText>
+                  </Pressable>
+                )}
               </ThemedView>
             </ThemedView>
 
             <Animated.ScrollView
-              style={{ width: '100%', flex: 1, height: height }}
+              style={{ width: "100%", flex: 1, height: height }}
               showsVerticalScrollIndicator={false}
             >
               {isForYou
                 ? Array.isArray(forYouPosts) &&
-                forYouPosts.map((post, i) => {
-                  if (post.postId) {
-                    return (
-                      <ThemedView key={post.id} style={{ flexDirection: "column", flex: 1 }}>
-                        <ThemedView style={styles.row}>
-                          <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
-                          <ThemedText style={styles.repost}>
-                            {post.user.username} Reposted
-                          </ThemedText>
+                  forYouPosts.map((post, i) => {
+                    if (post.postId) {
+                      return (
+                        <ThemedView
+                          key={post.id}
+                          style={{ flexDirection: "column", flex: 1 }}
+                        >
+                          <ThemedView style={styles.row}>
+                            <Ionicons
+                              color={colorScheme === "dark" ? "white" : "black"}
+                              name="git-compare-outline"
+                              size={15}
+                            />
+                            <ThemedText style={styles.repost}>
+                              {post.user.username} Reposted
+                            </ThemedText>
+                          </ThemedView>
+                          <Post
+                            key={post.id}
+                            post={post.post}
+                            isComment={false}
+                            setLoading={setLoading}
+                          />
                         </ThemedView>
-                        <Post key={post.id} post={post.post} isComment={false} setLoading={setLoading} />
-                      </ThemedView>
+                      );
+                    }
+                    return (
+                      <Post
+                        key={post.id}
+                        post={post}
+                        isComment={false}
+                        setLoading={setLoading}
+                      />
                     );
-                  }
-                  return <Post key={post.id} post={post} isComment={false} setLoading={setLoading} />;
-                })
+                  })
                 : Array.isArray(forYouFollowingPosts) &&
-                forYouFollowingPosts.map((post, i) => {
-                  if (post.postId) {
-                    return (
-                      <ThemedView key={post.id} style={{ flexDirection: "column", flex: 1 }}>
-                        <ThemedView style={styles.row}>
-                          <Ionicons color={colorScheme === 'dark' ? 'white' : 'black'} name="git-compare-outline" size={15} />
-                          <ThemedText style={styles.repost}>
-                            {post.user.username} Reposted
-                          </ThemedText>
+                  forYouFollowingPosts.map((post, i) => {
+                    if (post.postId) {
+                      return (
+                        <ThemedView
+                          key={post.id}
+                          style={{ flexDirection: "column", flex: 1 }}
+                        >
+                          <ThemedView style={styles.row}>
+                            <Ionicons
+                              color={colorScheme === "dark" ? "white" : "black"}
+                              name="git-compare-outline"
+                              size={15}
+                            />
+                            <ThemedText style={styles.repost}>
+                              {post.user.username} Reposted
+                            </ThemedText>
+                          </ThemedView>
+                          <Post
+                            key={post.id}
+                            post={post.post}
+                            isComment={false}
+                            setLoading={setLoading}
+                          />
                         </ThemedView>
-                        <Post key={post.id} post={post.post} isComment={false} setLoading={setLoading} />
-                      </ThemedView>
+                      );
+                    }
+                    return (
+                      <Post
+                        key={post.id}
+                        post={post}
+                        isComment={false}
+                        setLoading={setLoading}
+                      />
                     );
-                  }
-                  return <Post key={post.id} post={post} isComment={false} setLoading={setLoading} />;
-                })}
+                  })}
             </Animated.ScrollView>
           </ThemedView>
         </ThemedView>
       </ThemedView>
-      <CustomBottomSheet hideCancelButton ref={newPostRef} snapPercs={["10%", "10%"]}>
+      <CustomBottomSheet
+        hideCancelButton
+        ref={newPostRef}
+        snapPercs={["10%", "10%"]}
+      >
         <ThemedView style={styles.commentContainer}>
           <ThemedView style={styles.buttonContainer}>
             <Button title="Cancel" onPress={handleCloseNewPost}></Button>
@@ -242,11 +304,16 @@ export default function HomeScreen() {
               <Text style={styles.buttonText}>Post</Text>
             </Pressable>
           </ThemedView>
-          <ThemedView style={{ flexDirection: "row", display: 'flex', padding: 20, width: '100%' }}>
-
+          <ThemedView
+            style={{
+              flexDirection: "row",
+              display: "flex",
+              padding: 20,
+              width: "100%",
+            }}
+          >
             <Image
               style={styles.commentPic}
-
               source={{
                 uri: `${profileImage(myInfo?.id)}`,
               }}
@@ -268,10 +335,11 @@ export default function HomeScreen() {
           </ThemedView>
         </ThemedView>
       </CustomBottomSheet>
-      {myInfo ? <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
-        <Ionicons size={30} color={"white"} name="add" />
-      </Pressable> : null}
-
+      {myInfo ? (
+        <Pressable style={styles.addButton} onPress={handleOpenNewPost}>
+          <Ionicons size={30} color={"white"} name="add" />
+        </Pressable>
+      ) : null}
     </ThemedView>
   );
 }
@@ -282,7 +350,7 @@ const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: "column",
     flex: 1,
-    width: '100%',
+    width: "100%",
     display: "flex",
     alignItems: "center",
   },
@@ -303,7 +371,7 @@ const styles = StyleSheet.create({
   },
   postInput: {
     maxWidth: "100%",
-    width: '100%',
+    width: "100%",
     paddingTop: 15,
   },
   toggleContainer: {
@@ -314,8 +382,8 @@ const styles = StyleSheet.create({
   },
   commentContainer: {
     flexDirection: "column",
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     paddingTop: 20,
   },
   buttonContainer: {
@@ -338,7 +406,6 @@ const styles = StyleSheet.create({
     marginRight: 30,
     width: 45,
     height: 45,
-
   },
   repostedRow: {
     display: "flex",
@@ -352,7 +419,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: 35,
     height: 35,
-    marginBottom: 10,
+    paddingBottom: 10,
   },
   input: {
     fontSize: 16,
@@ -384,36 +451,36 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     zIndex: 20,
   },
   desktopCenter: {
     width: width > 600 ? "80%" : "100%",
     flex: 1,
-    // paddingBottom: 170    
+    // paddingBottom: 170
   },
   desktopRow: {
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-evenly",
-    flex: 1
+    flex: 1,
   },
   postContainer: {
     width: width > 600 ? "100%" : "100%",
     flex: 1,
     height: height,
-    paddingBottom: 170
+    paddingBottom: 170,
   },
   row: {
     marginLeft: 10,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   repost: {
     marginLeft: 5,
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 });

@@ -8,7 +8,7 @@ export default function Page() {
   const { loggedIn } = context;
 
   useFocusEffect(() => {
-      router.push("/(tabs)");
+    router.push("/(tabs)");
   });
 
   return <></>;

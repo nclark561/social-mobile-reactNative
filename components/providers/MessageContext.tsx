@@ -45,7 +45,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1"
       ) {
-        return process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL; // local 
+        return process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL; // local
       } else {
         // Prod for web
         return process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL; // Use production env variable

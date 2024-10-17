@@ -9,12 +9,8 @@ export default function ProfileLayout() {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen
-        name='[chatId]'
-      />
-      <Stack.Screen
-        name='newChat'
-      />
+      <Stack.Screen name="[chatId]" />
+      <Stack.Screen name="newChat" />
     </Stack>
   );
 }

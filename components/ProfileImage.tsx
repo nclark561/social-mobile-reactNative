@@ -4,19 +4,21 @@ import { Image } from "expo-image";
 
 interface ProfileImageProps {
   profileUri?: string;
-  blurhash?: string
+  blurhash?: string;
 }
 
-const ProfileImage = React.memo(({ profileUri, blurhash }: ProfileImageProps) => {
-  return (
-    <Image
-      style={styles.profilePic}
-      source={{ uri: profileUri }} 
-      placeholder={{ blurhash }}
-      transition={1000}
-    />
-  );
-});
+const ProfileImage = React.memo(
+  ({ profileUri, blurhash }: ProfileImageProps) => {
+    return (
+      <Image
+        style={styles.profilePic}
+        source={{ uri: profileUri }}
+        placeholder={{ blurhash }}
+        transition={1000}
+      />
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   profilePic: {

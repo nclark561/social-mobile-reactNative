@@ -13,22 +13,21 @@ export default function DesktopRouting() {
   const context = useContext<any>(MyContext);
   const { myInfo, loggedIn, setLoginToggle, setLoggedIn, setMyInfo } = context;
 
-
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
-      if (Platform.OS === 'web') {
-        localStorage.removeItem('user')
+      if (Platform.OS === "web") {
+        localStorage.removeItem("user");
       } else {
-          await AsyncStorage.removeItem("user");
+        await AsyncStorage.removeItem("user");
       }
       if (error) {
         console.log("this is logout error", error);
       }
-      setMyInfo(null)
+      setMyInfo(null);
       setLoginToggle(false);
       setLoggedIn(false);
-      location.reload()
+      location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -37,7 +36,10 @@ export default function DesktopRouting() {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const user = Platform.OS === 'web' ? localStorage.getItem('user') : await AsyncStorage.getItem("user");
+        const user =
+          Platform.OS === "web"
+            ? localStorage.getItem("user")
+            : await AsyncStorage.getItem("user");
         console.log(user, "user");
         if (user) {
           setLoggedIn(true);

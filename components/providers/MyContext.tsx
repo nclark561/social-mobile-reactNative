@@ -10,7 +10,7 @@ interface MyInfo {
   followers: string[];
   following: string[];
   username: string;
-  blurhash?: string
+  blurhash?: string;
 }
 
 interface ConversationData {
@@ -53,7 +53,7 @@ export interface UserContextType {
     links?: string,
     location?: string,
     bio?: string,
-    color?: string
+    color?: string,
   ) => Promise<void>;
   getUser: () => Promise<void>;
   getConvos: () => Promise<void>;
@@ -61,11 +61,10 @@ export interface UserContextType {
     myId: string,
     theirId: string,
     theirFollowers: string[],
-    myFollowing: string[]
+    myFollowing: string[],
   ) => Promise<void>;
-  setMyInfo: any
+  setMyInfo: any;
 }
-
 
 const MyContext = createContext<UserContextType | undefined>(undefined);
 
@@ -77,7 +76,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
   const getBaseUrl = () => {
     if (Platform.OS === "web") {
-      return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      return window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
         ? process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL
         : process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL;
     } else {
@@ -98,8 +98,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         return null;
       }
       setLoggedIn(true);
-      if(data) {
-        getUser()
+      if (data) {
+        getUser();
       }
       return data;
     } catch (err) {
@@ -111,12 +111,15 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   const getConvos = async () => {
     if (!myInfo?.id) return;
     try {
-      const response = await fetch(`${getBaseUrl()}/api/getConvos?id=${myInfo?.id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${getBaseUrl()}/api/getConvos?id=${myInfo?.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch conversations.");
       }
@@ -132,7 +135,6 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
       getConvos();
     }
   }, [myInfo]);
-  
 
   const getUser = async () => {
     try {
@@ -154,11 +156,11 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
       if (!result.ok) throw new Error("Failed to fetch user info.");
       const userInfo = await result.json();
-      console.log(userInfo, 'this is user info')
+      console.log(userInfo, "this is user info");
       setMyInfo(userInfo.user);
     } catch (error) {
       console.error("Error fetching user info:", error);
-      setMyInfo(undefined)
+      setMyInfo(undefined);
     }
   };
 
@@ -167,7 +169,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     links?: string,
     location?: string,
     bio?: string,
-    color?: string
+    color?: string,
   ) => {
     try {
       const bodyData: any = { email, links, location, bio, color };
@@ -192,7 +194,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     myId: string,
     theirId: string,
     theirFollowers: string[],
-    myFollowing: string[]
+    myFollowing: string[],
   ) => {
     try {
       const bodyData = { myId, theirId, theirFollowers, myFollowing };
@@ -226,7 +228,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
         getUser,
         getConvos,
         updateFollowers,
-        setMyInfo
+        setMyInfo,
       }}
     >
       {children}

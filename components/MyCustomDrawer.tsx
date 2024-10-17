@@ -1,6 +1,13 @@
 // components/MyCustomDrawer.js
 import React, { useContext, useState, useEffect, useMemo } from "react";
-import { StyleSheet, Image, Button, View, Pressable, useColorScheme } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  Button,
+  View,
+  Pressable,
+  useColorScheme,
+} from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -15,7 +22,7 @@ import { ThemedView } from "./ThemedView";
 export default function MyCustomDrawer(props: any) {
   const { setLoginToggle, myInfo, loggedIn, getUser, setLoggedIn } =
     useContext<any>(MyContext);
-    const colorScheme = useColorScheme()
+  const colorScheme = useColorScheme();
 
   // const router = useRouter();
   const mortyUrl =
@@ -71,7 +78,10 @@ export default function MyCustomDrawer(props: any) {
             </ThemedText>
           )}
         </ThemedView>
-        <DrawerItemList {...props} style={colorScheme === 'dark' && { color: 'white'}}/>
+        <DrawerItemList
+          {...props}
+          style={colorScheme === "dark" && { color: "white" }}
+        />
         <ThemedView style={styles.footer}>
           {loggedIn ? (
             <Button title="Logout" onPress={() => handleLogout()} />

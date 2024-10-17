@@ -29,7 +29,7 @@ interface Post {
   userId?: string;
   owner: any;
   reposts: any;
-  user: { blurhash: string },
+  user: { blurhash: string };
 }
 
 interface PostProps {
@@ -37,7 +37,7 @@ interface PostProps {
   isComment?: boolean;
   post: Post;
   user?: string;
-  setLoading: React.Dispatch<SetStateAction<boolean>>
+  setLoading: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Post({
@@ -45,7 +45,7 @@ export default function Post({
   isComment,
   user,
   repostLength,
-  setLoading
+  setLoading,
 }: PostProps) {
   const colorScheme = useColorScheme();
   const [commentInput, setCommentInput] = useState("");
@@ -55,7 +55,7 @@ export default function Post({
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const link = isComment ? "comment" : "post";
-  const postOwnerId = isComment ? post?.userId : post?.owner?.id
+  const postOwnerId = isComment ? post?.userId : post?.owner?.id;
 
   const { getForYouPosts, getUserPosts, getBaseUrl, getAllForYouPosts } =
     useContext<any>(PostContext);
@@ -68,11 +68,12 @@ export default function Post({
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
   const handleOpenShare = () => shareModalRef.current?.present();
+  const handleCloseShare = () => shareModalRef.current?.dismiss();
   const handleOpenComment = () => commentModalRef.current?.present();
   const handleCloseComment = () => commentModalRef.current?.dismiss();
   const handleOpenRepost = () => repostModalRef.current?.present();
-  const handleOpenDeleteMenu = () => deleteMenuRef.current?.present(); 
-  const handleCloseDeleteMenu = () => deleteMenuRef.current?.dismiss(); 
+  const handleOpenDeleteMenu = () => deleteMenuRef.current?.present();
+  const handleCloseDeleteMenu = () => deleteMenuRef.current?.dismiss();
 
   const likePost = () => {
     setLiked((prev) => !prev);
@@ -84,7 +85,6 @@ export default function Post({
   };
 
   const [liked, setLiked] = useState(isLikedByUser(post.likes));
-
 
   const addLike = async (userId: string, postId: string) => {
     setLiked((prevLiked) => !prevLiked);
@@ -107,7 +107,7 @@ export default function Post({
           }),
         },
       );
-      await getAllForYouPosts()
+      await getAllForYouPosts();
       await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
     } catch (error) {
@@ -116,7 +116,7 @@ export default function Post({
   };
 
   const deletePost = async (postId: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
       await fetch(`${getBaseUrl()}/api/deletePost`, {
         method: "POST",
@@ -128,18 +128,18 @@ export default function Post({
         }),
       });
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
-      await getAllForYouPosts()
+      await getAllForYouPosts();
       await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log(error, "this is the delete post error");
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   const deleteComment = async (id: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
       await fetch(`${getBaseUrl()}/api/deleteComment`, {
         method: "POST",
@@ -152,12 +152,12 @@ export default function Post({
       });
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
       await getForYouPosts(myInfo?.id);
-      await getAllForYouPosts()
+      await getAllForYouPosts();
       await getUserPosts(user);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log(error, "this is the delete post error");
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -215,8 +215,8 @@ export default function Post({
       console.log(error, "this is the repost error in post");
     }
   };
-  const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash
-  const blurhash2 = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+  const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash;
+  const blurhash2 = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
   const handleProfilePress = (event: any) => {
     // Prevent parent Pressable from being triggered
@@ -226,7 +226,6 @@ export default function Post({
   const handlePostPress = () => {
     router.push(`/${link}/${post.id}`);
   };
-
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -239,7 +238,10 @@ export default function Post({
         ]}
       >
         <ThemedView style={styles.flex}>
-          <ProfileImage profileUri={profileImage(post?.owner?.id || post?.userId || user)} blurhash={blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'} />
+          <ProfileImage
+            profileUri={profileImage(post?.owner?.id || post?.userId || user)}
+            blurhash={blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe"}
+          />
         </ThemedView>
         <ThemedView style={styles.postContent}>
           <Link
@@ -274,7 +276,11 @@ export default function Post({
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
-              <Pressable onPress={() => { likePost() }}>
+              <Pressable
+                onPress={() => {
+                  likePost();
+                }}
+              >
                 <Ionicons
                   size={15}
                   name={liked ? "heart" : "heart-outline"}
@@ -302,27 +308,26 @@ export default function Post({
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
           onPress={() => {
-            if (myInfo?.id === postOwnerId) {              
+            if (myInfo?.id === postOwnerId) {
               handleOpenDeleteMenu();
             }
           }}
         />
-        <CustomBottomSheet
-          snapPercs={["20%"]}
-          ref={deleteMenuRef}
-        >
-          {myInfo?.id === postOwnerId && (<Pressable
-            style={styles.deleteButton}
-            onPress={() => {
-              if (isComment) {
-                deleteComment(post.id);
-              } else {
-                deletePost(post.id);
-              }
-            }}
-          >
-            <Text style={styles.deleteButtonText}>Delete Post</Text>
-          </Pressable>)}
+        <CustomBottomSheet snapPercs={["20%"]} ref={deleteMenuRef}>
+          {myInfo?.id === postOwnerId && (
+            <Pressable
+              style={styles.deleteButton}
+              onPress={() => {
+                if (isComment) {
+                  deleteComment(post.id);
+                } else {
+                  deletePost(post.id);
+                }
+              }}
+            >
+              <Text style={styles.deleteButtonText}>Delete Post</Text>
+            </Pressable>
+          )}
           <Pressable onPress={handleCloseDeleteMenu}>
             <Text style={styles.deleteButtonText}>Cancel</Text>
           </Pressable>
@@ -333,7 +338,7 @@ export default function Post({
           title="Share"
         >
           <ThemedView style={styles.shareContainer}>
-            <ThemedView style={styles.shareOption}>
+            {/* <ThemedView style={styles.shareOption}>
               <Ionicons
                 size={25}
                 name="mail-outline"
@@ -342,7 +347,7 @@ export default function Post({
               <ThemedText style={styles.optionText}>
                 Send via Direct Message
               </ThemedText>
-            </ThemedView>
+            </ThemedView> */}
             <ThemedView style={styles.shareOption}>
               <Ionicons
                 size={25}
@@ -351,6 +356,9 @@ export default function Post({
               ></Ionicons>
               <ThemedText style={styles.optionText}>Copy Link</ThemedText>
             </ThemedView>
+            <Pressable onPress={() => {handleCloseShare()}}>
+              <ThemedText style={styles.cancelButton}>Cancel</ThemedText>
+            </Pressable>
           </ThemedView>
         </CustomBottomSheet>
         <CustomBottomSheet
@@ -360,7 +368,10 @@ export default function Post({
         >
           <ThemedView style={styles.commentContainer}>
             <ThemedView style={styles.buttonContainer}>
-              <Pressable onPress={handleCloseComment} style={styles.cancelButton}>
+              <Pressable
+                onPress={handleCloseComment}
+                style={styles.cancelButton}
+              >
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </Pressable>
               <Pressable
@@ -394,7 +405,9 @@ export default function Post({
                 source={{
                   uri: `${profileImage(post?.owner?.id || post?.userId)}`,
                 }}
-                placeholder={{ blurhash: blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe' }}
+                placeholder={{
+                  blurhash: blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe",
+                }}
                 transition={500}
               />
               <ThemedText style={styles.postUser}>
@@ -422,7 +435,7 @@ export default function Post({
                 multiline
                 placeholder="Post your reply"
                 style={[
-                  { paddingTop: 15, maxWidth: "80%", width: '100%' },
+                  { paddingTop: 15, maxWidth: "80%", width: "100%" },
                   colorScheme === "dark"
                     ? { color: "#bebebe" }
                     : { color: "#525252" },
@@ -435,7 +448,7 @@ export default function Post({
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
-            <ThemedView >
+            <ThemedView>
               <Pressable
                 onPress={() => {
                   repost(myInfo?.id, post.id);
@@ -450,7 +463,12 @@ export default function Post({
                 <ThemedText style={styles.optionText}>Repost</ThemedText>
               </Pressable>
             </ThemedView>
-            <ThemedView style={[styles.shareOption, { marginTop: 10, backgroundColor: 'transparent' }]}>
+            <ThemedView
+              style={[
+                styles.shareOption,
+                { marginTop: 10, backgroundColor: "transparent" },
+              ]}
+            >
               <Ionicons
                 size={25}
                 name="pencil-outline"
@@ -488,18 +506,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexShrink: 1,
     margin: 5,
-    ...(Platform.OS === 'web' && {
-      width: '90%'
-    })
+    ...(Platform.OS === "web" && {
+      width: "90%",
+    }),
   },
   postUser: {
     fontWeight: "bold",
 
     fontSize: 15,
     paddingBottom: 2,
-    ...(Platform.OS === 'web' && {
-      fontSize: 13
-    })
+    ...(Platform.OS === "web" && {
+      fontSize: 13,
+    }),
   },
   postText: {
     flexShrink: 1,
@@ -513,7 +531,7 @@ const styles = StyleSheet.create({
   reactionsContainer: {
     flexDirection: "row",
     width: "95%",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
     alignItems: "center",
     paddingTop: 10,
   },
@@ -522,25 +540,31 @@ const styles = StyleSheet.create({
   },
   shareContainer: {
     flexDirection: "column",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: "100%",
+  },
+  cancelButton: {
+    backgroundColor: 'blue',
+    borderRadius: 15,
+    padding: 5
   },
   shareOption: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: 10,
+    justifyContent: "center",
     width: "100%",
-    height: "50%",
   },
   optionText: {
     marginLeft: 10,
     fontSize: 18,
-    padding: 10
+    padding: 10,
   },
   commentContainer: {
     flexDirection: "column",
     paddingTop: 20,
-    width: '100%'
+    width: "100%",
   },
   buttonContainer: {
     flexDirection: "row",
@@ -605,18 +629,17 @@ const styles = StyleSheet.create({
   },
 
   deleteButton: {
-    backgroundColor: '#ff4d4d',
+    backgroundColor: "#ff4d4d",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginVertical: 10,
   },
   deleteButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
     fontSize: 16,
   },
-
 });

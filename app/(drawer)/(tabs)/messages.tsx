@@ -46,7 +46,7 @@ const MessageHome: React.FC = () => {
   return (
     <ThemedView style={styles.pageContainer}>
       <ThemedView style={styles.desktopCenter}>
-        <ThemedView style={styles.desktopRow}>          
+        <ThemedView style={styles.desktopRow}>
           <ThemedView style={styles.mainContent}>
             <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
               <ThemedText style={styles.title}>Messages</ThemedText>
@@ -134,25 +134,25 @@ const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   pageContainer: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     flex: 1,
     paddingTop: 20,
   },
   desktopCenter: {
-    width: width > 600 ? '80%' : '100%',
+    width: width > 600 ? "80%" : "100%",
   },
   desktopRow: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-evenly",
   },
   column: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
   },
   mainContent: {
-    width: width > 600 ? '100%' : '100%',
+    width: width > 600 ? "100%" : "100%",
   },
   header: {
     flexDirection: "row",
@@ -182,16 +182,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
-    ...(Platform.OS === 'web' && {
-      padding: 5
+    ...(Platform.OS === "web" && {
+      padding: 5,
     }),
   },
   list: {},
   desktopHiddenBorder: {
-    display: width > 600 ? 'flex' : 'none',
-    justifyContent: 'space-evenly',
+    display: width > 600 ? "flex" : "none",
+    justifyContent: "space-evenly",
     borderWidth: 1,
-    borderColor: 'rgb(232,232,232)',
+    borderColor: "rgb(232,232,232)",
     borderRadius: 10,
     padding: 15,
   },

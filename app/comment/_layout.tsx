@@ -9,9 +9,7 @@ export default function CommentLayout() {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen
-        name='[comment]'
-      />
+      <Stack.Screen name="[comment]" />
     </Stack>
   );
 }

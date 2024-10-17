@@ -40,7 +40,6 @@ export default function Header({ name }: HeaderProps) {
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
-
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();

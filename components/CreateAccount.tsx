@@ -18,25 +18,27 @@ export default function SignIn({
   setLoginToggle: (value: boolean) => void;
 }) {
   const [email, setEmail] = useState<string>("");
-  const [userName, setUsername] = useState<string>(""); 
-  const [password, setPassword] = useState<string>(""); 
+  const [userName, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const colorScheme = useColorScheme();
   const { getUserPosts, posts, getBaseUrl } = useContext<any>(PostContext);
-  const [ error, setError ] = useState<any>()
+  const [error, setError] = useState<any>();
 
   const color = colorScheme === "dark" ? "white" : "black";
 
   const handleSignUp = async (userName: string, email: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/getUserByUsername?username=${userName}`)
-      const { user } = await response.json()
-      if (user) throw new Error('username already taken')
+      const response = await fetch(
+        `${getBaseUrl()}/api/getUserByUsername?username=${userName}`,
+      );
+      const { user } = await response.json();
+      if (user) throw new Error("username already taken");
       const { data, error } = await supabase.auth.signUp({
-          email: email,
-          password: password,
+        email: email,
+        password: password,
       });
       if (error) {
-        throw new Error(error.message)
+        throw new Error(error.message);
       }
       const result = await fetch(`${getBaseUrl()}/api/createUser`, {
         method: "POST",
@@ -50,35 +52,37 @@ export default function SignIn({
       });
       setLoginToggle(true);
     } catch (error: any) {
-      setError(error.message)
+      setError(error.message);
     }
   };
 
   return (
     <ThemedView style={styles.page}>
       <ThemedView style={styles.wide}>
-        <ThemedText style={{fontSize: 30, padding: 20}}>Create Account</ThemedText>
+        <ThemedText style={{ fontSize: 30, padding: 20 }}>
+          Create Account
+        </ThemedText>
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Username"
           style={[styles.loginInput, { color }]}
           value={userName}
-          onChangeText={setUsername} 
+          onChangeText={setUsername}
         />
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Email"
           style={[styles.loginInput, { color }]}
           value={email}
-          onChangeText={setEmail} 
+          onChangeText={setEmail}
         />
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Password"
           style={[styles.loginInput, { color }]}
           value={password}
-          onChangeText={setPassword} 
-          secureTextEntry 
+          onChangeText={setPassword}
+          secureTextEntry
         />
         {error && <ThemedText style={styles.error}>{error}</ThemedText>}
       </ThemedView>
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    
+
     width: "100%",
   },
   loginInput: {
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgb(197, 191, 191)",
     padding: 12,
-    marginVertical: 10, 
+    marginVertical: 10,
   },
   gray: {
     color: "gray",
@@ -127,14 +131,14 @@ const styles = StyleSheet.create({
   wide: {
     width: "90%",
     alignItems: "center",
-    marginBottom: 20, 
+    marginBottom: 20,
   },
   button: {
     backgroundColor: "rgb(63, 134, 196)",
     borderRadius: 5,
     padding: 10,
     width: "90%",
-    alignItems: "center", 
+    alignItems: "center",
     marginVertical: 10,
   },
   buttonText: {
@@ -146,6 +150,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   error: {
-    color: 'red'
-  }
+    color: "red",
+  },
 });

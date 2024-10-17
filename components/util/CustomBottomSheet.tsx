@@ -34,7 +34,6 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(
 
     return (
       <BottomSheetModal
-      
         enablePanDownToClose
         backdropComponent={renderBackdrop}
         ref={ref}
@@ -50,7 +49,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(
           )}
           {children}
           {hideCancelButton && (
-            <Pressable  onPress={handleClosePress} style={styles.button}>
+            <Pressable onPress={handleClosePress} style={styles.button}>
               <ThemedText>Cancel</ThemedText>
             </Pressable>
           )}

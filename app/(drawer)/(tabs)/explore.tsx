@@ -37,7 +37,8 @@ export default function TabTwoScreen() {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  const mortyUrl = "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
+  const mortyUrl =
+    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
 
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
@@ -65,8 +66,8 @@ export default function TabTwoScreen() {
     return mortyUrl; // Fallback URL
   }, [myInfo?.id]);
 
-  const blurhash = myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe';
-  
+  const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
+
   return (
     <ThemedView style={styles.pageContainer}>
       <ThemedView style={styles.desktopCenter}>
@@ -94,12 +95,17 @@ export default function TabTwoScreen() {
                     : { backgroundColor: "#d3d3d3" },
                 ]}
               >
-                <Ionicons size={17} name="search" color={"gray"} style={styles.searchIcon} />
+                <Ionicons
+                  size={17}
+                  name="search"
+                  color={"gray"}
+                  style={styles.searchIcon}
+                />
                 <TextInput
                   placeholder="Search"
                   placeholderTextColor={"gray"}
                   style={[
-                    { maxWidth: "80%" },
+                    { maxWidth: "100%" },
                     colorScheme === "dark" && { color: "white" },
                   ]}
                   onChangeText={(text) => setSearchInput(text)}
@@ -110,20 +116,26 @@ export default function TabTwoScreen() {
 
             {searchInput.length === 0 ? (
               <>
-                <ThemedText style={styles.title} type="title">Featured</ThemedText>
+                <ThemedText style={styles.title} type="title">
+                  Featured
+                </ThemedText>
                 <ProfileDisplay user={noah} />
                 <ProfileDisplay user={kale} />
               </>
             ) : (
               <>
-                <ThemedText style={styles.title} type="title">Results</ThemedText>
+                <ThemedText style={styles.title} type="title">
+                  Results
+                </ThemedText>
                 <Animated.ScrollView>
                   {searchResults.length > 0 ? (
                     searchResults.map((e: any) => (
                       <ProfileDisplay key={e.id} user={e} />
                     ))
                   ) : (
-                    <ThemedText style={styles.center}>No results found</ThemedText>
+                    <ThemedText style={styles.center}>
+                      No results found
+                    </ThemedText>
                   )}
                 </Animated.ScrollView>
               </>
@@ -135,28 +147,28 @@ export default function TabTwoScreen() {
   );
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: "column",
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   desktopCenter: {
-    width: width > 600 ? '80%' : '100%',
+    width: width > 600 ? "80%" : "100%",
   },
   desktopRow: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-evenly",
   },
   column: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
   },
   mainContent: {
-    width: width > 600 ? '100%' : '100%',
+    width: width > 600 ? "100%" : "100%",
   },
   header: {
     flexDirection: "row",
@@ -178,9 +190,9 @@ const styles = StyleSheet.create({
   searchInput: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
     borderRadius: 25,
-    padding: 6,
+    padding: 10,
     width: "70%",
   },
   searchIcon: {
@@ -193,16 +205,16 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   desktopHiddenBorder: {
-    display: width > 600 ? 'flex' : 'none',
-    justifyContent: 'space-evenly',
+    display: width > 600 ? "flex" : "none",
+    justifyContent: "space-evenly",
     borderWidth: 1,
-    borderColor: 'rgb(232,232,232)',
+    borderColor: "rgb(232,232,232)",
     borderRadius: 10,
     padding: 15,
   },
   sectionHeader: {
-    textAlign: 'center',
-    fontWeight: '800',
+    textAlign: "center",
+    fontWeight: "800",
     fontSize: 20,
     marginBottom: 10,
   },

@@ -1,4 +1,13 @@
-import { StyleSheet, Button, Pressable, Text, View, Platform, Dimensions, Linking } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  Pressable,
+  Text,
+  View,
+  Platform,
+  Dimensions,
+  Linking,
+} from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useContext, useCallback } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -14,10 +23,9 @@ import { Link, router } from "expo-router";
 import MyContext from "@/components/providers/MyContext";
 import CommentBottomSheet from "@/components/postComponents/CommentBottomSheet";
 import Post from "@/components/postComponents/Post";
-import { useRoute } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { ClipLoader } from "react-spinners";
-
 
 interface Post {
   id: string;
@@ -138,7 +146,7 @@ export default function PostPage() {
       });
       const userData = await result.json();
       setThisPost(userData.post);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log(error, "this is the get user error");
     }
@@ -157,12 +165,14 @@ export default function PostPage() {
     }, [local.post]),
   );
 
-  const blurhash = thisPost?.owner?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+  const blurhash =
+    thisPost?.owner?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
+      const newProfileImageUri = `${
+        process.env.EXPO_PUBLIC_SUPABASE_URL
+      }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -170,14 +180,14 @@ export default function PostPage() {
   console.log(thisPost);
 
   return (
-    <ThemedView style={styles.realRow}>     
+    <ThemedView style={styles.realRow}>
       {loading && (
         <ThemedView
           style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
         >
           <ClipLoader color="#26a7de" />
         </ThemedView>
-      )} 
+      )}
       <ThemedView style={[styles.content, { flex: 1 }]}>
         <ThemedView style={styles.icon}>
           <Pressable>
@@ -289,10 +299,17 @@ export default function PostPage() {
               </ThemedView>
             </ThemedView>
           </CustomBottomSheet>
-          <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} user={thisPost?.owner} />
+          <CommentBottomSheet
+            post={thisPost}
+            commentModalRef={commentModalRef}
+            user={thisPost?.owner}
+          />
           <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
             <ThemedView
-              style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
+              style={[
+                styles.shareContainer,
+                { marginBottom: 30, height: "75%" },
+              ]}
             >
               <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
                 <Ionicons
@@ -316,19 +333,21 @@ export default function PostPage() {
           {/* Delete Menu */}
           <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
             <ThemedView style={styles.deleteContainer}>
-              {myInfo?.id === thisPost?.owner?.id && <Button
-                title="Delete Post"
-                color="red"
-                onPress={() => {
-                  deletePost(thisPost?.id);
-                  deleteMenuRef.current?.dismiss();
-                }}
-              />}
+              {myInfo?.id === thisPost?.owner?.id && (
+                <Button
+                  title="Delete Post"
+                  color="red"
+                  onPress={() => {
+                    deletePost(thisPost?.id);
+                    deleteMenuRef.current?.dismiss();
+                  }}
+                />
+              )}
             </ThemedView>
           </CustomBottomSheet>
         </ThemedView>
         {thisPost?.comments?.map((comment: any) => {
-          console.log(comment)
+          console.log(comment);
           return (
             <Post
               key={comment.id}
@@ -339,12 +358,12 @@ export default function PostPage() {
             />
           );
         })}
-      </ThemedView>      
+      </ThemedView>
     </ThemedView>
   );
 }
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   postContainer: {
@@ -383,9 +402,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexShrink: 1,
     margin: 5,
-    ...(Platform.OS === 'web' && {
-      width: '100%'
-    })
+    ...(Platform.OS === "web" && {
+      width: "100%",
+    }),
   },
   postUser: {
     fontWeight: "bold",
@@ -489,15 +508,15 @@ const styles = StyleSheet.create({
   realRow: {
     display: "flex",
     flexDirection: "row",
-    height: '100%',
-    padding: 10
+    height: "100%",
+    padding: 10,
   },
   column: {
-    display: 'flex',
-    flexDirection: 'column'
+    display: "flex",
+    flexDirection: "column",
   },
   content: {
-    width: '30%'
+    width: "30%",
   },
   icon: {
     padding: 10,
@@ -509,27 +528,27 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   desktopHiddenBorder: {
-    display: width > 600 ? 'flex' : 'none',
-    justifyContent: 'space-evenly',
+    display: width > 600 ? "flex" : "none",
+    justifyContent: "space-evenly",
     borderWidth: 1,
-    borderColor: 'rgb(232,232,232)',
+    borderColor: "rgb(232,232,232)",
     borderRadius: 10,
-    padding: 15
+    padding: 15,
   },
   sectionHeader: {
-    textAlign: 'center',
-    fontWeight: '800',
+    textAlign: "center",
+    fontWeight: "800",
     fontSize: 20,
     marginBottom: 10,
   },
   profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
     padding: 10,
     borderRadius: 8,
     marginVertical: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -539,10 +558,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   profileButton: {
-    backgroundColor: 'rgb(38,102,193)', // LinkedIn Blue
+    backgroundColor: "rgb(38,102,193)", // LinkedIn Blue
     padding: 5,
     margin: 5,
     borderRadius: 5,
@@ -553,9 +572,9 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     zIndex: 20,
   },
 });

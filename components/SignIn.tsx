@@ -25,9 +25,9 @@ export default function SignIn({
   const [password, setPassword] = useState<string>(""); // Initialize with an empty string
   const colorScheme = useColorScheme();
   const context = useContext<any>(MyContext);
-  const { setLoginToggle, getUser, setLoggedIn } = context; 
-  const { setForYouPosts } = useContext<any>(PostContext)
-  const [ error, setError ] = useState<any>()
+  const { setLoginToggle, getUser, setLoggedIn } = context;
+  const { setForYouPosts } = useContext<any>(PostContext);
+  const [error, setError] = useState<any>();
 
   const color = colorScheme === "dark" ? "white" : "black";
 
@@ -39,11 +39,11 @@ export default function SignIn({
       });
       if (error) {
         console.log(error, "this is the login error");
-        setError(error.message)
-        throw new Error('login error')
+        setError(error.message);
+        throw new Error("login error");
       }
       if (data) {
-        if(Platform.OS === 'web') {
+        if (Platform.OS === "web") {
           await localStorage.setItem("user", JSON.stringify(email));
         } else {
           await AsyncStorage.setItem("user", JSON.stringify(email));
@@ -51,10 +51,10 @@ export default function SignIn({
 
         setLogin(true);
         setLoginToggle(true);
-        setForYouPosts([])
+        setForYouPosts([]);
         await getUser();
-        if (Platform.OS === 'web') {
-          location.reload()
+        if (Platform.OS === "web") {
+          location.reload();
         } else {
           router.navigate("/(drawer)/(tabs)/");
         }
@@ -65,17 +65,16 @@ export default function SignIn({
   };
 
   useFocusEffect(() => {
-    if(Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       const user = localStorage.getItem("user");
-      if (user) router.navigate('/(drawer)/(tabs)/')
-    } 
-  })
+      if (user) router.navigate("/(drawer)/(tabs)/");
+    }
+  });
 
   return (
-    
     <ThemedView style={styles.page}>
       <ThemedView style={styles.wide}>
-        <ThemedText style={{fontSize: 30, padding: 20}}>Login</ThemedText>
+        <ThemedText style={{ fontSize: 30, padding: 20 }}>Login</ThemedText>
         <TextInput
           onChangeText={(text) => setEmail(text)}
           placeholderTextColor={"rgb(140, 138, 143)"}
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     justifyContent: "flex-start",
-    alignItems: "center",    
+    alignItems: "center",
     width: "100%",
   },
 
@@ -158,6 +157,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   error: {
-    color: 'red'
-  }
+    color: "red",
+  },
 });

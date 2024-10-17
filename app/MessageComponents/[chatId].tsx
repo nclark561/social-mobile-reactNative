@@ -214,7 +214,7 @@ const CurrentChat: React.FC = () => {
     >
       <ThemedView style={styles.container}>
         <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
-          <Link href={'/(drawer)/(tabs)/messages'}>
+          <Link href={"/(drawer)/(tabs)/messages"}>
             <Ionicons name="arrow-back" size={24} color={color} />
           </Link>
           <ThemedView style={styles.center}>

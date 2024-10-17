@@ -1,4 +1,10 @@
-import React, { createContext, useState, ReactNode, useEffect, SetStateAction } from "react";
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  useEffect,
+  SetStateAction,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../../components/Supabase";
 import { Platform } from "react-native";
@@ -11,9 +17,9 @@ type PostContextType = {
   forYouPostsToggle: boolean;
   setForYouPostsToggle: (value: boolean) => void;
   getBaseUrl: () => void;
-  forYouFollowingPosts: any[]
-  setForYouPosts: any,
-  getAllForYouPosts: any
+  forYouFollowingPosts: any[];
+  setForYouPosts: any;
+  getAllForYouPosts: any;
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -43,9 +49,8 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     getForYouPosts();
-    getAllForYouPosts()
+    getAllForYouPosts();
   }, [forYouPostsToggle]);
-
 
   const getUserPosts = async (email: string, userId: string) => {
     try {
@@ -67,20 +72,21 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
   const getForYouPosts = async (userId?: string) => {
     try {
-      const result = await fetch(`${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ''}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const result = await fetch(
+        `${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ""}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
-      const fetchedPosts = await result.json();      
+      );
+      const fetchedPosts = await result.json();
       setForYouFollowingPosts(fetchedPosts.Posts);
-      
     } catch (error) {
       console.log(error, "this is the get for you posts error");
     }
   };
-
 
   const getAllForYouPosts = async () => {
     try {
@@ -109,7 +115,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         getBaseUrl,
         setForYouPosts,
         forYouFollowingPosts,
-        getAllForYouPosts
+        getAllForYouPosts,
       }}
     >
       {children}

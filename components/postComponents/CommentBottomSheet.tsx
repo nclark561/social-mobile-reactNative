@@ -20,20 +20,20 @@ interface CommentBottomSheetProps {
   isComment?: boolean;
   post: any;
   commentModalRef: any;
-  user: any
+  user: any;
 }
 
 const CommentBottomSheet = ({
   isComment,
   post,
   commentModalRef,
-  user
+  user,
 }: CommentBottomSheetProps) => {
   const [commentInput, setCommentInput] = useState("");
   const { getUserPosts, posts, getBaseUrl } = useContext<any>(PostContext);
   const { myInfo } = useContext<any>(MyContext);
   const [profileImageUri, setProfileImageUri] = useState("");
-  const [ userProfileImageUri, setUserProfileImageUri ] = useState('')
+  const [userProfileImageUri, setUserProfileImageUri] = useState("");
   const colorScheme = useColorScheme();
 
   const handleCloseComment = () => commentModalRef.current?.dismiss();
@@ -78,8 +78,8 @@ const CommentBottomSheet = ({
       setUserProfileImageUri(newProfileImageUri);
     }
   }, [user]);
-  const blurhash =  myInfo?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
-  const blurhash2 =  user?.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+  const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
+  const blurhash2 = user?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
   return (
     <CustomBottomSheet
       snapPercs={["70%"]}

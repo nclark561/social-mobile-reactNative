@@ -27,7 +27,7 @@ import Animated from "react-native-reanimated";
 export default function ExternalProfile() {
   const navigation = useExpoNavigation();
   const router = useRouter();
-  const back = useNavigation()
+  const back = useNavigation();
   const [selectedOption, setSelectedOption] = useState("Posts"); // Track selected option
   const [user, setUser] = useState<any>();
   const { setLoginToggle, myInfo, loggedIn, updateUser, updateFollowers } =
@@ -49,13 +49,13 @@ export default function ExternalProfile() {
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
   const handleLoading = async () => {
-    await getUser()
-    setLoading(false)
-  }
+    await getUser();
+    setLoading(false);
+  };
 
   useFocusEffect(
     useCallback(() => {
-      handleLoading()
+      handleLoading();
       return () => {
         setUser("");
       };
@@ -65,7 +65,7 @@ export default function ExternalProfile() {
   useEffect(() => {
     if (user?.id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user?.id}?${Date.now()}`;
-      console.log(newProfileImageUri)
+      console.log(newProfileImageUri);
       setProfileImageUri(newProfileImageUri);
     }
   }, [user]);
@@ -88,18 +88,25 @@ export default function ExternalProfile() {
     }
   };
 
-
-
-
   const renderContent = () => {
     switch (selectedOption) {
       case "Posts":
         return (
-          <Animated.ScrollView showsVerticalScrollIndicator={false} style={{ height: "100%", flex: 1 }}>
+          <Animated.ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ height: "100%", flex: 1 }}
+          >
             <ThemedView>
               {Array.isArray(user?.posts) &&
                 user?.posts?.map((post: any) => {
-                  return <Post key={post?.id} post={post} user={user?.id} setLoading={setLoading} />;
+                  return (
+                    <Post
+                      key={post?.id}
+                      post={post}
+                      user={user?.id}
+                      setLoading={setLoading}
+                    />
+                  );
                 })}
             </ThemedView>
           </Animated.ScrollView>
@@ -108,7 +115,10 @@ export default function ExternalProfile() {
         return <ThemedText>Reposts</ThemedText>;
       case "Replies":
         return (
-          <Animated.ScrollView showsVerticalScrollIndicator={false} style={{ height: "100%", flex: 1 }}>
+          <Animated.ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ height: "100%", flex: 1 }}
+          >
             <ThemedView>
               {user?.comments?.map((comment: any) => {
                 return (
@@ -179,7 +189,11 @@ export default function ExternalProfile() {
           <ThemedView
             style={[styles.icon, { backgroundColor: `${user?.color}` }]}
           >
-            <Pressable onPress={() => { router.back() }}>
+            <Pressable
+              onPress={() => {
+                router.back();
+              }}
+            >
               <Ionicons size={25} name="arrow-back-outline" />
             </Pressable>
           </ThemedView>
@@ -261,10 +275,8 @@ export default function ExternalProfile() {
   );
 }
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
-
-
   header: {
     flexDirection: "column",
     paddingTop: 20,
@@ -290,14 +302,14 @@ const styles = StyleSheet.create({
   pageContainer: {
     flexDirection: "column",
     flex: 1,
-    display: 'flex',
-    alignItems: 'center'
+    display: "flex",
+    alignItems: "center",
   },
   tag: {
     fontSize: 14,
     marginLeft: 1,
     paddingBottom: 5,
-    paddingTop: 5
+    paddingTop: 5,
   },
   locationRow: {
     display: "flex",
@@ -329,6 +341,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "90%",
+    borderBottomColor: 'rgb(232,232,232)',
+    borderBottomWidth: .5,
     marginLeft: 10,
   },
   optionText: {
@@ -342,20 +356,20 @@ const styles = StyleSheet.create({
   content: {
     padding: 10,
     flex: 1,
-    display: 'flex',
-    justifyContent: 'center'
+    display: "flex",
+    justifyContent: "center",
   },
   row: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     width: "95%",
   },
   desktopCenter: {
-    width: width > 600 ? '75%' : '100%',
-    flex: 1
+    width: width > 600 ? "75%" : "100%",
+    flex: 1,
   },
   button: {
     width: 55,
@@ -393,9 +407,9 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     zIndex: 20,
   },
 });

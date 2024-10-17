@@ -12,7 +12,7 @@ interface user {
   email: string;
   username: string;
   id?: string;
-  blurhash?: string
+  blurhash?: string;
 }
 
 interface ProfileDisplayProps {
@@ -26,11 +26,6 @@ const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const { myInfo } = useContext<any>(MyContext);
 
-
-
-
-
-
   const profileImageUri = useMemo(() => {
     if (user?.id) {
       return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user.id}?${Date.now()}`;
@@ -38,23 +33,28 @@ const ProfileDisplay = ({ user }: ProfileDisplayProps) => {
     return mortyUrl; // Fallback URL
   }, [user?.id]);
 
-
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
-  const blurhash = user.blurhash || 'U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe'
+  const blurhash = user.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
   return (
-    <Pressable onPress={() => {router.navigate(`/profile/${user.email}`)}}>
+    <Pressable
+      onPress={() => {
+        router.navigate(`/profile/${user.email}`);
+      }}
+    >
       <ThemedView style={styles.previewContainer}>
         <Image
           style={styles.profilePic}
           source={{ uri: profileImageUri }}
-          placeholder={{blurhash}}
+          placeholder={{ blurhash }}
           transition={500}
         />
         <ThemedView style={styles.profileInfo}>
           <ThemedText>{user.username}</ThemedText>
-          <ThemedText style={{ color: fadedTextColor }}>@{user.email}</ThemedText>
+          <ThemedText style={{ color: fadedTextColor }}>
+            @{user.email}
+          </ThemedText>
         </ThemedView>
       </ThemedView>
     </Pressable>

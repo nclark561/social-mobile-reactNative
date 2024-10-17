@@ -128,7 +128,7 @@ export default function CommentPage() {
       );
       const userData = await result.json();
       setThisPost(userData.comment);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log(error, "this is the get user error");
     }
@@ -263,7 +263,11 @@ export default function CommentPage() {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>
-        <CommentBottomSheet post={thisPost} commentModalRef={commentModalRef} user={thisPost?.user}/>
+        <CommentBottomSheet
+          post={thisPost}
+          commentModalRef={commentModalRef}
+          user={thisPost?.user}
+        />
         <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
@@ -283,19 +287,27 @@ export default function CommentPage() {
         {/* Delete Menu */}
         <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
           <ThemedView style={styles.deleteContainer}>
-            {myInfo?.id === thisPost?.userId && <Button
-              title="Delete Post"
-              color="red"
-              onPress={() => {
-                deletePost(thisPost?.id);
-                deleteMenuRef.current?.dismiss();
-              }}
-            />}
+            {myInfo?.id === thisPost?.userId && (
+              <Button
+                title="Delete Post"
+                color="red"
+                onPress={() => {
+                  deletePost(thisPost?.id);
+                  deleteMenuRef.current?.dismiss();
+                }}
+              />
+            )}
           </ThemedView>
         </CustomBottomSheet>
       </ThemedView>
       {thisPost?.replies?.map((comment: any) => (
-        <Post key={comment.id} isComment post={comment} user={myInfo?.email} setLoading={setLoading}/>
+        <Post
+          key={comment.id}
+          isComment
+          post={comment}
+          user={myInfo?.email}
+          setLoading={setLoading}
+        />
       ))}
     </ThemedView>
   );
@@ -393,9 +405,9 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     zIndex: 20,
   },
 });

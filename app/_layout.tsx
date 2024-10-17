@@ -1,4 +1,8 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useLayoutEffect } from "react";
@@ -41,13 +45,12 @@ export default function RootLayout() {
     return null;
   }
 
-
-
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
-        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
           <MyProvider>
             <MessageProvider>
               <PostProvider>
@@ -59,7 +62,12 @@ export default function RootLayout() {
                           <DesktopRouting />
                           <StackLogos />
                         </ThemedView>
-                        <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+                        <Stack
+                          screenOptions={{
+                            headerShown: false,
+                            animation: "slide_from_right",
+                          }}
+                        >
                           <Stack.Screen name="(drawer)" />
                         </Stack>
                         <ThemedView style={styles.none}>
@@ -68,7 +76,12 @@ export default function RootLayout() {
                       </ThemedView>
                     </ThemedView>
                   ) : (
-                    <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+                    <Stack
+                      screenOptions={{
+                        headerShown: false,
+                        animation: "slide_from_right",
+                      }}
+                    >
                       <Stack.Screen name="(drawer)" />
                     </Stack>
                   )}
@@ -82,31 +95,29 @@ export default function RootLayout() {
   );
 }
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-
   column: {
-    display: width > 1000 ? 'flex' : 'none',
-    height: '80%',
-    flexDirection: 'column',
-    zIndex: 1000
-
+    display: width > 1000 ? "flex" : "none",
+    height: "80%",
+    flexDirection: "column",
+    zIndex: 1000,
   },
   none: {
-    display: width > 1000 ? 'flex' : 'none',
+    display: width > 1000 ? "flex" : "none",
     // flexDirection: 'column',
   },
   row: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center'
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
   },
   content: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '70%',
-    height: 900
-  }
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "70%",
+    height: 900,
+  },
 });
