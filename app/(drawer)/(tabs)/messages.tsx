@@ -23,7 +23,7 @@ const MessageHome: React.FC = () => {
   const { deleteConvos, myUsername, getConvos, setMyConvos, myConvos } =
     useContext<any>(MessageContext);
   const context = useContext<any>(MyContext);
-  const { myInfo } = context;
+  const { myInfo, loggedIn } = context;
   const colorScheme = useColorScheme();
   const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
@@ -59,9 +59,9 @@ const MessageHome: React.FC = () => {
             />
             <ThemedView style={styles.center}>
               {myConvos?.length > 1 ? null : (
-                <ThemedText>Create A Message</ThemedText>
+                <ThemedText>{loggedIn ? 'Create a message' : 'Login to create a message'}</ThemedText>
               )}
-              <TouchableOpacity
+              {loggedIn ? <TouchableOpacity
                 onPress={() => router.navigate("/MessageComponents/newChat")}
               >
                 <Ionicons
@@ -69,7 +69,15 @@ const MessageHome: React.FC = () => {
                   size={32}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> : <TouchableOpacity                
+              >
+                <Ionicons
+                  name="add-circle-outline"
+                  size={32}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+              </TouchableOpacity>}
+
             </ThemedView>
           </ThemedView>
         </ThemedView>

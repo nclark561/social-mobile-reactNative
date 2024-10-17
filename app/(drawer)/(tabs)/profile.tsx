@@ -151,7 +151,7 @@ export default function TabTwoScreen() {
         styles.pageContainer,
       ]}
     >
-      <ThemedView style={{width:'80%'}}>
+      <ThemedView style={{ width: '80%' }}>
         {loading && (
           <ThemedView
             style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
@@ -304,10 +304,10 @@ const styles = StyleSheet.create({
     borderColor: "#525252",
   },
   profilePic: {
-    borderRadius: 25,    
+    borderRadius: 25,
     // marginTop: width < 700 ? 0 : 60,
-    width: 55,
-    height: 55,
+    width: 75,
+    height: 75,
   },
   userName: {
     fontSize: 16,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "30%",    
+    width: "30%",
   },
   close: {
     display: "flex",
@@ -369,12 +369,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: "95%",
-    backgroundColor: "transparent",
-    paddingLeft: 10,
+    backgroundColor: "transparent",    
   },
-  columnLeftPadding: {
-    paddingLeft: 10,
-  },
+
   button: {
     borderRadius: 15,
     borderWidth: 1,
@@ -404,9 +401,10 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   bio: {
-    fontSize: 15,
+    fontSize: 12,
     paddingBottom: 5,
     paddingTop: 5,
+    lineHeight: 17
   },
   // backgroundColor: {
   //   position: "absolute",
@@ -505,4 +503,5 @@ const styles = StyleSheet.create({
     transform: "translate(-50%, -50%)",
     zIndex: 20,
   },
+  
 });

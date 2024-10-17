@@ -290,9 +290,9 @@ const styles = StyleSheet.create({
     borderColor: "#525252",
   },
   profilePic: {
-    borderRadius: 15,
-    width: 35,
-    height: 35,
+    borderRadius: 50,
+    width: 75,
+    height: 75,
     marginBottom: 10,
   },
   userName: {

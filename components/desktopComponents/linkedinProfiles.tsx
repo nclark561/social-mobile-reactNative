@@ -63,7 +63,7 @@ export default function LinkedinProfiles() {
           <Pressable
             onPress={() =>
               Linking.openURL(
-                "https://www.linkedin.com/in/noah-clark-62532426b/do ",
+                "https://www.linkedin.com/in/noah-clark-62532426b/",
               )
             }
             style={[styles.profileButton]}
