@@ -278,8 +278,7 @@ export default function ExternalProfile() {
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   header: {
-    flexDirection: "column",
-    paddingTop: 20,
+    flexDirection: "column",    
     paddingBottom: 20,
     paddingLeft: 10,
     paddingRight: 10,
@@ -391,13 +390,14 @@ const styles = StyleSheet.create({
 
   icon: {
     padding: 8,
+    backgroundColor: 'transparent'
   },
   backgroundColor: {
     position: "absolute",
     top: 0,
     backgroundColor: 'transparent',
     left: 0,
-    height: "40%",
+    height: "15%",
     width: "110%",
     zIndex: -1,
   },

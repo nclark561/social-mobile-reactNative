@@ -67,7 +67,7 @@ export default function Post({
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
-  const repostedByMe = post.reposts.filter((e: any) => e.userId === myInfo?.id).length > 0
+  const repostedByMe = post?.reposts?.filter((e: any) => e.userId === myInfo?.id).length > 0
 
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleCloseShare = () => shareModalRef.current?.dismiss();
