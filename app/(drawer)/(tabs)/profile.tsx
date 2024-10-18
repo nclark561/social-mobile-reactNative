@@ -304,8 +304,7 @@ const styles = StyleSheet.create({
     borderColor: "#525252",
   },
   profilePic: {
-    borderRadius: 25,
-    // marginTop: width < 700 ? 0 : 60,
+    borderRadius: 50,    
     width: 75,
     height: 75,
   },

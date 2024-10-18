@@ -113,12 +113,15 @@ const EditProfileSheet = ({
     updateUser(myInfo.email, links, location, bio, selectedColor);
     handleCloseEditProfile();
   };
+  const handleClose = async () => {
+    handleCloseEditProfile();
+  };
 
   return (
     <CustomBottomSheet
       hideCancelButton
       ref={editProfileRef}
-      snapPercs={["60%"]}
+      snapPercs={["70%"]}
     >
       <ThemedView style={styles.bottomSheetContent}>
         <ThemedText style={styles.bottomSheetTitle}>Edit Profile</ThemedText>
@@ -152,22 +155,26 @@ const EditProfileSheet = ({
             </TouchableOpacity>
           </ThemedView>
         </ThemedView>
+        <ThemedText>{bio.length}/170</ThemedText>
         <BottomSheetTextInput
           style={[
             styles.input,
             { color: colorScheme === "dark" ? "#fff" : "#000" },
           ]}
           placeholder="Bio"
+          multiline={true}
+          maxLength={170}
           placeholderTextColor={colorScheme === "dark" ? "#aaa" : "#555"}
           value={bio}
           onChangeText={setBio}
         />
+
         <BottomSheetTextInput
           style={[
             styles.input,
             { color: colorScheme === "dark" ? "#fff" : "#000" },
           ]}
-          placeholder="Links"
+          placeholder="Link"
           placeholderTextColor={colorScheme === "dark" ? "#aaa" : "#555"}
           value={links}
           onChangeText={setLinks}
@@ -182,7 +189,7 @@ const EditProfileSheet = ({
           value={location}
           onChangeText={setLocation}
         />
-        <Button title="Save" onPress={handleSave}></Button>
+        <Button title="Save" onPress={handleSave}></Button>        
       </ThemedView>
     </CustomBottomSheet>
   );
