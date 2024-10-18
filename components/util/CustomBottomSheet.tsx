@@ -48,7 +48,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(
             </ThemedText>
           )}
           {children}
-          {hideCancelButton && (
+          {!hideCancelButton && (
             <Pressable onPress={handleClosePress} style={styles.button}>
               <ThemedText>Cancel</ThemedText>
             </Pressable>

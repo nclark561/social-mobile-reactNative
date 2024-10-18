@@ -215,6 +215,7 @@ export default function Post({
         }),
       });
       await getForYouPosts(myInfo?.id);
+      await getAllForYouPosts()
       await getUserPosts(user);
       setLoading(false)
     } catch (error) {
@@ -222,6 +223,24 @@ export default function Post({
       setLoading(false)
     }
   };
+
+  const undoRepost = async (userId: string, postId: string) => {
+    setLoading(true)
+    handleCloseRepost()
+    try {
+      await fetch(`${getBaseUrl()}/api/deleteRepost?user=${userId}&post=${postId}`, {
+        method: 'DELETE'
+      })
+      await getForYouPosts(myInfo?.id);
+      await getAllForYouPosts()
+      await getUserPosts(user);
+      setLoading(false)
+    } catch (err) {
+      console.error(err)
+      setLoading(false)
+    }
+  }
+
   const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash;
   const blurhash2 = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
@@ -456,7 +475,7 @@ export default function Post({
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
             <ThemedView>
-              <Pressable
+              {!repostedByMe ? <Pressable
                 onPress={() => {
                   repost(myInfo?.id, post.id);
                 }}
@@ -468,7 +487,19 @@ export default function Post({
                   color={colorScheme === "dark" ? "white" : "black"}
                 ></Ionicons>
                 <ThemedText style={styles.optionText}>Repost</ThemedText>
-              </Pressable>
+              </Pressable> : <Pressable
+                onPress={() => {
+                  undoRepost(myInfo?.id, post.id);
+                }}
+                style={[styles.shareOption, { marginTop: 10 }]}
+              >
+                <Ionicons
+                  size={25}
+                  name="git-compare-outline"
+                  color='red'
+                ></Ionicons>
+                <ThemedText style={[styles.optionText, { color: 'red' }]}>Undo Repost</ThemedText>
+              </Pressable>}
             </ThemedView>
             <ThemedView
               style={[
