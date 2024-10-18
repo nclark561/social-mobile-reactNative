@@ -30,7 +30,7 @@ const noah = {
 const kale = {
   email: "kaleckh@gmail.com",
   username: "Kale",
-  id: "cm2f63lp300001279dlnff4ur",
+  id: "cm2f8fd2m0000xgv4rb750ad1",
 };
 
 export default function LinkedinProfiles() {

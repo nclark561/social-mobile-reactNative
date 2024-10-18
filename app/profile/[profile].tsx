@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Pressable,
   Alert,
+  Linking
 } from "react-native"; // Import Alert
 import { Dimensions } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
@@ -39,8 +40,9 @@ export default function ExternalProfile() {
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   const colorScheme = useColorScheme();
   const [loading, setLoading] = useState(true);
-
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
+  const linkTextColor = colorScheme === "dark" ? "#26a7de" : "#0000EE";
+  
 
   const handleError = () => {
     setProfileImageUri(mortyUrl);
@@ -136,6 +138,17 @@ export default function ExternalProfile() {
         return null;
     }
   };
+
+  const openLink = (url: string) => {
+    // Check if the URL starts with "http" or "https"
+    if (!url.startsWith("http")) {
+      url = "https://" + url; // Add protocol if not present
+    }
+    Linking.openURL(url).catch((err) =>
+      console.error("Couldn't load page", err),
+    );
+  };
+
 
   const formatDate = (dateString: any) => {
     const date = new Date(dateString);
@@ -239,6 +252,14 @@ export default function ExternalProfile() {
             <>
               <ThemedText style={styles.userName}>{user?.username}</ThemedText>
               <ThemedText style={styles.tag}>{user?.bio}</ThemedText>
+              {myInfo?.links && (
+                <ThemedText
+                  style={[styles.link, { color: linkTextColor }]}
+                  onPress={() => openLink(myInfo.links)}
+                >
+                  {myInfo.links}
+                </ThemedText>
+              )}
             </>
           </ThemedView>
           <ThemedView style={styles.followersRow}>
@@ -387,7 +408,9 @@ const styles = StyleSheet.create({
     color: "black",
     backgroundColor: "black",
   },
-
+  link: {
+    fontSize: 12
+  },
   icon: {
     padding: 8,
     zIndex: 100,
