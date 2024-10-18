@@ -187,7 +187,7 @@ export default function ExternalProfile() {
       <ThemedView style={styles.desktopCenter}>
         <ThemedView style={styles.header}>
           <ThemedView
-            style={[styles.icon, { backgroundColor: `${user?.color}` }]}
+            style={[styles.icon]}
           >
             <Pressable
               onPress={() => {
@@ -395,6 +395,7 @@ const styles = StyleSheet.create({
   backgroundColor: {
     position: "absolute",
     top: 0,
+    backgroundColor: 'transparent',
     left: 0,
     height: "40%",
     width: "110%",

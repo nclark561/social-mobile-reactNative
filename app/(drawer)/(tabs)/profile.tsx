@@ -160,20 +160,25 @@ export default function TabTwoScreen() {
           </ThemedView>
         )}
         <ThemedView style={styles.header}>
+          <ThemedView
+            style={[
+              styles.backgroundColor,
+              { backgroundColor: myInfo?.color },
+            ]}
+          ></ThemedView>
           <ThemedView style={styles.close}>
-            <ThemedView
-              style={[{ backgroundColor: myInfo?.color || "#fff" }]}
-            ></ThemedView>
             <ThemedView style={styles.row}>
               {loggedIn ? (
-                <Image
-                  style={styles.profilePic}
-                  source={{
-                    uri: profileImageUri,
-                  }}
-                  placeholder={{ blurhash }}
-                  transition={500}
-                />
+                <ThemedView style={styles.zIndex}>
+                  <Image
+                    style={styles.profilePic}
+                    source={{
+                      uri: profileImageUri,
+                    }}
+                    placeholder={{ blurhash }}
+                    transition={500}
+                  />
+                </ThemedView>
               ) : (
                 <Image
                   style={styles.profilePic}
@@ -304,9 +309,11 @@ const styles = StyleSheet.create({
     borderColor: "#525252",
   },
   profilePic: {
-    borderRadius: 50,    
+    borderRadius: 50,
+    backgroundColor: 'transparent',
     width: 75,
     height: 75,
+    zIndex: 100
   },
   userName: {
     fontSize: 16,
@@ -324,13 +331,15 @@ const styles = StyleSheet.create({
   },
   close: {
     display: "flex",
+    backgroundColor: 'transparent',
     flexDirection: "column",
     ...(Platform.OS === "web" && {
       width: "100%",
     }),
   },
   smallGray: {
-    fontSize: 11,
+    fontSize: 13,
+    paddingTop: 5,
     lineHeight: 18,
     color: "rgb(119 118 118)",
   },
@@ -365,19 +374,19 @@ const styles = StyleSheet.create({
   row: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-between",
     width: "95%",
-    backgroundColor: "transparent",    
+    backgroundColor: "transparent",
   },
 
   button: {
     borderRadius: 15,
     borderWidth: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     paddingHorizontal: 5,
-    marginTop: width < 600 ? 0 : 90,
+    marginTop: width < 600 ? 0 : 10,
   },
   bottomSheetContent: {
     padding: 20,
@@ -398,6 +407,10 @@ const styles = StyleSheet.create({
   },
   link: {
     fontSize: 10,
+  },
+  zIndex: {
+    zIndex: 100,
+    backgroundColor: 'transparent'
   },
   bio: {
     fontSize: 12,
@@ -502,5 +515,16 @@ const styles = StyleSheet.create({
     transform: "translate(-50%, -50%)",
     zIndex: 20,
   },
-  
+  backgroundColor: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "10%",
+    width: "110%",
+    zIndex: -1,
+  },
+  columnLeftPadding: {
+    marginLeft: 5
+  }
+
 });
