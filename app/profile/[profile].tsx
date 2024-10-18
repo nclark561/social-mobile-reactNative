@@ -186,17 +186,17 @@ export default function ExternalProfile() {
       )}
       <ThemedView style={styles.desktopCenter}>
         <ThemedView style={styles.header}>
-          <ThemedView
-            style={[styles.icon]}
+          <Pressable
+            onPress={() => {
+              router.back();
+            }}
           >
-            <Pressable
-              onPress={() => {
-                router.back();
-              }}
+            <ThemedView
+              style={[styles.icon]}
             >
               <Ionicons size={25} name="arrow-back-outline" />
-            </Pressable>
-          </ThemedView>
+            </ThemedView>
+          </Pressable>
           <ThemedView
             style={[
               styles.backgroundColor,
@@ -278,7 +278,7 @@ export default function ExternalProfile() {
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   header: {
-    flexDirection: "column",    
+    flexDirection: "column",
     paddingBottom: 20,
     paddingLeft: 10,
     paddingRight: 10,
@@ -319,14 +319,14 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "40%",
+    width: "35%",
   },
   close: {
     display: "flex",
     flexDirection: "column",
   },
   smallGray: {
-    fontSize: 11,
+    fontSize: 13,
     lineHeight: 18,
     color: "rgb(119 118 118)",
   },
@@ -390,6 +390,7 @@ const styles = StyleSheet.create({
 
   icon: {
     padding: 8,
+    zIndex: 100,
     backgroundColor: 'transparent'
   },
   backgroundColor: {

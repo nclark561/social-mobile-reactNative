@@ -48,14 +48,14 @@ export default function HomeScreen() {
   const { myInfo, loggedIn } = context;
   const [loading, setLoading] = useState(true);
   const [isForYou, setIsForYou] = useState(true);
+  
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -155,23 +155,13 @@ export default function HomeScreen() {
           <ThemedView style={styles.postContainer}>
             <ThemedView style={styles.desktopHiddenFullscreen}>
               <ThemedView style={styles.repostedRow}>
-                {loggedIn ? (
-                  <Image
-                    style={[styles.profilePic, { margin: 20 }]}
-                    source={{
-                      uri: profileImageUri,
-                    }}
-                    onError={handleError}
-                  />
-                ) : (
-                  <Image
-                    style={[styles.profilePic, { margin: 20 }]}
-                    source={{
-                      uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAACUCAMAAADbGilTAAAAM1BMVEXk5ueutLeqsLPO0tTn6erh4+Tq7O3a3d6xt7rU19m/xMbEyMvJzc/d4OG5vsG9wcSkq6+UDpwhAAAD9ElEQVR4nO2b13LcMAwAWSBWibr//9pQvhJdZxNAj7l5iJOnHRiEWADGBoPBYDAYDAaDwWAw+LsAAGPTxvnHbgGYtJy9WyPOS6tZr7oA0gXDhRA8sv1lgtOgqL2eAKbXs+Q9gruF9RVcsOsL0bOtcLajVFDLyt+pnmM7dSILzH8QvSC7kAUdvqtysXYQWrAmQTXKGk0uK1NEz7aWVhbmpKD2IAsyQzViKVWzTGNkyXIWbF5UN1miagAs1zQSSFQZuOywxsB6EtW5IKxEKTuZIldu8DeJKmET8DqwM3pgp1OZagzsgqwKa6kq5zOyqi5X5WbCdS3N1g2Bu5ktLQKXwKKWgvyv611gMVeXensSTMMjBhbqVLlBTNil0pVrNNXCrcAOvEqgQqWq8GiuUFWxNhza52Cpdg1YrmCrXdH2L2BrVfEKQfbxldK1umRxgXVTMFyHawvXUQdeuP6i+sp0/XcL73j4e/YDTNW6It7AKVcbV7x7ooJL4nsM5stB8WXWBcSbl9qEXTHP3JnvLw/gPh4tVWEVuDewJW8FN1W8U+xG1ZYAbeNypXx1CYesWlNi0Z9lVbFqQH/bKA7sCfcG/izri1QF5t3rjbKbIrzd4J6yLCDqdyh4OkR+gtmT+yAnHF0XSebTkVjJTDfSGp6uUSVVhSWlkeymStyhNaU+dQlP3/mmElu0uugoBPs9D0Sg79D7ASb/5awoZvrf/5W4xD6prtSL6g5Q1r0sX0IY38mv/z/AFhkeO7aFWOXSUQP0DmDa775kwduufvmPKAWTthE9gepZdMvbO3qUhZ+BkklL6d0agol/QnB+llt4+8nXaLJoK33g4iQe1lb8d/xPs85Wb860ogoW69eo+fnDFZXN6qWmy2BQes5rejAkExwxOa3np/wzjAgSdz4GwPqnup+sa5ycsM7dCmT4NP7y3ZYbj2EbV70vjehe9xTs0Vsv0K4qpHvdII9MXMWamf4Q7GGZ8HVLnU08LhwRW2Ay53ydbOuX5rIw1fa6vZM1jRMBWM48Ua5taBnaGNTjVLd6266jRCWOvlXQ6i05a56sEGHauDavVK9lW5x2K1uzk2nwTn/oqrqjcgIJpsNX1V62KrLH1qpnKmQBWbViSKJoSK+Swk8YRl19ouyprmrsqZiyPoiJQrXsta52PKec7HNYi17MQrLfFuvHHcrJzAKSGnAlt+GUzjR3eSmCr8BeNisJSFWzRpNVWStLOzK+XnUTpS1IzljC2noho9OgZqi4Dclliz4F0mdQNHlY05t4KL9ZN9IuuaonSltwSgurwri7+EZiPy/04Jp4w6W7cHVJCWu3d1Vy0jp6teyBxAILXZDmOvhb/AN6bzfTexgP5QAAAABJRU5ErkJggg==",
-                    }}
-                    onError={handleError}
-                  />
-                )}
+                <Image
+                  style={[styles.profilePic, { margin: 20 }]}
+                  source={{
+                    uri: profileImageUri,
+                  }}
+                  onError={handleError}
+                />
 
                 <TextInput
                   onFocus={() => setIsFocused(false)}
@@ -211,77 +201,77 @@ export default function HomeScreen() {
             >
               {isForYou
                 ? Array.isArray(forYouPosts) &&
-                  forYouPosts.map((post, i) => {
-                    if (post.postId) {
-                      return (
-                        <ThemedView
-                          key={post.id}
-                          style={{ flexDirection: "column", flex: 1 }}
-                        >
-                          <ThemedView style={styles.row}>
-                            <Ionicons
-                              color={colorScheme === "dark" ? "white" : "black"}
-                              name="git-compare-outline"
-                              size={15}
-                            />
-                            <ThemedText style={styles.repost}>
-                              {post.user.username} Reposted
-                            </ThemedText>
-                          </ThemedView>
-                          <Post
-                            key={post.id}
-                            post={post.post}
-                            isComment={false}
-                            setLoading={setLoading}
-                          />
-                        </ThemedView>
-                      );
-                    }
+                forYouPosts.map((post, i) => {
+                  if (post.postId) {
                     return (
-                      <Post
+                      <ThemedView
                         key={post.id}
-                        post={post}
-                        isComment={false}
-                        setLoading={setLoading}
-                      />
+                        style={{ flexDirection: "column", flex: 1 }}
+                      >
+                        <ThemedView style={styles.row}>
+                          <Ionicons
+                            color={colorScheme === "dark" ? "white" : "black"}
+                            name="git-compare-outline"
+                            size={15}
+                          />
+                          <ThemedText style={styles.repost}>
+                            {post.user.username} Reposted
+                          </ThemedText>
+                        </ThemedView>
+                        <Post
+                          key={post.id}
+                          post={post.post}
+                          isComment={false}
+                          setLoading={setLoading}
+                        />
+                      </ThemedView>
                     );
-                  })
+                  }
+                  return (
+                    <Post
+                      key={post.id}
+                      post={post}
+                      isComment={false}
+                      setLoading={setLoading}
+                    />
+                  );
+                })
                 : Array.isArray(forYouFollowingPosts) &&
-                  forYouFollowingPosts.map((post, i) => {
-                    if (post.postId) {
-                      return (
-                        <ThemedView
-                          key={post.id}
-                          style={{ flexDirection: "column", flex: 1 }}
-                        >
-                          <ThemedView style={styles.row}>
-                            <Ionicons
-                              color={colorScheme === "dark" ? "white" : "black"}
-                              name="git-compare-outline"
-                              size={15}
-                            />
-                            <ThemedText style={styles.repost}>
-                              {post.user.username} Reposted
-                            </ThemedText>
-                          </ThemedView>
-                          <Post
-                            key={post.id}
-                            post={post.post}
-                            isComment={false}
-                            setLoading={setLoading}
-                          />
-                        </ThemedView>
-                      );
-                    }
+                forYouFollowingPosts.map((post, i) => {
+                  if (post.postId) {
                     return (
-                      <Post
+                      <ThemedView
                         key={post.id}
-                        post={post}
-                        isComment={false}
-                        setLoading={setLoading}
-                      />
+                        style={{ flexDirection: "column", flex: 1 }}
+                      >
+                        <ThemedView style={styles.row}>
+                          <Ionicons
+                            color={colorScheme === "dark" ? "white" : "black"}
+                            name="git-compare-outline"
+                            size={15}
+                          />
+                          <ThemedText style={styles.repost}>
+                            {post.user.username} Reposted
+                          </ThemedText>
+                        </ThemedView>
+                        <Post
+                          key={post.id}
+                          post={post.post}
+                          isComment={false}
+                          setLoading={setLoading}
+                        />
+                      </ThemedView>
                     );
-                  })}
+                  }
+                  return (
+                    <Post
+                      key={post.id}
+                      post={post}
+                      isComment={false}
+                      setLoading={setLoading}
+                    />
+                  );
+                })}
             </Animated.ScrollView>
           </ThemedView>
         </ThemedView>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 import {
   FlatList,
   TouchableOpacity,
@@ -8,14 +8,18 @@ import {
   Animated,
   Dimensions,
   Platform,
+  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Test from "../../MessageComponents/Test";
 import MyContext from "@/components/providers/MyContext";
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useNavigation } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import { DrawerActions } from "@react-navigation/native";
+import { Image } from "expo-image";
 import MessageContext from "@/components/providers/MessageContext";
+import AnimatedUnderlineText from "@/components/desktopComponents/animatedUnderlineText";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -23,10 +27,13 @@ const MessageHome: React.FC = () => {
   const { deleteConvos, myUsername, getConvos, setMyConvos, myConvos } =
     useContext<any>(MessageContext);
   const context = useContext<any>(MyContext);
+  const navigation = useNavigation();
   const { myInfo, loggedIn } = context;
   const colorScheme = useColorScheme();
   const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
-
+  const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
+  const mortyUrl =
+    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   useFocusEffect(() => {
     const intervalId = setInterval(getConvos, 2000);
     return () => clearInterval(intervalId);
@@ -39,6 +46,15 @@ const MessageHome: React.FC = () => {
     deleteConvos(conversationId);
   };
 
+  const profileImageUri = useMemo(() => {
+    if (myInfo?.id) {
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}?${Date.now()}`;
+    }
+    return mortyUrl; // Fallback URL
+  }, [myInfo?.id]);
+
+  const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
+
   const renderItem = ({ item }: { item: any }) => {
     return <SwipeableItem item={item} onDelete={() => handleDelete(item.id)} />;
   };
@@ -49,7 +65,21 @@ const MessageHome: React.FC = () => {
         <ThemedView style={styles.desktopRow}>
           <ThemedView style={styles.mainContent}>
             <ThemedView style={[styles.header, { borderColor: fadedColor }]}>
+                {loggedIn ? (
+                  <Pressable onPress={handlePress}>
+                    <Image
+                      style={styles.profilePic}
+                      source={{ uri: profileImageUri }}
+                      placeholder={{ blurhash }}
+                    />
+                  </Pressable>
+                ) : (
+                  <Pressable onPress={() => router.navigate("/login")}>
+                    <AnimatedUnderlineText style={{ marginLeft: 5 }}>Login</AnimatedUnderlineText>
+                  </Pressable>
+                )}              
               <ThemedText style={styles.title}>Messages</ThemedText>
+              <ThemedView></ThemedView>
             </ThemedView>
             <FlatList
               data={myConvos}
@@ -69,7 +99,7 @@ const MessageHome: React.FC = () => {
                   size={32}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
-              </TouchableOpacity> : <TouchableOpacity                
+              </TouchableOpacity> : <TouchableOpacity
               >
                 <Ionicons
                   name="add-circle-outline"
@@ -159,12 +189,17 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
   },
+  profilePic: {
+    borderRadius: 15,
+    width: 35,
+    height: 35,
+  },
   mainContent: {
     width: width > 600 ? "100%" : "100%",
   },
   header: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
     paddingBottom: 10,

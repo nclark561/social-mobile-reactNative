@@ -327,10 +327,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "30%",
+    width: width > 1000 ? '30%' : '50%',
+    paddingLeft: width > 1000 ? 0 : 10,
   },
   close: {
     display: "flex",
+    padding: width > 1000 ? 0 : 10,
     backgroundColor: 'transparent',
     flexDirection: "column",
     ...(Platform.OS === "web" && {
@@ -383,10 +385,11 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 15,
     borderWidth: 1,
+
     justifyContent: "flex-start",
     alignItems: "center",
     paddingHorizontal: 5,
-    marginTop: width < 600 ? 0 : 10,
+    marginTop: width < 600 ? 0 : 25,
   },
   bottomSheetContent: {
     padding: 20,
@@ -520,7 +523,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     height: "10%",
-    width: "110%",
+    width: width < 1000 ? '100%' : '110%',
     zIndex: -1,
   },
   columnLeftPadding: {
