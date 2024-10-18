@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     width: "95%",
   },
   desktopCenter: {
-    width: width > 600 ? "75%" : "100%",
+    width: width > 600 ? "100%" : "100%",
     flex: 1,
   },
   button: {
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     left: 0,
     height: "15%",
-    width: "110%",
+    width: "91%",
     zIndex: -1,
   },
   followIcon: {},

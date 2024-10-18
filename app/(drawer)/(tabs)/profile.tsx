@@ -151,7 +151,7 @@ export default function TabTwoScreen() {
         styles.pageContainer,
       ]}
     >
-      <ThemedView style={{ width: '80%' }}>
+      <ThemedView style={{ width: '90%' }}>
         {loading && (
           <ThemedView
             style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
@@ -522,8 +522,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    height: "10%",
-    width: width < 1000 ? '100%' : '110%',
+    height: "15%",
+    width: width < 1000 ? '100%' : '100%',
     zIndex: -1,
   },
   columnLeftPadding: {
