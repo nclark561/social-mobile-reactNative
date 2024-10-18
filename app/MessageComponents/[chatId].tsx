@@ -247,7 +247,7 @@ const CurrentChat: React.FC = () => {
           <TextInput
             style={[styles.input, { borderColor: fadedColor, color }]}
             placeholder="Type your message"
-            value={message}
+            value={message}            
             onChangeText={setMessage}
             onSubmitEditing={onSend}
           />

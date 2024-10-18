@@ -167,7 +167,7 @@ export default function HomeScreen() {
                   onFocus={() => setIsFocused(false)}
                   onBlur={() => setIsFocused(false)}
                   style={styles.input}
-                  value={postInput}
+                  value={postInput}                  
                   multiline={true}
                   textAlignVertical="center"
                   onChangeText={(text) => {

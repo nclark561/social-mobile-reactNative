@@ -65,6 +65,7 @@ export default function SignIn({
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Username"
+          autoCapitalize="none"
           style={[styles.loginInput, { color }]}
           value={userName}
           onChangeText={setUsername}
@@ -72,6 +73,7 @@ export default function SignIn({
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Email"
+          autoCapitalize="none"
           style={[styles.loginInput, { color }]}
           value={email}
           onChangeText={setEmail}
@@ -79,6 +81,7 @@ export default function SignIn({
         <TextInput
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Password"
+          autoCapitalize="none"
           style={[styles.loginInput, { color }]}
           value={password}
           onChangeText={setPassword}

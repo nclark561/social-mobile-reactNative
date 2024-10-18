@@ -104,6 +104,7 @@ export default function TabTwoScreen() {
                 />
                 <TextInput
                   placeholder="Search"
+                  autoCapitalize="none"
                   placeholderTextColor={"gray"}
                   style={[
                     { maxWidth: "100%" },

@@ -79,12 +79,14 @@ export default function SignIn({
           onChangeText={(text) => setEmail(text)}
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Email"
+          autoCapitalize="none"
           style={[styles.loginInput, { color }]}
         />
         <TextInput
           onChangeText={(text) => setPassword(text)}
           placeholderTextColor={"rgb(140, 138, 143)"}
           placeholder="Password"
+          autoCapitalize="none"
           style={[styles.loginInput, { color }]}
           secureTextEntry={true} // Ensure password input is secure
         />
