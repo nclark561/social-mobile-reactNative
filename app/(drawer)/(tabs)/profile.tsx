@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   link: {
-    fontSize: 10,
+    fontSize: 13,
   },
   zIndex: {
     zIndex: 100,

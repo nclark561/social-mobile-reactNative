@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   link: {
-    fontSize: 12
+    fontSize: 13
   },
   icon: {
     padding: 8,
