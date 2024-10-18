@@ -21,7 +21,7 @@ import ProfileDisplay from "@/components/exploreComponents/ProfileDisplay";
 const noah = {
   email: "noahammon00@gmail.com",
   username: "Noah",
-  id: "cm2axaly20001gays58jtdvde",
+  id: "cm2f9bxae0000q848tq2er51l",
 };
 
 const kale = {
