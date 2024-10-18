@@ -20,6 +20,7 @@ interface TestProps {
   user: any;
   time: string;
   messageUser: string;
+  recipient?: any
 }
 
 const Test = (props: TestProps) => {
@@ -43,7 +44,7 @@ const Test = (props: TestProps) => {
     const date = new Date(string);
 
     let hours = date.getUTCHours();
-    let minutes = date.getUTCMinutes();
+    let minutes: any = date.getUTCMinutes();
 
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12 || 12; // Convert 24-hour format to 12-hour format
