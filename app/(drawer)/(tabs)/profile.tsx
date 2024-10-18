@@ -196,7 +196,7 @@ export default function TabTwoScreen() {
               )}
             </ThemedView>
             {loggedIn ? (
-              <ThemedView style={styles.columnLeftPadding}>
+              <ThemedView >
                 <ThemedText style={styles.userName}>
                   {myInfo?.username}
                 </ThemedText>
