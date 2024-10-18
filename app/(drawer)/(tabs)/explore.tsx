@@ -16,6 +16,7 @@ import Animated from "react-native-reanimated";
 import PostContext from "@/components/providers/PostContext";
 import MyContext from "../../../components/providers/MyContext";
 import { Image } from "expo-image";
+import AnimatedUnderlineText from "@/components/desktopComponents/animatedUnderlineText";
 
 const noah = {
   email: "noahammon00@gmail.com",
@@ -84,7 +85,7 @@ export default function TabTwoScreen() {
                 </Pressable>
               ) : (
                 <Pressable onPress={() => router.navigate("/login")}>
-                  <ThemedText style={{ marginLeft: 5 }}>Login</ThemedText>
+                  <AnimatedUnderlineText style={{ marginLeft: 5 }}>Login</AnimatedUnderlineText>
                 </Pressable>
               )}
               <ThemedView

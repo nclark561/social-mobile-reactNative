@@ -14,6 +14,7 @@ import { DrawerActions } from "@react-navigation/native";
 import { supabase } from "./Supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedText } from "./ThemedText";
+import AnimatedUnderlineText from "./desktopComponents/animatedUnderlineText";
 
 interface HeaderProps {
   name: string;
@@ -88,7 +89,7 @@ export default function Header({ name }: HeaderProps) {
             router.navigate("/login");
           }}
         >
-          <ThemedText style={{ marginLeft: 5 }}>Login</ThemedText>
+          <AnimatedUnderlineText style={{ marginLeft: 5 }}>Login</AnimatedUnderlineText>
         </Pressable>
       )}
       <ThemedText style={styles.Title}>{name}</ThemedText>
