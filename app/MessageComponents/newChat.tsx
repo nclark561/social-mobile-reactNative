@@ -121,16 +121,18 @@ const Chat: React.FC = () => {
       {toggleList && (
         <ThemedView style={[styles.userList, { borderColor: fadedColor }]}>
           <ScrollView style={styles.usersView}>
-            {searchResults?.length > 0 ? (
-              searchResults.map((e: any) => (
-                <Pressable
-                  style={styles.border}
-                  onPress={() => handlePickUser(e)}
-                >
-                  <ThemedText style={styles.user} key={e.id}>
-                    {e.username}
-                  </ThemedText>
-                </Pressable>
+            {recipientSearch?.length > 0 ? (
+              searchResults?.map((e: any) => (
+                <ThemedView>
+                  <Pressable
+                    style={styles.border}
+                    onPress={() => handlePickUser(e)}
+                  >
+                    <ThemedText style={styles.user} key={e.id}>
+                      {e.username}
+                    </ThemedText>
+                  </Pressable>
+                </ThemedView>
               ))
             ) : (
               <ThemedText>No users found</ThemedText>
@@ -239,7 +241,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   border: {
-    backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "gray",
   },
