@@ -67,11 +67,14 @@ export default function Post({
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
+  const repostedByMe = post.reposts.filter((e: any) => e.userId === myInfo?.id).length > 0
+
   const handleOpenShare = () => shareModalRef.current?.present();
   const handleCloseShare = () => shareModalRef.current?.dismiss();
   const handleOpenComment = () => commentModalRef.current?.present();
   const handleCloseComment = () => commentModalRef.current?.dismiss();
   const handleOpenRepost = () => repostModalRef.current?.present();
+  const handleCloseRepost = () => repostModalRef.current?.dismiss();
   const handleOpenDeleteMenu = () => deleteMenuRef.current?.present();
   const handleCloseDeleteMenu = () => deleteMenuRef.current?.dismiss();
 
@@ -198,6 +201,8 @@ export default function Post({
   };
 
   const repost = async (userId: string, postId: string) => {
+    setLoading(true)
+    handleCloseRepost()
     try {
       const test = await fetch(`${getBaseUrl()}/api/addReposts`, {
         method: "POST",
@@ -211,8 +216,10 @@ export default function Post({
       });
       await getForYouPosts(myInfo?.id);
       await getUserPosts(user);
+      setLoading(false)
     } catch (error) {
       console.log(error, "this is the repost error in post");
+      setLoading(false)
     }
   };
   const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash;
@@ -267,9 +274,9 @@ export default function Post({
             <ThemedView style={styles.smallRow}>
               <Ionicons
                 size={15}
-                name="git-compare-outline"
+                name={repostedByMe ? "git-compare" : 'git-compare-outline'}
                 onPress={handleOpenRepost}
-                color={colorScheme === "dark" ? "white" : "black"}
+                color={repostedByMe ? 'green' : colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
                 {repostLength ? repostLength : post?.reposts?.length}
@@ -372,7 +379,7 @@ export default function Post({
                 onPress={handleCloseComment}
                 style={styles.cancelButton}
               >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+                <Text >Cancel</Text>
               </Pressable>
               <Pressable
                 onPress={() => {

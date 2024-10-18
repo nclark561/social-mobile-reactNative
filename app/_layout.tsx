@@ -19,9 +19,6 @@ import { ThemedView } from "@/components/ThemedView";
 import { MessageProvider } from "@/components/providers/MessageContext";
 import DesktopRouting from "@/components/desktopComponents/desktopRouting";
 import StackLogos from "@/components/desktopComponents/stackLogos";
-import { useContext } from "react";
-import MyContext from "@/components/providers/MyContext";
-import { Link, router } from "expo-router";
 import LinkedinProfiles from "@/components/desktopComponents/linkedinProfiles";
 
 SplashScreen.preventAutoHideAsync();
