@@ -151,7 +151,7 @@ export default function TabTwoScreen() {
         styles.pageContainer,
       ]}
     >
-      <ThemedView style={{ width: '90%', flex: 1 }}>
+      <ThemedView style={[{flex: 1 }, styles.ninety]}>
         {loading && (
           <ThemedView
             style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
@@ -311,8 +311,8 @@ const styles = StyleSheet.create({
   profilePic: {
     borderRadius: 50,
     backgroundColor: 'transparent',
-    width: 75,
-    height: 75,
+    width: width < 1000 ? 75 : 35,
+    height: width < 1000 ? 75 : 35,
     zIndex: 100
   },
   userName: {
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     paddingHorizontal: 5,
-    marginTop: width < 600 ? 0 : 25,
+    marginTop: width < 600 ? 25 : 25,
   },
   bottomSheetContent: {
     padding: 20,
@@ -528,6 +528,9 @@ const styles = StyleSheet.create({
   },
   columnLeftPadding: {
     marginLeft: 5
+  },
+  ninety: {
+    width: width < 1000 ? '100%' : '90%'
   }
 
 });
