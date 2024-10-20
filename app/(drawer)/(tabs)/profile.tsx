@@ -151,7 +151,7 @@ export default function TabTwoScreen() {
         styles.pageContainer,
       ]}
     >
-      <ThemedView style={{ width: '90%' }}>
+      <ThemedView style={{ width: '90%', flex: 1 }}>
         {loading && (
           <ThemedView
             style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}

@@ -35,7 +35,7 @@ const MessageHome: React.FC = () => {
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   useFocusEffect(() => {
-    const intervalId = setInterval(getConvos, 2000);
+    const intervalId = setInterval(getConvos, 1500);
     return () => clearInterval(intervalId);
   });
 
