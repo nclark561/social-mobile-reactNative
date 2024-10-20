@@ -26,6 +26,10 @@ import Post from "@/components/postComponents/Post";
 import { useRoute } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { ClipLoader } from "react-spinners";
+import DeletePopup from "@/components/postComponents/DeletePopup";
+import CommentPopup from "@/components/postComponents/CommentPopup";
+import SharePopup from "@/components/postComponents/SharePopup";
+import RepostPopup from "@/components/postComponents/RepostPopup";
 
 interface Post {
   id: string;
@@ -53,14 +57,69 @@ export default function PostPage() {
   const { setLoginToggle, myInfo, loggedIn, getUser } =
     useContext<any>(MyContext);
   const [loading, setLoading] = useState(true);
+  const [commentVisible, setCommentVisible] = useState(false); // State for menu visibility
+  const [shareVisible, setShareVisible] = useState(false);
+  const [repostVisible, setRepostVisible] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false)
 
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
-  const handleOpenShare = () => shareModalRef.current?.present();
-  const handleOpenComment = () => commentModalRef.current?.present();
-  const handleCloseComment = () => commentModalRef.current?.dismiss();
-  const handleOpenRepost = () => repostModalRef.current?.present();
-  const handleOpenDeleteMenu = () => deleteMenuRef.current?.present(); // Open delete menu
+  const handleOpenShare = () => {
+    if (Platform.OS === 'web') {
+      setShareVisible(true)
+    } else {
+      shareModalRef.current?.present()
+    }
+  };
+  const handleCloseShare = () => {
+    if (Platform.OS === 'web') {
+      setShareVisible(false)
+    } else {
+      shareModalRef.current?.dismiss()
+    }
+  };
+  const handleOpenComment = () => {
+    if (Platform.OS === 'web') {
+      setCommentVisible(true)
+    } else {
+      commentModalRef.current?.present();
+    }
+  }
+  const handleCloseComment = () => {
+    if (Platform.OS === 'web') {
+      setCommentVisible(false)
+    } else {
+      commentModalRef.current?.dismiss();
+    }
+  };
+  const handleOpenRepost = () => {
+    if (Platform.OS === 'web') {
+      setRepostVisible(true)
+    } else {
+      repostModalRef.current?.present();
+    }
+  };
+  const handleCloseRepost = () => {
+    if (Platform.OS === 'web') {
+      setRepostVisible(false)
+    } else {
+      repostModalRef.current?.dismiss();
+    }
+  };
+  const handleOpenDeleteMenu = () => {
+    if (Platform.OS === 'web') {
+      setDeleteVisible(true)
+    } else {
+      deleteMenuRef.current?.present();
+    }
+  };
+  const handleCloseDeleteMenu = () => {
+    if (Platform.OS === 'web') {
+      setDeleteVisible(false)
+    } else {
+      deleteMenuRef.current?.dismiss();
+    }
+  };
 
   const likePost = () => {
     setLiked((prev) => !prev);
@@ -115,6 +174,7 @@ export default function PostPage() {
     userId: string,
     commentId?: string,
   ) => {
+    handleCloseComment()
     try {
       const response = await fetch(`${getBaseUrl()}/api/addComment`, {
         method: "POST",
@@ -273,7 +333,7 @@ export default function PostPage() {
             onPress={handleOpenDeleteMenu} // Open delete menu on click
             color={colorScheme === "dark" ? "white" : "black"}
           />
-          <CustomBottomSheet
+          {Platform.OS !== 'web' ? (<CustomBottomSheet
             snapPercs={["25%"]}
             ref={shareModalRef}
             title="Share"
@@ -298,13 +358,15 @@ export default function PostPage() {
                 <ThemedText style={styles.optionText}>Copy Link</ThemedText>
               </ThemedView>
             </ThemedView>
-          </CustomBottomSheet>
-          <CommentBottomSheet
+          </CustomBottomSheet>) : (
+            <SharePopup shareVisible={shareVisible} handleCloseShare={handleCloseShare}/>
+          )}
+          {Platform.OS !== 'web' ? (<CommentBottomSheet
             post={thisPost}
             commentModalRef={commentModalRef}
             user={thisPost?.owner}
-          />
-          <CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
+          />) : <CommentPopup myInfo={myInfo} setCommentInput={setCommentInput} commentInput={commentInput} handleCloseComment={handleCloseComment} addComment={addComment} commentVisible={commentVisible} post={thisPost}/>}
+          {Platform.OS !== 'web' ? (<CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
             <ThemedView
               style={[
                 styles.shareContainer,
@@ -328,10 +390,10 @@ export default function PostPage() {
                 <ThemedText style={styles.optionText}>Quote</ThemedText>
               </ThemedView>
             </ThemedView>
-          </CustomBottomSheet>
+          </CustomBottomSheet>) : <></>}
 
           {/* Delete Menu */}
-          <CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
+          {Platform.OS !== 'web' ? (<CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
             <ThemedView style={styles.deleteContainer}>
               {myInfo?.id === thisPost?.owner?.id && (
                 <Button
@@ -339,12 +401,12 @@ export default function PostPage() {
                   color="red"
                   onPress={() => {
                     deletePost(thisPost?.id);
-                    deleteMenuRef.current?.dismiss();
+                    handleCloseDeleteMenu();
                   }}
                 />
               )}
             </ThemedView>
-          </CustomBottomSheet>
+          </CustomBottomSheet>) : <DeletePopup post={thisPost} deleteComment={null} deletePost={deletePost} deleteVisible={deleteVisible} postOwnerId={thisPost?.owner?.id} myInfo={myInfo} handleCloseDeleteMenu={handleCloseDeleteMenu}/>}
         </ThemedView>
         {thisPost?.comments?.map((comment: any) => {
           console.log(comment);

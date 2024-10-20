@@ -119,7 +119,6 @@ const EditProfileSheet = ({
 
   return (
     <CustomBottomSheet
-      hideCancelButton
       ref={editProfileRef}
       snapPercs={["70%"]}
     >
