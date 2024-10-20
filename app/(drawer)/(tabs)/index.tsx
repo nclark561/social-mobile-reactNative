@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { useContext, useCallback, useEffect } from "react";
+import { useContext, useCallback, useEffect, useMemo } from "react";
 import Animated from "react-native-reanimated";
 import Post from "@/components/postComponents/Post";
 import { Alert } from "react-native";
@@ -42,7 +42,7 @@ export default function HomeScreen() {
     forYouFollowingPosts,
     getAllForYouPosts,
   } = postContext;
-  const [profileImageUri, setProfileImageUri] = useState(``);
+  // const [profileImageUri, setProfileImageUri] = useState(``);
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const context = useContext<any>(MyContext);
   const { myInfo, loggedIn } = context;
@@ -52,13 +52,12 @@ export default function HomeScreen() {
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
 
-  const profileImage = (id: string) => {
-    if (id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
-        }/storage/v1/object/public/profile-images/${id}${Date.now()}`;
-      return newProfileImageUri;
+  const profileImageUri = useMemo(() => {
+    if (myInfo?.id) {
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}?${Date.now()}`;
     }
-  };
+    return mortyUrl; // Fallback URL
+  }, [myInfo?.id]);
 
   const createPost = async (content: string, userName: string) => {
     if (content.length < 1) return;
@@ -86,12 +85,12 @@ export default function HomeScreen() {
     }
   };
 
-  useEffect(() => {
-    if (myInfo?.id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
-      setProfileImageUri(newProfileImageUri);
-    }
-  }, [myInfo]);
+  // useEffect(() => {
+  //   if (myInfo?.id) {
+  //     const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}.jpg?${Date.now()}`;
+  //     setProfileImageUri(newProfileImageUri);
+  //   }
+  // }, [myInfo]);
 
   useFocusEffect(
     useCallback(() => {
@@ -111,7 +110,7 @@ export default function HomeScreen() {
 
   const mortyUrl =
     "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
-  const handleError = () => setProfileImageUri(mortyUrl);
+  // const handleError = () => setProfileImageUri(mortyUrl);
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
@@ -155,50 +154,33 @@ export default function HomeScreen() {
           <ThemedView style={styles.postContainer}>
             <ThemedView style={styles.desktopHiddenFullscreen}>
               <ThemedView style={styles.repostedRow}>
-                {loggedIn ? <Image
+                {loggedIn ? <><Image
                   style={[styles.profilePic, { margin: 20 }]}
                   source={{
                     uri: profileImageUri,
                   }}
-                  onError={handleError}
-                /> : <Image
-                  style={[styles.profilePic, { margin: 20 }]}
-                  source={{
-                    uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALIAAACUCAMAAAAAoYNxAAAAM1BMVEXk5ueutLfp6uu/xMarsbTZ3N3h4+Sxt7q6v8Ld4OHIzM7V2Nq3vL/P0tTFycvS1delrLCbz0J0AAAEK0lEQVR4nO2c2ZLjIAxFjdgNXv7/awe7kx4nkwUQkUiN70s6/XRKdREgpAzDqVOnTp06derUqVOnTp069T8IYDA+TNO0aJP+7l5GT7NQ66o2pQ8rF8/N9EIwhNElUnFU+upG3Wm0IUR7x3ultk73yKztI9xf7NgbNHj5CnhjXmffFfT0MsTXQE8dMb8L8RVa9sLsHy66h8y2j4wXbCbwztzDKtQFxHuc2Zl9ril+xe2NcmJhDSuxicXEQjlW5Lk8yIl5ZLTzVEMsxLqwEVcY+SIuYnC1yGrmsQYs1UEWIrAgD7EeWUmWTDfVxzgxaw7kaifvyI7BzQFDnBIdvTPq08UlzAxnZxxxOmpQA8OyIpHFQhxmqDgP3YrcGaboYP8QORIfnAOWOJmZdgeEEY+saM9zkFkGeIk8kiIbZFbekSUpskcnjKRIilxWCXgm0j37C5Eb5LhkZtLEjDzGcSBj7lB/kUmP+V+I/IXGaLP8ziRHgExbAvUOT0xdAW1xkptJiaGqSnuHPNEio0pFF2TiupzHI0fiGhfgr6vU7w8NzEz+/ODRpRfy2ifaGZG8JgeVTztXrdT1rSSPC7PieC1BLUDiIsZFqKMRz6swJs/xBHkYTD1yZHp6r08aiiFdXJgrK3OcPUZ1iU6RP5McVGcNnmfKX+axnFkxt8uVZzqu/HZQ4S1wZeprqGcmvqM+UZE3ONuKDkp318yeT8HXVHQnCBmNtXsPMzfpQckc76BVL6a4CoJ7Ca2E42/2vBMMwa3PoJWSYeiNeJd+HOkEzN2a+lwAi4tWqJ9Jjf3DWrf0GeCrALZhGCndJinn6TsmePaJoyRjhm/A/Uf9Mu+R1WEZZ7m5+WrnGJ0cp6C1Nz3BJ1ofkn/dz7pT9+li/1+Uclx0F0ZJDGGOdqN9s/kpZa2Vk+em1qN9un88Jl/TrmJ4SgIAPoyPJ88yqCdNbm0ALWMN74VaWTcZSmgYpph5RH5OLYSkg/ZjfXxvqNdkawLq5AhsgA/Qyk2fNjUYmXUByYcWH54CNLKNJW6p7cfuV2Byr6WlWuVnbizbVekjwGIL9Nh+UwRouOoeKTYP9OuR5RZSY9NtPLu4gmJuurU06L7IYW43Xu4Rk0VlzI26sDOrV42gW1SUQBPY+MjcIMaEvDsztmSOmumrZcYRa2pggYwzeMKVd2BGrEFDld3uVf9e/Llz0DtVHkdrniEbqfLJGDQbcfXDPB+wqGt/gJkVWVSM1nFk5KMqdu4GDcpI5tIwB3R/JBq5cFIbWLa9W61FYQbNHuTSRIef/22ikjA36AFvoYIjXYth2gZSBQ2ALSZTmyh/wKDNOBFeBdsJspu6mZTLdYahqbRkKHtWreYnnz6jNdfMiCbfxso2cw9b30W554xeVl+SzUSef34LtQetuVGW3Sh7jgr6US5y3/oDD+I6UeymLPkAAAAASUVORK5CYII=',
-                  }}
-                  onError={handleError}
-                />}
-
-
-                <TextInput
-                  onFocus={() => setIsFocused(false)}
-                  onBlur={() => setIsFocused(false)}
-                  style={styles.input}
-                  value={postInput}
-                  multiline={true}
-                  textAlignVertical="center"
-                  onChangeText={(text) => {
-                    setPostInput(text);
-                  }}
-                  placeholder="What's Happening!?"
-                ></TextInput>
-                {loggedIn ? (
+                  // onError={handleError}
+                />
+                  <TextInput
+                    onFocus={() => setIsFocused(false)}
+                    onBlur={() => setIsFocused(false)}
+                    style={styles.input}
+                    value={postInput}
+                    multiline={true}
+                    textAlignVertical="center"
+                    onChangeText={(text) => {
+                      setPostInput(text);
+                    }}
+                    placeholder="What's Happening!?"
+                  ></TextInput>
                   <Pressable
                     onPress={() => {
                       createPost(postInput, myInfo.username);
                     }}
                   >
                     <ThemedText style={styles.postButton}>Post!</ThemedText>
-                  </Pressable>
-                ) : (
-                  <Pressable
-                    onPress={() => {
-                      Alert.alert("You aren't logged in");
-                    }}
-                  >
-                    <ThemedText style={styles.postButton}>Post!</ThemedText>
-                  </Pressable>
-                )}
+                  </Pressable></> : <></>}
+
               </ThemedView>
             </ThemedView>
 
@@ -312,7 +294,7 @@ export default function HomeScreen() {
             <Image
               style={styles.commentPic}
               source={{
-                uri: `${profileImage(myInfo?.id)}`,
+                uri: profileImageUri,
               }}
               placeholder={{ blurhash }}
               transition={500}
