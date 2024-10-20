@@ -52,6 +52,9 @@ export default function HomeScreen() {
   const handleOpenNewPost = () => newPostRef?.current?.present();
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
 
+  const mortyUrl =
+  "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
+
   const profileImageUri = useMemo(() => {
     if (myInfo?.id) {
       return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}?${Date.now()}`;
@@ -108,8 +111,6 @@ export default function HomeScreen() {
     loadingPosts();
   }, [myInfo]); // Refresh when switching between For You and Following
 
-  const mortyUrl =
-    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
   // const handleError = () => setProfileImageUri(mortyUrl);
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
