@@ -14,20 +14,16 @@ import { Ionicons } from "@expo/vector-icons";
 interface SharePopupProps {
   shareVisible: boolean;
   handleCloseShare: () => void;
-  linkToShare: string; // Add the link to be shared as a prop
 }
 
-const SharePopup = ({ shareVisible, handleCloseShare, linkToShare }: SharePopupProps) => {
+const SharePopup = ({ shareVisible, handleCloseShare }: SharePopupProps) => {
   const colorScheme = useColorScheme();
 
   const copyToClipboard = async () => {
-    if (linkToShare) {
-      await Clipboard.setStringAsync(linkToShare);
-      Alert.alert("Link copied to clipboard!");
-    } else {
-      Alert.alert("No link to copy!");
-    }
+    await Clipboard.setStringAsync(window.location.href);
   };
+
+  console.log(window.location.href, 'the window location')
 
   return (
     <Modal transparent visible={shareVisible} animationType="fade">
