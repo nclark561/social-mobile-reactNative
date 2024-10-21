@@ -255,9 +255,9 @@ export default function ExternalProfile() {
               {myInfo?.links && (
                 <ThemedText
                   style={[styles.link, { color: linkTextColor }]}
-                  onPress={() => openLink(myInfo.links)}
+                  onPress={() => openLink(user?.links)}
                 >
-                  {myInfo.links}
+                  {user?.links}
                 </ThemedText>
               )}
             </>
