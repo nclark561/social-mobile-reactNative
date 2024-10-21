@@ -1,18 +1,12 @@
-import { Tabs, useFocusEffect } from "expo-router";
+import { SafeAreaView, Platform, useWindowDimensions } from "react-native";
+import { Tabs } from "expo-router";
 import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useContext } from "react";
 import MyContext from "@/components/providers/MyContext";
-import { router } from "expo-router";
-import {
-  SafeAreaView,
-  Dimensions,
-  useWindowDimensions,
-  Platform,
-} from "react-native";
+import { useContext } from "react";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -20,7 +14,12 @@ export default function TabLayout() {
 
   const context = useContext<any>(MyContext);
   const { loggedIn } = context;
-  const { width } = useWindowDimensions();
+
+  // Automatically tracks window dimension changes
+  const { width, height } = useWindowDimensions();
+
+  // Debugging purposes: See if the dimensions change
+  console.log('Window dimensions:', width, height);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

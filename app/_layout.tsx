@@ -42,18 +42,23 @@ export default function RootLayout() {
   // UseEffect to monitor window size changes
   useEffect(() => {
     const handleResize = () => {
-      const newWidth = Dimensions.get("window").width;
-      setWindowWidth(newWidth);
+      const { width } = Dimensions.get("window");
+      setWindowWidth(width);
     };
-    const subscription = Dimensions.addEventListener("change", handleResize);    
+
+    const subscription = Dimensions.addEventListener("change", handleResize);
+
     return () => {
-      subscription?.remove(); 
+      subscription?.remove();
     };
   }, []);
 
   if (!loaded) {
     return null;
   }
+
+  // Dynamically adjust width in styles based on window width
+  const contentWidth = windowWidth >= 1000 && windowWidth <= 1400 ? '98%' : '70%';
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -67,10 +72,9 @@ export default function RootLayout() {
                 <SafeAreaView style={{ flex: 1, backgroundColor }}>
                   {windowWidth > 1000 ? (
                     <ThemedView style={styles.row}>
-                      <ThemedView style={styles.content}>
+                      <ThemedView style={[styles.content, { width: contentWidth }]}>
                         <ThemedView style={styles.column}>
-                          <DesktopRouting />
-                          <StackLogos />
+                          <DesktopRouting />                          
                         </ThemedView>
                         <Stack
                           screenOptions={{
@@ -85,15 +89,15 @@ export default function RootLayout() {
                         </ThemedView>
                       </ThemedView>
                     </ThemedView>
-                  ) : (
-                    <Stack
-                      screenOptions={{
-                        headerShown: false,
-                        animation: "slide_from_right",
-                      }}
-                    >
-                      <Stack.Screen name="(drawer)" />
-                    </Stack>
+                  ) : (                    
+                      <Stack
+                        screenOptions={{
+                          headerShown: false,
+                          animation: "slide_from_right",
+                        }}
+                      >
+                        <Stack.Screen name="(drawer)" />
+                      </Stack>                    
                   )}
                 </SafeAreaView>
               </PostProvider>
@@ -106,10 +110,10 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-  column: {
-    height: "80%",
+  column: {    
     flexDirection: "column",
     zIndex: 1000,
+    height: '100%'
   },
   none: {
     display: "flex",
@@ -118,12 +122,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
+    height: '100%'
   },
   content: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
-    width: "70%",
-    height: 900,
+    height: '100%'
   },
 });

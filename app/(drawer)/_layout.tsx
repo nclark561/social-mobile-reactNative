@@ -7,8 +7,9 @@ import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { SafeAreaView, Platform, Dimensions } from "react-native";
+import { SafeAreaView, Dimensions } from "react-native";
 import { Drawer } from "expo-router/drawer";
+import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import MyCustomDrawer from "@/components/MyCustomDrawer";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -23,8 +24,24 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, "background");
 
-  const windowWidth = Dimensions.get("window").width;
-  const isDesktop = Platform.OS === "web" && windowWidth >= 1024;
+  const [windowWidth, setWindowWidth] = useState(Dimensions.get("window").width);
+
+  // UseEffect to monitor window size changes and update state
+  useEffect(() => {
+    const handleResize = () => {
+      const { width } = Dimensions.get("window");
+      setWindowWidth(width);
+    };
+
+    const subscription = Dimensions.addEventListener("change", handleResize);
+
+    return () => {
+      subscription?.remove();
+    };
+  }, []);
+
+  // Define whether we are in desktop view or mobile/tablet view
+  const isDesktop = windowWidth >= 1024;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -37,7 +54,7 @@ export default function RootLayout() {
               <PostProvider>
                 <SafeAreaView style={{ flex: 1, backgroundColor }}>
                   {isDesktop ? (
-                    // Use Stack Navigator on desktop
+                    // Stack Navigator on desktop
                     <Stack>
                       <Stack.Screen
                         name="(tabs)"
@@ -96,6 +113,7 @@ export default function RootLayout() {
                       />
                     </Stack>
                   ) : (
+                    // Drawer Navigator on mobile/tablet
                     <Drawer
                       drawerContent={(props) => <MyCustomDrawer {...props} />}
                     >

@@ -7,6 +7,7 @@ import MyContext from "../providers/MyContext";
 import { useContext, useEffect } from "react";
 import { supabase } from "../Supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import StackLogos from "@/components/desktopComponents/stackLogos";
 
 export default function DesktopRouting() {
   const colorScheme = useColorScheme();
@@ -134,6 +135,7 @@ export default function DesktopRouting() {
           </Link>
         )}
       </ThemedView>
+      <StackLogos />
     </ThemedView>
   );
 }
@@ -143,7 +145,7 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   desktopHidden: {
     display: width > 600 ? "flex" : "none",
-    height: "50%",
+    height: 900,
     justifyContent: "space-evenly",
   },
   desktopHiddenFullscreen: {
