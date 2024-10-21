@@ -24,6 +24,7 @@ import CommentPopup from "./CommentPopup";
 import SharePopup from "./SharePopup";
 import RepostPopup from "./RepostPopup";
 import DeletePopup from "./DeletePopup";
+import { useIsFocused } from "@react-navigation/native";
 
 interface Post {
   id: string;
@@ -256,9 +257,8 @@ export default function Post({
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -376,7 +376,7 @@ export default function Post({
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
-              <Pressable
+              {loggedIn ? <Pressable
                 onPress={() => {
                   likePost();
                 }}
@@ -389,7 +389,14 @@ export default function Post({
                   }}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
-              </Pressable>
+              </Pressable> :
+                <Ionicons
+                  size={15}
+                  name={liked ? "heart" : "heart-outline"}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+              }
+
               <ThemedText style={styles.smallNumber}>
                 {optimisticLike}
               </ThemedText>
@@ -460,13 +467,13 @@ export default function Post({
                 ></Ionicons>
                 <ThemedText style={styles.optionText}>Copy Link</ThemedText>
               </ThemedView>
-              <Pressable
+              {/* <Pressable
                 onPress={() => {
                   handleCloseShare();
                 }}
               >
                 <ThemedText style={styles.cancelButton}>Cancel</ThemedText>
-              </Pressable>
+              </Pressable> */}
             </ThemedView>
           </CustomBottomSheet>
         ) : (
@@ -477,7 +484,7 @@ export default function Post({
         )}
         {width < 1000 ? (
           <CustomBottomSheet
-            snapPercs={["20%, 40%"]}
+            snapPercs={["5%"]}
             ref={commentModalRef}
             hideCancelButton
           >
@@ -551,7 +558,7 @@ export default function Post({
                   multiline
                   placeholder="Post your reply"
                   style={[
-                    { paddingTop: 15, maxWidth: "80%", width: "100%" },
+                    { paddingTop: 15, maxWidth: "80%", width: "100%", borderWidth: 0},
                     colorScheme === "dark"
                       ? { color: "#bebebe" }
                       : { color: "#525252" },
@@ -613,7 +620,7 @@ export default function Post({
                   </Pressable>
                 )}
               </ThemedView>
-              <ThemedView
+              {/* <ThemedView
                 style={[
                   styles.shareOption,
                   { marginTop: 10, backgroundColor: "transparent" },
@@ -625,7 +632,7 @@ export default function Post({
                   color={colorScheme === "dark" ? "white" : "black"}
                 ></Ionicons>
                 <ThemedText style={styles.optionText}>Quote</ThemedText>
-              </ThemedView>
+              </ThemedView> */}
             </ThemedView>
           </CustomBottomSheet>
         ) : (
@@ -674,7 +681,7 @@ const styles = StyleSheet.create({
   postUser: {
     fontWeight: "bold",
     fontSize: 15,
-    paddingBottom: 5,    
+    paddingBottom: 5,
     ...(Platform.OS === "web" && {
       fontSize: 13,
     }),
@@ -707,7 +714,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   cancelButton: {
-    backgroundColor: "blue",
     borderRadius: 15,
     padding: 5,
   },
@@ -729,6 +735,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+    paddingTop: 50,
     justifyContent: "space-around",
     width: "100%",
     padding: 10,
@@ -755,7 +762,7 @@ const styles = StyleSheet.create({
   commentOGPost: {
     flexDirection: "row",
     marginVertical: 5,
-    maxHeight: "55%",
+    paddingBottom: 20
   },
   line: {
     backgroundColor: "#bebebe",
