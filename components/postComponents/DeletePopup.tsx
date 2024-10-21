@@ -25,24 +25,26 @@ const DeletePopup = ({
 }: DeletePopupProps) => {
   return (
     <Modal transparent visible={deleteVisible} animationType="fade">
-      <ThemedView style={styles.popup}>
-        {myInfo?.id === postOwnerId && (
-          <Pressable
-            style={styles.deleteButton}
-            onPress={() => {
-              if (isComment) {
-                deleteComment(post.id);
-              } else {
-                deletePost(post.id);
-              }
-            }}
-          >
-            <Text style={styles.deleteButtonText}>Delete Post</Text>
+      <ThemedView style={styles.modal}>
+        <ThemedView style={styles.popup}>
+          {myInfo?.id === postOwnerId && (
+            <Pressable
+              style={styles.deleteButton}
+              onPress={() => {
+                if (isComment) {
+                  deleteComment(post.id);
+                } else {
+                  deletePost(post.id);
+                }
+              }}
+            >
+              <Text style={styles.deleteButtonText}>Delete Post</Text>
+            </Pressable>
+          )}
+          <Pressable onPress={handleCloseDeleteMenu}>
+            <Text style={styles.deleteButtonText}>Cancel</Text>
           </Pressable>
-        )}
-        <Pressable onPress={handleCloseDeleteMenu}>
-          <Text style={styles.deleteButtonText}>Cancel</Text>
-        </Pressable>
+        </ThemedView>
       </ThemedView>
     </Modal>
   );
@@ -51,9 +53,6 @@ const DeletePopup = ({
 const styles = StyleSheet.create({
   popup: {
     flexDirection: "column",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
     width: 400,
     padding: 20,
     borderRadius: 25,
@@ -72,6 +71,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });
 

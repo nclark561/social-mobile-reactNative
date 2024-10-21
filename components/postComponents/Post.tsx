@@ -1,5 +1,12 @@
 import React, { useContext, useState, useRef, SetStateAction } from "react";
-import { StyleSheet, Modal, Pressable, Text, View, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Modal,
+  Pressable,
+  Text,
+  View,
+  Dimensions,
+} from "react-native";
 import MyContext from "../providers/MyContext";
 import PostContext from "../providers/PostContext";
 import { ThemedText } from "../ThemedText";
@@ -44,6 +51,8 @@ interface PostProps {
   setLoading: React.Dispatch<SetStateAction<boolean>>;
 }
 
+const { width } = Dimensions.get("window");
+
 export default function Post({
   post,
   isComment,
@@ -57,7 +66,7 @@ export default function Post({
   const [commentVisible, setCommentVisible] = useState(false); // State for menu visibility
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
-  const [deleteVisible, setDeleteVisible] = useState(false)
+  const [deleteVisible, setDeleteVisible] = useState(false);
   const link = isComment ? "comment" : "post";
   const postOwnerId = isComment ? post?.userId : post?.owner?.id;
 
@@ -75,57 +84,57 @@ export default function Post({
     post?.reposts?.filter((e: any) => e.userId === myInfo?.id).length > 0;
 
   const handleOpenShare = () => {
-    if (Platform.OS === 'web') {
-      setShareVisible(true)
+    if (Platform.OS === "web" && width > 1000) {
+      setShareVisible(true);
     } else {
-      shareModalRef.current?.present()
+      shareModalRef.current?.present();
     }
   };
   const handleCloseShare = () => {
-    if (Platform.OS === 'web') {
-      setShareVisible(false)
+    if (Platform.OS === "web" && width > 1000) {
+      setShareVisible(false);
     } else {
-      shareModalRef.current?.dismiss()
+      shareModalRef.current?.dismiss();
     }
   };
   const handleOpenComment = () => {
-    if (Platform.OS === 'web') {
-      setCommentVisible(true)
+    if (Platform.OS === "web" && width > 1000) {
+      setCommentVisible(true);
     } else {
       commentModalRef.current?.present();
     }
-  }
+  };
   const handleCloseComment = () => {
-    if (Platform.OS === 'web') {
-      setCommentVisible(false)
+    if (Platform.OS === "web" && width > 1000) {
+      setCommentVisible(false);
     } else {
       commentModalRef.current?.dismiss();
     }
   };
   const handleOpenRepost = () => {
-    if (Platform.OS === 'web') {
-      setRepostVisible(true)
+    if (Platform.OS === "web" && width > 1000) {
+      setRepostVisible(true);
     } else {
       repostModalRef.current?.present();
     }
   };
   const handleCloseRepost = () => {
-    if (Platform.OS === 'web') {
-      setRepostVisible(false)
+    if (Platform.OS === "web" && width > 1000) {
+      setRepostVisible(false);
     } else {
       repostModalRef.current?.dismiss();
     }
   };
   const handleOpenDeleteMenu = () => {
-    if (Platform.OS === 'web') {
-      setDeleteVisible(true)
+    if (Platform.OS === "web" && width > 1000) {
+      setDeleteVisible(true);
     } else {
       deleteMenuRef.current?.present();
     }
   };
   const handleCloseDeleteMenu = () => {
-    if (Platform.OS === 'web') {
-      setDeleteVisible(false)
+    if (Platform.OS === "web" && width > 1000) {
+      setDeleteVisible(false);
     } else {
       deleteMenuRef.current?.dismiss();
     }
@@ -307,7 +316,8 @@ export default function Post({
   };
 
   const handlePostPress = () => {
-    if (commentVisible || shareVisible ||repostVisible || deleteVisible) return
+    if (commentVisible || shareVisible || repostVisible || deleteVisible)
+      return;
     router.push(`/${link}/${post.id}`);
   };
 
@@ -403,49 +413,69 @@ export default function Post({
             }
           }}
         />
-        {Platform.OS !== 'web' ? (<CustomBottomSheet snapPercs={["20%"]} ref={deleteMenuRef}>
-          {myInfo?.id === postOwnerId && (
-            <Pressable
-              style={styles.deleteButton}
-              onPress={() => {
-                if (isComment) {
-                  deleteComment(post.id);
-                } else {
-                  deletePost(post.id);
-                }
-              }}
-            >
-              <Text style={styles.deleteButtonText}>Delete Post</Text>
+        {width < 1000 ? (
+          <CustomBottomSheet snapPercs={["20%"]} ref={deleteMenuRef}>
+            {myInfo?.id === postOwnerId && (
+              <Pressable
+                style={styles.deleteButton}
+                onPress={() => {
+                  if (isComment) {
+                    deleteComment(post.id);
+                  } else {
+                    deletePost(post.id);
+                  }
+                }}
+              >
+                <Text style={styles.deleteButtonText}>Delete Post</Text>
+              </Pressable>
+            )}
+            <Pressable onPress={handleCloseDeleteMenu}>
+              <Text style={styles.deleteButtonText}>Cancel</Text>
             </Pressable>
-          )}
-          <Pressable onPress={handleCloseDeleteMenu}>
-            <Text style={styles.deleteButtonText}>Cancel</Text>
-          </Pressable>
-        </CustomBottomSheet>) : <DeletePopup handleCloseDeleteMenu={handleCloseDeleteMenu} post={post} isComment={isComment} deletePost={deletePost} deleteComment={deleteComment} postOwnerId={postOwnerId} myInfo={myInfo} deleteVisible={deleteVisible}/>}
-        {Platform.OS !== 'web' ? (<CustomBottomSheet
-          snapPercs={["25%"]}
-          ref={shareModalRef}
-          title="Share"
-        >
-          <ThemedView style={styles.shareContainer}>
-            <ThemedView style={styles.shareOption}>
-              <Ionicons
-                size={25}
-                name="copy-outline"
-                color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>Copy Link</ThemedText>
+          </CustomBottomSheet>
+        ) : (
+          <DeletePopup
+            handleCloseDeleteMenu={handleCloseDeleteMenu}
+            post={post}
+            isComment={isComment}
+            deletePost={deletePost}
+            deleteComment={deleteComment}
+            postOwnerId={postOwnerId}
+            myInfo={myInfo}
+            deleteVisible={deleteVisible}
+          />
+        )}
+        {width < 1000 ? (
+          <CustomBottomSheet
+            snapPercs={["25%"]}
+            ref={shareModalRef}
+            title="Share"
+          >
+            <ThemedView style={styles.shareContainer}>
+              <ThemedView style={styles.shareOption}>
+                <Ionicons
+                  size={25}
+                  name="copy-outline"
+                  color={colorScheme === "dark" ? "white" : "black"}
+                ></Ionicons>
+                <ThemedText style={styles.optionText}>Copy Link</ThemedText>
+              </ThemedView>
+              <Pressable
+                onPress={() => {
+                  handleCloseShare();
+                }}
+              >
+                <ThemedText style={styles.cancelButton}>Cancel</ThemedText>
+              </Pressable>
             </ThemedView>
-            <Pressable
-              onPress={() => {
-                handleCloseShare();
-              }}
-            >
-              <ThemedText style={styles.cancelButton}>Cancel</ThemedText>
-            </Pressable>
-          </ThemedView>
-        </CustomBottomSheet>) : <SharePopup shareVisible={shareVisible} handleCloseShare={handleCloseShare}/>}
-        {Platform.OS !== "web" ? (
+          </CustomBottomSheet>
+        ) : (
+          <SharePopup
+            shareVisible={shareVisible}
+            handleCloseShare={handleCloseShare}
+          />
+        )}
+        {width < 1000 ? (
           <CustomBottomSheet
             snapPercs={["20%, 40%"]}
             ref={commentModalRef}
@@ -531,60 +561,84 @@ export default function Post({
             </ThemedView>
           </CustomBottomSheet>
         ) : (
-          <CommentPopup setCommentInput={setCommentInput} commentInput={commentInput} myInfo={myInfo} addComment={addComment} post={post} isComment={isComment} commentVisible={commentVisible} handleCloseComment={handleCloseComment}/>
+          <CommentPopup
+            setCommentInput={setCommentInput}
+            commentInput={commentInput}
+            myInfo={myInfo}
+            addComment={addComment}
+            post={post}
+            isComment={isComment}
+            commentVisible={commentVisible}
+            handleCloseComment={handleCloseComment}
+          />
         )}
-        {Platform.OS !== 'web' ? (<CustomBottomSheet snapPercs={["25%"]} ref={repostModalRef}>
-          <ThemedView
-            style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
-          >
-            <ThemedView>
-              {!repostedByMe ? (
-                <Pressable
-                  onPress={() => {
-                    repost(myInfo?.id, post.id);
-                  }}
-                  style={[styles.shareOption, { marginTop: 10 }]}
-                >
-                  <Ionicons
-                    size={25}
-                    name="git-compare-outline"
-                    color={colorScheme === "dark" ? "white" : "black"}
-                  ></Ionicons>
-                  <ThemedText style={styles.optionText}>Repost</ThemedText>
-                </Pressable>
-              ) : (
-                <Pressable
-                  onPress={() => {
-                    undoRepost(myInfo?.id, post.id);
-                  }}
-                  style={[styles.shareOption, { marginTop: 10 }]}
-                >
-                  <Ionicons
-                    size={25}
-                    name="git-compare-outline"
-                    color="red"
-                  ></Ionicons>
-                  <ThemedText style={[styles.optionText, { color: "red" }]}>
-                    Undo Repost
-                  </ThemedText>
-                </Pressable>
-              )}
-            </ThemedView>
+        {width < 1000 ? (
+          <CustomBottomSheet snapPercs={["25%"]} ref={repostModalRef}>
             <ThemedView
               style={[
-                styles.shareOption,
-                { marginTop: 10, backgroundColor: "transparent" },
+                styles.shareContainer,
+                { marginBottom: 30, height: "75%" },
               ]}
             >
-              <Ionicons
-                size={25}
-                name="pencil-outline"
-                color={colorScheme === "dark" ? "white" : "black"}
-              ></Ionicons>
-              <ThemedText style={styles.optionText}>Quote</ThemedText>
+              <ThemedView>
+                {!repostedByMe ? (
+                  <Pressable
+                    onPress={() => {
+                      repost(myInfo?.id, post.id);
+                    }}
+                    style={[styles.shareOption, { marginTop: 10 }]}
+                  >
+                    <Ionicons
+                      size={25}
+                      name="git-compare-outline"
+                      color={colorScheme === "dark" ? "white" : "black"}
+                    ></Ionicons>
+                    <ThemedText style={styles.optionText}>Repost</ThemedText>
+                  </Pressable>
+                ) : (
+                  <Pressable
+                    onPress={() => {
+                      undoRepost(myInfo?.id, post.id);
+                    }}
+                    style={[styles.shareOption, { marginTop: 10 }]}
+                  >
+                    <Ionicons
+                      size={25}
+                      name="git-compare-outline"
+                      color="red"
+                    ></Ionicons>
+                    <ThemedText style={[styles.optionText, { color: "red" }]}>
+                      Undo Repost
+                    </ThemedText>
+                  </Pressable>
+                )}
+              </ThemedView>
+              <ThemedView
+                style={[
+                  styles.shareOption,
+                  { marginTop: 10, backgroundColor: "transparent" },
+                ]}
+              >
+                <Ionicons
+                  size={25}
+                  name="pencil-outline"
+                  color={colorScheme === "dark" ? "white" : "black"}
+                ></Ionicons>
+                <ThemedText style={styles.optionText}>Quote</ThemedText>
+              </ThemedView>
             </ThemedView>
-          </ThemedView>
-        </CustomBottomSheet>) : <RepostPopup handleCloseRepost={handleCloseRepost} undoRepost={undoRepost} repost={repost} post={post} myInfo={myInfo} repostVisible={repostVisible} repostedByMe={repostedByMe}/>}
+          </CustomBottomSheet>
+        ) : (
+          <RepostPopup
+            handleCloseRepost={handleCloseRepost}
+            undoRepost={undoRepost}
+            repost={repost}
+            post={post}
+            myInfo={myInfo}
+            repostVisible={repostVisible}
+            repostedByMe={repostedByMe}
+          />
+        )}
       </ThemedView>
     </Pressable>
   );
@@ -749,12 +803,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   popup: {
-    flexDirection: 'column',
+    flexDirection: "column",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 800,
     padding: 20,
-    borderRadius: 25
-  }
+    borderRadius: 25,
+  },
 });

@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Pressable, Platform, Button } from "react-native";
+import { StyleSheet, Image, Pressable, Platform, Button, Dimensions } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useContext, useEffect, useCallback, useState, useRef } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -29,6 +29,8 @@ interface Post {
   username: string;
 }
 
+const { width } = Dimensions.get('window')
+
 export default function CommentPage() {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
@@ -50,56 +52,56 @@ export default function CommentPage() {
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const handleOpenShare = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && width > 1000) {
       setShareVisible(true)
     } else {
       shareModalRef.current?.present()
     }
   };
   const handleCloseShare = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && width > 1000) {
       setShareVisible(false)
     } else {
       shareModalRef.current?.dismiss()
     }
   };
   const handleOpenComment = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && width > 1000) {
       setCommentVisible(true)
     } else {
       commentModalRef.current?.present();
     }
   }
   const handleCloseComment = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && width > 1000) {
       setCommentVisible(false)
     } else {
       commentModalRef.current?.dismiss();
     }
   };
   const handleOpenRepost = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && width > 1000) {
       setRepostVisible(true)
     } else {
       repostModalRef.current?.present();
     }
   };
   const handleCloseRepost = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && width > 1000) {
       setRepostVisible(false)
     } else {
       repostModalRef.current?.dismiss();
     }
   };
   const handleOpenDeleteMenu = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && width > 1000) {
       setDeleteVisible(true)
     } else {
       deleteMenuRef.current?.present();
     }
   };
   const handleCloseDeleteMenu = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && width > 1000) {
       setDeleteVisible(false)
     } else {
       deleteMenuRef.current?.dismiss();
@@ -297,7 +299,7 @@ export default function CommentPage() {
           onPress={handleOpenDeleteMenu} // Open delete menu on click
           color={colorScheme === "dark" ? "white" : "black"}
         />
-        {Platform.OS !== 'web' ? (<CustomBottomSheet
+        {width < 1000 ? (<CustomBottomSheet
           snapPercs={["25%"]}
           ref={shareModalRef}
           title="Share"
@@ -323,12 +325,12 @@ export default function CommentPage() {
             </ThemedView>
           </ThemedView>
         </CustomBottomSheet>) : <SharePopup handleCloseShare={handleCloseShare} shareVisible={shareVisible}/>}
-        {Platform.OS !== 'web' ? (<CommentBottomSheet
+        {width < 1000 ? (<CommentBottomSheet
           post={thisPost}
           commentModalRef={commentModalRef}
           user={thisPost?.user}
         />) : <CommentPopup isComment myInfo={myInfo} addComment={addComment} setCommentInput={setCommentInput} handleCloseComment={handleCloseComment} commentVisible={commentVisible} commentInput={commentInput} post={thisPost}/>}
-        {Platform.OS !== 'web' ? (<CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
+        {width < 1000 ? (<CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
           >
@@ -345,7 +347,7 @@ export default function CommentPage() {
           </ThemedView>
         </CustomBottomSheet>) : <></>}
         {/* Delete Menu */}
-        {Platform.OS !== 'web' ? (<CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
+        {width < 1000 ? (<CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
           <ThemedView style={styles.deleteContainer}>
             {myInfo?.id === thisPost?.userId && (
               <Button
