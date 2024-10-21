@@ -173,16 +173,15 @@ const styles = StyleSheet.create({
   },
   commentScroll: {
     maxWidth: "80%",
-    paddingRight: 10,
+    paddingRight: 10,    
   },
   popup: {
     flexDirection: "column",
-    width: 800,
+    width: 800,    
     padding: 40,
     borderRadius: 25,
   },
   modal: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 20,

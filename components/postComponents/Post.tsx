@@ -720,6 +720,7 @@ const styles = StyleSheet.create({
   shareOption: {
     flexDirection: "row",
     alignItems: "center",
+    padding: 10,
     justifyContent: "center",
     width: "100%",
   },
@@ -730,7 +731,7 @@ const styles = StyleSheet.create({
   },
   commentContainer: {
     flexDirection: "column",
-    paddingTop: 20,
+    paddingTop: 20,    
     width: "100%",
   },
   buttonContainer: {

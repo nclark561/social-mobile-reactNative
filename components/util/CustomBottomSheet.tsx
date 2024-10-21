@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     justifyContent: "space-between",
-    paddingBottom: 60,
+    paddingBottom: 20,
   },
   header: {
     textAlign: "center",
