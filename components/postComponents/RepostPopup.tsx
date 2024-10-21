@@ -29,7 +29,7 @@ const RepostPopup = ({
     <Modal transparent visible={repostVisible} animationType="fade">
       <ThemedView style={styles.modal}>
         <ThemedView
-          style={[styles.popup, { marginBottom: 30, height: "75%" }]}
+          style={[styles.popup, { marginBottom: 30, height: "20%" }]}
         >
           <ThemedView
             style={[styles.buttonContainer, { justifyContent: "flex-start" }]}
@@ -71,7 +71,7 @@ const RepostPopup = ({
               </Pressable>
             )}
           </ThemedView>
-          <ThemedView
+          {/* <ThemedView
             style={[
               styles.shareOption,
               { marginTop: 10, backgroundColor: "transparent" },
@@ -83,7 +83,7 @@ const RepostPopup = ({
               color={colorScheme === "dark" ? "white" : "black"}
             ></Ionicons>
             <ThemedText style={styles.optionText}>Quote</ThemedText>
-          </ThemedView>
+          </ThemedView> */}
         </ThemedView>
       </ThemedView>
     </Modal>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     width: 400,
     padding: 20,
     borderRadius: 25,
-    height: 200
+    height: 100
   },
   shareOption: {
     flexDirection: "row",

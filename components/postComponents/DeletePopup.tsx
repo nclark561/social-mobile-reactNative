@@ -41,7 +41,7 @@ const DeletePopup = ({
               <Text style={styles.deleteButtonText}>Delete Post</Text>
             </Pressable>
           )}
-          <Pressable onPress={handleCloseDeleteMenu}>
+          <Pressable style={styles.center} onPress={handleCloseDeleteMenu}>
             <Text style={styles.deleteButtonText}>Cancel</Text>
           </Pressable>
         </ThemedView>
@@ -53,6 +53,9 @@ const DeletePopup = ({
 const styles = StyleSheet.create({
   popup: {
     flexDirection: "column",
+    display:'flex',
+    justifyContent: 'space-evenly',
+    alignContent: 'center',
     width: 400,
     padding: 20,
     borderRadius: 25,
@@ -78,6 +81,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
+  center: {
+    display: 'flex',
+    alignItems: 'center'
+  }
 });
 
 export default DeletePopup;

@@ -4,36 +4,48 @@ import {
   useColorScheme,
   StyleSheet,
   Text,
+  Alert,
 } from "react-native";
 import { ThemedText } from "../ThemedText";
+import * as Clipboard from 'expo-clipboard';
 import { ThemedView } from "../ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 
 interface SharePopupProps {
   shareVisible: boolean;
   handleCloseShare: () => void;
+  linkToShare: string; // Add the link to be shared as a prop
 }
 
-const SharePopup = ({ shareVisible, handleCloseShare }: SharePopupProps) => {
+const SharePopup = ({ shareVisible, handleCloseShare, linkToShare }: SharePopupProps) => {
   const colorScheme = useColorScheme();
+
+  const copyToClipboard = async () => {
+    if (linkToShare) {
+      await Clipboard.setStringAsync(linkToShare);
+      Alert.alert("Link copied to clipboard!");
+    } else {
+      Alert.alert("No link to copy!");
+    }
+  };
 
   return (
     <Modal transparent visible={shareVisible} animationType="fade">
       <ThemedView style={styles.modal}>
         <ThemedView style={[styles.popup]}>
-          <ThemedView style={styles.shareOption}>
-            <Ionicons
-              size={25}
-              name="copy-outline"
-              color={colorScheme === "dark" ? "white" : "black"}
-            ></Ionicons>
-            <ThemedText style={styles.optionText}>Copy Link</ThemedText>
-          </ThemedView>
-          <Pressable
-            onPress={() => {
-              handleCloseShare();
-            }}
-          >
+          <Pressable onPress={() => {
+            copyToClipboard(); handleCloseShare()
+          }}>
+            <ThemedView style={styles.shareOption}>
+              <Ionicons
+                size={25}
+                name="copy-outline"
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
+              <ThemedText style={styles.optionText}>Copy Link</ThemedText>
+            </ThemedView>
+          </Pressable>
+          <Pressable onPress={handleCloseShare}>
             <Text style={styles.cancelButton}>Cancel</Text>
           </Pressable>
         </ThemedView>

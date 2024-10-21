@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   popup: {
     flexDirection: "column",
     width: 800,
-    padding: 20,
+    padding: 40,
     borderRadius: 25,
   },
   modal: {
