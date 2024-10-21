@@ -38,9 +38,8 @@ const CommentPopup = ({
   const colorScheme = useColorScheme();
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
       return newProfileImageUri;
     }
   };
@@ -117,7 +116,7 @@ const CommentPopup = ({
               multiline
               placeholder="Post your reply"
               style={[
-                { paddingTop: 15, maxWidth: "80%", width: "100%" },
+                { marginTop: 15, maxWidth: "80%", width: "100%", paddingLeft: 10, paddingRight: 10, paddingBottom: 10, paddingTop: 3 },
                 colorScheme === "dark"
                   ? { color: "#bebebe" }
                   : { color: "#525252" },

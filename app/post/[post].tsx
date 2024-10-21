@@ -471,10 +471,11 @@ const styles = StyleSheet.create({
   postUser: {
     fontWeight: "bold",
     fontSize: 12,
-    paddingBottom: 2,
+    paddingBottom: 5,
   },
   postText: {
     flexShrink: 1,
+    paddingTop: 10,
     fontSize: 14,
   },
   ellipsis: {
