@@ -5,12 +5,12 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Dimensions } from "react-native";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { SafeAreaView, StyleSheet, Dimensions } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Stack } from "expo-router";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { MyProvider } from "../components/providers/MyContext";
@@ -25,6 +25,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const [windowWidth, setWindowWidth] = useState(Dimensions.get("window").width);
 
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -37,6 +38,18 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  // UseEffect to monitor window size changes
+  useEffect(() => {
+    const handleResize = () => {
+      const newWidth = Dimensions.get("window").width;
+      setWindowWidth(newWidth);
+    };
+    const subscription = Dimensions.addEventListener("change", handleResize);    
+    return () => {
+      subscription?.remove(); 
+    };
+  }, []);
 
   if (!loaded) {
     return null;
@@ -52,7 +65,7 @@ export default function RootLayout() {
             <MessageProvider>
               <PostProvider>
                 <SafeAreaView style={{ flex: 1, backgroundColor }}>
-                  {width > 1000 ? (
+                  {windowWidth > 1000 ? (
                     <ThemedView style={styles.row}>
                       <ThemedView style={styles.content}>
                         <ThemedView style={styles.column}>
@@ -92,18 +105,14 @@ export default function RootLayout() {
   );
 }
 
-const { width, height } = Dimensions.get("window");
-
 const styles = StyleSheet.create({
   column: {
-    display: width > 1000 ? "flex" : "none",
     height: "80%",
     flexDirection: "column",
     zIndex: 1000,
   },
   none: {
-    display: width > 1000 ? "flex" : "none",
-    // flexDirection: 'column',
+    display: "flex",
   },
   row: {
     display: "flex",

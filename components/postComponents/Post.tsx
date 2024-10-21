@@ -673,9 +673,8 @@ const styles = StyleSheet.create({
   },
   postUser: {
     fontWeight: "bold",
-
     fontSize: 15,
-    paddingBottom: 2,
+    paddingBottom: 5,    
     ...(Platform.OS === "web" && {
       fontSize: 13,
     }),
@@ -683,6 +682,7 @@ const styles = StyleSheet.create({
   postText: {
     flexShrink: 1,
     fontSize: 13,
+    paddingTop: 10
   },
   ellipsis: {
     position: "absolute",
@@ -750,7 +750,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: 25,
     height: 25,
-    margin: 10,
+    margin: 15,
   },
   commentOGPost: {
     flexDirection: "row",
