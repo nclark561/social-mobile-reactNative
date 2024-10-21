@@ -120,7 +120,7 @@ const EditProfileSheet = ({
   return (
     <CustomBottomSheet
       ref={editProfileRef}
-      snapPercs={["70%"]}
+      snapPercs={["80%"]}
     >
       <ThemedView style={styles.bottomSheetContent}>
         <ThemedText style={styles.bottomSheetTitle}>Edit Profile</ThemedText>
@@ -201,11 +201,15 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   bottomSheetContent: {
     padding: 20,
+    paddingBottom: 10,
     width: width > 1000 ? "30%" : "90%",
     marginRight: width > 1000 ? 100 : 0,
   },
   bottomSheetTitle: {
     fontSize: 18,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     fontWeight: "bold",
     textAlign: "center",
   },
