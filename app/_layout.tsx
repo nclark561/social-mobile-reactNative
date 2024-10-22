@@ -67,6 +67,7 @@ export default function RootLayout() {
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
           <MyProvider>
+            
             <MessageProvider>
               <PostProvider>
                 <SafeAreaView style={{ flex: 1, backgroundColor }}>
@@ -74,7 +75,7 @@ export default function RootLayout() {
                     <ThemedView style={styles.row}>
                       <ThemedView style={[styles.content, { width: contentWidth }]}>
                         <ThemedView style={styles.column}>
-                          <DesktopRouting />                          
+                          <DesktopRouting />
                         </ThemedView>
                         <Stack
                           screenOptions={{
@@ -89,15 +90,15 @@ export default function RootLayout() {
                         </ThemedView>
                       </ThemedView>
                     </ThemedView>
-                  ) : (                    
-                      <Stack
-                        screenOptions={{
-                          headerShown: false,
-                          animation: "slide_from_right",
-                        }}
-                      >
-                        <Stack.Screen name="(drawer)" />
-                      </Stack>                    
+                  ) : (
+                    <Stack
+                      screenOptions={{
+                        headerShown: false,
+                        animation: "slide_from_right",
+                      }}
+                    >
+                      <Stack.Screen name="(drawer)" />
+                    </Stack>
                   )}
                 </SafeAreaView>
               </PostProvider>
@@ -110,7 +111,7 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-  column: {    
+  column: {
     flexDirection: "column",
     zIndex: 1000,
     height: '100%'

@@ -1,5 +1,6 @@
 import { ScrollViewStyleReset } from "expo-router/html";
 import { type PropsWithChildren } from "react";
+import { Analytics } from "@vercel/analytics"
 
 /**
  * This file is web-only and used to configure the root HTML for every web page during static rendering.
@@ -27,6 +28,7 @@ export default function Root({ children }: PropsWithChildren) {
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
       <body>{children}</body>
+      <Analytics />
     </html>
   );
 }
