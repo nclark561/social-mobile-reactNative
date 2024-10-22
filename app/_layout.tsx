@@ -20,6 +20,7 @@ import { MessageProvider } from "@/components/providers/MessageContext";
 import DesktopRouting from "@/components/desktopComponents/desktopRouting";
 import StackLogos from "@/components/desktopComponents/stackLogos";
 import LinkedinProfiles from "@/components/desktopComponents/linkedinProfiles";
+import { Analytics } from "@vercel/analytics/react"
 
 SplashScreen.preventAutoHideAsync();
 
@@ -62,12 +63,13 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <Analytics />
       <BottomSheetModalProvider>
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
           <MyProvider>
-            
+
             <MessageProvider>
               <PostProvider>
                 <SafeAreaView style={{ flex: 1, backgroundColor }}>
