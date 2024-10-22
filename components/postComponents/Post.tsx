@@ -781,6 +781,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    zIndex: 100,
     width: "10%",
     justifyContent: "space-evenly",
   },
