@@ -2,12 +2,12 @@
 import React, { useContext, useState, useEffect, useMemo } from "react";
 import {
   StyleSheet,
-  Image,
   Button,
   View,
   Pressable,
   useColorScheme,
 } from "react-native";
+import { Image } from "expo-image";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -18,6 +18,7 @@ import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyContext from "./providers/MyContext";
 import { ThemedView } from "./ThemedView";
+
 
 export default function MyCustomDrawer(props: any) {
   const { setLoginToggle, myInfo, loggedIn, getUser, setLoggedIn } =
@@ -46,10 +47,12 @@ export default function MyCustomDrawer(props: any) {
 
   const profileImageUri = useMemo(() => {
     if (myInfo?.id) {
-      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}.jpg?${Date.now()}`;
+      return `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo?.id}?${Date.now()}`;
     }
     return mortyUrl; // Fallback URL
   }, [myInfo?.id]);
+
+  const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
@@ -60,8 +63,9 @@ export default function MyCustomDrawer(props: any) {
               style={styles.profilePic}
               source={{
                 uri: profileImageUri,
-                cache: "reload",
               }}
+              placeholder={{ blurhash }}
+
             />
           ) : (
             <Pressable
