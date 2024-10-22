@@ -1,14 +1,20 @@
-import { Pressable, Text, Modal, StyleSheet } from "react-native";
+import {
+  Pressable,
+  Text,
+  Modal,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
 import React, { SetStateAction } from "react";
 import { ThemedView } from "../ThemedView";
 
 interface DeletePopupProps {
   unfollowVisible: boolean;
-  setUnfollowVisible: React.Dispatch<SetStateAction<boolean>>
-  myInfo: any
-  user: any
-  updateFollowers: any
-  setLoading: React.Dispatch<SetStateAction<boolean>>
+  setUnfollowVisible: React.Dispatch<SetStateAction<boolean>>;
+  myInfo: any;
+  user: any;
+  updateFollowers: any;
+  setLoading: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const UnfollowPopup = ({
@@ -17,27 +23,34 @@ const UnfollowPopup = ({
   myInfo,
   user,
   updateFollowers,
-  setLoading
+  setLoading,
 }: DeletePopupProps) => {
+  const colorScheme = useColorScheme();
   return (
     <Modal transparent visible={unfollowVisible} animationType="fade">
       <ThemedView style={styles.modal}>
         <ThemedView style={styles.popup}>
-          <Pressable style={styles.deleteButton} onPress={async () => {
-            setLoading(true)
-            setUnfollowVisible(false)
-            await updateFollowers(
+          <Pressable
+            style={styles.deleteButton}
+            onPress={async () => {
+              setLoading(true);
+              setUnfollowVisible(false);
+              await updateFollowers(
                 myInfo?.id,
                 user?.id,
                 user.followers,
-                myInfo.following,
-              )  
-            setLoading(false)  
-          }}>
-            <Text style={styles.deleteButtonText}>Unfollow</Text>
+                myInfo.following
+              );
+              setLoading(false);
+            }}
+          >
+            <Text style={[styles.deleteButtonText, { color: 'white' }]}>Unfollow</Text>
           </Pressable>
-          <Pressable style={styles.center} onPress={() => setUnfollowVisible(false)}>
-            <Text style={styles.deleteButtonText}>Cancel</Text>
+          <Pressable
+            style={styles.center}
+            onPress={() => setUnfollowVisible(false)}
+          >
+            <Text style={[styles.deleteButtonText, colorScheme === 'dark'  ? { color: 'white' } : { color: 'black' }]}>Cancel</Text>
           </Pressable>
         </ThemedView>
       </ThemedView>
@@ -66,7 +79,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   deleteButtonText: {
-    color: "white",
     fontWeight: "bold",
     fontSize: 16,
   },
