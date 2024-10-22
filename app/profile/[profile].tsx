@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   Pressable,
   Alert,
-  Linking
+  Linking,
+  Platform
 } from "react-native"; // Import Alert
 import { Dimensions } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
@@ -24,6 +25,7 @@ import { Link, useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import { ClipLoader } from "react-spinners";
 import Animated from "react-native-reanimated";
+import UnfollowPopup from "@/components/profileComponents/UnfollowPopup";
 
 export default function ExternalProfile() {
   const navigation = useExpoNavigation();
@@ -42,6 +44,7 @@ export default function ExternalProfile() {
   const [loading, setLoading] = useState(true);
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const linkTextColor = colorScheme === "dark" ? "#26a7de" : "#0000EE";
+  const [ unfollowVisible, setUnfollowVisible ] = useState(false)
   
 
   const handleError = () => {
@@ -165,27 +168,31 @@ export default function ExternalProfile() {
 
   // Alert function to confirm unfollow action
   const handleUnfollow = () => {
-    Alert.alert(
-      "Unfollow",
-      "Are you sure you want to unfollow?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Unfollow",
-          onPress: () =>
-            updateFollowers(
-              myInfo?.id,
-              user?.id,
-              user.followers,
-              myInfo.following,
-            ),
-        },
-      ],
-      { cancelable: false },
-    );
+    if (Platform.OS === 'web') {
+      setUnfollowVisible(true)
+    } else {
+      Alert.alert(
+        "Unfollow",
+        "Are you sure you want to unfollow?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Unfollow",
+            onPress: () =>
+              updateFollowers(
+                myInfo?.id,
+                user?.id,
+                user.followers,
+                myInfo.following,
+              ),
+          },
+        ],
+        { cancelable: false },
+      );
+    }
   };
 
   return (
@@ -234,13 +241,15 @@ export default function ExternalProfile() {
                 </Pressable>
               ) : (
                 <Pressable
-                  onPress={() => {
-                    updateFollowers(
+                  onPress={async () => {
+                    setLoading(true)
+                    await updateFollowers(
                       myInfo.id,
                       user.id,
                       user.followers,
                       myInfo.following,
                     );
+                    setLoading(false)
                   }}
                 >
                   <ThemedText style={styles.button}>Follow</ThemedText>
@@ -292,6 +301,7 @@ export default function ExternalProfile() {
         </ThemedView>
         {renderContent()}
       </ThemedView>
+      <UnfollowPopup setLoading={setLoading} setUnfollowVisible={setUnfollowVisible} unfollowVisible={unfollowVisible} myInfo={myInfo} user={user} updateFollowers={updateFollowers}/>
     </ThemedView>
   );
 }
