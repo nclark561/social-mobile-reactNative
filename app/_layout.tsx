@@ -22,6 +22,7 @@ import StackLogos from "@/components/desktopComponents/stackLogos";
 import LinkedinProfiles from "@/components/desktopComponents/linkedinProfiles";
 import { Analytics } from "@vercel/analytics/react"
 
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
