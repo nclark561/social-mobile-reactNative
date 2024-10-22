@@ -340,7 +340,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "35%",
+    paddingLeft: 2,
+    width: "45%",
   },
   close: {
     display: "flex",
@@ -422,7 +423,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     left: 0,
     height: "15%",
-    width: "91%",
+    width: "100%",
     zIndex: -1,
   },
   followIcon: {},
