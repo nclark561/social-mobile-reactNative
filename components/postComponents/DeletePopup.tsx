@@ -1,4 +1,4 @@
-import { Pressable, Text, Modal, StyleSheet } from "react-native";
+import { Pressable, Text, Modal, StyleSheet, useColorScheme } from "react-native";
 import React from "react";
 import { ThemedView } from "../ThemedView";
 
@@ -23,6 +23,7 @@ const DeletePopup = ({
   post,
   handleCloseDeleteMenu,
 }: DeletePopupProps) => {
+  const colorScheme = useColorScheme()
   return (
     <Modal transparent visible={deleteVisible} animationType="fade">
       <ThemedView style={styles.modal}>
@@ -38,11 +39,11 @@ const DeletePopup = ({
                 }
               }}
             >
-              <Text style={styles.deleteButtonText}>Delete Post</Text>
+              <Text style={[styles.deleteButtonText, { color: 'white' }]}>Delete Post</Text>
             </Pressable>
           )}
           <Pressable style={styles.center} onPress={handleCloseDeleteMenu}>
-            <Text style={styles.deleteButtonText}>Cancel</Text>
+            <Text style={[styles.deleteButtonText, colorScheme === 'dark'  ? { color: 'white' } : { color: 'black' }]}>Cancel</Text>
           </Pressable>
         </ThemedView>
       </ThemedView>
@@ -71,7 +72,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   deleteButtonText: {
-    color: "white",
     fontWeight: "bold",
     fontSize: 16,
   },
