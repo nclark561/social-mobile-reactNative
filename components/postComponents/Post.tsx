@@ -699,9 +699,11 @@ const styles = StyleSheet.create({
   reactionsContainer: {
     flexDirection: "row",
     width: "95%",
+    zIndex: 100,
     justifyContent: "space-evenly",
     alignItems: "center",
     paddingTop: 10,
+    padding: 5
   },
   smallWidth: {
     width: 40,
@@ -779,6 +781,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    zIndex: 100,
     width: "10%",
     justifyContent: "space-evenly",
   },

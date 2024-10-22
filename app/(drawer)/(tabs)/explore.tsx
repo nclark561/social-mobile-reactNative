@@ -21,7 +21,7 @@ import AnimatedUnderlineText from "@/components/desktopComponents/animatedUnderl
 const noah = {
   email: "noahammon00@gmail.com",
   username: "nclark561",
-  id: "cm2axaly20001gays58jtdvde",
+  id: "cm2f9bxae0000q848tq2er51l",
 };
 
 const kale = {
