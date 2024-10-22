@@ -95,6 +95,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
       if (error) {
         console.log("Error fetching session:", error);
         setLoggedIn(false);
+        localStorage.removeItem('user')
         return null;
       }
       setLoggedIn(true);
