@@ -20,13 +20,15 @@ import { MessageProvider } from "@/components/providers/MessageContext";
 import DesktopRouting from "@/components/desktopComponents/desktopRouting";
 import StackLogos from "@/components/desktopComponents/stackLogos";
 import LinkedinProfiles from "@/components/desktopComponents/linkedinProfiles";
-import { Analytics } from "@vercel/analytics/react"
+import { inject } from "@vercel/analytics"
+
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [windowWidth, setWindowWidth] = useState(Dimensions.get("window").width);
+  inject()
 
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -63,7 +65,6 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Analytics />
       <BottomSheetModalProvider>
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
