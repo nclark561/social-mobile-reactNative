@@ -52,56 +52,56 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     getAllForYouPosts();
   }, [forYouPostsToggle]);
 
-  const getUserPosts = async (email: string, userId: string) => {
-    try {
-      const result = await fetch(
-        `${getBaseUrl()}/api/getMyPosts?email=${email}&id=${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      const fetchedPosts = await result.json();
-      setPosts(fetchedPosts);
-    } catch (error) {
-      console.log(error, "this is the get user error");
-    }
-  };
+  // const getUserPosts = async (email: string, userId: string) => {
+  //   try {
+  //     const result = await fetch(
+  //       `${getBaseUrl()}/api/getMyPosts?email=${email}&id=${userId}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       },
+  //     );
+  //     const fetchedPosts = await result.json();
+  //     setPosts(fetchedPosts);
+  //   } catch (error) {
+  //     console.log(error, "this is the get user error");
+  //   }
+  // };
 
-  const getForYouPosts = async (userId?: string) => {
-    try {
-      const result = await fetch(
-        `${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ""}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      const fetchedPosts = await result.json();
-      setForYouFollowingPosts(fetchedPosts.Posts);
-    } catch (error) {
-      console.log(error, "this is the get for you posts error");
-    }
-  };
+  // const getForYouPosts = async (userId?: string) => {
+  //   try {
+  //     const result = await fetch(
+  //       `${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ""}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       },
+  //     );
+  //     const fetchedPosts = await result.json();
+  //     setForYouFollowingPosts(fetchedPosts.Posts);
+  //   } catch (error) {
+  //     console.log(error, "this is the get for you posts error");
+  //   }
+  // };
 
-  const getAllForYouPosts = async () => {
-    try {
-      const result = await fetch(`${getBaseUrl()}/api/getPosts`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const fetchedPosts = await result.json();
-      setForYouPosts(fetchedPosts.Posts);
-    } catch (error) {
-      console.log(error, "this is the get for you posts error");
-    }
-  };
+  // const getAllForYouPosts = async () => {
+  //   try {
+  //     const result = await fetch(`${getBaseUrl()}/api/getPosts`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     const fetchedPosts = await result.json();
+  //     setForYouPosts(fetchedPosts.Posts);
+  //   } catch (error) {
+  //     console.log(error, "this is the get for you posts error");
+  //   }
+  // };
 
   return (
     <PostContext.Provider

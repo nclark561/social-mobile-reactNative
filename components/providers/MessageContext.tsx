@@ -56,72 +56,72 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getConvos = async () => {
-    try {
-      const convos = await fetch(
-        `${getBaseUrl()}/api/getConvos?id=${myInfo.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      const userInfo = await convos.json();
-      setMyConvos([...userInfo]);
-    } catch (error) {
-      console.log(error, "this is the gete convos error");
-    }
-  };
+  // const getConvos = async () => {
+  //   try {
+  //     const convos = await fetch(
+  //       `${getBaseUrl()}/api/getConvos?id=${myInfo.id}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       },
+  //     );
+  //     const userInfo = await convos.json();
+  //     setMyConvos([...userInfo]);
+  //   } catch (error) {
+  //     console.log(error, "this is the gete convos error");
+  //   }
+  // };
 
-  const deleteConvos = async (id: string) => {
-    console.log(id, "hitting delete convo");
-    try {
-      await fetch(`${getBaseUrl()}/api/deleteConvo`, {
-        method: "POST",
-        body: JSON.stringify({
-          id: id,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      getConvos();
-    } catch (error) {
-      console.log(error, "this is the delete error");
-    }
-  };
+  // const deleteConvos = async (id: string) => {
+  //   console.log(id, "hitting delete convo");
+  //   try {
+  //     await fetch(`${getBaseUrl()}/api/deleteConvo`, {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         id: id,
+  //       }),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     getConvos();
+  //   } catch (error) {
+  //     console.log(error, "this is the delete error");
+  //   }
+  // };
 
-  const addMessage = async (
-    conversationId: string,
-    message: string,
-    id: string,
-  ) => {
-    try {
-      const response = await fetch(`${getBaseUrl()}/api/addMessage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          conversationId,
-          messages: message,
-          id,
-        }),
-      });
+  // const addMessage = async (
+  //   conversationId: string,
+  //   message: string,
+  //   id: string,
+  // ) => {
+  //   try {
+  //     const response = await fetch(`${getBaseUrl()}/api/addMessage`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         conversationId,
+  //         messages: message,
+  //         id,
+  //       }),
+  //     });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
 
-      const data = await response.json();
-      console.log("Message added successfully:", data);
+  //     const data = await response.json();
+  //     console.log("Message added successfully:", data);
 
-      getConvos(); // Call the getConvos function to update the conversation data
-    } catch (error) {
-      console.log(error, "this is the add message error");
-    }
-  };
+  //     getConvos(); // Call the getConvos function to update the conversation data
+  //   } catch (error) {
+  //     console.log(error, "this is the add message error");
+  //   }
+  // };
 
   return (
     <MessageContext.Provider

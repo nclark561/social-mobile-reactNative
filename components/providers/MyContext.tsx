@@ -109,27 +109,27 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const getConvos = async () => {
-    if (!myInfo?.id) return;
-    try {
-      const response = await fetch(
-        `${getBaseUrl()}/api/getConvos?id=${myInfo?.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch conversations.");
-      }
-      const { conversations } = await response.json();
-      setMyConvos(conversations);
-    } catch (error) {
-      console.error("Failed to fetch conversations:", error);
-    }
-  };
+  // const getConvos = async () => {
+  //   if (!myInfo?.id) return;
+  //   try {
+  //     const response = await fetch(
+  //       `${getBaseUrl()}/api/getConvos?id=${myInfo?.id}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       },
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch conversations.");
+  //     }
+  //     const { conversations } = await response.json();
+  //     setMyConvos(conversations);
+  //   } catch (error) {
+  //     console.error("Failed to fetch conversations:", error);
+  //   }
+  // };
 
   useEffect(() => {
     if (myInfo) {
@@ -137,84 +137,84 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [myInfo]);
 
-  const getUser = async () => {
-    try {
-      let userEmail;
-      if (Platform.OS === "web") {
-        userEmail = localStorage.getItem("user");
-      } else {
-        userEmail = await AsyncStorage.getItem("user");
-      }
-      if (!userEmail) throw new Error("User not logged in");
+  // const getUser = async () => {
+  //   try {
+  //     let userEmail;
+  //     if (Platform.OS === "web") {
+  //       userEmail = localStorage.getItem("user");
+  //     } else {
+  //       userEmail = await AsyncStorage.getItem("user");
+  //     }
+  //     if (!userEmail) throw new Error("User not logged in");
 
-      const email = JSON.parse(userEmail);
-      const result = await fetch(`${getBaseUrl()}/api/myInfo?email=${email}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  //     const email = JSON.parse(userEmail);
+  //     const result = await fetch(`${getBaseUrl()}/api/myInfo?email=${email}`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
 
-      if (!result.ok) throw new Error("Failed to fetch user info.");
-      const userInfo = await result.json();
-      console.log(userInfo, "this is user info");
-      setMyInfo(userInfo.user);
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-      setMyInfo(undefined);
-    }
-  };
+  //     if (!result.ok) throw new Error("Failed to fetch user info.");
+  //     const userInfo = await result.json();
+  //     console.log(userInfo, "this is user info");
+  //     setMyInfo(userInfo.user);
+  //   } catch (error) {
+  //     console.error("Error fetching user info:", error);
+  //     setMyInfo(undefined);
+  //   }
+  // };
 
-  const updateUser = async (
-    email: string,
-    links?: string,
-    location?: string,
-    bio?: string,
-    color?: string,
-  ) => {
-    try {
-      const bodyData: any = { email, links, location, bio, color };
+  // const updateUser = async (
+  //   email: string,
+  //   links?: string,
+  //   location?: string,
+  //   bio?: string,
+  //   color?: string,
+  // ) => {
+  //   try {
+  //     const bodyData: any = { email, links, location, bio, color };
 
-      const response = await fetch(`${getBaseUrl()}/api/updateUser`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyData),
-      });
+  //     const response = await fetch(`${getBaseUrl()}/api/updateUser`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(bodyData),
+  //     });
 
-      if (!response.ok) throw new Error("Failed to update user info.");
+  //     if (!response.ok) throw new Error("Failed to update user info.");
 
-      await getUser(); // Refresh the user info after update
-    } catch (error) {
-      console.error("Failed to update user:", error);
-    }
-  };
+  //     await getUser(); // Refresh the user info after update
+  //   } catch (error) {
+  //     console.error("Failed to update user:", error);
+  //   }
+  // };
 
-  const updateFollowers = async (
-    myId: string,
-    theirId: string,
-    theirFollowers: string[],
-    myFollowing: string[],
-  ) => {
-    try {
-      const bodyData = { myId, theirId, theirFollowers, myFollowing };
+  // const updateFollowers = async (
+  //   myId: string,
+  //   theirId: string,
+  //   theirFollowers: string[],
+  //   myFollowing: string[],
+  // ) => {
+  //   try {
+  //     const bodyData = { myId, theirId, theirFollowers, myFollowing };
 
-      const response = await fetch(`${getBaseUrl()}/api/updateUserFollow`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyData),
-      });
+  //     const response = await fetch(`${getBaseUrl()}/api/updateUserFollow`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(bodyData),
+  //     });
 
-      if (!response.ok) throw new Error("Failed to update followers.");
+  //     if (!response.ok) throw new Error("Failed to update followers.");
 
-      await getUser(); // Refresh the user info after update
-    } catch (error) {
-      console.error("Failed to update followers:", error);
-    }
-  };
+  //     await getUser(); // Refresh the user info after update
+  //   } catch (error) {
+  //     console.error("Failed to update followers:", error);
+  //   }
+  // };
 
   return (
     <MyContext.Provider
