@@ -54,6 +54,8 @@ export default function MyCustomDrawer(props: any) {
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
+  console.log(myInfo, "my Info")
+
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
       <ThemedView style={{ flex: 1 }}>

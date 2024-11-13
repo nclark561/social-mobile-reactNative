@@ -68,7 +68,7 @@ export default function HomeScreen() {
     setPostInput("");
     const userEmail = await AsyncStorage.getItem("user");
     try {
-      await fetch(`${getBaseUrl()}/api/createPost`, {
+      await fetch(`${getBaseUrl()}/posts/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
