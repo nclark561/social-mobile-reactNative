@@ -79,8 +79,7 @@ export default function HomeScreen() {
           userName,
         }),
       });
-      await getForYouPosts(myInfo?.id);
-      await getAllForYouPosts();
+      await getForYouPosts(myInfo?.id);      
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the create post error");
@@ -102,8 +101,7 @@ export default function HomeScreen() {
   );
 
   const loadingPosts = async () => {
-    await getForYouPosts(myInfo?.id);
-    await getAllForYouPosts();
+    await getForYouPosts(myInfo?.id);    
     setLoading(false);
   };
 
@@ -114,6 +112,9 @@ export default function HomeScreen() {
   // const handleError = () => setProfileImageUri(mortyUrl);
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
+
+  console.log(forYouPosts, 'for you posts')
+  console.log(forYouFollowingPosts, 'for you following posts')
 
   return (
     <ThemedView style={styles.pageContainer}>
@@ -189,7 +190,7 @@ export default function HomeScreen() {
               style={{ width: "100%", flex: 1, height: height }}
               showsVerticalScrollIndicator={false}
             >
-              {isForYou
+              {!isForYou
                 ? Array.isArray(forYouPosts) &&
                 forYouPosts.map((post, i) => {
                   if (post.postId) {

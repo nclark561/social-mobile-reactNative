@@ -19,7 +19,7 @@ type PostContextType = {
   getBaseUrl: () => void;
   forYouFollowingPosts: any[];
   setForYouPosts: any;
-  getAllForYouPosts: any;
+  
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -36,7 +36,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1"
       ) {
-        return process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL; // local
+        return process.env.EXPO_PUBLIC_LOCAL_PYTHON_BASE_URL; // local
       } else {
         // Prod for web
         return process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL; // Use production env variable
@@ -49,7 +49,6 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     getForYouPosts();
-    getAllForYouPosts();
   }, [forYouPostsToggle]);
 
   const getUserPosts = async (email: string, userId: string) => {
@@ -73,7 +72,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   const getForYouPosts = async (userId?: string) => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}/api/getPosts${userId ? `?id=${userId}` : ""}`,
+        `${getBaseUrl()}/posts/getPosts${userId ? `?id=${userId}` : ""}`,
         {
           method: "GET",
           headers: {
@@ -82,26 +81,27 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         },
       );
       const fetchedPosts = await result.json();
+      
       setForYouFollowingPosts(fetchedPosts.Posts);
     } catch (error) {
       console.log(error, "this is the get for you posts error");
     }
   };
 
-  const getAllForYouPosts = async () => {
-    try {
-      const result = await fetch(`${getBaseUrl()}/api/getPosts`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const fetchedPosts = await result.json();
-      setForYouPosts(fetchedPosts.Posts);
-    } catch (error) {
-      console.log(error, "this is the get for you posts error");
-    }
-  };
+  // const getAllForYouPosts = async () => {
+  //   try {
+  //     const result = await fetch(`${getBaseUrl()}/api/getPosts`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     const fetchedPosts = await result.json();
+  //     setForYouPosts(fetchedPosts.Posts);
+  //   } catch (error) {
+  //     console.log(error, "this is the get for you posts error");
+  //   }
+  // };
 
   return (
     <PostContext.Provider
@@ -114,8 +114,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         setForYouPostsToggle,
         getBaseUrl,
         setForYouPosts,
-        forYouFollowingPosts,
-        getAllForYouPosts,
+        forYouFollowingPosts,        
       }}
     >
       {children}
