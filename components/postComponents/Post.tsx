@@ -34,7 +34,7 @@ interface Post {
   email: string;
   likes: any;
   profilePic: string;
-  username: string;
+  user_name: string;
   replies?: any;
   postId?: string;
   userName: string;
@@ -343,7 +343,7 @@ export default function Post({
             style={styles.link}
             onPress={handleProfilePress}
           >
-            <ThemedText style={styles.postUser}>{post.userName}</ThemedText>
+            <ThemedText style={styles.postUser}>{post.user_name}</ThemedText>
           </Link>
           <ThemedText style={styles.postText}>{post?.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>

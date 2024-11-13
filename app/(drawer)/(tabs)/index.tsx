@@ -242,7 +242,7 @@ export default function HomeScreen() {
                             size={15}
                           />
                           <ThemedText style={styles.repost}>
-                            {post.user.username} Reposted
+                            {post.user_name} Reposted
                           </ThemedText>
                         </ThemedView>
                         <Post

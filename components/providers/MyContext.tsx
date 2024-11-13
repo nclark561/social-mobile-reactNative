@@ -78,7 +78,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     if (Platform.OS === "web") {
       return window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1"
-        ? process.env.EXPO_PUBLIC_LOCAL_SERVER_BASE_URL
+        ? process.env.EXPO_PUBLIC_LOCAL_PYTHON_BASE_URL
         : process.env.EXPO_PUBLIC_PROD_SERVER_BASE_URL;
     } else {
       return process.env.EXPO_PUBLIC_SERVER_BASE_URL;
@@ -148,7 +148,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
       if (!userEmail) throw new Error("User not logged in");
 
       const email = JSON.parse(userEmail);
-      const result = await fetch(`${getBaseUrl()}/api/myInfo?email=${email}`, {
+      const result = await fetch(`${getBaseUrl()}/users/myInfo?email=${email}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
