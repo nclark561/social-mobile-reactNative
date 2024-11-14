@@ -62,6 +62,8 @@ export default function TabTwoScreen() {
     }
   }, [myInfo]);
 
+  console.log(posts.Posts.posts)
+
   const renderContent = () => {
     switch (selectedOption) {
       case "Posts":

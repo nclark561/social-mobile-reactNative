@@ -59,7 +59,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `${getBaseUrl()}/api/getConvos?id=${myInfo.id}`,
+        `${getBaseUrl()}/conversations/getConvos?id=${myInfo.id}`,
         {
           method: "GET",
           headers: {

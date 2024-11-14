@@ -113,7 +113,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     if (!myInfo?.id) return;
     try {
       const response = await fetch(
-        `${getBaseUrl()}/api/getConvos?id=${myInfo?.id}`,
+        `${getBaseUrl()}/conversations/getConvos?id=${myInfo?.id}`,
         {
           method: "GET",
           headers: {
