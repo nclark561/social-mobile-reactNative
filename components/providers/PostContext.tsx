@@ -89,20 +89,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // const getAllForYouPosts = async () => {
-  //   try {
-  //     const result = await fetch(`${getBaseUrl()}/api/getPosts`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const fetchedPosts = await result.json();
-  //     setForYouPosts(fetchedPosts.Posts);
-  //   } catch (error) {
-  //     console.log(error, "this is the get for you posts error");
-  //   }
-  // };
+
 
   return (
     <PostContext.Provider
