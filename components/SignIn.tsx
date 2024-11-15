@@ -32,6 +32,7 @@ export default function SignIn({
   const color = colorScheme === "dark" ? "white" : "black";
 
   const handleLogin = async (email: string, password: string) => {
+    debugger
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email,
@@ -43,6 +44,7 @@ export default function SignIn({
         throw new Error("login error");
       }
       if (data) {
+        console.log(data, "this is the login data");
         if (Platform.OS === "web") {
           await localStorage.setItem("user", JSON.stringify(email));
         } else {

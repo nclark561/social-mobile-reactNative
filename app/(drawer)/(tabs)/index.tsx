@@ -65,18 +65,18 @@ export default function HomeScreen() {
   const createPost = async (content: string, userName: string) => {
     if (content.length < 1) return;
     setLoading(true);
-    setPostInput("");
-    const userEmail = await AsyncStorage.getItem("user");
+    setPostInput("");    
     try {
+    
       await fetch(`${getBaseUrl()}/posts/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content,
-          email: userEmail,
-          userName,
+          content,          
+          user_name: userName,
+          email: myInfo.email
         }),
       });
       await getForYouPosts(myInfo?.id);      

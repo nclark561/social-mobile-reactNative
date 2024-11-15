@@ -44,12 +44,13 @@ export default function TabTwoScreen() {
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
   const searchUsers = async () => {
+    console.log(getBaseUrl())
     try {
       const result = await fetch(
-        `${getBaseUrl()}/api/searchUsers?username=${searchInput}`,
+        `${getBaseUrl()}/users/userSearch?search=${searchInput}`,
       );
       const users = await result.json();
-      console.log(users);
+      console.log(users, 'these are searched users');
       setSearchResults(users.user);
     } catch (err) {
       console.log("oops");
@@ -130,7 +131,7 @@ export default function TabTwoScreen() {
                   Results
                 </ThemedText>
                 <Animated.ScrollView>
-                  {searchResults.length > 0 ? (
+                  {searchResults?.length > 0 ? (
                     searchResults.map((e: any) => (
                       <ProfileDisplay key={e.id} user={e} />
                     ))

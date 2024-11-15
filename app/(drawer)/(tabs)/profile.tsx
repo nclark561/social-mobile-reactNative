@@ -62,7 +62,7 @@ export default function TabTwoScreen() {
     }
   }, [myInfo]);
 
-  console.log(posts.Posts.posts)
+  
 
   const renderContent = () => {
     switch (selectedOption) {
@@ -73,8 +73,9 @@ export default function TabTwoScreen() {
             style={{ flexDirection: "column", flex: 1 }}
           >
             <ThemedView>
-              {Array.isArray(posts.posts) &&
-                posts?.posts?.map((post: any) => {
+              {Array.isArray(posts?.Posts?.posts) &&
+                posts?.Posts.posts?.map((post: any) => {
+                  console.log(post, 'testttttttt`')
                   return (
                     <Post
                       key={post.id}
@@ -144,6 +145,8 @@ export default function TabTwoScreen() {
       console.error("Couldn't load page", err),
     );
   };
+
+  
 
   return (
     <ThemedView

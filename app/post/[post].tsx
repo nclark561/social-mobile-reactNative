@@ -195,10 +195,9 @@ export default function PostPage() {
     }
   };
 
-  const getPost = async (id: string) => {
-    console.log(id, "calling this post");
+  const getPost = async (id: string) => {    
     try {
-      const result = await fetch(`${getBaseUrl()}/api/getPost?id=${id}`, {
+      const result = await fetch(`${getBaseUrl()}/posts/getPost?post_id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -279,7 +278,7 @@ export default function PostPage() {
               </ThemedView>
               <Link href={`/profile/${thisPost?.email}`}>
                 <ThemedText style={styles.postUser}>
-                  {thisPost?.userName}
+                  {thisPost?.user_name}
                 </ThemedText>
               </Link>
             </ThemedView>
@@ -292,9 +291,9 @@ export default function PostPage() {
                   onPress={handleOpenComment}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
-                <ThemedText style={styles.smallNumber}>
+                {/* <ThemedText style={styles.smallNumber}>
                   {thisPost?.comments?.length}
-                </ThemedText>
+                </ThemedText> */}
               </ThemedView>
               <Ionicons
                 size={15}
