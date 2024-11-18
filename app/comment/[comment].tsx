@@ -114,23 +114,23 @@ export default function CommentPage() {
 
   const likePost = () => setLiked((prev) => !prev);
 
-  const addLike = async (userId: string, postId: string) => {
-    try {
-      const test = await fetch(`${getBaseUrl()}/api/addLike`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          postId,
-        }),
-      });
-      await getForYouPosts();
-    } catch (error) {
-      console.log(error, "this is the add like error");
-    }
-  };
+  // const addLike = async (userId: string, postId: string) => {
+  //   try {
+  //     const test = await fetch(`${getBaseUrl()}/api/addLike`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         userId,
+  //         postId,
+  //       }),
+  //     });
+  //     await getForYouPosts();
+  //   } catch (error) {
+  //     console.log(error, "this is the add like error");
+  //   }
+  // };
 
   const addComment = async (
     comment: string,
@@ -141,7 +141,7 @@ export default function CommentPage() {
   ) => {
     try {
       handleCloseComment()
-      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

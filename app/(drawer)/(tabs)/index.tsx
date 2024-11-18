@@ -114,8 +114,6 @@ export default function HomeScreen() {
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
 
-  console.log(forYouFollowingPosts, 'for you following posts')
-
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name={"Welcome"} />

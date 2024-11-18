@@ -52,7 +52,6 @@ export default function DesktopRouting() {
     checkUser();
   }, [myInfo]);
 
-  console.log(myInfo, "we are logged in ------------------------");
 
   return (
     <ThemedView style={styles.desktopHidden}>

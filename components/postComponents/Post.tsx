@@ -152,7 +152,7 @@ export default function Post({
 
   const [liked, setLiked] = useState(isLikedByUser(post.likes));
 
-  const addLike = async (userId: string, postId: string) => {
+  const addLike = async (userId: string, postId: string) => {    
     setLiked((prevLiked) => !prevLiked);
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
     setOptimisticLike(updatedLikesCount);
@@ -160,8 +160,8 @@ export default function Post({
     try {
       const test = await fetch(
         !isComment
-          ? `${getBaseUrl()}/api/addLike`
-          : `${getBaseUrl()}/api/addCommentLike`,
+          ? `${getBaseUrl()}/posts/likes`
+          : `${getBaseUrl()}/comments/likes`,
         {
           method: "POST",
           headers: {
@@ -180,6 +180,7 @@ export default function Post({
       console.log(error, "this is the add like error in post");
     }
   };
+
 
   const deletePost = async (postId: string) => {
     setLoading(true);
@@ -235,7 +236,7 @@ export default function Post({
     commentId?: string
   ) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -321,6 +322,7 @@ export default function Post({
     router.push(`/${link}/${post.id}`);
   };
 
+
   return (
     <Pressable onPress={handlePostPress}>
       <ThemedView
@@ -384,7 +386,8 @@ export default function Post({
                 <Ionicons
                   size={15}
                   name={liked ? "heart" : "heart-outline"}
-                  onPress={() => {
+                  onPress={(event) => {
+                    event?.stopPropagation();
                     addLike(myInfo?.id, post.id);
                   }}
                   color={colorScheme === "dark" ? "white" : "black"}
@@ -781,7 +784,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    zIndex: 100,
+    zIndex: 1000,
     width: "10%",
     justifyContent: "space-evenly",
   },

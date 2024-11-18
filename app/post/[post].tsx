@@ -129,8 +129,8 @@ export default function PostPage() {
     try {
       const test = await fetch(
         comment
-          ? `${getBaseUrl()}/api/addCommentLike`
-          : `${getBaseUrl()}/api/addLike`,
+          ? `${getBaseUrl()}/comments/addLike`
+          : `${getBaseUrl()}/posts/addLike`,
         {
           method: "POST",
           headers: {
@@ -176,7 +176,7 @@ export default function PostPage() {
   ) => {
     handleCloseComment()
     try {
-      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+      const response = await fetch(`${getBaseUrl()}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

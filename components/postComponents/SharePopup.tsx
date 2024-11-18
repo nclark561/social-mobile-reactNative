@@ -23,7 +23,7 @@ const SharePopup = ({ shareVisible, handleCloseShare }: SharePopupProps) => {
     await Clipboard.setStringAsync(window.location.href);
   };
 
-  console.log(window.location.href, 'the window location')
+  
 
   return (
     <Modal transparent visible={shareVisible} animationType="fade">

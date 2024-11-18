@@ -3,10 +3,7 @@ import React, {
   useState,
   ReactNode,
   useEffect,
-  SetStateAction,
-} from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { supabase } from "../../components/Supabase";
+} from "react";47
 import { Platform } from "react-native";
 
 type PostContextType = {
@@ -63,7 +60,6 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         },
       );
       const fetchedPosts = await result.json();
-      console.log(fetchedPosts, 'these are fetchedposts')
       setPosts(fetchedPosts);
     } catch (error) {
       console.log(error, "this is the get user error");
@@ -88,8 +84,6 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
       console.log(error, "this is the get for you posts error");
     }
   };
-
-
 
   return (
     <PostContext.Provider
