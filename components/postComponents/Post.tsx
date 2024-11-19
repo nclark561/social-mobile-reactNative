@@ -323,6 +323,8 @@ export default function Post({
   };
 
 
+  console.log(post, 'this is a post')
+
   return (
     <Pressable onPress={handlePostPress}>
       <ThemedView
