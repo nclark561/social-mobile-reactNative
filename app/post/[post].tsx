@@ -151,12 +151,12 @@ export default function PostPage() {
 
   const deletePost = async (postId: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/deletePost`, {
+      const response = await fetch(`${getBaseUrl()}/posts/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ postId }),
+        body: JSON.stringify({ post_id: postId }),
       });
       const result = await response.json();
       if (result) {

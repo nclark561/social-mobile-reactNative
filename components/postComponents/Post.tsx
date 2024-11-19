@@ -152,7 +152,7 @@ export default function Post({
 
   const [liked, setLiked] = useState(isLikedByUser(post.likes));
 
-  const addLike = async (userId: string, postId: string) => {    
+  const addLike = async (userId: string, postId: string) => {
     setLiked((prevLiked) => !prevLiked);
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
     setOptimisticLike(updatedLikesCount);
@@ -185,13 +185,13 @@ export default function Post({
   const deletePost = async (postId: string) => {
     setLoading(true);
     try {
-      await fetch(`${getBaseUrl()}/api/deletePost`, {
+      await fetch(`${getBaseUrl()}/posts/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          postId,
+          post_id: postId,
         }),
       });
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
@@ -208,13 +208,13 @@ export default function Post({
   const deleteComment = async (id: string) => {
     setLoading(true);
     try {
-      await fetch(`${getBaseUrl()}/api/deleteComment`, {
+      await fetch(`${getBaseUrl()}/comments/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id,
+          comment_id: id,
         }),
       });
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
@@ -268,14 +268,14 @@ export default function Post({
     setLoading(true);
     handleCloseRepost();
     try {
-      const test = await fetch(`${getBaseUrl()}/api/addReposts`, {
+      const test = await fetch(`${getBaseUrl()}/reposts/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId,
-          postId,
+          user_id: userId,
+          post_id: postId,
         }),
       });
       await getForYouPosts(myInfo?.id);
@@ -293,7 +293,7 @@ export default function Post({
     handleCloseRepost();
     try {
       await fetch(
-        `${getBaseUrl()}/api/deleteRepost?user=${userId}&post=${postId}`,
+        `${getBaseUrl()}/reposts/delete?user_id=${userId}&post_id=${postId}`,
         {
           method: "DELETE",
         }
@@ -561,7 +561,7 @@ export default function Post({
                   multiline
                   placeholder="Post your reply"
                   style={[
-                    { paddingTop: 15, maxWidth: "80%", width: "100%", borderWidth: 0},
+                    { paddingTop: 15, maxWidth: "80%", width: "100%", borderWidth: 0 },
                     colorScheme === "dark"
                       ? { color: "#bebebe" }
                       : { color: "#525252" },
@@ -736,7 +736,7 @@ const styles = StyleSheet.create({
   },
   commentContainer: {
     flexDirection: "column",
-    paddingTop: 20,    
+    paddingTop: 20,
     width: "100%",
   },
   buttonContainer: {

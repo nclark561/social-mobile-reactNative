@@ -161,26 +161,26 @@ export default function CommentPage() {
 
   const deletePost = async (id: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/deleteComment`, {
+      const response = await fetch(`${getBaseUrl()}/comments/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ comment_id: id }),
       });
       const result = await response.json();
       if (result) {
         router.navigate("/(tabs)/");
       }
     } catch (error) {
-      console.error("Error deleting post:", error);
+      console.error("Error deleting comment:", error);
     }
   };
 
   const getPost = async () => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}/api/getSingleComment?id=${local.comment}`,
+        `${getBaseUrl()}/comments/singleComment?comment_id=${local.comment}`,
         {
           method: "GET",
           headers: {

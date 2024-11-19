@@ -175,7 +175,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     try {
       const bodyData: any = { email, links, location, bio, color };
 
-      const response = await fetch(`${getBaseUrl()}/api/updateUser`, {
+      const response = await fetch(`${getBaseUrl()}/users/update`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -194,13 +194,10 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   const updateFollowers = async (
     myId: string,
     theirId: string,
-    theirFollowers: string[],
-    myFollowing: string[],
   ) => {
     try {
-      const bodyData = { myId, theirId, theirFollowers, myFollowing };
-
-      const response = await fetch(`${getBaseUrl()}/api/updateUserFollow`, {
+      const bodyData = { myId, theirId };      
+      const response = await fetch(`${getBaseUrl()}/users/updateFollowing`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

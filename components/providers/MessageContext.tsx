@@ -77,10 +77,10 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const deleteConvos = async (id: string) => {
     console.log(id, "hitting delete convo");
     try {
-      await fetch(`${getBaseUrl()}/api/deleteConvo`, {
+      await fetch(`${getBaseUrl()}/conversations/delete`, {
         method: "POST",
         body: JSON.stringify({
-          id: id,
+          conversation_id: id,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -98,15 +98,15 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
     id: string,
   ) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/addMessage`, {
+      const response = await fetch(`${getBaseUrl()}/conversations/addMessage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          conversationId,
+          conversation_id: conversationId,
           messages: message,
-          id,
+          user_id: id,
         }),
       });
 
