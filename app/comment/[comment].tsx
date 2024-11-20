@@ -189,7 +189,8 @@ export default function CommentPage() {
         },
       );
       const userData = await result.json();
-      setThisPost(userData.comment);
+      console.log(userData, 'this is user data')
+      setThisPost(userData.comment[0]);
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the get user error");

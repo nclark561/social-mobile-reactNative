@@ -51,6 +51,7 @@ export default function PostPage() {
   const { getForYouPosts, getBaseUrl } = useContext<any>(PostContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
+  const [optimisticLike, setOptimisticLike] = useState(thisPost?.likes?.length);
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Reference for delete menu
   const local = useLocalSearchParams<any>();
@@ -126,11 +127,14 @@ export default function PostPage() {
   };
 
   const addLike = async (userId: string, postId: string, comment: boolean) => {
+    setLiked((prevLiked) => !prevLiked);
+    const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
+    setOptimisticLike(updatedLikesCount);
     try {
       const test = await fetch(
         comment
-          ? `${getBaseUrl()}/comments/addLike`
-          : `${getBaseUrl()}/posts/addLike`,
+          ? `${getBaseUrl()}/comments/likes`
+          : `${getBaseUrl()}/posts/likes`,
         {
           method: "POST",
           headers: {
@@ -205,6 +209,7 @@ export default function PostPage() {
       });
       const userData = await result.json();
       setThisPost(userData.post);
+      setOptimisticLike(userData?.post?.likes?.length)
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the get user error");
@@ -236,7 +241,7 @@ export default function PostPage() {
     }
   };
 
-  console.log(thisPost);
+  
 
   return (
     <ThemedView style={styles.realRow}>
@@ -313,7 +318,7 @@ export default function PostPage() {
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
                 <ThemedText style={styles.smallNumber}>
-                  {thisPost?.likes?.length}
+                  {optimisticLike}
                 </ThemedText>
               </ThemedView>
               <Ionicons

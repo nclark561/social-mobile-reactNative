@@ -237,11 +237,11 @@ export default function Post({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          comment,
-          userName,
-          postId,
-          userId,
-          commentId,
+          content: comment,
+          user_name: userName,
+          post_id: postId,
+          user_id: userId,
+          parent_id: commentId,
         }),
       });
       const post = await response.json();
