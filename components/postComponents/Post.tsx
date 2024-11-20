@@ -70,12 +70,8 @@ export default function Post({
   const [deleteVisible, setDeleteVisible] = useState(false);
   const link = isComment ? "comment" : "post";
   const postOwnerId = isComment ? post?.userId : post?.owner?.id;
-
-  const { getForYouPosts, getUserPosts, getBaseUrl, getAllForYouPosts } =
-    useContext<any>(PostContext);
-  const { setLoginToggle, myInfo, loggedIn, getUser } =
-    useContext<any>(MyContext);
-
+  const { getForYouPosts, getUserPosts, getBaseUrl, getAllForYouPosts } = useContext<any>(PostContext);
+  const {  myInfo, loggedIn } = useContext<any>(MyContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
@@ -145,18 +141,17 @@ export default function Post({
     setLiked((prev) => !prev);
   };
 
-  const isLikedByUser = (likes: string[]): boolean => {
-    if (!myInfo?.id) return false; // If user info is not available, return false
-    return likes?.includes(myInfo.id); // Check if the user's ID is in the likes array
+  const isLikedByUser = (likes: string[]): boolean => {    
+    if (!myInfo?.id) return false; 
+    return likes?.includes(myInfo?.id); 
   };
 
-  const [liked, setLiked] = useState(isLikedByUser(post.likes));
+  const [liked, setLiked] = useState(isLikedByUser(post?.likes));
 
   const addLike = async (userId: string, postId: string) => {
     setLiked((prevLiked) => !prevLiked);
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
     setOptimisticLike(updatedLikesCount);
-
     try {
       const test = await fetch(
         !isComment
@@ -323,7 +318,8 @@ export default function Post({
   };
 
 
-  console.log(post, 'this is a post')
+  console.log(isLikedByUser(myInfo?.id), 'these are likes')
+  console.log(liked, 'true or false')
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -397,7 +393,7 @@ export default function Post({
               </Pressable> :
                 <Ionicons
                   size={15}
-                  name={liked ? "heart" : "heart-outline"}
+                  name={isLikedByUser(myInfo?.id) ? "heart" : "heart-outline"}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
               }
