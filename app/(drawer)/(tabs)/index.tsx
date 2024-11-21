@@ -191,6 +191,7 @@ export default function HomeScreen() {
               {!isForYou
                 ? Array.isArray(forYouPosts) &&
                 forYouPosts.map((post, i) => {
+                  // console.log(post, 'this is the post')
                   if (post.postId) {
                     return (
                       <ThemedView
@@ -227,6 +228,7 @@ export default function HomeScreen() {
                 })
                 : Array.isArray(forYouFollowingPosts) &&
                 forYouFollowingPosts.map((post, i) => {
+                  console.log(post, 'this is the post')
                   if (post.postId) {
                     return (
                       <ThemedView

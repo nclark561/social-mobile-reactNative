@@ -199,9 +199,9 @@ export default function PostPage() {
     }
   };
 
-  const getPost = async (id: string) => {    
+  const getPost = async (id: string) => {
     try {
-      const result = await fetch(`${getBaseUrl()}/posts/getPost?post_id=${id}`, {
+      const result = await fetch(`${getBaseUrl()}/posts/post?post_id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -217,7 +217,11 @@ export default function PostPage() {
   };
 
   const isLikedByUser = (likes: string[]): boolean => {
-    return likes?.includes(myInfo?.id);
+    const liked = likes?.includes(myInfo?.id);
+    console.log("Likes array:", likes);
+    console.log("My user ID:", myInfo?.id);
+    console.log("Is liked by user:", liked);
+    return liked;
   };
 
   useFocusEffect(
@@ -234,14 +238,15 @@ export default function PostPage() {
 
   const profileImage = (id: string) => {
     if (id) {
-      const newProfileImageUri = `${
-        process.env.EXPO_PUBLIC_SUPABASE_URL
-      }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/profile-images/${id}?${Date.now()}`;
       return newProfileImageUri;
     }
   };
 
-  
+
+
+
 
   return (
     <ThemedView style={styles.realRow}>
@@ -296,19 +301,25 @@ export default function PostPage() {
                   onPress={handleOpenComment}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
-                {/* <ThemedText style={styles.smallNumber}>
+                <ThemedText style={styles.smallNumber}>
                   {thisPost?.comments?.length}
-                </ThemedText> */}
+                </ThemedText>
               </ThemedView>
-              <Ionicons
-                size={15}
-                name="git-compare-outline"
-                onPress={handleOpenRepost}
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
               <ThemedView style={styles.smallRow}>
                 <Ionicons
                   size={15}
+                  name="git-compare-outline"
+                  onPress={handleOpenRepost}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+                <ThemedText style={styles.smallNumber}>
+                  {thisPost?.reposts?.length}
+                </ThemedText>
+              </ThemedView>
+              <ThemedView style={styles.smallRow}>
+                <Ionicons
+                  size={15}
+                  key={`like-icon-${isLikedByUser(thisPost?.likes)}`}
                   name={
                     isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
                   }
@@ -363,13 +374,13 @@ export default function PostPage() {
               </ThemedView>
             </ThemedView>
           </CustomBottomSheet>) : (
-            <SharePopup shareVisible={shareVisible} handleCloseShare={handleCloseShare}/>
+            <SharePopup shareVisible={shareVisible} handleCloseShare={handleCloseShare} />
           )}
           {width < 1000 ? (<CommentBottomSheet
             post={thisPost}
             commentModalRef={commentModalRef}
             user={thisPost?.owner}
-          />) : <CommentPopup myInfo={myInfo} setCommentInput={setCommentInput} commentInput={commentInput} handleCloseComment={handleCloseComment} addComment={addComment} commentVisible={commentVisible} post={thisPost}/>}
+          />) : <CommentPopup myInfo={myInfo} setCommentInput={setCommentInput} commentInput={commentInput} handleCloseComment={handleCloseComment} addComment={addComment} commentVisible={commentVisible} post={thisPost} />}
           {width < 1000 ? (<CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
             <ThemedView
               style={[
@@ -410,10 +421,10 @@ export default function PostPage() {
                 />
               )}
             </ThemedView>
-          </CustomBottomSheet>) : <DeletePopup post={thisPost} deleteComment={null} deletePost={deletePost} deleteVisible={deleteVisible} postOwnerId={thisPost?.owner?.id} myInfo={myInfo} handleCloseDeleteMenu={handleCloseDeleteMenu}/>}
+          </CustomBottomSheet>) : <DeletePopup post={thisPost} deleteComment={null} deletePost={deletePost} deleteVisible={deleteVisible} postOwnerId={thisPost?.owner?.id} myInfo={myInfo} handleCloseDeleteMenu={handleCloseDeleteMenu} />}
         </ThemedView>
         {thisPost?.comments?.map((comment: any) => {
-          console.log(comment);
+          console.log(comment, 'this is comment');
           return (
             <Post
               key={comment.id}

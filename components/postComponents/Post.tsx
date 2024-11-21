@@ -318,9 +318,6 @@ export default function Post({
   };
 
 
-  console.log(isLikedByUser(myInfo?.id), 'these are likes')
-  console.log(liked, 'true or false')
-
   return (
     <Pressable onPress={handlePostPress}>
       <ThemedView
