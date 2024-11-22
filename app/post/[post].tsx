@@ -62,7 +62,7 @@ export default function PostPage() {
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false)
-
+  const repostedByMe = thisPost?.reposts?.filter((e: any) => e.user_id === myInfo?.id).length > 0;
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const handleOpenShare = () => {
@@ -244,10 +244,6 @@ export default function PostPage() {
     }
   };
 
-
-
-
-
   return (
     <ThemedView style={styles.realRow}>
       {loading && (
@@ -308,9 +304,15 @@ export default function PostPage() {
               <ThemedView style={styles.smallRow}>
                 <Ionicons
                   size={15}
-                  name="git-compare-outline"
+                  name={repostedByMe ? "git-compare" : "git-compare-outline"}
                   onPress={handleOpenRepost}
-                  color={colorScheme === "dark" ? "white" : "black"}
+                  color={
+                    repostedByMe
+                      ? "green"
+                      : colorScheme === "dark"
+                        ? "white"
+                        : "black"
+                  }
                 />
                 <ThemedText style={styles.smallNumber}>
                   {thisPost?.reposts?.length}
@@ -424,7 +426,6 @@ export default function PostPage() {
           </CustomBottomSheet>) : <DeletePopup post={thisPost} deleteComment={null} deletePost={deletePost} deleteVisible={deleteVisible} postOwnerId={thisPost?.owner?.id} myInfo={myInfo} handleCloseDeleteMenu={handleCloseDeleteMenu} />}
         </ThemedView>
         {thisPost?.comments?.map((comment: any) => {
-          console.log(comment, 'this is comment');
           return (
             <Post
               key={comment.id}

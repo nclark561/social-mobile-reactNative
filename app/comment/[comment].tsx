@@ -114,23 +114,23 @@ export default function CommentPage() {
 
   const likePost = () => setLiked((prev) => !prev);
 
-  // const addLike = async (userId: string, postId: string) => {
-  //   try {
-  //     const test = await fetch(`${getBaseUrl()}/api/addLike`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         userId,
-  //         postId,
-  //       }),
-  //     });
-  //     await getForYouPosts();
-  //   } catch (error) {
-  //     console.log(error, "this is the add like error");
-  //   }
-  // };
+  const addLike = async (userId: string, postId: string) => {
+    try {
+      const test = await fetch(`${getBaseUrl()}/comments/likes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          postId,
+        }),
+      });
+      await getForYouPosts();
+    } catch (error) {
+      console.log(error, "this is the add like error");
+    }
+  };
 
   const addComment = async (
     comment: string,
@@ -206,6 +206,13 @@ export default function CommentPage() {
     }, [local.comment]),
   );
 
+
+  const isLikedByUser = (likes: string[]): boolean => {
+    if (!myInfo?.id) return false;
+    return likes?.includes(myInfo?.id);
+  };
+
+
   useEffect(() => {
     if (thisPost) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}?${Date.now()}`;
@@ -279,11 +286,14 @@ export default function CommentPage() {
             />
             <ThemedView style={styles.smallRow}>
               <Ionicons
+              onPress={() => {
+                addLike(myInfo?.id, thisPost?.id)
+              }}              
                 size={15}
-                name="heart-outline"
+                name={isLikedByUser(myInfo?.id) ? "heart" : "heart-outline"}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{0}</ThemedText>
+              <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -325,12 +335,12 @@ export default function CommentPage() {
               <ThemedText style={styles.optionText}>Copy Link</ThemedText>
             </ThemedView>
           </ThemedView>
-        </CustomBottomSheet>) : <SharePopup handleCloseShare={handleCloseShare} shareVisible={shareVisible}/>}
+        </CustomBottomSheet>) : <SharePopup handleCloseShare={handleCloseShare} shareVisible={shareVisible} />}
         {width < 1000 ? (<CommentBottomSheet
           post={thisPost}
           commentModalRef={commentModalRef}
           user={thisPost?.user}
-        />) : <CommentPopup isComment myInfo={myInfo} addComment={addComment} setCommentInput={setCommentInput} handleCloseComment={handleCloseComment} commentVisible={commentVisible} commentInput={commentInput} post={thisPost}/>}
+        />) : <CommentPopup isComment myInfo={myInfo} addComment={addComment} setCommentInput={setCommentInput} handleCloseComment={handleCloseComment} commentVisible={commentVisible} commentInput={commentInput} post={thisPost} />}
         {width < 1000 ? (<CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
@@ -361,7 +371,7 @@ export default function CommentPage() {
               />
             )}
           </ThemedView>
-        </CustomBottomSheet>) : <DeletePopup handleCloseDeleteMenu={handleCloseDeleteMenu} postOwnerId={thisPost?.userId} post={thisPost} isComment deletePost={null} deleteComment={deletePost} deleteVisible={deleteVisible} myInfo={myInfo}/>}
+        </CustomBottomSheet>) : <DeletePopup handleCloseDeleteMenu={handleCloseDeleteMenu} postOwnerId={thisPost?.userId} post={thisPost} isComment deletePost={null} deleteComment={deletePost} deleteVisible={deleteVisible} myInfo={myInfo} />}
       </ThemedView>
       {thisPost?.replies?.map((comment: any) => (
         <Post

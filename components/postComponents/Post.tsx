@@ -71,14 +71,13 @@ export default function Post({
   const link = isComment ? "comment" : "post";
   const postOwnerId = isComment ? post?.userId : post?.owner?.id;
   const { getForYouPosts, getUserPosts, getBaseUrl, getAllForYouPosts } = useContext<any>(PostContext);
-  const {  myInfo, loggedIn } = useContext<any>(MyContext);
+  const { myInfo, loggedIn } = useContext<any>(MyContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
-  const repostedByMe =
-    post?.reposts?.filter((e: any) => e.userId === myInfo?.id).length > 0;
+  const repostedByMe = post?.reposts?.filter((e: any) => e.user_id === myInfo?.id).length > 0;
 
   const handleOpenShare = () => {
     if (Platform.OS === "web" && width > 1000) {
@@ -141,9 +140,9 @@ export default function Post({
     setLiked((prev) => !prev);
   };
 
-  const isLikedByUser = (likes: string[]): boolean => {    
-    if (!myInfo?.id) return false; 
-    return likes?.includes(myInfo?.id); 
+  const isLikedByUser = (likes: string[]): boolean => {
+    if (!myInfo?.id) return false;
+    return likes?.includes(myInfo?.id);
   };
 
   const [liked, setLiked] = useState(isLikedByUser(post?.likes));
@@ -246,6 +245,9 @@ export default function Post({
       });
       const post = await response.json();
       handleCloseComment();
+      await getForYouPosts(myInfo?.id);
+      await getAllForYouPosts();
+      await getUserPosts(user);
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -270,7 +272,7 @@ export default function Post({
         },
         body: JSON.stringify({
           user_id: userId,
-          post_id: postId,
+          ...(isComment ? { comment_id: postId } : { post_id: postId }),
         }),
       });
       await getForYouPosts(myInfo?.id);
@@ -288,11 +290,16 @@ export default function Post({
     handleCloseRepost();
     try {
       await fetch(
-        `${getBaseUrl()}/reposts/delete?user_id=${userId}&post_id=${postId}`,
-        {
-          method: "DELETE",
-        }
-      );
+        `${getBaseUrl()}/reposts/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          ...(isComment ? { comment_id: postId } : { post_id: postId }),
+        }),
+      });
       await getForYouPosts(myInfo?.id);
       await getAllForYouPosts();
       await getUserPosts(user);
@@ -316,7 +323,6 @@ export default function Post({
       return;
     router.push(`/${link}/${post.id}`);
   };
-
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -609,7 +615,7 @@ export default function Post({
                   >
                     <Ionicons
                       size={25}
-                      name="git-compare-outline"
+                      name="git-compare"
                       color="red"
                     ></Ionicons>
                     <ThemedText style={[styles.optionText, { color: "red" }]}>
