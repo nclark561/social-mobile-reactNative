@@ -78,7 +78,6 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         },
       );
       const fetchedPosts = await result.json();
-      
       setForYouFollowingPosts(fetchedPosts.Posts);
     } catch (error) {
       console.log(error, "this is the get for you posts error");

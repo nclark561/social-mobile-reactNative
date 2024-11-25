@@ -1,6 +1,6 @@
 import { StyleSheet, Image, Pressable, Platform, Button, Dimensions } from "react-native";
 import { useFocusEffect } from "expo-router";
-import { useContext, useEffect, useCallback, useState, useRef } from "react";
+import { useContext, useEffect, useCallback, useState, useRef, useMemo } from "react";
 import { useLocalSearchParams } from "expo-router";
 import PostContext from "../../components/providers/PostContext";
 import { ThemedText } from "@/components/ThemedText";
@@ -43,6 +43,7 @@ export default function CommentPage() {
   const [profileImageUri, setProfileImageUri] = useState("");
   const local = useLocalSearchParams();
   const { myInfo } = useContext<any>(MyContext);
+  const [optimisticLike, setOptimisticLike] = useState(thisPost?.likes?.length);
   const [loading, setLoading] = useState(true);
   const [commentInput, setCommentInput] = useState("");
   const [commentVisible, setCommentVisible] = useState(false); // State for menu visibility
@@ -115,6 +116,8 @@ export default function CommentPage() {
   const likePost = () => setLiked((prev) => !prev);
 
   const addLike = async (userId: string, postId: string) => {
+    const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
+    setOptimisticLike(updatedLikesCount);
     try {
       const test = await fetch(`${getBaseUrl()}/comments/likes`, {
         method: "POST",
@@ -126,7 +129,7 @@ export default function CommentPage() {
           postId,
         }),
       });
-      await getForYouPosts();
+      await getPost();
     } catch (error) {
       console.log(error, "this is the add like error");
     }
@@ -189,13 +192,67 @@ export default function CommentPage() {
         },
       );
       const userData = await result.json();
-      console.log(userData, 'this is user data')
+      setOptimisticLike(userData?.comment[0].likes?.length)
       setThisPost(userData.comment[0]);
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the get user error");
     }
   };
+
+  const repost = async (userId: string, postId: string) => {
+    setLoading(true);
+    handleCloseRepost();
+    try {
+      const test = await fetch(`${getBaseUrl()}/reposts/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          comment_id: postId,
+        }),
+      });
+      // await getForYouPosts(myInfo?.id);      
+      await getPost()
+      // await getUserPosts(user);
+      setLoading(false);
+    } catch (error) {
+      console.log(error, "this is the repost error in post");
+      setLoading(false);
+    }
+  };
+
+  const undoRepost = async (userId: string, postId: string) => {
+    setLoading(true);
+    handleCloseRepost();
+    try {
+      await fetch(
+        `${getBaseUrl()}/reposts/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          comment_id: postId,
+        }),
+      });
+      await getPost()
+      // await getForYouPosts(myInfo?.id);
+      // await getAllForYouPosts();
+      // await getUserPosts(user);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  };
+
+  const repostedByMe = useMemo(() => {
+    return thisPost?.reposts?.some((e: any) => e.user_id === myInfo?.id) || false;
+  }, [thisPost?.reposts, myInfo?.id]);
 
   useFocusEffect(
     useCallback(() => {
@@ -208,8 +265,8 @@ export default function CommentPage() {
 
 
   const isLikedByUser = (likes: string[]): boolean => {
-    if (!myInfo?.id) return false;
-    return likes?.includes(myInfo?.id);
+    const liked = likes?.includes(myInfo?.id);
+    return liked;
   };
 
 
@@ -286,14 +343,14 @@ export default function CommentPage() {
             />
             <ThemedView style={styles.smallRow}>
               <Ionicons
-              onPress={() => {
-                addLike(myInfo?.id, thisPost?.id)
-              }}              
+                onPress={() => {
+                  addLike(myInfo?.id, thisPost?.id)
+                }}
                 size={15}
-                name={isLikedByUser(myInfo?.id) ? "heart" : "heart-outline"}
+                name={isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{thisPost?.likes.length}</ThemedText>
+              <ThemedText style={styles.smallNumber}>{optimisticLike}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -342,20 +399,37 @@ export default function CommentPage() {
           user={thisPost?.user}
         />) : <CommentPopup isComment myInfo={myInfo} addComment={addComment} setCommentInput={setCommentInput} handleCloseComment={handleCloseComment} commentVisible={commentVisible} commentInput={commentInput} post={thisPost} />}
         {width < 1000 ? (<CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
-          <ThemedView
-            style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
-          >
-            <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
-              <Pressable>
-                <Ionicons
-                  size={25}
-                  name="git-compare-outline"
-                  color={colorScheme === "dark" ? "white" : "black"}
-                ></Ionicons>
-                <ThemedText style={styles.optionText}>Repost</ThemedText>
-              </Pressable>
-            </ThemedView>
-          </ThemedView>
+          {!repostedByMe ? (
+            <Pressable
+              onPress={() => {
+                repost(myInfo?.id, thisPost?.id);
+              }}
+              style={[styles.shareOption, { marginTop: 10 }]}
+            >
+              <Ionicons
+                size={25}
+                name="git-compare-outline"
+                color={colorScheme === "dark" ? "white" : "black"}
+              ></Ionicons>
+              <ThemedText style={styles.optionText}>Repost</ThemedText>
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => {
+                undoRepost(myInfo?.id, thisPost?.id);
+              }}
+              style={[styles.shareOption, { marginTop: 10 }]}
+            >
+              <Ionicons
+                size={25}
+                name="git-compare"
+                color="red"
+              ></Ionicons>
+              <ThemedText style={[styles.optionText, { color: "red" }]}>
+                Undo Repost
+              </ThemedText>
+            </Pressable>
+          )}
         </CustomBottomSheet>) : <></>}
         {/* Delete Menu */}
         {width < 1000 ? (<CustomBottomSheet snapPercs={["15%"]} ref={deleteMenuRef}>
@@ -373,11 +447,12 @@ export default function CommentPage() {
           </ThemedView>
         </CustomBottomSheet>) : <DeletePopup handleCloseDeleteMenu={handleCloseDeleteMenu} postOwnerId={thisPost?.userId} post={thisPost} isComment deletePost={null} deleteComment={deletePost} deleteVisible={deleteVisible} myInfo={myInfo} />}
       </ThemedView>
-      {thisPost?.replies?.map((comment: any) => (
+      {thisPost?.replies?.map((reply: any) => (
         <Post
-          key={comment.id}
+          key={reply.id}
+          localId={thisPost?.id}
           isComment
-          post={comment}
+          post={reply}
           user={myInfo?.email}
           setLoading={setLoading}
         />

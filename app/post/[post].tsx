@@ -244,6 +244,7 @@ export default function PostPage() {
     }
   };
 
+
   return (
     <ThemedView style={styles.realRow}>
       {loading && (
@@ -429,6 +430,8 @@ export default function PostPage() {
           return (
             <Post
               key={comment.id}
+              getPost={getPost}
+              localId={local.post}
               isComment
               post={comment}
               user={myInfo?.email}

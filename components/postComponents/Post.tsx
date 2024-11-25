@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, SetStateAction } from "react";
+import React, { useContext, useState, useRef, SetStateAction, useEffect, useMemo } from "react";
 import {
   StyleSheet,
   Modal,
@@ -36,7 +36,7 @@ interface Post {
   profilePic: string;
   user_name: string;
   replies?: any;
-  postId?: string;
+  post_id?: string;
   userName: string;
   userId?: string;
   owner: any;
@@ -50,12 +50,16 @@ interface PostProps {
   post: Post;
   user?: string;
   setLoading: React.Dispatch<SetStateAction<boolean>>;
+  getPost?: (id: string) => Promise<void>;
+  localId: string
 }
 
 const { width } = Dimensions.get("window");
 
 export default function Post({
   post,
+  getPost,
+  localId,
   isComment,
   user,
   repostLength,
@@ -77,7 +81,9 @@ export default function Post({
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
-  const repostedByMe = post?.reposts?.filter((e: any) => e.user_id === myInfo?.id).length > 0;
+  const repostedByMe = useMemo(() => {
+    return post?.reposts?.some((e: any) => e.user_id === myInfo?.id) || false;
+  }, [post?.reposts, myInfo?.id]);
 
   const handleOpenShare = () => {
     if (Platform.OS === "web" && width > 1000) {
@@ -145,7 +151,12 @@ export default function Post({
     return likes?.includes(myInfo?.id);
   };
 
-  const [liked, setLiked] = useState(isLikedByUser(post?.likes));
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    setLiked(isLikedByUser(post?.likes));
+  }, [post?.likes, myInfo?.id]);
+  
 
   const addLike = async (userId: string, postId: string) => {
     setLiked((prevLiked) => !prevLiked);
@@ -229,6 +240,7 @@ export default function Post({
     userId: string,
     commentId?: string
   ) => {
+    
     try {
       const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
@@ -245,9 +257,10 @@ export default function Post({
       });
       const post = await response.json();
       handleCloseComment();
-      await getForYouPosts(myInfo?.id);
-      await getAllForYouPosts();
-      await getUserPosts(user);
+      // await getForYouPosts(myInfo?.id);
+      // await getAllForYouPosts();
+      // await getUserPosts(user);
+      getPost(localId)
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -275,8 +288,8 @@ export default function Post({
           ...(isComment ? { comment_id: postId } : { post_id: postId }),
         }),
       });
-      await getForYouPosts(myInfo?.id);
-      await getAllForYouPosts();
+      await getForYouPosts(myInfo?.id);      
+      getPost(localId)
       await getUserPosts(user);
       setLoading(false);
     } catch (error) {
@@ -300,6 +313,7 @@ export default function Post({
           ...(isComment ? { comment_id: postId } : { post_id: postId }),
         }),
       });
+      await getPost(localId)
       await getForYouPosts(myInfo?.id);
       await getAllForYouPosts();
       await getUserPosts(user);
@@ -323,6 +337,8 @@ export default function Post({
       return;
     router.push(`/${link}/${post.id}`);
   };
+
+  console.log(post, "not sure")
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -358,7 +374,7 @@ export default function Post({
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
-                {post?.comments?.length}
+                {post.comments ? post?.comments?.length : post?.replies?.length}                
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
@@ -503,11 +519,11 @@ export default function Post({
                 <Pressable
                   onPress={() => {
                     if (isComment) {
-                      if (!post.postId) return;
+                      // if (!post.postId) return;
                       addComment(
                         commentInput,
                         myInfo.username,
-                        post.postId,
+                        post.post_id || '',
                         myInfo.id,
                         post.id
                       );
