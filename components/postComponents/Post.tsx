@@ -156,7 +156,7 @@ export default function Post({
   useEffect(() => {
     setLiked(isLikedByUser(post?.likes));
   }, [post?.likes, myInfo?.id]);
-  
+
 
   const addLike = async (userId: string, postId: string) => {
     setLiked((prevLiked) => !prevLiked);
@@ -187,10 +187,13 @@ export default function Post({
   };
 
 
-  const deletePost = async (postId: string) => {
+  const deletePost = async (postId: string) => {    
     setLoading(true);
     try {
-      await fetch(`${getBaseUrl()}/posts/delete`, {
+      await fetch(
+        !isComment
+          ? `${getBaseUrl()}/posts/delete`
+          : `${getBaseUrl()}/comments/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -200,9 +203,9 @@ export default function Post({
         }),
       });
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
-      await getAllForYouPosts();
+      // await getAllForYouPosts();
       await getForYouPosts(myInfo?.id);
-      await getUserPosts(user);
+      await getUserPosts(myInfo.email, myInfo.id);
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the delete post error");
@@ -210,7 +213,7 @@ export default function Post({
     }
   };
 
-  const deleteComment = async (id: string) => {
+  const deleteComment = async (id: string) => {        
     setLoading(true);
     try {
       await fetch(`${getBaseUrl()}/comments/delete`, {
@@ -222,9 +225,9 @@ export default function Post({
           comment_id: id,
         }),
       });
-      deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
+      deleteMenuRef.current?.dismiss(); 
       await getForYouPosts(myInfo?.id);
-      await getAllForYouPosts();
+      // await getAllForYouPosts();
       await getUserPosts(user);
       setLoading(false);
     } catch (error) {
@@ -240,7 +243,7 @@ export default function Post({
     userId: string,
     commentId?: string
   ) => {
-    
+
     try {
       const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
@@ -257,9 +260,9 @@ export default function Post({
       });
       const post = await response.json();
       handleCloseComment();
-      // await getForYouPosts(myInfo?.id);
+      await getForYouPosts(myInfo?.id);
       // await getAllForYouPosts();
-      // await getUserPosts(user);
+      await getUserPosts(myInfo.email, myInfo.id);
       getPost(localId)
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -288,9 +291,9 @@ export default function Post({
           ...(isComment ? { comment_id: postId } : { post_id: postId }),
         }),
       });
-      await getForYouPosts(myInfo?.id);      
+      await getUserPosts(myInfo?.email, myInfo?.id);
+      await getForYouPosts(myInfo?.id);
       getPost(localId)
-      await getUserPosts(user);
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the repost error in post");
@@ -313,10 +316,10 @@ export default function Post({
           ...(isComment ? { comment_id: postId } : { post_id: postId }),
         }),
       });
-      await getPost(localId)
+      await getUserPosts(myInfo.email, myInfo.id);
       await getForYouPosts(myInfo?.id);
+      await getPost(localId)
       await getAllForYouPosts();
-      await getUserPosts(user);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -374,7 +377,7 @@ export default function Post({
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
-                {post.comments ? post?.comments?.length : post?.replies?.length}                
+                {post.comments ? post?.comments?.length : post?.replies?.length}
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
@@ -451,6 +454,7 @@ export default function Post({
                   } else {
                     deletePost(post.id);
                   }
+                  handleCloseDeleteMenu()
                 }}
               >
                 <Text style={styles.deleteButtonText}>Delete Post</Text>

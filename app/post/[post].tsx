@@ -7,6 +7,7 @@ import {
   Platform,
   Dimensions,
   Linking,
+  Animated,
 } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useContext, useCallback } from "react";
@@ -64,6 +65,7 @@ export default function PostPage() {
   const [deleteVisible, setDeleteVisible] = useState(false)
   const repostedByMe = thisPost?.reposts?.filter((e: any) => e.user_id === myInfo?.id).length > 0;
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
+  const { height } = Dimensions.get("window");
 
   const handleOpenShare = () => {
     if (Platform.OS === 'web' && width > 1000) {
@@ -426,21 +428,26 @@ export default function PostPage() {
             </ThemedView>
           </CustomBottomSheet>) : <DeletePopup post={thisPost} deleteComment={null} deletePost={deletePost} deleteVisible={deleteVisible} postOwnerId={thisPost?.owner?.id} myInfo={myInfo} handleCloseDeleteMenu={handleCloseDeleteMenu} />}
         </ThemedView>
-        {thisPost?.comments?.map((comment: any) => {
-          return (
-            <Post
-              key={comment.id}
-              getPost={getPost}
-              localId={local.post}
-              isComment
-              post={comment}
-              user={myInfo?.email}
-              setLoading={setLoading}
-            />
-          );
-        })}
+        <Animated.ScrollView
+          style={{ width: "100%", flex: 1, height: height }}
+          showsVerticalScrollIndicator={false}
+        >
+          {thisPost?.comments?.map((comment: any) => {
+            return (
+              <Post
+                key={comment.id}
+                getPost={getPost}
+                localId={local.post}
+                isComment
+                post={comment}
+                user={myInfo?.email}
+                setLoading={setLoading}
+              />
+            );
+          })}
+        </Animated.ScrollView>
       </ThemedView>
-    </ThemedView>
+    </ThemedView >
   );
 }
 
@@ -590,6 +597,7 @@ const styles = StyleSheet.create({
   realRow: {
     display: "flex",
     flexDirection: "row",
+    flex: 1,
     height: "100%",
     padding: 10,
   },

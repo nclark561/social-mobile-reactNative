@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Pressable, Platform, Button, Dimensions } from "react-native";
+import { StyleSheet, Image, Pressable, Platform, Button, Dimensions, Animated } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useContext, useEffect, useCallback, useState, useRef, useMemo } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -50,6 +50,7 @@ export default function CommentPage() {
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false)
+  const { height } = Dimensions.get("window");
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const handleOpenShare = () => {
@@ -447,16 +448,21 @@ export default function CommentPage() {
           </ThemedView>
         </CustomBottomSheet>) : <DeletePopup handleCloseDeleteMenu={handleCloseDeleteMenu} postOwnerId={thisPost?.userId} post={thisPost} isComment deletePost={null} deleteComment={deletePost} deleteVisible={deleteVisible} myInfo={myInfo} />}
       </ThemedView>
-      {thisPost?.replies?.map((reply: any) => (
-        <Post
-          key={reply.id}
-          localId={thisPost?.id}
-          isComment
-          post={reply}
-          user={myInfo?.email}
-          setLoading={setLoading}
-        />
-      ))}
+      <Animated.ScrollView
+        style={{ width: "100%", flex: 1, height: height }}
+        showsVerticalScrollIndicator={false}
+      >
+        {thisPost?.replies?.map((reply: any) => (
+          <Post
+            key={reply.id}
+            localId={thisPost?.id}
+            isComment
+            post={reply}
+            user={myInfo?.email}
+            setLoading={setLoading}
+          />
+        ))}
+      </Animated.ScrollView>
     </ThemedView>
   );
 }

@@ -62,7 +62,7 @@ export default function TabTwoScreen() {
     }
   }, [myInfo]);
 
-  
+
 
   const renderContent = () => {
     switch (selectedOption) {
@@ -78,6 +78,7 @@ export default function TabTwoScreen() {
                   console.log(post, 'testttttttt`')
                   return (
                     <Post
+                      localId={post.id}
                       key={post.id}
                       post={post}
                       user={myInfo?.email}
@@ -97,7 +98,7 @@ export default function TabTwoScreen() {
             <ThemedView>
               {Array.isArray(posts.reposts) &&
                 posts?.reposts?.map((post: any) => {
-                  
+
                   return (
                     <Post
                       repostLength={posts?.reposts.length}
@@ -147,7 +148,7 @@ export default function TabTwoScreen() {
     );
   };
 
-  
+
 
   return (
     <ThemedView
@@ -157,7 +158,7 @@ export default function TabTwoScreen() {
         styles.pageContainer,
       ]}
     >
-      <ThemedView style={[{flex: 1 }, styles.ninety]}>
+      <ThemedView style={[{ flex: 1 }, styles.ninety]}>
         {loading && (
           <ThemedView
             style={[styles.spinnerContainer, { backgroundColor: fadedTextColor }]}
