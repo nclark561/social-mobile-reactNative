@@ -151,13 +151,14 @@ export default function CommentPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          comment,
-          userName,
-          postId,
-          userId,
-          commentId,
+          content: comment,
+          user_name: userName,
+          post_id: postId,
+          user_id: userId,
+          parent_id: commentId,
         }),
       });
+      await getPost()
     } catch (error) {
       console.error("Error adding comment:", error);
     }

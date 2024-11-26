@@ -182,20 +182,21 @@ export default function PostPage() {
   ) => {
     handleCloseComment()
     try {
-      const response = await fetch(`${getBaseUrl()}`, {
+      const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          comment,
-          userName,
-          postId,
-          userId,
-          commentId,
+          content: comment,
+          user_name: userName,
+          post_id: postId,
+          user_id: userId,
+          parent_id: commentId,
         }),
       });
       const post = await response.json();
+      await getPost(local.post);
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -245,6 +246,53 @@ export default function PostPage() {
       return newProfileImageUri;
     }
   };
+
+
+  const repost = async (userId: string, postId: string) => {
+    setLoading(true);
+    handleCloseRepost();
+    try {
+      const test = await fetch(`${getBaseUrl()}/reposts/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          post_id: postId ,
+        }),
+      });
+      await getPost(local.post);
+      setLoading(false);
+    } catch (error) {
+      console.log(error, "this is the repost error in post");
+      setLoading(false);
+    }
+  };
+
+  const undoRepost = async (userId: string, postId: string) => {
+    setLoading(true);
+    handleCloseRepost();
+    try {
+      await fetch(
+        `${getBaseUrl()}/reposts/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          post_id: postId,
+        }),
+      });
+      await getPost(local.post);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  };
+
 
 
   return (
@@ -387,29 +435,37 @@ export default function PostPage() {
             user={thisPost?.owner}
           />) : <CommentPopup myInfo={myInfo} setCommentInput={setCommentInput} commentInput={commentInput} handleCloseComment={handleCloseComment} addComment={addComment} commentVisible={commentVisible} post={thisPost} />}
           {width < 1000 ? (<CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
-            <ThemedView
-              style={[
-                styles.shareContainer,
-                { marginBottom: 30, height: "75%" },
-              ]}
-            >
-              <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+            {!repostedByMe ? (
+              <Pressable
+                onPress={() => {
+                  repost(myInfo?.id, local.id);
+                }}
+                style={[styles.shareOption, { marginTop: 10 }]}
+              >
                 <Ionicons
                   size={25}
                   name="git-compare-outline"
                   color={colorScheme === "dark" ? "white" : "black"}
                 ></Ionicons>
                 <ThemedText style={styles.optionText}>Repost</ThemedText>
-              </ThemedView>
-              <ThemedView style={[styles.shareOption, { marginTop: 10 }]}>
+              </Pressable>
+            ) : (
+              <Pressable
+                onPress={() => {
+                  undoRepost(myInfo?.id, local.id);
+                }}
+                style={[styles.shareOption, { marginTop: 10 }]}
+              >
                 <Ionicons
                   size={25}
-                  name="pencil-outline"
-                  color={colorScheme === "dark" ? "white" : "black"}
+                  name="git-compare"
+                  color="red"
                 ></Ionicons>
-                <ThemedText style={styles.optionText}>Quote</ThemedText>
-              </ThemedView>
-            </ThemedView>
+                <ThemedText style={[styles.optionText, { color: "red" }]}>
+                  Undo Repost
+                </ThemedText>
+              </Pressable>
+            )}
           </CustomBottomSheet>) : <></>}
 
           {/* Delete Menu */}
