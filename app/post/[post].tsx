@@ -293,7 +293,7 @@ export default function PostPage() {
     }
   };
 
-
+console.log(local, 'thi si s local')
 
   return (
     <ThemedView style={styles.realRow}>
@@ -438,7 +438,7 @@ export default function PostPage() {
             {!repostedByMe ? (
               <Pressable
                 onPress={() => {
-                  repost(myInfo?.id, local.id);
+                  repost(myInfo?.id, local?.post);
                 }}
                 style={[styles.shareOption, { marginTop: 10 }]}
               >
@@ -452,7 +452,7 @@ export default function PostPage() {
             ) : (
               <Pressable
                 onPress={() => {
-                  undoRepost(myInfo?.id, local.id);
+                  undoRepost(myInfo?.id, local?.post);
                 }}
                 style={[styles.shareOption, { marginTop: 10 }]}
               >

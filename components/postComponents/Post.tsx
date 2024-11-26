@@ -187,7 +187,7 @@ export default function Post({
   };
 
 
-  const deletePost = async (postId: string) => {    
+  const deletePost = async (postId: string) => {
     setLoading(true);
     try {
       await fetch(
@@ -213,7 +213,7 @@ export default function Post({
     }
   };
 
-  const deleteComment = async (id: string) => {        
+  const deleteComment = async (id: string) => {
     setLoading(true);
     try {
       await fetch(`${getBaseUrl()}/comments/delete`, {
@@ -225,7 +225,7 @@ export default function Post({
           comment_id: id,
         }),
       });
-      deleteMenuRef.current?.dismiss(); 
+      deleteMenuRef.current?.dismiss();
       await getForYouPosts(myInfo?.id);
       // await getAllForYouPosts();
       await getUserPosts(user);
@@ -255,7 +255,7 @@ export default function Post({
           user_name: userName,
           post_id: postId,
           user_id: userId,
-          parent_id: commentId,
+          parent_id: isComment? postId : null,
         }),
       });
       const post = await response.json();
@@ -522,27 +522,17 @@ export default function Post({
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    if (isComment) {
-                      // if (!post.postId) return;
-                      addComment(
-                        commentInput,
-                        myInfo.username,
-                        post.post_id || '',
-                        myInfo.id,
-                        post.id
-                      );
-                    } else {
-                      addComment(
-                        commentInput,
-                        myInfo.username,
-                        post.id,
-                        myInfo.id
-                      );
-                    }
+                    addComment(
+                      commentInput,
+                      myInfo.username,
+                      post.id || '',
+                      myInfo.id,
+                      post.id
+                    );
                   }}
                   style={styles.postButton}
                 >
-                  <Text style={styles.buttonText}>Post</Text>
+                  <Text style={styles.buttonText}>Post from homepage</Text>
                 </Pressable>
               </ThemedView>
               <ThemedView style={styles.commentOP}>

@@ -21,6 +21,7 @@ import DesktopRouting from "@/components/desktopComponents/desktopRouting";
 import StackLogos from "@/components/desktopComponents/stackLogos";
 import LinkedinProfiles from "@/components/desktopComponents/linkedinProfiles";
 import { inject } from "@vercel/analytics"
+import { NavigationContainer } from "@react-navigation/native";
 
 
 SplashScreen.preventAutoHideAsync();
@@ -69,44 +70,45 @@ export default function RootLayout() {
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-          <MyProvider>
-
-            <MessageProvider>
-              <PostProvider>
-                <SafeAreaView style={{ flex: 1, backgroundColor }}>
-                  {windowWidth > 1000 ? (
-                    <ThemedView style={styles.row}>
-                      <ThemedView style={[styles.content, { width: contentWidth }]}>
-                        <ThemedView style={styles.column}>
-                          <DesktopRouting />
-                        </ThemedView>
-                        <Stack
-                          screenOptions={{
-                            headerShown: false,
-                            animation: "slide_from_right",
-                          }}
-                        >
-                          <Stack.Screen name="(drawer)" />
-                        </Stack>
-                        <ThemedView style={styles.none}>
-                          <LinkedinProfiles />
+          
+            <MyProvider>
+              <MessageProvider>
+                <PostProvider>
+                  <SafeAreaView style={{ flex: 1, backgroundColor }}>
+                    {windowWidth > 1000 ? (
+                      <ThemedView style={styles.row}>
+                        <ThemedView style={[styles.content, { width: contentWidth }]}>
+                          <ThemedView style={styles.column}>
+                            <DesktopRouting />
+                          </ThemedView>
+                          <Stack
+                            screenOptions={{
+                              headerShown: false,
+                              animation: "slide_from_right",
+                            }}
+                          >
+                            <Stack.Screen name="(drawer)" />
+                          </Stack>
+                          <ThemedView style={styles.none}>
+                            <LinkedinProfiles />
+                          </ThemedView>
                         </ThemedView>
                       </ThemedView>
-                    </ThemedView>
-                  ) : (
-                    <Stack
-                      screenOptions={{
-                        headerShown: false,
-                        animation: "slide_from_right",
-                      }}
-                    >
-                      <Stack.Screen name="(drawer)" />
-                    </Stack>
-                  )}
-                </SafeAreaView>
-              </PostProvider>
-            </MessageProvider>
-          </MyProvider>
+                    ) : (
+                      <Stack
+                        screenOptions={{
+                          headerShown: false,
+                          animation: "slide_from_right",
+                        }}
+                      >
+                        <Stack.Screen name="(drawer)" />
+                      </Stack>
+                    )}
+                  </SafeAreaView>
+                </PostProvider>
+              </MessageProvider>
+            </MyProvider>
+          
         </ThemeProvider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

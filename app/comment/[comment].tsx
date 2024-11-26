@@ -31,7 +31,7 @@ interface Post {
 
 const { width } = Dimensions.get('window')
 
-export default function CommentPage() {
+export default function CommentPage({navigation}) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
@@ -194,7 +194,7 @@ export default function CommentPage() {
         },
       );
       const userData = await result.json();
-      setOptimisticLike(userData?.comment[0].likes?.length)
+      setOptimisticLike(userData?.comment[0].likes?.length)      
       setThisPost(userData.comment[0]);
       setLoading(false);
     } catch (error) {
@@ -277,9 +277,10 @@ export default function CommentPage() {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}?${Date.now()}`;
       setProfileImageUri(newProfileImageUri);
     }
-  }, [thisPost]);
+  }, [thisPost]);  
 
-  console.log(thisPost, "this is this post");
+  
+
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -291,14 +292,16 @@ export default function CommentPage() {
         </ThemedView>
       )}
       <ThemedView style={styles.icon}>
-        <Pressable>
-          <Link href="/(tabs)/">
+        <Pressable onPress={() => {
+          navigation.goBack()
+        }}>
+          {/* <Link href="/(tabs)/"> */}
             <Ionicons
               size={20}
               name="arrow-back-outline"
               color={colorScheme === "dark" ? "white" : "black"}
             />
-          </Link>
+          {/* </Link> */}
         </Pressable>
       </ThemedView>
       <ThemedView
