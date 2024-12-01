@@ -47,6 +47,8 @@ const CommentPopup = ({
   const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash;
   const blurhash2 = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
+  console.log(post, 'popup post')
+
   return (
     <Modal transparent visible={commentVisible} animationType="fade">
       <ThemedView style={styles.modal}>
@@ -62,18 +64,14 @@ const CommentPopup = ({
             </Pressable>
             <Pressable
               onPress={() => {
-                if (isComment) {
-                  if (!post.postId) return;
                   addComment(
                     commentInput,
                     myInfo?.username,
-                    post?.postId,
+                    post?.post_id,
                     myInfo?.id,
                     post?.id
                   );
-                } else {
-                  addComment(commentInput, myInfo.username, post.id, myInfo.id);
-                }
+                
               }}
               style={styles.postButton}
             >

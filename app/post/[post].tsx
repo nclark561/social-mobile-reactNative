@@ -10,7 +10,7 @@ import {
   Animated,
 } from "react-native";
 import { useFocusEffect } from "expo-router";
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
 import PostContext from "../../components/providers/PostContext";
 import { ThemedText } from "@/components/ThemedText";
@@ -48,6 +48,7 @@ export default function PostPage() {
   const { post } = route.params as { post: Post };
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
+  const [postComments, setPostComments] = useState<any>();
   const [commentInput, setCommentInput] = useState("");
   const { getForYouPosts, getBaseUrl } = useContext<any>(PostContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
@@ -128,6 +129,10 @@ export default function PostPage() {
     setLiked((prev) => !prev);
   };
 
+  useEffect(() => {
+    setOptimisticLike(thisPost?.likes?.length)
+  }, [thisPost])
+
   const addLike = async (userId: string, postId: string, comment: boolean) => {
     setLiked((prevLiked) => !prevLiked);
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
@@ -192,7 +197,7 @@ export default function PostPage() {
           user_name: userName,
           post_id: postId,
           user_id: userId,
-          parent_id: commentId,
+          // parent_id: commentId,
         }),
       });
       const post = await response.json();
@@ -211,7 +216,8 @@ export default function PostPage() {
         },
       });
       const userData = await result.json();
-      setThisPost(userData.post);
+      setThisPost(userData.post.post);
+      setPostComments(userData.post.top_level_comments);
       setOptimisticLike(userData?.post?.likes?.length)
       setLoading(false);
     } catch (error) {
@@ -293,7 +299,7 @@ export default function PostPage() {
     }
   };
 
-console.log(local, 'thi si s local')
+
 
   return (
     <ThemedView style={styles.realRow}>
@@ -306,14 +312,12 @@ console.log(local, 'thi si s local')
       )}
       <ThemedView style={[styles.content, { flex: 1 }]}>
         <ThemedView style={styles.icon}>
-          <Pressable>
-            <Link href="/(tabs)/">
+          <Pressable onPress={() => router.back()}>            
               <Ionicons
                 size={20}
                 name="arrow-back-outline"
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-            </Link>
           </Pressable>
         </ThemedView>
         <ThemedView
@@ -349,7 +353,7 @@ console.log(local, 'thi si s local')
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
                 <ThemedText style={styles.smallNumber}>
-                  {thisPost?.comments?.length}
+                  {postComments?.length}
                 </ThemedText>
               </ThemedView>
               <ThemedView style={styles.smallRow}>
@@ -488,7 +492,7 @@ console.log(local, 'thi si s local')
           style={{ width: "100%", flex: 1, height: height }}
           showsVerticalScrollIndicator={false}
         >
-          {thisPost?.comments?.map((comment: any) => {
+          {postComments?.map((comment: any) => {
             return (
               <Post
                 key={comment.id}

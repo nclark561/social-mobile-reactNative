@@ -243,7 +243,7 @@ export default function Post({
     userId: string,
     commentId?: string
   ) => {
-
+debugger
     try {
       const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
@@ -255,7 +255,7 @@ export default function Post({
           user_name: userName,
           post_id: postId,
           user_id: userId,
-          parent_id: isComment? postId : null,
+          ...(isComment && {parent_id: commentId}),
         }),
       });
       const post = await response.json();

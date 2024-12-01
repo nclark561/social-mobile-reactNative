@@ -19,6 +19,7 @@ import CommentPopup from "@/components/postComponents/CommentPopup";
 import SharePopup from "@/components/postComponents/SharePopup";
 import RepostPopup from "@/components/postComponents/RepostPopup";
 
+
 interface Post {
   id: string;
   content: string;
@@ -35,6 +36,7 @@ export default function CommentPage({navigation}) {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
+  const [postComments, setPostComments] = useState<any>();
   const { getForYouPosts, getBaseUrl } = useContext<any>(PostContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
@@ -194,8 +196,10 @@ export default function CommentPage({navigation}) {
         },
       );
       const userData = await result.json();
-      setOptimisticLike(userData?.comment[0].likes?.length)      
-      setThisPost(userData.comment[0]);
+      console.log(userData, 'userrr data')
+      setOptimisticLike(userData?.comment.parent?.likes.length)      
+      setThisPost(userData.comment.parent);
+      setPostComments(userData.comment.replies);
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the get user error");
@@ -293,7 +297,7 @@ export default function CommentPage({navigation}) {
       )}
       <ThemedView style={styles.icon}>
         <Pressable onPress={() => {
-          navigation.goBack()
+          router.back()
         }}>
           {/* <Link href="/(tabs)/"> */}
             <Ionicons
@@ -337,7 +341,7 @@ export default function CommentPage({navigation}) {
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
-                {thisPost?.replies?.length}
+                {postComments?.length}
               </ThemedText>
             </ThemedView>
             <Ionicons
@@ -456,8 +460,9 @@ export default function CommentPage({navigation}) {
         style={{ width: "100%", flex: 1, height: height }}
         showsVerticalScrollIndicator={false}
       >
-        {thisPost?.replies?.map((reply: any) => (
+        {postComments?.map((reply: any) => (
           <Post
+            getPost={getPost}
             key={reply.id}
             localId={thisPost?.id}
             isComment
