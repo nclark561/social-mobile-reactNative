@@ -47,7 +47,7 @@ const CommentPopup = ({
   const blurhash = isComment ? post?.user?.blurhash : post?.owner?.blurhash;
   const blurhash2 = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
-  console.log(post, 'popup post')
+
 
   return (
     <Modal transparent visible={commentVisible} animationType="fade">

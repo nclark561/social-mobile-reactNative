@@ -173,8 +173,8 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     color?: string,
   ) => {
     try {
+      
       const bodyData: any = { email, links, location, bio, color };
-
       const response = await fetch(`${getBaseUrl()}/users/update`, {
         method: "POST",
         headers: {

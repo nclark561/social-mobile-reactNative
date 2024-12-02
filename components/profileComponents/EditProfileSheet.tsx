@@ -63,51 +63,51 @@ const EditProfileSheet = ({
 
   async function uploadProfileImage(imageUri: string) {
     try {
-      // Fetch the image from the URI
       const response = await fetch(imageUri);
       if (!response.ok) {
         throw new Error("Failed to fetch the image");
       }
+  
       const formData = new FormData();
-
+  
       if (Platform.OS === "web") {
-        const response = await fetch(imageUri);
         const blob = await response.blob();
-        formData.append("image", blob, myInfo.id);
+        formData.append("image", blob, `${myInfo.id}`); // Append image for web
+        console.log("Appended image (web):", blob);
       } else {
         formData.append("image", {
-          uri: imageUri, // The local URI of the image
-          type: profileImage.mimeType,
-          name: `${myInfo.id}`,
-        } as any);
+          uri: imageUri,
+          type: profileImage.mimeType || "image/png",
+          name: `${myInfo.id}.png`,
+        } as any); // Append image for mobile
+        console.log("Appended image (mobile):", imageUri);
       }
-
-      // Make the POST request with fetch
-      const uploadResponse = await fetch(
-        `${getBaseUrl()}/api/supabase-s3?id=${myInfo.id}`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
+  
+      formData.append("id", myInfo.id); // Append id
+      console.log("Appended id:", myInfo.id);
+  
+      // Log final FormData content
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}:`, pair[1]);
+      }
+  
+      const uploadResponse = await fetch(`${getBaseUrl()}/supabase/upload`, {
+        method: "POST",
+        body: formData,
+      });
+  
       if (!uploadResponse.ok) {
         const errorText = await uploadResponse.text();
         throw new Error(`Upload failed: ${errorText}`);
       }
+  
       const result = await uploadResponse.json();
       console.log("Upload successful:", result);
-      setProfileImageUri(
-        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}?${Date.now()}`,
-      );
-      setProfileImage(null);
     } catch (error) {
-      console.error(
-        "Error uploading image:",
-        error instanceof Error ? error.message : error,
-      );
+      console.error("Error uploading image:", error);
     }
   }
-
+  
   const handleSave = async () => {
     if (profileImage?.uri) await uploadProfileImage(profileImage.uri);
     updateUser(myInfo.email, links, location, bio, selectedColor);

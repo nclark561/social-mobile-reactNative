@@ -57,7 +57,7 @@ export default function TabTwoScreen() {
   useEffect(() => {
     if (myInfo?.id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${myInfo.id}?${Date.now()}`;
-      console.log(newProfileImageUri);
+      // console.log(newProfileImageUri);
       setProfileImageUri(newProfileImageUri);
     }
   }, [myInfo]);
@@ -75,7 +75,7 @@ export default function TabTwoScreen() {
             <ThemedView>
               {Array.isArray(posts?.Posts?.posts) &&
                 posts?.Posts.posts?.map((post: any) => {
-                  console.log(post, 'testttttttt`')
+        
                   return (
                     <Post
                       localId={post.id}
@@ -221,7 +221,13 @@ export default function TabTwoScreen() {
                   >
                     {myInfo.links}
                   </ThemedText>
+                  
                 )}
+                <ThemedText
+                    style={styles.bio}
+                  >
+                    {myInfo?.location}
+                  </ThemedText>
               </ThemedView>
             ) : (
               <ThemedText style={styles.bio}>

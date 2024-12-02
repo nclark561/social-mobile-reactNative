@@ -341,7 +341,7 @@ debugger
     router.push(`/${link}/${post.id}`);
   };
 
-  console.log(post, "not sure")
+
 
   return (
     <Pressable onPress={handlePostPress}>
