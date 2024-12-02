@@ -78,6 +78,7 @@ export default function Post({
   const { myInfo, loggedIn } = useContext<any>(MyContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
   const commentModalRef = useRef<BottomSheetModal>(null);
+  const [profileImageUri, setProfileImageUri] = useState(``);
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
@@ -269,6 +270,16 @@ debugger
     }
   };
 
+
+  useEffect(() => {
+    if (myInfo?.id) {
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${post?.owner?.id || post?.userId || user}?${Date.now()}`;
+      // console.log(newProfileImageUri);
+      setProfileImageUri(newProfileImageUri);
+    }
+  }, [post]);
+
+
   const profileImage = (id: string) => {
     if (id) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL
@@ -342,7 +353,7 @@ debugger
   };
 
 
-
+console.log(post, 'this is post')
   return (
     <Pressable onPress={handlePostPress}>
       <ThemedView
@@ -355,7 +366,7 @@ debugger
       >
         <ThemedView style={styles.flex}>
           <ProfileImage
-            profileUri={profileImage(post?.owner?.id || post?.userId || user)}
+            profileUri={profileImageUri}
             blurhash={blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe"}
           />
         </ThemedView>
