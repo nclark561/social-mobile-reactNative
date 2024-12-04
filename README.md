@@ -8,18 +8,18 @@ Twitter Dupe is a full-stack social media application that mimics core features 
 ## Features
 
 ### Frontend
-- **Built with Expo (React Native):** Ensures compatibility across iOS, Android, and web.
+- **Built with Expo (React Native):** Ensures compatibility across iOS, and web.
 - **Interactive Feed:** Users can view and scroll through a timeline of posts.
 - **Tweet Management:** Users can create, edit, delete, and interact with tweets.
 - **Comment System:** Supports nested comments with a visually intuitive design.
 - **Authentication:** Login and user sessions integrated with the backend.
 - **Responsive Design:** Optimized for different screen sizes and devices.
+- **Real-Time Messaging :** Using WebSockets for instant messages.
 
 ### Backend
 - **Powered by Python and FastAPI:** Provides a robust and scalable RESTful API.
 - **PostgreSQL Database:** Manages user data, tweets, likes, and comments.
 - **Authentication and Authorization:** User authentication with token-based security.
-- **Real-Time Notifications (Optional):** Using WebSockets for instant updates.
 - **Scalable API Design:** API endpoints designed for high traffic.
 
 ---
@@ -50,8 +50,8 @@ Twitter Dupe is a full-stack social media application that mimics core features 
 ### Frontend Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/twitter-dupe-frontend.git
-   cd twitter-dupe-frontend
+   git clone https://github.com/nclark561/social-mobile-reactNative.git
+   cd social-mobile-reactNative
    ```
 
 2. Install dependencies:
@@ -67,8 +67,8 @@ Twitter Dupe is a full-stack social media application that mimics core features 
 ### Backend Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/twitter-dupe-backend.git
-   cd twitter-dupe-backend
+   git clone https://github.com/kaleckh/FastAPI-Python_Server.git
+   cd FastAPI-Python_Server
    ```
 
 2. Set up a virtual environment:
@@ -106,49 +106,26 @@ Twitter Dupe is a full-stack social media application that mimics core features 
 
 ### Frontend Deployment
 - Use Expo to build and deploy the app:
-  ```bash
-  expo build:android
+  ```bash  
   expo build:ios
   ```
 - Host the web version using Vercel or Netlify.
 
-### Backend Deployment
-- Use Docker for containerized deployment or host directly on platforms like AWS, DigitalOcean, or Render.
-- Example Docker setup:
-  ```dockerfile
-  FROM python:3.9-slim
-
-  WORKDIR /app
-
-  COPY . /app
-
-  RUN pip install -r requirements.txt
-
-  CMD ["uvicorn", "app:main", "--host", "0.0.0.0", "--port", "8000"]
-  ```
-
----
 
 ## API Endpoints
 
 ### Authentication
-- `POST /auth/register`: Register a new user.
-- `POST /auth/login`: Login and receive a token.
+- `POST /users/create`: Register a new user.
 
-### Tweets
+<!-- ### Tweets
 - `GET /tweets`: Get all tweets.
 - `POST /tweets`: Create a new tweet.
 - `DELETE /tweets/{id}`: Delete a tweet by ID.
 
 ### Comments
 - `GET /tweets/{id}/comments`: Get comments for a tweet.
-- `POST /tweets/{id}/comments`: Add a comment to a tweet.
+- `POST /tweets/{id}/comments`: Add a comment to a tweet. -->
 
-### Likes
-- `POST /tweets/{id}/like`: Like a tweet.
-- `POST /tweets/{id}/unlike`: Unlike a tweet.
-
----
 
 ## Future Improvements
 - Add support for image and video uploads.
@@ -156,21 +133,10 @@ Twitter Dupe is a full-stack social media application that mimics core features 
 - Real-time updates for tweets, likes, and comments using WebSockets.
 - Push notifications for mobile users.
 
----
-
-## Contributing
-Feel free to fork the repository and submit a pull request. For major changes, please open an issue first to discuss the proposed changes.
-
----
-
-## License
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
 
 ## Contact
 For any questions or inquiries, reach out to:
-- **Email:** your.email@example.com
-- **GitHub:** [yourusername](https://github.com/yourusername)
-- **LinkedIn:** [Your Name](https://linkedin.com/in/yourprofile)
+- **Email:** kaleckh@gmail.com
+- **GitHub:** [kaleckh](https://github.com/kaleckh)
+- **LinkedIn:** [Kaleck Hamm](https://linkedin.com/in/kaleck-hamm)
 
