@@ -244,7 +244,7 @@ export default function Post({
     userId: string,
     commentId?: string
   ) => {
-debugger
+
     try {
       const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
@@ -533,6 +533,7 @@ console.log(post, 'this is post')
                 </Pressable>
                 <Pressable
                   onPress={() => {
+                    debugger
                     addComment(
                       commentInput,
                       myInfo.username,

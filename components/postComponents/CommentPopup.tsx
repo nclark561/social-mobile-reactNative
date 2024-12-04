@@ -64,14 +64,15 @@ const CommentPopup = ({
             </Pressable>
             <Pressable
               onPress={() => {
-                  addComment(
-                    commentInput,
-                    myInfo?.username,
-                    post?.post_id,
-                    myInfo?.id,
-                    post?.id
-                  );
                 
+                addComment(
+                  commentInput,
+                  myInfo?.username,
+                  !isComment ? post?.id : post.post_id,
+                  myInfo?.id,
+                  post?.id
+                );
+
               }}
               style={styles.postButton}
             >
@@ -171,11 +172,11 @@ const styles = StyleSheet.create({
   },
   commentScroll: {
     maxWidth: "80%",
-    paddingRight: 10,    
+    paddingRight: 10,
   },
   popup: {
     flexDirection: "column",
-    width: 800,    
+    width: 800,
     padding: 40,
     borderRadius: 25,
   },
