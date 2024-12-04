@@ -137,6 +137,6 @@ Twitter Dupe is a full-stack social media application that mimics core features 
 ## Contact
 For any questions or inquiries, reach out to:
 - **Email:** kaleckh@gmail.com
-- **GitHub:** [kaleckh](https://github.com/kaleckh)
-- **LinkedIn:** [Kaleck Hamm](https://linkedin.com/in/kaleck-hamm)
+- **GitHub:** [https://github.com/kaleckh]
+- **LinkedIn:** [https://linkedin.com/in/kaleck-hamm]
 
