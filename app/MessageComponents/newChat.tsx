@@ -41,8 +41,7 @@ const Chat: React.FC = () => {
   const fadedColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const color = colorScheme === "dark" ? "white" : "black";
 
-  const handlePickUser = (user: User) => {
-    console.log("hitting pick user");
+  const handlePickUser = (user: User) => {    
     setRecipient(user);
     setRecipientSearch(user.username);
     setToggleList(false);
@@ -89,10 +88,9 @@ const Chat: React.FC = () => {
         `${getBaseUrl()}/users/userSearch?search=${recipientSearch}`,
       );
       const users = await result.json();
-      console.log(users);
       setSearchResults(users.user);
     } catch (err) {
-      console.log("oops");
+      console.log(err, "oops");
     }
   };
 

@@ -89,8 +89,7 @@ const CurrentChat: React.FC = () => {
           { event: "message" },
           ({ payload }: { payload: { message: Message } }) => {
             payload.message.date = new Date();
-            payload.message.status = "Delivered";
-            console.log(messages?.messages.length, "messages length");
+            payload.message.status = "Delivered";            
             setMessages((prev) => {
               if (prev)
                 return {
@@ -146,31 +145,11 @@ const CurrentChat: React.FC = () => {
         },
       );
       const data = await response.json();
-
-      setMessages(data);
-      console.log(messages?.messages[0].user);
+      setMessages(data);      
     } catch (error) {
       console.error("Failed to fetch messages", error);
     }
   };
-
-  // const getConvoDetails = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `${getBaseUrl()}/api/getSingleConvo?id=${local.chatId}`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     setInfo(data);
-  //   } catch (error) {
-  //     console.error("Failed to fetch conversation details", error);
-  //   }
-  // };
 
   const onSend = () => {
     if (!message.trim()) return;

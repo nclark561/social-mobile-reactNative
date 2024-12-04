@@ -273,8 +273,7 @@ export default function Post({
 
   useEffect(() => {
     if (myInfo?.id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${post?.owner?.id || post?.userId || user}?${Date.now()}`;
-      // console.log(newProfileImageUri);
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${post?.owner?.id || post?.userId || user}?${Date.now()}`;      
       setProfileImageUri(newProfileImageUri);
     }
   }, [post]);
@@ -353,7 +352,6 @@ export default function Post({
   };
 
 
-console.log(post, 'this is post')
   return (
     <Pressable onPress={handlePostPress}>
       <ThemedView

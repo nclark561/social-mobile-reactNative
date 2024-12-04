@@ -33,8 +33,7 @@ export default function SignIn({
 
 
 
-  const handleLogin = async (email: string, password: string) => {        
-    console.log('handleLogin triggered with email:', email);
+  const handleLogin = async (email: string, password: string) => {            
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.toLowerCase(),
@@ -60,11 +59,9 @@ export default function SignIn({
         setForYouPosts([]);
         await getUser();
   
-        if (Platform.OS === "web") {
-          console.log('Reloading web page...');
+        if (Platform.OS === "web") {          
           // location.reload();
-        } else {
-          console.log('Navigating to tabs screen...');
+        } else {          
           router.push("/(drawer)/(tabs)/");
         }
       }

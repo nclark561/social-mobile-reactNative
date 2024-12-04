@@ -195,8 +195,7 @@ export default function CommentPage({navigation}) {
           },
         },
       );
-      const userData = await result.json();
-      console.log(userData, 'userrr data')
+      const userData = await result.json();      
       setOptimisticLike(userData?.comment.parent?.likes.length)      
       setThisPost(userData.comment.parent);
       setPostComments(userData.comment.replies);

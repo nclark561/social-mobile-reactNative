@@ -67,47 +67,43 @@ const EditProfileSheet = ({
       if (!response.ok) {
         throw new Error("Failed to fetch the image");
       }
-  
+
       const formData = new FormData();
-  
+
       if (Platform.OS === "web") {
         const blob = await response.blob();
-        formData.append("image", blob, `${myInfo.id}`); // Append image for web
-        console.log("Appended image (web):", blob);
+        formData.append("image", blob, `${myInfo.id}`); // Append image for web        
       } else {
         formData.append("image", {
           uri: imageUri,
           type: profileImage.mimeType || "image/png",
           name: `${myInfo.id}.png`,
-        } as any); // Append image for mobile
-        console.log("Appended image (mobile):", imageUri);
+        } as any); // Append image for mobile        
       }
-  
-      formData.append("id", myInfo.id); // Append id
-      console.log("Appended id:", myInfo.id);
-  
+
+      formData.append("id", myInfo.id); // Append id      
+
       // Log final FormData content
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
+      for (let pair of formData.entries()) {        
       }
-  
+
       const uploadResponse = await fetch(`${getBaseUrl()}/supabase/upload`, {
         method: "POST",
         body: formData,
       });
-  
+
       if (!uploadResponse.ok) {
         const errorText = await uploadResponse.text();
         throw new Error(`Upload failed: ${errorText}`);
       }
-  
+
       const result = await uploadResponse.json();
       console.log("Upload successful:", result);
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   }
-  
+
   const handleSave = async () => {
     if (profileImage?.uri) await uploadProfileImage(profileImage.uri);
     updateUser(myInfo.email, links, location, bio, selectedColor);
@@ -188,7 +184,7 @@ const EditProfileSheet = ({
           value={location}
           onChangeText={setLocation}
         />
-        <Button title="Save" onPress={handleSave}></Button>        
+        <Button title="Save" onPress={handleSave}></Button>
       </ThemedView>
     </CustomBottomSheet>
   );

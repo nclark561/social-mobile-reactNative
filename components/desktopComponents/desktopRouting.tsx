@@ -40,8 +40,7 @@ export default function DesktopRouting() {
         const user =
           Platform.OS === "web"
             ? localStorage.getItem("user")
-            : await AsyncStorage.getItem("user");
-        console.log(user, "user");
+            : await AsyncStorage.getItem("user");        
         if (user) {
           setLoggedIn(true);
         }

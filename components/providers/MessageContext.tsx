@@ -74,8 +74,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const deleteConvos = async (id: string) => {
-    console.log(id, "hitting delete convo");
+  const deleteConvos = async (id: string) => {    
     try {
       await fetch(`${getBaseUrl()}/conversations/delete`, {
         method: "POST",
@@ -115,8 +114,6 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const data = await response.json();
-      console.log("Message added successfully:", data);
-
       getConvos(); // Call the getConvos function to update the conversation data
     } catch (error) {
       console.log(error, "this is the add message error");

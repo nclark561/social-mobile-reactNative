@@ -19,7 +19,7 @@ export default function TabLayout() {
   const { width, height } = useWindowDimensions();
 
   // Debugging purposes: See if the dimensions change
-  console.log('Window dimensions:', width, height);
+  
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

@@ -44,13 +44,12 @@ export default function TabTwoScreen() {
   const handlePress = () => navigation.dispatch(DrawerActions.openDrawer());
 
   const searchUsers = async () => {
-    console.log(getBaseUrl())
+    
     try {
       const result = await fetch(
         `${getBaseUrl()}/users/userSearch?search=${searchInput}`,
       );
-      const users = await result.json();
-      console.log(users, 'these are searched users');
+      const users = await result.json();      
       setSearchResults(users.user);
     } catch (err) {
       console.log("oops");

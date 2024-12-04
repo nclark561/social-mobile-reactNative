@@ -226,10 +226,7 @@ export default function PostPage() {
   };
 
   const isLikedByUser = (likes: string[]): boolean => {
-    const liked = likes?.includes(myInfo?.id);
-    console.log("Likes array:", likes);
-    console.log("My user ID:", myInfo?.id);
-    console.log("Is liked by user:", liked);
+    const liked = likes?.includes(myInfo?.id);    
     return liked;
   };
 

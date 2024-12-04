@@ -69,8 +69,7 @@ export default function ExternalProfile() {
 
   useEffect(() => {
     if (user?.id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user?.id}?${Date.now()}`;
-      console.log(newProfileImageUri);
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${user?.id}?${Date.now()}`;      
       setProfileImageUri(newProfileImageUri);
     }
   }, [user]);

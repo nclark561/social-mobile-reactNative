@@ -40,22 +40,7 @@ export default function Header({ name }: HeaderProps) {
   }, [myInfo?.id]);
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
-
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      await AsyncStorage.removeItem("user");
-      if (error) {
-        console.log("this is logout error", error);
-      }
-      await getUser();
-      router.navigate("/login");
-      setLoginToggle(false);
-      setLoggedIn(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   return (
     <ThemedView style={styles.page}>
