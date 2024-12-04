@@ -140,3 +140,7 @@ For any questions or inquiries, reach out to:
 - **GitHub:** [https://github.com/kaleckh]
 - **LinkedIn:** [https://linkedin.com/in/kaleck-hamm]
 
+- **Email:** noahwebedev@gmail.com
+- **GitHub:** [https://github.com/nclark561]
+- **LinkedIn:** [https://www.linkedin.com/in/noah-clark-62532426b/]
+
