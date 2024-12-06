@@ -87,7 +87,7 @@ const EditProfileSheet = ({
       for (let pair of formData.entries()) {        
       }
 
-      const uploadResponse = await fetch(`${getBaseUrl()}/supabase/upload`, {
+      const uploadResponse = await fetch(`${getBaseUrl()}supabase/upload`, {
         method: "POST",
         body: formData,
       });

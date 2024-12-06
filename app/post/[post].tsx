@@ -140,8 +140,8 @@ export default function PostPage() {
     try {
       const test = await fetch(
         comment
-          ? `${getBaseUrl()}/comments/likes`
-          : `${getBaseUrl()}/posts/likes`,
+          ? `${getBaseUrl()}comments/likes`
+          : `${getBaseUrl()}posts/likes`,
         {
           method: "POST",
           headers: {
@@ -162,7 +162,7 @@ export default function PostPage() {
 
   const deletePost = async (postId: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/posts/delete`, {
+      const response = await fetch(`${getBaseUrl()}posts/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +187,7 @@ export default function PostPage() {
   ) => {
     handleCloseComment()
     try {
-      const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
+      const response = await fetch(`${getBaseUrl()}comments/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,7 +209,7 @@ export default function PostPage() {
 
   const getPost = async (id: string) => {
     try {
-      const result = await fetch(`${getBaseUrl()}/posts/post?post_id=${id}`, {
+      const result = await fetch(`${getBaseUrl()}posts/post?post_id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -255,7 +255,7 @@ export default function PostPage() {
     setLoading(true);
     handleCloseRepost();
     try {
-      const test = await fetch(`${getBaseUrl()}/reposts/add`, {
+      const test = await fetch(`${getBaseUrl()}reposts/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -278,7 +278,7 @@ export default function PostPage() {
     handleCloseRepost();
     try {
       await fetch(
-        `${getBaseUrl()}/reposts/delete`, {
+        `${getBaseUrl()}reposts/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
