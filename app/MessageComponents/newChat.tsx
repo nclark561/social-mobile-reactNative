@@ -51,7 +51,7 @@ const Chat: React.FC = () => {
     try {
       if (!myInfo.id || !recipient?.id) throw new Error("User missing");
 
-      const response = await fetch(`${getBaseUrl()}/conversations/create`, {
+      const response = await fetch(`${getBaseUrl()}/api/conversations/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const Chat: React.FC = () => {
   const searchUsers = async () => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}/users/userSearch?search=${recipientSearch}`,
+        `${getBaseUrl()}/api/users/userSearch?search=${recipientSearch}`,
       );
       const users = await result.json();
       setSearchResults(users.user);

@@ -68,7 +68,7 @@ export default function HomeScreen() {
     setPostInput("");    
     try {
     
-      await fetch(`${getBaseUrl()}/posts/create`, {
+      await fetch(`${getBaseUrl()}/api/posts/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

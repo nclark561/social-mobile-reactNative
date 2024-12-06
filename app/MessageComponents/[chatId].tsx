@@ -136,7 +136,7 @@ const CurrentChat: React.FC = () => {
   const getConvoMessages = async () => {
     try {
       const response = await fetch(
-        `${getBaseUrl()}/conversations/getConvo?conversation_id=${local.chatId}`,
+        `${getBaseUrl()}/api/conversations/getConvo?conversation_id=${local.chatId}`,
         {
           method: "GET",
           headers: {

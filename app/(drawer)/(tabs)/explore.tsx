@@ -47,7 +47,7 @@ export default function TabTwoScreen() {
     
     try {
       const result = await fetch(
-        `${getBaseUrl()}/users/userSearch?search=${searchInput}`,
+        `${getBaseUrl()}/api/users/userSearch?search=${searchInput}`,
       );
       const users = await result.json();      
       setSearchResults(users.user);

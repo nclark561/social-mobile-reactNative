@@ -29,7 +29,7 @@ export default function SignIn({
   const handleSignUp = async (userName: string, email: string) => {
     try {
       const response = await fetch(
-        `${getBaseUrl()}/users/usernameCheck?username=${userName}`,
+        `${getBaseUrl()}/api/users/usernameCheck?username=${userName}`,
       );
       const { user } = await response.json();
       if (user) throw new Error("username already taken");
@@ -40,7 +40,7 @@ export default function SignIn({
       if (error) {
         throw new Error(error.message);
       }
-      const result = await fetch(`${getBaseUrl()}/users/create`, {
+      const result = await fetch(`${getBaseUrl()}/api/users/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
