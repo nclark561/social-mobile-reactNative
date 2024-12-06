@@ -113,7 +113,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     if (!myInfo?.id) return;
     try {
       const response = await fetch(
-        `${getBaseUrl()}/api/conversations/getConvos?user_id=${myInfo?.id}`,
+        `${getBaseUrl()}/conversations/getConvos?user_id=${myInfo?.id}`,
         {
           method: "GET",
           headers: {
@@ -148,7 +148,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
       if (!userEmail) throw new Error("User not logged in");
 
       const email = JSON.parse(userEmail);
-      const result = await fetch(`${getBaseUrl()}/api/users/myInfo?email=${email}`, {
+      const result = await fetch(`${getBaseUrl()}/users/myInfo?email=${email}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -174,7 +174,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     try {
       
       const bodyData: any = { email, links, location, bio, color };
-      const response = await fetch(`${getBaseUrl()}/api/users/update`, {
+      const response = await fetch(`${getBaseUrl()}/users/update`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -196,7 +196,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
   ) => {
     try {
       const bodyData = { myId, theirId };      
-      const response = await fetch(`${getBaseUrl()}/api/users/updateFollowing`, {
+      const response = await fetch(`${getBaseUrl()}/users/updateFollowing`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -166,8 +166,8 @@ export default function Post({
     try {
       const test = await fetch(
         !isComment
-          ? `${getBaseUrl()}/api/posts/likes`
-          : `${getBaseUrl()}/api/comments/likes`,
+          ? `${getBaseUrl()}/posts/likes`
+          : `${getBaseUrl()}/comments/likes`,
         {
           method: "POST",
           headers: {
@@ -193,8 +193,8 @@ export default function Post({
     try {
       await fetch(
         !isComment
-          ? `${getBaseUrl()}/api/posts/delete`
-          : `${getBaseUrl()}/api/comments/delete`, {
+          ? `${getBaseUrl()}/posts/delete`
+          : `${getBaseUrl()}/comments/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -217,7 +217,7 @@ export default function Post({
   const deleteComment = async (id: string) => {
     setLoading(true);
     try {
-      await fetch(`${getBaseUrl()}/api/comments/delete`, {
+      await fetch(`${getBaseUrl()}/comments/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -246,7 +246,7 @@ export default function Post({
   ) => {
 
     try {
-      const response = await fetch(`${getBaseUrl()}/api/comments/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -291,7 +291,7 @@ export default function Post({
     setLoading(true);
     handleCloseRepost();
     try {
-      const test = await fetch(`${getBaseUrl()}/api/reposts/add`, {
+      const test = await fetch(`${getBaseUrl()}/reposts/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -316,7 +316,7 @@ export default function Post({
     handleCloseRepost();
     try {
       await fetch(
-        `${getBaseUrl()}/api/reposts/delete`, {
+        `${getBaseUrl()}/reposts/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

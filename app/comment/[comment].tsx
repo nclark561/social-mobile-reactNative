@@ -122,7 +122,7 @@ export default function CommentPage({navigation}) {
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
     setOptimisticLike(updatedLikesCount);
     try {
-      const test = await fetch(`${getBaseUrl()}/api/comments/likes`, {
+      const test = await fetch(`${getBaseUrl()}/comments/likes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,7 +147,7 @@ export default function CommentPage({navigation}) {
   ) => {
     try {
       handleCloseComment()
-      const response = await fetch(`${getBaseUrl()}/api/comments/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/comments/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +168,7 @@ export default function CommentPage({navigation}) {
 
   const deletePost = async (id: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/comments/delete`, {
+      const response = await fetch(`${getBaseUrl()}/comments/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +187,7 @@ export default function CommentPage({navigation}) {
   const getPost = async () => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}/api/comments/singleComment?comment_id=${local.comment}`,
+        `${getBaseUrl()}/comments/singleComment?comment_id=${local.comment}`,
         {
           method: "GET",
           headers: {
@@ -209,7 +209,7 @@ export default function CommentPage({navigation}) {
     setLoading(true);
     handleCloseRepost();
     try {
-      const test = await fetch(`${getBaseUrl()}/api/reposts/add`, {
+      const test = await fetch(`${getBaseUrl()}/reposts/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -234,7 +234,7 @@ export default function CommentPage({navigation}) {
     handleCloseRepost();
     try {
       await fetch(
-        `${getBaseUrl()}/api/reposts/delete`, {
+        `${getBaseUrl()}/reposts/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

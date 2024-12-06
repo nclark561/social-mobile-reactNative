@@ -51,7 +51,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   const getUserPosts = async (email: string, userId: string) => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}/api/posts/getMyPosts?email=${email}&user_id=${userId}`,
+        `${getBaseUrl()}/posts/getMyPosts?email=${email}&user_id=${userId}`,
         {
           method: "GET",
           headers: {
@@ -69,7 +69,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   const getForYouPosts = async (userId?: string) => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}/api/posts/getPosts${userId ? `?user_id=${userId}` : ""}`,
+        `${getBaseUrl()}/posts/getPosts${userId ? `?user_id=${userId}` : ""}`,
         {
           method: "GET",
           headers: {

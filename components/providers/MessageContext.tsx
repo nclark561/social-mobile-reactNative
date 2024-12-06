@@ -59,7 +59,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const getConvos = async () => {
     try {
       const convos = await fetch(
-        `${getBaseUrl()}/api/conversations/getConvos?user_id=${myInfo?.id}`,
+        `${getBaseUrl()}/conversations/getConvos?user_id=${myInfo?.id}`,
         {
           method: "GET",
           headers: {
@@ -76,7 +76,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
 
   const deleteConvos = async (id: string) => {    
     try {
-      await fetch(`${getBaseUrl()}/api/conversations/delete`, {
+      await fetch(`${getBaseUrl()}/conversations/delete`, {
         method: "POST",
         body: JSON.stringify({
           conversation_id: id,
@@ -97,7 +97,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
     id: string,
   ) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/conversations/addMessage`, {
+      const response = await fetch(`${getBaseUrl()}/conversations/addMessage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
