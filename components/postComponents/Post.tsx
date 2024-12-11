@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, SetStateAction, useEffect } from "react";
+import React, { useContext, useState, useRef, SetStateAction, useEffect, useMemo } from "react";
 import {
   StyleSheet,
   Modal,
@@ -68,7 +68,7 @@ export default function Post({
   const colorScheme = useColorScheme();
   const [commentInput, setCommentInput] = useState("");
   const [optimisticLike, setOptimisticLike] = useState(post?.likes?.length);
-  const [optimisticomment, setOptimisticComment] = useState(post?.replies?.length);
+  const [optimisticomment, setOptimisticComment] = useState(post?.comments ? post?.comments?.length : post?.replies?.length);
   const [commentVisible, setCommentVisible] = useState(false); // State for menu visibility
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
@@ -84,7 +84,7 @@ export default function Post({
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
   const repostedByMe = useMemo(() => {
-    return post?.reposts?.some((e: any) => e.user_id === myInfo?.id) || false;
+    return post?.reposts?.some((e: any) => e.userId === myInfo?.id) || false;
   }, [post?.reposts, myInfo?.id]);
 
   const handleOpenShare = () => {
@@ -148,7 +148,7 @@ export default function Post({
     setLiked((prev) => !prev);
   };
 
- 
+
   const isLikedByUser = (likes: string[]): boolean => {
     if (!myInfo?.id) return false;
     return likes?.includes(myInfo.id);
@@ -187,7 +187,7 @@ export default function Post({
       console.log(error, "this is the add like error in post");
     }
   };
-  
+
 
 
   const deletePost = async (postId: string) => {
@@ -251,11 +251,11 @@ export default function Post({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: comment,
-          user_name: userName,
-          post_id: postId,
-          user_id: userId,
-          ...(isComment && {parent_id: commentId}),
+          comment,
+          userName,
+          postId,
+          userId,
+          ...(isComment && { parent_id: commentId }),
         }),
       });
       const post = await response.json();
@@ -274,7 +274,7 @@ export default function Post({
 
   useEffect(() => {
     if (myInfo?.id) {
-      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${post?.owner?.id || post?.userId || user}?${Date.now()}`;      
+      const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${post?.owner?.id || post?.userId || user}?${Date.now()}`;
       setProfileImageUri(newProfileImageUri);
     }
   }, [post]);
@@ -347,11 +347,10 @@ export default function Post({
   };
 
   useEffect(() => {
-    setOptimisticComment(post?.replies?.length)
+    setOptimisticComment(post.comments ? post?.comments?.length : post?.replies?.length)
   }, [post])
 
-
-  console.log(post, 'this is the post')
+  
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -375,9 +374,9 @@ export default function Post({
             style={styles.link}
             onPress={handleProfilePress}
           >
-            <ThemedText style={styles.postUser}>{post.user_name}</ThemedText>
+            <ThemedText style={styles.postUser}>{post?.user_name}</ThemedText>
           </Link>
-          <ThemedText style={styles.postText}>{post?.content}</ThemedText>
+          <ThemedText style={styles.postText}>{post?.content}</ThemedText>          
           <ThemedView style={styles.reactionsContainer}>
             <ThemedView style={styles.smallRow}>
               <Ionicons

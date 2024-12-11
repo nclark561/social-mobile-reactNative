@@ -41,7 +41,7 @@ export default function MyCustomDrawer(props: any) {
       setLoginToggle(false);
       setLoggedIn(false);
     } catch (error) {
-      console.log(error);
+      console.log(error, 'testing error');
     }
   };
 

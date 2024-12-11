@@ -32,7 +32,7 @@ interface Post {
 
 const { width } = Dimensions.get('window')
 
-export default function CommentPage({navigation}) {
+export default function CommentPage() {
   const colorScheme = useColorScheme();
   const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
@@ -195,8 +195,8 @@ export default function CommentPage({navigation}) {
           },
         },
       );
-      const userData = await result.json();      
-      setOptimisticLike(userData?.comment.parent?.likes.length)      
+      const userData = await result.json();
+      setOptimisticLike(userData?.comment.parent?.likes.length)
       setThisPost(userData.comment.parent);
       setPostComments(userData.comment.replies);
       setLoading(false);
@@ -269,10 +269,7 @@ export default function CommentPage({navigation}) {
   );
 
 
-  const isLikedByUser = (likes: string[]): boolean => {
-    const liked = likes?.includes(myInfo?.id);
-    return liked;
-  };
+
 
 
   useEffect(() => {
@@ -280,13 +277,13 @@ export default function CommentPage({navigation}) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}?${Date.now()}`;
       setProfileImageUri(newProfileImageUri);
     }
-  }, [thisPost]);  
+  }, [thisPost]);
 
   const isLikedByUser = (likes: string[]): boolean => {
     return likes?.includes(myInfo?.id);
   };
 
-  console.log(thisPost, 'comment')
+
 
   return (
     <ThemedView style={{ flex: 1 }}>

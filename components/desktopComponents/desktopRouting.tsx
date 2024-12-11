@@ -30,7 +30,7 @@ export default function DesktopRouting() {
       setLoggedIn(false);
       location.reload();
     } catch (error) {
-      console.log(error);
+      console.log(error, "testing error");
     }
   };
 

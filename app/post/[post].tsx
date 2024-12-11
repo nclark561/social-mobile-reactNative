@@ -65,7 +65,7 @@ export default function PostPage() {
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false)
-  const repostedByMe = thisPost?.reposts?.filter((e: any) => e.user_id === myInfo?.id).length > 0;
+  const repostedByMe = thisPost?.reposts?.filter((e: any) => e.userId === myInfo?.id).length > 0;
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
   const { height } = Dimensions.get("window");
 
@@ -216,8 +216,8 @@ export default function PostPage() {
           "Content-Type": "application/json",
         },
       });
-      const userData = await result.json();
-      setThisPost(userData.post.post);
+      const userData = await result.json();      
+      setThisPost(userData.post);
       setPostComments(userData.post.top_level_comments);
       setOptimisticLike(userData?.post?.likes?.length)
       setLoading(false);
@@ -297,7 +297,7 @@ export default function PostPage() {
     }
   };
 
-
+console.log(thisPost, 'this is this post')
 
   return (
     <ThemedView style={styles.realRow}>
@@ -490,8 +490,7 @@ export default function PostPage() {
             </ThemedView>
           </CustomBottomSheet>) : <DeletePopup post={thisPost} deleteComment={null} deletePost={deletePost} deleteVisible={deleteVisible} postOwnerId={thisPost?.owner?.id} myInfo={myInfo} handleCloseDeleteMenu={handleCloseDeleteMenu} />}
         </ThemedView>
-        {thisPost?.comments?.map((comment: any) => {
-          console.log(comment);
+        {thisPost?.comments?.map((comment: any) => {          
           return (
             <Post
               key={comment.id}

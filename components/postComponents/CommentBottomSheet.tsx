@@ -82,7 +82,7 @@ const CommentBottomSheet = ({
   const blurhash2 = user?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
   return (
     <CustomBottomSheet
-      snapPercs={["70%"]}
+      snapPercs={["15%"]}
       ref={commentModalRef}
       hideCancelButton
     >
