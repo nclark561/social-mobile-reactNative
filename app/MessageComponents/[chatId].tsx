@@ -122,7 +122,7 @@ const CurrentChat: React.FC = () => {
     userId: string,
   ) => {
     try {
-      await fetch(`${getBaseUrl()}/api/updateMessageRead`, {
+      await fetch(`${getBaseUrl()}/api/conversations/updateMessageRead`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +137,7 @@ const CurrentChat: React.FC = () => {
   const getConvoMessages = async () => {
     try {
       const response = await fetch(
-        `${getBaseUrl()}/api/getConvo?id=${local.chatId}`,
+        `${getBaseUrl()}/api/conversations/getConvo?id=${local.chatId}`,
         {
           method: "GET",
           headers: {

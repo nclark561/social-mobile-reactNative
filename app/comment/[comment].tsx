@@ -116,7 +116,7 @@ export default function CommentPage() {
 
   const addLike = async (userId: string, postId: string) => {
     try {
-      const test = await fetch(`${getBaseUrl()}/api/addLike`, {
+      const test = await fetch(`${getBaseUrl()}/api/posts/addCommentLike`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,7 +141,7 @@ export default function CommentPage() {
   ) => {
     try {
       handleCloseComment()
-      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/posts/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -161,7 +161,7 @@ export default function CommentPage() {
 
   const deletePost = async (id: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/deleteComment`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/deleteComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -180,7 +180,7 @@ export default function CommentPage() {
   const getPost = async () => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}/api/getSingleComment?id=${local.comment}`,
+        `${getBaseUrl()}/api/posts/getSingleComment?id=${local.comment}`,
         {
           method: "GET",
           headers: {
@@ -212,7 +212,11 @@ export default function CommentPage() {
     }
   }, [thisPost]);
 
-  console.log(thisPost, "this is this post");
+  const isLikedByUser = (likes: string[]): boolean => {
+    return likes?.includes(myInfo?.id);
+  };
+
+  console.log(thisPost, 'comment')
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -224,14 +228,16 @@ export default function CommentPage() {
         </ThemedView>
       )}
       <ThemedView style={styles.icon}>
-        <Pressable>
-          <Link href="/(tabs)/">
-            <Ionicons
-              size={20}
-              name="arrow-back-outline"
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-          </Link>
+        <Pressable onPress={() => {
+          router.back()
+        }}>
+
+          <Ionicons
+            size={20}
+            name="arrow-back-outline"
+            color={colorScheme === "dark" ? "white" : "black"}
+          />
+
         </Pressable>
       </ThemedView>
       <ThemedView
@@ -270,19 +276,27 @@ export default function CommentPage() {
                 {thisPost?.replies?.length}
               </ThemedText>
             </ThemedView>
-            <Ionicons
-              size={15}
-              name="git-compare-outline"
-              onPress={handleOpenRepost}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-            <ThemedView style={styles.smallRow}>
+            <ThemedView>
               <Ionicons
                 size={15}
-                name="heart-outline"
+                name="git-compare-outline"
+                onPress={handleOpenRepost}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{0}</ThemedText>
+              <ThemedText style={styles.smallNumber}>
+                {thisPost?.reposts?.length}
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.smallRow}>
+              <Ionicons
+                onPress={() => { addLike(myInfo?.id, thisPost?.id) }}
+                size={15}
+                name={
+                  isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
+                }
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
+              <ThemedText style={styles.smallNumber}>{thisPost?.likes?.length}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}
@@ -324,12 +338,12 @@ export default function CommentPage() {
               <ThemedText style={styles.optionText}>Copy Link</ThemedText>
             </ThemedView>
           </ThemedView>
-        </CustomBottomSheet>) : <SharePopup handleCloseShare={handleCloseShare} shareVisible={shareVisible}/>}
+        </CustomBottomSheet>) : <SharePopup handleCloseShare={handleCloseShare} shareVisible={shareVisible} />}
         {width < 1000 ? (<CommentBottomSheet
           post={thisPost}
           commentModalRef={commentModalRef}
           user={thisPost?.user}
-        />) : <CommentPopup isComment myInfo={myInfo} addComment={addComment} setCommentInput={setCommentInput} handleCloseComment={handleCloseComment} commentVisible={commentVisible} commentInput={commentInput} post={thisPost}/>}
+        />) : <CommentPopup isComment myInfo={myInfo} addComment={addComment} setCommentInput={setCommentInput} handleCloseComment={handleCloseComment} commentVisible={commentVisible} commentInput={commentInput} post={thisPost} />}
         {width < 1000 ? (<CustomBottomSheet snapPercs={["20%"]} ref={repostModalRef}>
           <ThemedView
             style={[styles.shareContainer, { marginBottom: 30, height: "75%" }]}
@@ -360,7 +374,7 @@ export default function CommentPage() {
               />
             )}
           </ThemedView>
-        </CustomBottomSheet>) : <DeletePopup handleCloseDeleteMenu={handleCloseDeleteMenu} postOwnerId={thisPost?.userId} post={thisPost} isComment deletePost={null} deleteComment={deletePost} deleteVisible={deleteVisible} myInfo={myInfo}/>}
+        </CustomBottomSheet>) : <DeletePopup handleCloseDeleteMenu={handleCloseDeleteMenu} postOwnerId={thisPost?.userId} post={thisPost} isComment deletePost={null} deleteComment={deletePost} deleteVisible={deleteVisible} myInfo={myInfo} />}
       </ThemedView>
       {thisPost?.replies?.map((comment: any) => (
         <Post

@@ -31,6 +31,7 @@ import CommentPopup from "@/components/postComponents/CommentPopup";
 import SharePopup from "@/components/postComponents/SharePopup";
 import RepostPopup from "@/components/postComponents/RepostPopup";
 
+
 interface Post {
   id: string;
   content: string;
@@ -129,8 +130,8 @@ export default function PostPage() {
     try {
       const test = await fetch(
         comment
-          ? `${getBaseUrl()}/api/addCommentLike`
-          : `${getBaseUrl()}/api/addLike`,
+          ? `${getBaseUrl()}/api/posts/addCommentLike`
+          : `${getBaseUrl()}/api/post/addLike`,
         {
           method: "POST",
           headers: {
@@ -151,7 +152,7 @@ export default function PostPage() {
 
   const deletePost = async (postId: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/deletePost`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/deletePost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -176,7 +177,7 @@ export default function PostPage() {
   ) => {
     handleCloseComment()
     try {
-      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -198,7 +199,7 @@ export default function PostPage() {
   const getPost = async (id: string) => {
     console.log(id, "calling this post");
     try {
-      const result = await fetch(`${getBaseUrl()}/api/getPost?id=${id}`, {
+      const result = await fetch(`${getBaseUrl()}/api/posts/getPost?id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -250,14 +251,16 @@ export default function PostPage() {
       )}
       <ThemedView style={[styles.content, { flex: 1 }]}>
         <ThemedView style={styles.icon}>
-          <Pressable>
-            <Link href="/(tabs)/">
+          <Pressable onPress={() => {
+            router.back()
+          }}>
+            
               <Ionicons
                 size={20}
                 name="arrow-back-outline"
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-            </Link>
+            
           </Pressable>
         </ThemedView>
         <ThemedView
@@ -415,7 +418,7 @@ export default function PostPage() {
               key={comment.id}
               isComment
               post={comment}
-              user={myInfo?.email}
+              user={myInfo?.id}
               setLoading={setLoading}
             />
           );

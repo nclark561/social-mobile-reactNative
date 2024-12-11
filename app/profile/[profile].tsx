@@ -78,7 +78,7 @@ export default function ExternalProfile() {
   const getUser = async () => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}/api/myInfo?email=${local.profile}`,
+        `${getBaseUrl()}/api/users/myInfo?email=${local.profile}`,
         {
           method: "GET",
           headers: {

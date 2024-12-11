@@ -23,6 +23,7 @@ import LinkedinProfiles from "@/components/desktopComponents/linkedinProfiles";
 import { inject } from "@vercel/analytics"
 
 
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {

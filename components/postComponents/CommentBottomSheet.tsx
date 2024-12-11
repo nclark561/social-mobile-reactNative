@@ -46,7 +46,7 @@ const CommentBottomSheet = ({
     parentId?: string,
   ) => {
     try {
-      const response = await fetch(`${getBaseUrl()}/api/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
