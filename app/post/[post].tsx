@@ -500,6 +500,7 @@ export default function PostPage() {
               <Post
                 key={comment.id}
                 isComment
+                parent_post_id={thisPost?.id}
                 post={comment}
                 user={myInfo?.id}
                 setLoading={setLoading}

@@ -196,8 +196,9 @@ export default function CommentPage() {
         },
       );
       const userData = await result.json();
+      console.log(userData, 'this is the user data')
       setOptimisticLike(userData?.comment.parent?.likes.length)
-      setThisPost(userData.comment.parent);
+      setThisPost(userData?.comment);
       setPostComments(userData.comment.replies);
       setLoading(false);
     } catch (error) {

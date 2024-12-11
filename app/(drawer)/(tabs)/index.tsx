@@ -53,7 +53,7 @@ export default function HomeScreen() {
   const handleCloseNewPost = () => newPostRef?.current?.dismiss();
 
   const mortyUrl =
-  "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
+    "https://cdn.costumewall.com/wp-content/uploads/2017/01/morty-smith.jpg";
 
   const profileImageUri = useMemo(() => {
     if (myInfo?.id) {
@@ -65,7 +65,7 @@ export default function HomeScreen() {
   const createPost = async (content: string, userName: string) => {
     if (content.length < 1) return;
     setLoading(true);
-    setPostInput("");    
+    setPostInput("");
     try {
       await fetch(`${getBaseUrl()}/api/posts/createPost`, {
         method: "POST",
@@ -73,12 +73,12 @@ export default function HomeScreen() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content,          
-          user_name: userName,
+          content,
+          userName,
           email: myInfo.email
         }),
       });
-      await getForYouPosts(myInfo?.id);      
+      await getForYouPosts(myInfo?.id);
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the create post error");
@@ -100,7 +100,7 @@ export default function HomeScreen() {
   );
 
   const loadingPosts = async () => {
-    await getForYouPosts(myInfo?.id);    
+    await getForYouPosts(myInfo?.id);
     setLoading(false);
   };
 
@@ -112,7 +112,7 @@ export default function HomeScreen() {
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
-  
+
 
   return (
     <ThemedView style={styles.pageContainer}>
@@ -159,7 +159,7 @@ export default function HomeScreen() {
                   source={{
                     uri: profileImageUri,
                   }}
-                  // onError={handleError}
+                // onError={handleError}
                 />
                   <TextInput
                     onFocus={() => setIsFocused(false)}
@@ -190,7 +190,7 @@ export default function HomeScreen() {
             >
               {!isForYou
                 ? Array.isArray(forYouPosts) &&
-                forYouPosts.map((post, i) => {                  
+                forYouPosts.map((post, i) => {
                   if (post.postId) {
                     return (
                       <ThemedView
@@ -226,7 +226,7 @@ export default function HomeScreen() {
                   );
                 })
                 : Array.isArray(forYouFollowingPosts) &&
-                forYouFollowingPosts.map((post, i) => {                  
+                forYouFollowingPosts.map((post, i) => {
                   if (post.postId) {
                     return (
                       <ThemedView

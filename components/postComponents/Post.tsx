@@ -48,6 +48,7 @@ interface PostProps {
   repostLength?: number;
   isComment?: boolean;
   post: Post;
+  parent_post_id: string,
   user?: string;
   setLoading: React.Dispatch<SetStateAction<boolean>>;
   getPost?: (id: string) => Promise<void>;
@@ -60,6 +61,7 @@ export default function Post({
   post,
   getPost,
   localId,
+  parent_post_id,
   isComment,
   user,
   repostLength,
@@ -244,7 +246,7 @@ export default function Post({
     userId: string,
     commentId?: string
   ) => {
-
+    debugger
     try {
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
@@ -254,7 +256,7 @@ export default function Post({
         body: JSON.stringify({
           comment,
           userName,
-          postId,
+          parent_post_id,
           userId,
           ...(isComment && { parent_id: commentId }),
         }),
@@ -299,8 +301,8 @@ export default function Post({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: userId,
-          ...(isComment ? { comment_id: postId } : { post_id: postId }),
+          userId,
+          ...(isComment ? { postId } : { postId }),
         }),
       });
       await getUserPosts(myInfo?.email, myInfo?.id);
@@ -351,7 +353,8 @@ export default function Post({
     setOptimisticComment(post.comments ? post?.comments?.length : post?.replies?.length)
   }, [post])
 
-
+  console.log(parent_post_id, 'post_id')
+  console.log(post.id, 'parent_post_id')
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -532,7 +535,6 @@ export default function Post({
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    debugger
                     addComment(
                       commentInput,
                       myInfo.username,
