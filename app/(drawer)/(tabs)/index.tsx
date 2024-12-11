@@ -67,8 +67,7 @@ export default function HomeScreen() {
     setLoading(true);
     setPostInput("");    
     try {
-    
-      await fetch(`${getBaseUrl()}posts/create`, {
+      await fetch(`${getBaseUrl()}/api/posts/createPost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,6 +112,7 @@ export default function HomeScreen() {
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
+  console.log(forYouPosts, 'for u posts')
 
   return (
     <ThemedView style={styles.pageContainer}>

@@ -81,17 +81,14 @@ const EditProfileSheet = ({
         } as any); // Append image for mobile        
       }
 
-      formData.append("id", myInfo.id); // Append id      
-
-      // Log final FormData content
-      for (let pair of formData.entries()) {        
-      }
-
-      const uploadResponse = await fetch(`${getBaseUrl()}supabase/upload`, {
-        method: "POST",
-        body: formData,
-      });
-
+      // Make the POST request with fetch
+      const uploadResponse = await fetch(
+        `${getBaseUrl()}/api/users/supabase-s3?id=${myInfo.id}`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
       if (!uploadResponse.ok) {
         const errorText = await uploadResponse.text();
         throw new Error(`Upload failed: ${errorText}`);

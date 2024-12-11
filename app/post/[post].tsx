@@ -32,6 +32,7 @@ import CommentPopup from "@/components/postComponents/CommentPopup";
 import SharePopup from "@/components/postComponents/SharePopup";
 import RepostPopup from "@/components/postComponents/RepostPopup";
 
+
 interface Post {
   id: string;
   content: string;
@@ -140,8 +141,8 @@ export default function PostPage() {
     try {
       const test = await fetch(
         comment
-          ? `${getBaseUrl()}comments/likes`
-          : `${getBaseUrl()}posts/likes`,
+          ? `${getBaseUrl()}/api/posts/addCommentLike`
+          : `${getBaseUrl()}/api/post/addLike`,
         {
           method: "POST",
           headers: {
@@ -162,7 +163,7 @@ export default function PostPage() {
 
   const deletePost = async (postId: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}posts/delete`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/deletePost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +188,7 @@ export default function PostPage() {
   ) => {
     handleCloseComment()
     try {
-      const response = await fetch(`${getBaseUrl()}comments/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,7 +210,7 @@ export default function PostPage() {
 
   const getPost = async (id: string) => {
     try {
-      const result = await fetch(`${getBaseUrl()}posts/post?post_id=${id}`, {
+      const result = await fetch(`${getBaseUrl()}/api/posts/getPost?id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -309,12 +310,16 @@ export default function PostPage() {
       )}
       <ThemedView style={[styles.content, { flex: 1 }]}>
         <ThemedView style={styles.icon}>
-          <Pressable onPress={() => router.back()}>            
+          <Pressable onPress={() => {
+            router.back()
+          }}>
+            
               <Ionicons
                 size={20}
                 name="arrow-back-outline"
                 color={colorScheme === "dark" ? "white" : "black"}
               />
+            
           </Pressable>
         </ThemedView>
         <ThemedView
@@ -485,24 +490,18 @@ export default function PostPage() {
             </ThemedView>
           </CustomBottomSheet>) : <DeletePopup post={thisPost} deleteComment={null} deletePost={deletePost} deleteVisible={deleteVisible} postOwnerId={thisPost?.owner?.id} myInfo={myInfo} handleCloseDeleteMenu={handleCloseDeleteMenu} />}
         </ThemedView>
-        <Animated.ScrollView
-          style={{ width: "100%", flex: 1, height: height }}
-          showsVerticalScrollIndicator={false}
-        >
-          {postComments?.map((comment: any) => {
-            return (
-              <Post
-                key={comment.id}
-                getPost={getPost}
-                localId={local.post}
-                isComment
-                post={comment}
-                user={myInfo?.email}
-                setLoading={setLoading}
-              />
-            );
-          })}
-        </Animated.ScrollView>
+        {thisPost?.comments?.map((comment: any) => {
+          console.log(comment);
+          return (
+            <Post
+              key={comment.id}
+              isComment
+              post={comment}
+              user={myInfo?.id}
+              setLoading={setLoading}
+            />
+          );
+        })}
       </ThemedView>
     </ThemedView >
   );

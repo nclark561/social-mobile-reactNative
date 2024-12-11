@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, SetStateAction, useEffect, useMemo } from "react";
+import React, { useContext, useState, useRef, SetStateAction, useEffect } from "react";
 import {
   StyleSheet,
   Modal,
@@ -68,6 +68,7 @@ export default function Post({
   const colorScheme = useColorScheme();
   const [commentInput, setCommentInput] = useState("");
   const [optimisticLike, setOptimisticLike] = useState(post?.likes?.length);
+  const [optimisticomment, setOptimisticComment] = useState(post?.replies?.length);
   const [commentVisible, setCommentVisible] = useState(false); // State for menu visibility
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
@@ -147,17 +148,17 @@ export default function Post({
     setLiked((prev) => !prev);
   };
 
+ 
   const isLikedByUser = (likes: string[]): boolean => {
     if (!myInfo?.id) return false;
-    return likes?.includes(myInfo?.id);
+    return likes?.includes(myInfo.id);
   };
 
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(isLikedByUser(post.likes));
 
   useEffect(() => {
     setLiked(isLikedByUser(post?.likes));
   }, [post?.likes, myInfo?.id]);
-
 
   const addLike = async (userId: string, postId: string) => {
     setLiked((prevLiked) => !prevLiked);
@@ -166,8 +167,8 @@ export default function Post({
     try {
       const test = await fetch(
         !isComment
-          ? `${getBaseUrl()}posts/likes`
-          : `${getBaseUrl()}comments/likes`,
+          ? `${getBaseUrl()}/api/posts/addLike`
+          : `${getBaseUrl()}/api/posts/addCommentLike`,
         {
           method: "POST",
           headers: {
@@ -186,15 +187,13 @@ export default function Post({
       console.log(error, "this is the add like error in post");
     }
   };
+  
 
 
   const deletePost = async (postId: string) => {
     setLoading(true);
     try {
-      await fetch(
-        !isComment
-          ? `${getBaseUrl()}posts/delete`
-          : `${getBaseUrl()}comments/delete`, {
+      await fetch(`${getBaseUrl()}/api/posts/deletePost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -217,7 +216,7 @@ export default function Post({
   const deleteComment = async (id: string) => {
     setLoading(true);
     try {
-      await fetch(`${getBaseUrl()}comments/delete`, {
+      await fetch(`${getBaseUrl()}/api/posts/deleteComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -246,7 +245,7 @@ export default function Post({
   ) => {
 
     try {
-      const response = await fetch(`${getBaseUrl()}comments/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -260,6 +259,8 @@ export default function Post({
         }),
       });
       const post = await response.json();
+      const updatedCommentCount = optimisticomment + 1;
+      setOptimisticComment(updatedCommentCount);
       handleCloseComment();
       await getForYouPosts(myInfo?.id);
       // await getAllForYouPosts();
@@ -291,7 +292,7 @@ export default function Post({
     setLoading(true);
     handleCloseRepost();
     try {
-      const test = await fetch(`${getBaseUrl()}reposts/add`, {
+      const test = await fetch(`${getBaseUrl()}/api/posts/addReposts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -316,17 +317,11 @@ export default function Post({
     handleCloseRepost();
     try {
       await fetch(
-        `${getBaseUrl()}reposts/delete`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          ...(isComment ? { comment_id: postId } : { post_id: postId }),
-        }),
-      });
-      await getUserPosts(myInfo.email, myInfo.id);
+        `${getBaseUrl()}/api/posts/deleteRepost?user=${userId}&post=${postId}`,
+        {
+          method: "DELETE",
+        }
+      );
       await getForYouPosts(myInfo?.id);
       await getPost(localId)
       await getAllForYouPosts();
@@ -351,6 +346,12 @@ export default function Post({
     router.push(`/${link}/${post.id}`);
   };
 
+  useEffect(() => {
+    setOptimisticComment(post?.replies?.length)
+  }, [post])
+
+
+  console.log(post, 'this is the post')
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -386,7 +387,7 @@ export default function Post({
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
-                {post.comments ? post?.comments?.length : post?.replies?.length}
+                {optimisticomment}
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>

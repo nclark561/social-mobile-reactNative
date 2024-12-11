@@ -122,7 +122,7 @@ export default function CommentPage({navigation}) {
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
     setOptimisticLike(updatedLikesCount);
     try {
-      const test = await fetch(`${getBaseUrl()}comments/likes`, {
+      const test = await fetch(`${getBaseUrl()}/api/posts/addCommentLike`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,7 +147,7 @@ export default function CommentPage({navigation}) {
   ) => {
     try {
       handleCloseComment()
-      const response = await fetch(`${getBaseUrl()}comments/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/posts/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +168,7 @@ export default function CommentPage({navigation}) {
 
   const deletePost = async (id: string) => {
     try {
-      const response = await fetch(`${getBaseUrl()}comments/delete`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/deleteComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +187,7 @@ export default function CommentPage({navigation}) {
   const getPost = async () => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}comments/singleComment?comment_id=${local.comment}`,
+        `${getBaseUrl()}/api/posts/getSingleComment?id=${local.comment}`,
         {
           method: "GET",
           headers: {
@@ -282,8 +282,11 @@ export default function CommentPage({navigation}) {
     }
   }, [thisPost]);  
 
-  
+  const isLikedByUser = (likes: string[]): boolean => {
+    return likes?.includes(myInfo?.id);
+  };
 
+  console.log(thisPost, 'comment')
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -298,13 +301,13 @@ export default function CommentPage({navigation}) {
         <Pressable onPress={() => {
           router.back()
         }}>
-          {/* <Link href="/(tabs)/"> */}
-            <Ionicons
-              size={20}
-              name="arrow-back-outline"
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-          {/* </Link> */}
+
+          <Ionicons
+            size={20}
+            name="arrow-back-outline"
+            color={colorScheme === "dark" ? "white" : "black"}
+          />
+
         </Pressable>
       </ThemedView>
       <ThemedView
@@ -343,22 +346,27 @@ export default function CommentPage({navigation}) {
                 {postComments?.length}
               </ThemedText>
             </ThemedView>
-            <Ionicons
-              size={15}
-              name="git-compare-outline"
-              onPress={handleOpenRepost}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-            <ThemedView style={styles.smallRow}>
+            <ThemedView>
               <Ionicons
-                onPress={() => {
-                  addLike(myInfo?.id, thisPost?.id)
-                }}
                 size={15}
-                name={isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"}
+                name="git-compare-outline"
+                onPress={handleOpenRepost}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{optimisticLike}</ThemedText>
+              <ThemedText style={styles.smallNumber}>
+                {thisPost?.reposts?.length}
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.smallRow}>
+              <Ionicons
+                onPress={() => { addLike(myInfo?.id, thisPost?.id) }}
+                size={15}
+                name={
+                  isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
+                }
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
+              <ThemedText style={styles.smallNumber}>{thisPost?.likes?.length}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}

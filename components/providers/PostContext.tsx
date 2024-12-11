@@ -51,7 +51,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   const getUserPosts = async (email: string, userId: string) => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}posts/getMyPosts?email=${email}&user_id=${userId}`,
+        `${getBaseUrl()}/api/posts/getMyPosts?email=${email}&id=${userId}`,
         {
           method: "GET",
           headers: {
@@ -69,7 +69,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   const getForYouPosts = async (userId?: string) => {
     try {
       const result = await fetch(
-        `${getBaseUrl()}posts/getPosts${userId ? `?user_id=${userId}` : ""}`,
+        `${getBaseUrl()}/api/posts/getPosts${userId ? `?id=${userId}` : ""}`,
         {
           method: "GET",
           headers: {
@@ -79,6 +79,21 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
       );
       const fetchedPosts = await result.json();
       setForYouFollowingPosts(fetchedPosts.Posts);
+    } catch (error) {
+      console.log(error, "this is the get for you posts error");
+    }
+  };
+
+  const getAllForYouPosts = async () => {
+    try {
+      const result = await fetch(`${getBaseUrl()}/api/posts/getPosts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const fetchedPosts = await result.json();
+      setForYouPosts(fetchedPosts.Posts);
     } catch (error) {
       console.log(error, "this is the get for you posts error");
     }

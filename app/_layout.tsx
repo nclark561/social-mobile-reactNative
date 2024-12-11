@@ -24,6 +24,7 @@ import { inject } from "@vercel/analytics"
 import { NavigationContainer } from "@react-navigation/native";
 
 
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
