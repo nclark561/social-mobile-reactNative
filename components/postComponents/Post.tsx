@@ -225,7 +225,7 @@ export default function Post({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          comment_id: id,
+          id,
         }),
       });
       deleteMenuRef.current?.dismiss();

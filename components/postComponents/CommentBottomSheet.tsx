@@ -78,6 +78,10 @@ const CommentBottomSheet = ({
       setUserProfileImageUri(newProfileImageUri);
     }
   }, [user]);
+
+  console.log(post, 'this is the comment bottom sheet post')
+
+
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
   const blurhash2 = user?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
   return (
