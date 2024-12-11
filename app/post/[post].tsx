@@ -194,10 +194,10 @@ export default function PostPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: comment,
-          user_name: userName,
-          post_id: postId,
-          user_id: userId,
+          comment,
+          userName,
+          postId,
+          userId,
           // parent_id: commentId,
         }),
       });
@@ -216,9 +216,10 @@ export default function PostPage() {
           "Content-Type": "application/json",
         },
       });
-      const userData = await result.json();      
+      const userData = await result.json();
       setThisPost(userData.post);
-      setPostComments(userData.post.top_level_comments);
+      console.log(userData.post)
+      setPostComments(userData?.post.comments);
       setOptimisticLike(userData?.post?.likes?.length)
       setLoading(false);
     } catch (error) {
@@ -227,7 +228,7 @@ export default function PostPage() {
   };
 
   const isLikedByUser = (likes: string[]): boolean => {
-    const liked = likes?.includes(myInfo?.id);    
+    const liked = likes?.includes(myInfo?.id);
     return liked;
   };
 
@@ -263,7 +264,7 @@ export default function PostPage() {
         },
         body: JSON.stringify({
           user_id: userId,
-          post_id: postId ,
+          post_id: postId,
         }),
       });
       await getPost(local.post);
@@ -297,7 +298,7 @@ export default function PostPage() {
     }
   };
 
-console.log(thisPost, 'this is this post')
+  console.log(thisPost, 'this is this post')
 
   return (
     <ThemedView style={styles.realRow}>
@@ -313,13 +314,13 @@ console.log(thisPost, 'this is this post')
           <Pressable onPress={() => {
             router.back()
           }}>
-            
-              <Ionicons
-                size={20}
-                name="arrow-back-outline"
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
-            
+
+            <Ionicons
+              size={20}
+              name="arrow-back-outline"
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+
           </Pressable>
         </ThemedView>
         <ThemedView
@@ -490,17 +491,22 @@ console.log(thisPost, 'this is this post')
             </ThemedView>
           </CustomBottomSheet>) : <DeletePopup post={thisPost} deleteComment={null} deletePost={deletePost} deleteVisible={deleteVisible} postOwnerId={thisPost?.owner?.id} myInfo={myInfo} handleCloseDeleteMenu={handleCloseDeleteMenu} />}
         </ThemedView>
-        {thisPost?.comments?.map((comment: any) => {          
-          return (
-            <Post
-              key={comment.id}
-              isComment
-              post={comment}
-              user={myInfo?.id}
-              setLoading={setLoading}
-            />
-          );
-        })}
+        <Animated.ScrollView
+          showsVerticalScrollIndicator={false}
+        // style={{ height: "72%", flex: 1 }}
+        >
+          {thisPost?.comments?.map((comment: any) => {
+            return (
+              <Post
+                key={comment.id}
+                isComment
+                post={comment}
+                user={myInfo?.id}
+                setLoading={setLoading}
+              />
+            );
+          })}
+        </Animated.ScrollView>
       </ThemedView>
     </ThemedView >
   );

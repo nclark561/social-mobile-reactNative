@@ -79,7 +79,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
       await fetch(`${getBaseUrl()}/api/posts/deleteConvo`, {
         method: "POST",
         body: JSON.stringify({
-          conversation_id: id,
+           id,
         }),
         headers: {
           "Content-Type": "application/json",

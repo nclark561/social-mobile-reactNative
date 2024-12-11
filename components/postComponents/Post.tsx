@@ -191,6 +191,7 @@ export default function Post({
 
 
   const deletePost = async (postId: string) => {
+    debugger
     setLoading(true);
     try {
       await fetch(`${getBaseUrl()}/api/posts/deletePost`, {
@@ -199,7 +200,7 @@ export default function Post({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          post_id: postId,
+          postId,
         }),
       });
       deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
@@ -350,7 +351,7 @@ export default function Post({
     setOptimisticComment(post.comments ? post?.comments?.length : post?.replies?.length)
   }, [post])
 
-  
+
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -376,7 +377,7 @@ export default function Post({
           >
             <ThemedText style={styles.postUser}>{post?.user_name}</ThemedText>
           </Link>
-          <ThemedText style={styles.postText}>{post?.content}</ThemedText>          
+          <ThemedText style={styles.postText}>{post?.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
             <ThemedView style={styles.smallRow}>
               <Ionicons

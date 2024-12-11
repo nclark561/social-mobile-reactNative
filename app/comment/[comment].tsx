@@ -153,11 +153,11 @@ export default function CommentPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: comment,
-          user_name: userName,
-          post_id: postId,
-          user_id: userId,
-          parent_id: commentId,
+           comment,
+           userName,
+           postId,
+           userId,
+           commentId,
         }),
       });
       await getPost()
@@ -173,7 +173,7 @@ export default function CommentPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ comment_id: id }),
+        body: JSON.stringify({  id }),
       });
       const result = await response.json();
       if (result) {
@@ -215,8 +215,8 @@ export default function CommentPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: userId,
-          comment_id: postId,
+           userId,
+           postId,
         }),
       });
       // await getForYouPosts(myInfo?.id);      
@@ -240,8 +240,8 @@ export default function CommentPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: userId,
-          comment_id: postId,
+           userId,
+          postId,
         }),
       });
       await getPost()
@@ -256,7 +256,7 @@ export default function CommentPage() {
   };
 
   const repostedByMe = useMemo(() => {
-    return thisPost?.reposts?.some((e: any) => e.user_id === myInfo?.id) || false;
+    return thisPost?.reposts?.some((e: any) => e.userId === myInfo?.id) || false;
   }, [thisPost?.reposts, myInfo?.id]);
 
   useFocusEffect(
