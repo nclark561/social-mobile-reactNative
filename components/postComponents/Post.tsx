@@ -88,7 +88,12 @@ export default function Post({
   console.log(post, 'this is the post')
 
   const repostedByMe = useMemo(() => {
-    return post?.repostedcomments?.some((e: any) => e.userId === myInfo?.id) || false;
+    if(post.repostedcomments) {
+      return post?.repostedcomments?.some((e: any) => e.userId === myInfo?.id) || false;
+    } else {
+      return post?.reposts?.some((e: any) => e.userId === myInfo?.id) || false;
+    }
+    
   }, [post?.reposts, myInfo?.id]);
 
   const handleOpenShare = () => {
@@ -409,7 +414,7 @@ export default function Post({
                 }
               />
               <ThemedText style={styles.smallNumber}>
-                {repostLength ? repostLength : post?.repostedcomments?.length}
+                {post?.reposts ? post?.reposts.length : post?.repostedcomments?.length}
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
