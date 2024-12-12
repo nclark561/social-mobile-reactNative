@@ -146,8 +146,9 @@ export default function CommentPage() {
     commentId?: string,
   ) => {
     try {
+      
       handleCloseComment()
-      const response = await fetch(`${getBaseUrl()}/posts/addComment`, {
+      const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

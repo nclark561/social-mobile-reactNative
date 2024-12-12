@@ -137,7 +137,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [myInfo]);
 
-  const getUser = async () => {
+  const getUser = async () => {    
     try {
       let userEmail;
       if (Platform.OS === "web") {
@@ -157,6 +157,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
 
       if (!result.ok) throw new Error("Failed to fetch user info.");
       const userInfo = await result.json();      
+      console.log(userInfo, 'this is user info')
       setMyInfo(userInfo.user);
     } catch (error) {
       console.error("Error fetching user info:", error);

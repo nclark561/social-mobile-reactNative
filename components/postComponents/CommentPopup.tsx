@@ -48,7 +48,7 @@ const CommentPopup = ({
   const blurhash2 = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
 
-
+console.log(post, 'this is popup')
   return (
     <Modal transparent visible={commentVisible} animationType="fade">
       <ThemedView style={styles.modal}>
@@ -64,11 +64,11 @@ const CommentPopup = ({
             </Pressable>
             <Pressable
               onPress={() => {
-                
+                debugger
                 addComment(
                   commentInput,
                   myInfo?.username,
-                  !isComment ? post?.id : post.post_id,
+                  !isComment ? post?.id : post.postId,
                   myInfo?.id,
                   post?.id
                 );

@@ -142,7 +142,7 @@ export default function PostPage() {
       const test = await fetch(
         comment
           ? `${getBaseUrl()}/api/posts/addCommentLike`
-          : `${getBaseUrl()}/api/post/addLike`,
+          : `${getBaseUrl()}/api/posts/addLike`,
         {
           method: "POST",
           headers: {
@@ -298,7 +298,7 @@ export default function PostPage() {
     }
   };
 
-  console.log(thisPost, 'this is this post')
+ console.log(thisPost, 'testing this post')
 
   return (
     <ThemedView style={styles.realRow}>
@@ -500,7 +500,7 @@ export default function PostPage() {
               <Post
                 key={comment.id}
                 isComment
-                parent_post_id={thisPost?.id}
+                localId={thisPost?.id}
                 post={comment}
                 user={myInfo?.id}
                 setLoading={setLoading}

@@ -88,7 +88,7 @@ export default function Post({
   console.log(post, 'this is the post')
 
   const repostedByMe = useMemo(() => {
-    return post?.reposts?.some((e: any) => e.userId === myInfo?.id) || false;
+    return post?.repostedcomments?.some((e: any) => e.userId === myInfo?.id) || false;
   }, [post?.reposts, myInfo?.id]);
 
   const handleOpenShare = () => {
@@ -165,6 +165,7 @@ export default function Post({
   }, [post?.likes, myInfo?.id]);
 
   const addLike = async (userId: string, postId: string) => {
+
     setLiked((prevLiked) => !prevLiked);
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
     setOptimisticLike(updatedLikesCount);
@@ -247,9 +248,9 @@ export default function Post({
     postId: string,
     userId: string,
     commentId?: string
-  ) => {
-    debugger
+  ) => {    
     try {
+      
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {
@@ -258,12 +259,12 @@ export default function Post({
         body: JSON.stringify({
           comment,
           userName,
-          parent_post_id: postId,
+          postId: isComment ? localId : postId,
           userId,
-          ...(isComment && { parent_id: commentId }),
+          ...(isComment && { commentId }),
         }),
       });
-      const post = await response.json();
+      const postId1 = await response.json();
       const updatedCommentCount = optimisticomment + 1;
       setOptimisticComment(updatedCommentCount);
       handleCloseComment();
@@ -355,8 +356,7 @@ export default function Post({
     setOptimisticComment(post.comments ? post?.comments?.length : post?.replies?.length)
   }, [post])
 
-  console.log(parent_post_id, 'post_id')
-  console.log(post.id, 'parent_post_id')
+
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -409,7 +409,7 @@ export default function Post({
                 }
               />
               <ThemedText style={styles.smallNumber}>
-                {repostLength ? repostLength : post?.reposts?.length}
+                {repostLength ? repostLength : post?.repostedcomments?.length}
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
@@ -537,6 +537,7 @@ export default function Post({
                 </Pressable>
                 <Pressable
                   onPress={() => {
+                    
                     addComment(
                       commentInput,
                       myInfo.username,
