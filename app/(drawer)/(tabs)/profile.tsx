@@ -20,6 +20,7 @@ import Animated from "react-native-reanimated";
 import EditProfileSheet from "@/components/profileComponents/EditProfileSheet";
 import { Image } from "expo-image";
 import { ClipLoader } from "react-spinners";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabTwoScreen() {
   const editProfileRef = useRef<BottomSheetModal>(null);
@@ -112,13 +113,44 @@ export default function TabTwoScreen() {
           </Animated.ScrollView>
         );
       case "Replies":
+        const comments = myInfo?.comments
+        const repostedComments = myInfo?.repostedcomments
+        const query = [...comments, ...repostedComments].sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
+
         return (
           <Animated.ScrollView
             showsVerticalScrollIndicator={false}
             style={{ height: "72%", flex: 1 }}
           >
             <ThemedView>
-              {myInfo?.comments?.map((comment: any) => {
+              {query.map((comment: any) => {
+                if(comment.comment) {
+                  return (
+                    <ThemedView
+                        key={comment.comment.id}
+                        style={{ flexDirection: "column", flex: 1 }}
+                      >
+                        <ThemedView style={styles.row}>
+                          <Ionicons
+                            color={colorScheme === "dark" ? "white" : "black"}
+                            name="git-compare-outline"
+                            size={15}
+                          />
+                          <ThemedText style={styles.repost}>
+                            {myInfo?.username} Reposted
+                          </ThemedText>
+                        </ThemedView>
+                        <Post
+                          key={comment.comment.id}
+                          post={comment.comment}
+                          isComment={false}
+                          setLoading={setLoading}
+                        />
+                      </ThemedView>
+                  )
+                }
                 return (
                   <Post
                     user={myInfo?.email}
@@ -543,6 +575,9 @@ const styles = StyleSheet.create({
   },
   ninety: {
     width: width < 1000 ? '100%' : '90%'
+  },
+  repost: {
+    marginLeft: 5,
+    fontSize: 14,
   }
-
 });

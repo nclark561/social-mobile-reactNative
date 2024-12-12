@@ -304,7 +304,7 @@ export default function Post({
         },
         body: JSON.stringify({
           userId,
-          ...(isComment ? { postId } : { postId }),
+          ...(isComment ? { commentId: postId } : { postId }),
         }),
       });
       await getUserPosts(myInfo?.email, myInfo?.id);
@@ -380,7 +380,7 @@ export default function Post({
             style={styles.link}
             onPress={handleProfilePress}
           >
-            <ThemedText style={styles.postUser}>{postOwner.username}</ThemedText>
+            <ThemedText style={styles.postUser}>{postOwner?.username}</ThemedText>
           </Link>
           <ThemedText style={styles.postText}>{post?.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
@@ -453,14 +453,14 @@ export default function Post({
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
           onPress={() => {
-            if (myInfo?.id === postOwner.id) {
+            if (myInfo?.id === postOwner?.id) {
               handleOpenDeleteMenu();
             }
           }}
         />
         {width < 1000 ? (
           <CustomBottomSheet snapPercs={["20%"]} ref={deleteMenuRef}>
-            {myInfo?.id === postOwner.id && (
+            {myInfo?.id === postOwner?.id && (
               <Pressable
                 style={styles.deleteButton}
                 onPress={() => {
@@ -486,7 +486,7 @@ export default function Post({
             isComment={isComment}
             deletePost={deletePost}
             deleteComment={deleteComment}
-            postOwnerId={postOwner.id}
+            postOwnerId={postOwner?.id}
             myInfo={myInfo}
             deleteVisible={deleteVisible}
           />
