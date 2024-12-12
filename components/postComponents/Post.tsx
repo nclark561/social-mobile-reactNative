@@ -76,7 +76,7 @@ export default function Post({
   const [repostVisible, setRepostVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
   const link = isComment ? "comment" : "post";
-  const postOwnerId = isComment ? post?.userId : post?.owner?.id;
+  const postOwner = isComment ? post?.user : post?.owner;
   const { getForYouPosts, getUserPosts, getBaseUrl, getAllForYouPosts } = useContext<any>(PostContext);
   const { myInfo, loggedIn } = useContext<any>(MyContext);
   const shareModalRef = useRef<BottomSheetModal>(null);
@@ -84,6 +84,8 @@ export default function Post({
   const [profileImageUri, setProfileImageUri] = useState(``);
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
+
+  console.log(post, 'this is the post')
 
   const repostedByMe = useMemo(() => {
     return post?.reposts?.some((e: any) => e.userId === myInfo?.id) || false;
@@ -256,7 +258,7 @@ export default function Post({
         body: JSON.stringify({
           comment,
           userName,
-          parent_post_id,
+          parent_post_id: postId,
           userId,
           ...(isComment && { parent_id: commentId }),
         }),
@@ -378,7 +380,7 @@ export default function Post({
             style={styles.link}
             onPress={handleProfilePress}
           >
-            <ThemedText style={styles.postUser}>{post?.user_name}</ThemedText>
+            <ThemedText style={styles.postUser}>{postOwner.username}</ThemedText>
           </Link>
           <ThemedText style={styles.postText}>{post?.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
@@ -451,14 +453,14 @@ export default function Post({
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
           onPress={() => {
-            if (myInfo?.id === postOwnerId) {
+            if (myInfo?.id === postOwner.id) {
               handleOpenDeleteMenu();
             }
           }}
         />
         {width < 1000 ? (
           <CustomBottomSheet snapPercs={["20%"]} ref={deleteMenuRef}>
-            {myInfo?.id === postOwnerId && (
+            {myInfo?.id === postOwner.id && (
               <Pressable
                 style={styles.deleteButton}
                 onPress={() => {
@@ -484,7 +486,7 @@ export default function Post({
             isComment={isComment}
             deletePost={deletePost}
             deleteComment={deleteComment}
-            postOwnerId={postOwnerId}
+            postOwnerId={postOwner.id}
             myInfo={myInfo}
             deleteVisible={deleteVisible}
           />
