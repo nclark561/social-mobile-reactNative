@@ -85,7 +85,7 @@ export default function Post({
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
-  console.log(post, 'this is the post')
+  
 
   const repostedByMe = useMemo(() => {
     if(post.repostedcomments) {
@@ -200,8 +200,7 @@ export default function Post({
 
 
 
-  const deletePost = async (postId: string) => {
-    debugger
+  const deletePost = async (postId: string) => {    
     setLoading(true);
     try {
       await fetch(`${getBaseUrl()}/api/posts/deletePost`, {

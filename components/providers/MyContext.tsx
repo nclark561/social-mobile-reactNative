@@ -156,8 +156,7 @@ export const MyProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (!result.ok) throw new Error("Failed to fetch user info.");
-      const userInfo = await result.json();      
-      console.log(userInfo, 'this is user info')
+      const userInfo = await result.json();            
       setMyInfo(userInfo.user);
     } catch (error) {
       console.error("Error fetching user info:", error);

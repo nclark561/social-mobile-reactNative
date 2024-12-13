@@ -146,7 +146,7 @@ export default function CommentPage() {
     commentId?: string,
   ) => {
     try {
-      
+
       handleCloseComment()
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
@@ -154,11 +154,11 @@ export default function CommentPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-           comment,
-           userName,
-           postId,
-           userId,
-           commentId,
+          comment,
+          userName,
+          postId,
+          userId,
+          commentId,
         }),
       });
       await getPost()
@@ -174,7 +174,7 @@ export default function CommentPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({  id }),
+        body: JSON.stringify({ id }),
       });
       const result = await response.json();
       if (result) {
@@ -217,8 +217,8 @@ export default function CommentPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-           userId,
-           postId,
+          userId,
+          postId,
         }),
       });
       // await getForYouPosts(myInfo?.id);      
@@ -242,7 +242,7 @@ export default function CommentPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-           userId,
+          userId,
           postId,
         }),
       });
@@ -286,6 +286,8 @@ export default function CommentPage() {
   };
 
 
+
+  console.log(postComments, 'these are post comments')
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -344,7 +346,7 @@ export default function CommentPage() {
               <ThemedText style={styles.smallNumber}>
                 {postComments?.length}
               </ThemedText>
-            </ThemedView>
+            </ThemedView>``
             <ThemedView>
               <Ionicons
                 size={15}
@@ -481,6 +483,7 @@ export default function CommentPage() {
     </ThemedView>
   );
 }
+
 
 const styles = StyleSheet.create({
   mainPostContainer: {

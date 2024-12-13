@@ -113,7 +113,7 @@ export default function HomeScreen() {
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
 
 
-  console.log(myInfo, 'my info')
+
   return (
     <ThemedView style={styles.pageContainer}>
       <Header name={"Welcome"} />
