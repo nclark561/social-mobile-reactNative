@@ -264,7 +264,7 @@ export default function Post({
         body: JSON.stringify({
           comment,
           userName,
-          postId: isComment ? localId : postId,
+          postId: localId ? localId : postId,
           userId,
           ...(isComment && { commentId }),
         }),
