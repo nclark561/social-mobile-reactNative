@@ -258,7 +258,7 @@ export default function CommentPage() {
   };
 
   const repostedByMe = useMemo(() => {
-    return thisPost?.reposts?.some((e: any) => e.userId === myInfo?.id) || false;
+    return thisPost?.repostedcomments?.some((e: any) => e.userId === myInfo?.id) || false;
   }, [thisPost?.reposts, myInfo?.id]);
 
   useFocusEffect(
@@ -353,7 +353,7 @@ export default function CommentPage() {
                 size={15}
                 name={repostedByMe ? "git-compare" : "git-compare-outline"}
                 onPress={handleOpenRepost}
-                color={colorScheme === "dark" ? "white" : "black"}
+                color={colorScheme === "dark" ? "white" : "green"}
               />
               <ThemedText style={styles.smallNumber}>
                 {thisPost?.repostedcomments?.length}

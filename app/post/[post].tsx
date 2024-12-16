@@ -7,7 +7,7 @@ import {
   Animated,
 } from "react-native";
 import { useFocusEffect } from "expo-router";
-import { useContext, useCallback, useEffect } from "react";
+import { useContext, useCallback, useEffect, useMemo } from "react";
 import { useLocalSearchParams } from "expo-router";
 import PostContext from "../../components/providers/PostContext";
 import { ThemedText } from "@/components/ThemedText";
@@ -60,8 +60,11 @@ export default function PostPage() {
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false)
-  const repostedByMe = thisPost?.reposts?.filter((e: any) => e.userId === myInfo?.id).length > 0;
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
+
+  const repostedByMe = useMemo(() => {
+    return thisPost?.reposts?.filter((e: any) => e.userId === myInfo?.id).length > 0;;
+  }, [thisPost?.reposts, myInfo?.id]);
 
   const handleOpenShare = () => {
     if (Platform.OS === 'web' && width > 1000) {
@@ -292,7 +295,7 @@ export default function PostPage() {
   };
 
 
-
+  console.log(repostedByMe, 'testing boolean')
 
   return (
     <ThemedView style={styles.realRow}>
