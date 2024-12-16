@@ -33,8 +33,7 @@ interface Post {
 const { width } = Dimensions.get('window')
 
 export default function CommentPage() {
-  const colorScheme = useColorScheme();
-  const [liked, setLiked] = useState(false);
+  const colorScheme = useColorScheme();  
   const [thisPost, setThisPost] = useState<any>();
   const [postComments, setPostComments] = useState<any>();
   const { getForYouPosts, getBaseUrl } = useContext<any>(PostContext);
@@ -119,6 +118,7 @@ export default function CommentPage() {
   const likePost = () => setLiked((prev) => !prev);
 
   const addLike = async (userId: string, postId: string) => {
+    setLiked((prevLiked) => !prevLiked);
     const updatedLikesCount = liked ? optimisticLike - 1 : optimisticLike + 1;
     setOptimisticLike(updatedLikesCount);
     try {
@@ -198,7 +198,7 @@ export default function CommentPage() {
       );
       const userData = await result.json();
       console.log(userData, 'this is the user data')
-      setOptimisticLike(userData?.comment.parent?.likes.length)
+      setOptimisticLike(userData?.comment.likes.length)
       setThisPost(userData?.comment);
       setPostComments(userData.comment.replies);
       setLoading(false);
@@ -286,8 +286,9 @@ export default function CommentPage() {
   };
 
 
+  const [liked, setLiked] = useState(isLikedByUser(thisPost?.likes));  
 
-  console.log(postComments, 'these are post comments')
+  console.log(thisPost, 'this is this post')
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -347,15 +348,15 @@ export default function CommentPage() {
                 {postComments?.length}
               </ThemedText>
             </ThemedView>
-            <ThemedView>
+            <ThemedView style={styles.smallRow}>
               <Ionicons
                 size={15}
-                name="git-compare-outline"
+                name={repostedByMe ? "git-compare" : "git-compare-outline"}
                 onPress={handleOpenRepost}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
-                {thisPost?.reposts?.length}
+                {thisPost?.repostedcomments?.length}
               </ThemedText>
             </ThemedView>
             <ThemedView style={styles.smallRow}>
@@ -367,7 +368,7 @@ export default function CommentPage() {
                 }
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>{thisPost?.likes?.length}</ThemedText>
+              <ThemedText style={styles.smallNumber}>{optimisticLike}</ThemedText>
             </ThemedView>
             <Ionicons
               size={15}

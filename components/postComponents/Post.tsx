@@ -434,7 +434,7 @@ export default function Post({
               </Pressable> :
                 <Ionicons
                   size={15}
-                  name={isLikedByUser(myInfo?.id) ? "heart" : "heart-outline"}
+                  name={liked ? "heart" : "heart-outline"}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
               }

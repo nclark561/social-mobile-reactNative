@@ -43,8 +43,8 @@ export default function PostPage() {
   const route = useRoute();
   const colorScheme = useColorScheme();
   const { post } = route.params as { post: Post };
-  const [liked, setLiked] = useState(false);
   const [thisPost, setThisPost] = useState<any>();
+  const [liked, setLiked] = useState();
   const [postComments, setPostComments] = useState<any>();
   const [commentInput, setCommentInput] = useState("");
   const { getForYouPosts, getBaseUrl } = useContext<any>(PostContext);
@@ -212,7 +212,6 @@ export default function PostPage() {
       });
       const userData = await result.json();
       setThisPost(userData.post);
-      console.log(userData.post)
       setPostComments(userData?.post.comments);
       setOptimisticLike(userData?.post?.likes?.length)
       setLoading(false);
@@ -291,6 +290,8 @@ export default function PostPage() {
       setLoading(false);
     }
   };
+
+
 
 
   return (
