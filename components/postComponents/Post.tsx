@@ -254,7 +254,7 @@ export default function Post({
     commentId?: string
   ) => {    
     try {
-      
+      debugger
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {

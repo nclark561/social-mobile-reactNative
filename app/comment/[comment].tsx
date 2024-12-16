@@ -146,7 +146,7 @@ export default function CommentPage() {
     commentId?: string,
   ) => {
     try {
-
+debugger
       handleCloseComment()
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
@@ -346,7 +346,7 @@ export default function CommentPage() {
               <ThemedText style={styles.smallNumber}>
                 {postComments?.length}
               </ThemedText>
-            </ThemedView>``
+            </ThemedView>
             <ThemedView>
               <Ionicons
                 size={15}
@@ -471,8 +471,7 @@ export default function CommentPage() {
         {postComments?.map((reply: any) => (
           <Post
             getPost={getPost}
-            key={reply.id}
-            localId={thisPost?.id}
+            key={reply.id}            
             isComment
             post={reply}
             user={myInfo?.email}
