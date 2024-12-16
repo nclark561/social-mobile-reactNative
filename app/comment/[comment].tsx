@@ -146,7 +146,7 @@ export default function CommentPage() {
     commentId?: string,
   ) => {
     try {
-debugger
+      debugger
       handleCloseComment()
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
@@ -471,7 +471,7 @@ debugger
         {postComments?.map((reply: any) => (
           <Post
             getPost={getPost}
-            key={reply.id}            
+            key={reply.id}
             isComment
             post={reply}
             user={myInfo?.email}

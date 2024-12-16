@@ -2,11 +2,8 @@ import {
   StyleSheet,
   Button,
   Pressable,
-  Text,
-  View,
   Platform,
   Dimensions,
-  Linking,
   Animated,
 } from "react-native";
 import { useFocusEffect } from "expo-router";
@@ -30,7 +27,6 @@ import { ClipLoader } from "react-spinners";
 import DeletePopup from "@/components/postComponents/DeletePopup";
 import CommentPopup from "@/components/postComponents/CommentPopup";
 import SharePopup from "@/components/postComponents/SharePopup";
-import RepostPopup from "@/components/postComponents/RepostPopup";
 
 
 interface Post {
@@ -58,16 +54,14 @@ export default function PostPage() {
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Reference for delete menu
   const local = useLocalSearchParams<any>();
-  const { setLoginToggle, myInfo, loggedIn, getUser } =
-    useContext<any>(MyContext);
+  const { myInfo } = useContext<any>(MyContext);
   const [loading, setLoading] = useState(true);
-  const [commentVisible, setCommentVisible] = useState(false); // State for menu visibility
+  const [commentVisible, setCommentVisible] = useState(false);
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false)
   const repostedByMe = thisPost?.reposts?.filter((e: any) => e.userId === myInfo?.id).length > 0;
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
-  const { height } = Dimensions.get("window");
 
   const handleOpenShare = () => {
     if (Platform.OS === 'web' && width > 1000) {
@@ -298,7 +292,6 @@ export default function PostPage() {
     }
   };
 
- console.log(thisPost, 'testing this post')
 
   return (
     <ThemedView style={styles.realRow}>
@@ -314,13 +307,11 @@ export default function PostPage() {
           <Pressable onPress={() => {
             router.back()
           }}>
-
             <Ionicons
               size={20}
               name="arrow-back-outline"
               color={colorScheme === "dark" ? "white" : "black"}
             />
-
           </Pressable>
         </ThemedView>
         <ThemedView
@@ -400,7 +391,6 @@ export default function PostPage() {
               />
             </ThemedView>
           </ThemedView>
-
           <Ionicons
             size={20}
             name="ellipsis-horizontal"

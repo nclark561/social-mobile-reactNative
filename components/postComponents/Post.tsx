@@ -85,15 +85,15 @@ export default function Post({
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Ref for the delete menu
 
-  
+
 
   const repostedByMe = useMemo(() => {
-    if(post.repostedcomments) {
+    if (post.repostedcomments) {
       return post?.repostedcomments?.some((e: any) => e.userId === myInfo?.id) || false;
     } else {
       return post?.reposts?.some((e: any) => e.userId === myInfo?.id) || false;
     }
-    
+
   }, [post?.reposts, myInfo?.id]);
 
   const handleOpenShare = () => {
@@ -200,7 +200,7 @@ export default function Post({
 
 
 
-  const deletePost = async (postId: string) => {    
+  const deletePost = async (postId: string) => {
     setLoading(true);
     try {
       await fetch(`${getBaseUrl()}/api/posts/deletePost`, {
@@ -252,7 +252,7 @@ export default function Post({
     postId: string,
     userId: string,
     commentId?: string
-  ) => {    
+  ) => {
     try {
       debugger
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
@@ -541,7 +541,7 @@ export default function Post({
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    
+
                     addComment(
                       commentInput,
                       myInfo.username,
