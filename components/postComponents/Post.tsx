@@ -53,7 +53,6 @@ interface PostProps {
   setLoading: React.Dispatch<SetStateAction<boolean>>;
   getPost?: (id: string) => Promise<void>;
   localId: string
-  triggerRerender: () => void; 
 }
 
 const { width } = Dimensions.get("window");
@@ -62,7 +61,6 @@ export default function Post({
   post,
   getPost,
   localId,
-  triggerRerender,
   isComment,
   user,
   repostLength,
@@ -213,7 +211,7 @@ export default function Post({
           postId,
         }),
       });
-      deleteMenuRef.current?.dismiss(); 
+      deleteMenuRef.current?.dismiss();
       await getForYouPosts(myInfo?.id);
       await getUserPosts(myInfo.email, myInfo.id);
       setLoading(false);
@@ -236,12 +234,16 @@ export default function Post({
         }),
       });
       deleteMenuRef.current?.dismiss();
-      await getForYouPosts(myInfo?.id);
-      await getAllForYouPosts();
-      await getUserPosts(user);
-      await getPost?.(localId || post.id);
+      handleCloseComment();
+      await getForYouPosts(myInfo?.id);      
+      await getUserPosts(myInfo.email, myInfo.id);
+      if (getPost) {
+        await getPost(localId);
+      } else {
+        console.log("getPost is not defined");
+      }
       setLoading(false)
-      triggerRerender()
+      
     } catch (error) {
       console.log(error, "this is the delete post error");
       setLoading(false);
@@ -255,7 +257,7 @@ export default function Post({
     userId: string,
     commentId?: string
   ) => {
-    try {      
+    try {
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {
@@ -373,7 +375,7 @@ export default function Post({
     setOptimisticComment(post.comments ? post?.comments?.length : post?.replies?.length)
   }, [post])
 
-
+console.log(post,'this is the post')
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -397,7 +399,7 @@ export default function Post({
             style={styles.link}
             onPress={handleProfilePress}
           >
-            <ThemedText style={styles.postUser}>{postOwner?.username}</ThemedText>
+            <ThemedText style={styles.postUser}>{postOwner?.username ? postOwner?.username : post?.userName}</ThemedText>
           </Link>
           <ThemedText style={styles.postText}>{post?.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
@@ -470,7 +472,9 @@ export default function Post({
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
           onPress={() => {
+            debugger
             if (myInfo?.id === postOwner?.id) {
+              debugger
               handleOpenDeleteMenu();
             }
           }}

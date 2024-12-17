@@ -507,8 +507,7 @@ export default function PostPage() {
                 }}
                 isComment
                 localId={thisPost?.id}
-                post={comment}
-                triggerRerender={triggerRerender}
+                post={comment}                
                 user={myInfo?.id}
                 setLoading={setLoading}
               />
