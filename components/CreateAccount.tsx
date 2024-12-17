@@ -33,10 +33,10 @@ export default function SignIn({
       );
       const { user } = await response.json();
       if (user) throw new Error("username already taken");
-      // const { data, error } = await supabase.auth.signUp({
-      //   email: email,
-      //   password: password,
-      // });
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
       if (error) {
         throw new Error(error.message);
       }
