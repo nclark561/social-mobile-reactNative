@@ -335,47 +335,49 @@ export default function CommentPage() {
               </ThemedText>
             </Link>
           </ThemedView>
-          <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
-          <ThemedView style={styles.reactionsContainer}>
-            <ThemedView style={styles.smallRow}>
+          <ThemedText  style={styles.postText}>{thisPost?.content}</ThemedText>
+          <ThemedView style={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
+            <ThemedView style={styles.reactionsContainer}>
+              <ThemedView style={styles.smallRow}>
+                <Ionicons
+                  size={15}
+                  name="chatbubble-outline"
+                  onPress={handleOpenComment}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+                <ThemedText style={styles.smallNumber}>
+                  {postComments?.length}
+                </ThemedText>
+              </ThemedView>
+              <ThemedView style={styles.smallRow}>
+                <Ionicons
+                  size={15}
+                  name={repostedByMe ? "git-compare" : "git-compare-outline"}
+                  onPress={handleOpenRepost}
+                  color={colorScheme === "dark" ? "white" : "green"}
+                />
+                <ThemedText style={styles.smallNumber}>
+                  {thisPost?.repostedcomments?.length}
+                </ThemedText>
+              </ThemedView>
+              <ThemedView style={styles.smallRow}>
+                <Ionicons
+                  onPress={() => { addLike(myInfo?.id, thisPost?.id) }}
+                  size={15}
+                  name={
+                    isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
+                  }
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
+                <ThemedText style={styles.smallNumber}>{optimisticLike}</ThemedText>
+              </ThemedView>
               <Ionicons
                 size={15}
-                name="chatbubble-outline"
-                onPress={handleOpenComment}
+                name="share-outline"
+                onPress={handleOpenShare}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <ThemedText style={styles.smallNumber}>
-                {postComments?.length}
-              </ThemedText>
             </ThemedView>
-            <ThemedView style={styles.smallRow}>
-              <Ionicons
-                size={15}
-                name={repostedByMe ? "git-compare" : "git-compare-outline"}
-                onPress={handleOpenRepost}
-                color={colorScheme === "dark" ? "white" : "green"}
-              />
-              <ThemedText style={styles.smallNumber}>
-                {thisPost?.repostedcomments?.length}
-              </ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.smallRow}>
-              <Ionicons
-                onPress={() => { addLike(myInfo?.id, thisPost?.id) }}
-                size={15}
-                name={
-                  isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
-                }
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
-              <ThemedText style={styles.smallNumber}>{optimisticLike}</ThemedText>
-            </ThemedView>
-            <Ionicons
-              size={15}
-              name="share-outline"
-              onPress={handleOpenShare}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
           </ThemedView>
         </ThemedView>
         <Ionicons
@@ -512,7 +514,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexShrink: 1,
     margin: 5,
-    width: "80%",
+    width: "90%",
   },
   postUser: {
     fontWeight: "bold",
@@ -522,6 +524,7 @@ const styles = StyleSheet.create({
   postText: {
     flexShrink: 1,
     fontSize: 14,
+    marginTop: 5    
   },
   ellipsis: {
     position: "absolute",
@@ -530,7 +533,7 @@ const styles = StyleSheet.create({
   },
   reactionsContainer: {
     flexDirection: "row",
-    width: "95%",
+    width: "80%",
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: 10,

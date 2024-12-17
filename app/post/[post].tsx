@@ -206,8 +206,7 @@ export default function PostPage() {
     }
   };
 
-  const getPost = async (id: string) => {
-    debugger
+  const getPost = async (id: string) => {    
     try {
       const result = await fetch(`${getBaseUrl()}/api/posts/getPost?id=${id}`, {
         method: "GET",
@@ -296,13 +295,10 @@ export default function PostPage() {
     }
   };
 
+  
+    
 
-  const triggerRerender = () => {
-    debugger
-    setRenderKey((prev) => prev + 1); // Increment key to force rerender
-  };
-
-  console.log(repostedByMe, 'testing boolean')
+  
 
   return (
     <ThemedView style={styles.realRow}>
@@ -349,57 +345,59 @@ export default function PostPage() {
               </Link>
             </ThemedView>
             <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
-            <ThemedView style={styles.reactionsContainer}>
-              <ThemedView style={styles.smallRow}>
+            <ThemedView style={{display:'flex', justifyContent: 'center', width: '100%', alignItems:'center'}}>
+              <ThemedView style={styles.reactionsContainer}>
+                <ThemedView style={styles.smallRow}>
+                  <Ionicons
+                    size={15}
+                    name="chatbubble-outline"
+                    onPress={handleOpenComment}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
+                  <ThemedText style={styles.smallNumber}>
+                    {postComments?.length}
+                  </ThemedText>
+                </ThemedView>
+                <ThemedView style={styles.smallRow}>
+                  <Ionicons
+                    size={15}
+                    name={repostedByMe ? "git-compare" : "git-compare-outline"}
+                    onPress={handleOpenRepost}
+                    color={
+                      repostedByMe
+                        ? "green"
+                        : colorScheme === "dark"
+                          ? "white"
+                          : "black"
+                    }
+                  />
+                  <ThemedText style={styles.smallNumber}>
+                    {thisPost?.reposts?.length}
+                  </ThemedText>
+                </ThemedView>
+                <ThemedView style={styles.smallRow}>
+                  <Ionicons
+                    size={15}
+                    key={`like-icon-${isLikedByUser(thisPost?.likes)}`}
+                    name={
+                      isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
+                    }
+                    onPress={() => {
+                      addLike(myInfo?.id, thisPost?.id, false);
+                    }}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
+                  <ThemedText style={styles.smallNumber}>
+                    {optimisticLike}
+                  </ThemedText>
+                </ThemedView>
                 <Ionicons
                   size={15}
-                  name="chatbubble-outline"
-                  onPress={handleOpenComment}
+                  name="share-outline"
+                  onPress={handleOpenShare}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
-                <ThemedText style={styles.smallNumber}>
-                  {postComments?.length}
-                </ThemedText>
               </ThemedView>
-              <ThemedView style={styles.smallRow}>
-                <Ionicons
-                  size={15}
-                  name={repostedByMe ? "git-compare" : "git-compare-outline"}
-                  onPress={handleOpenRepost}
-                  color={
-                    repostedByMe
-                      ? "green"
-                      : colorScheme === "dark"
-                        ? "white"
-                        : "black"
-                  }
-                />
-                <ThemedText style={styles.smallNumber}>
-                  {thisPost?.reposts?.length}
-                </ThemedText>
-              </ThemedView>
-              <ThemedView style={styles.smallRow}>
-                <Ionicons
-                  size={15}
-                  key={`like-icon-${isLikedByUser(thisPost?.likes)}`}
-                  name={
-                    isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
-                  }
-                  onPress={() => {
-                    addLike(myInfo?.id, thisPost?.id, false);
-                  }}
-                  color={colorScheme === "dark" ? "white" : "black"}
-                />
-                <ThemedText style={styles.smallNumber}>
-                  {optimisticLike}
-                </ThemedText>
-              </ThemedView>
-              <Ionicons
-                size={15}
-                name="share-outline"
-                onPress={handleOpenShare}
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
             </ThemedView>
           </ThemedView>
           <Ionicons
@@ -502,12 +500,11 @@ export default function PostPage() {
                 key={comment.id}
                 getPost={async (id: string) => {
                   console.log("getPost called with ID:", id);
-                  debugger;
                   getPost(id);
                 }}
                 isComment
                 localId={thisPost?.id}
-                post={comment}                
+                post={comment}
                 user={myInfo?.id}
                 setLoading={setLoading}
               />
@@ -579,7 +576,7 @@ const styles = StyleSheet.create({
   },
   reactionsContainer: {
     flexDirection: "row",
-    width: "95%",
+    width: "80%",
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: 10,
