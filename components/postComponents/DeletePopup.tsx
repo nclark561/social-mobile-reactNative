@@ -34,8 +34,10 @@ const DeletePopup = ({
               onPress={() => {
                 if (isComment) {
                   deleteComment(post.id);
+                  handleCloseDeleteMenu()
                 } else {
                   deletePost(post.id);
+                  handleCloseDeleteMenu()
                 }
               }}
             >

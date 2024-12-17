@@ -60,6 +60,7 @@ export default function PostPage() {
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false)
+  const [renderKey, setRenderKey] = useState(0);
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
   const repostedByMe = useMemo(() => {
@@ -206,6 +207,7 @@ export default function PostPage() {
   };
 
   const getPost = async (id: string) => {
+    debugger
     try {
       const result = await fetch(`${getBaseUrl()}/api/posts/getPost?id=${id}`, {
         method: "GET",
@@ -294,6 +296,11 @@ export default function PostPage() {
     }
   };
 
+
+  const triggerRerender = () => {
+    debugger
+    setRenderKey((prev) => prev + 1); // Increment key to force rerender
+  };
 
   console.log(repostedByMe, 'testing boolean')
 
@@ -493,9 +500,15 @@ export default function PostPage() {
             return (
               <Post
                 key={comment.id}
+                getPost={async (id: string) => {
+                  console.log("getPost called with ID:", id);
+                  debugger;
+                  getPost(id);
+                }}
                 isComment
                 localId={thisPost?.id}
                 post={comment}
+                triggerRerender={triggerRerender}
                 user={myInfo?.id}
                 setLoading={setLoading}
               />

@@ -33,7 +33,7 @@ interface Post {
 const { width } = Dimensions.get('window')
 
 export default function CommentPage() {
-  const colorScheme = useColorScheme();  
+  const colorScheme = useColorScheme();
   const [thisPost, setThisPost] = useState<any>();
   const [postComments, setPostComments] = useState<any>();
   const { getForYouPosts, getBaseUrl } = useContext<any>(PostContext);
@@ -286,7 +286,7 @@ export default function CommentPage() {
   };
 
 
-  const [liked, setLiked] = useState(isLikedByUser(thisPost?.likes));  
+  const [liked, setLiked] = useState(isLikedByUser(thisPost?.likes));
 
   console.log(thisPost, 'this is this post')
 
@@ -473,6 +473,7 @@ export default function CommentPage() {
           <Post
             getPost={getPost}
             key={reply.id}
+            localId={reply.id}
             isComment
             post={reply}
             user={myInfo?.email}

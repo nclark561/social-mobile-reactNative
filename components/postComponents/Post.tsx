@@ -42,17 +42,18 @@ interface Post {
   owner: any;
   reposts: any;
   user: { blurhash: string };
+
 }
 
 interface PostProps {
   repostLength?: number;
   isComment?: boolean;
   post: Post;
-  parent_post_id: string,
   user?: string;
   setLoading: React.Dispatch<SetStateAction<boolean>>;
   getPost?: (id: string) => Promise<void>;
   localId: string
+  triggerRerender: () => void; 
 }
 
 const { width } = Dimensions.get("window");
@@ -61,7 +62,7 @@ export default function Post({
   post,
   getPost,
   localId,
-  parent_post_id,
+  triggerRerender,
   isComment,
   user,
   repostLength,
@@ -212,8 +213,7 @@ export default function Post({
           postId,
         }),
       });
-      deleteMenuRef.current?.dismiss(); // Close delete menu after deletion
-      // await getAllForYouPosts();
+      deleteMenuRef.current?.dismiss(); 
       await getForYouPosts(myInfo?.id);
       await getUserPosts(myInfo.email, myInfo.id);
       setLoading(false);
@@ -237,9 +237,11 @@ export default function Post({
       });
       deleteMenuRef.current?.dismiss();
       await getForYouPosts(myInfo?.id);
-      // await getAllForYouPosts();
+      await getAllForYouPosts();
       await getUserPosts(user);
-      setLoading(false);
+      await getPost?.(localId || post.id);
+      setLoading(false)
+      triggerRerender()
     } catch (error) {
       console.log(error, "this is the delete post error");
       setLoading(false);
@@ -253,8 +255,7 @@ export default function Post({
     userId: string,
     commentId?: string
   ) => {
-    try {
-      debugger
+    try {      
       const response = await fetch(`${getBaseUrl()}/api/posts/addComment`, {
         method: "POST",
         headers: {
@@ -275,7 +276,11 @@ export default function Post({
       await getForYouPosts(myInfo?.id);
       // await getAllForYouPosts();
       await getUserPosts(myInfo.email, myInfo.id);
-      getPost(localId)
+      if (getPost) {
+        await getPost(localId);
+      } else {
+        console.log("getPost is not defined");
+      }
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -314,7 +319,11 @@ export default function Post({
       });
       await getUserPosts(myInfo?.email, myInfo?.id);
       await getForYouPosts(myInfo?.id);
-      getPost(localId)
+      if (getPost) {
+        await getPost(localId);
+      } else {
+        console.log("getPost is not defined");
+      }
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the repost error in post");
@@ -333,7 +342,11 @@ export default function Post({
         }
       );
       await getForYouPosts(myInfo?.id);
-      await getPost(localId)
+      if (getPost) {
+        await getPost(localId);
+      } else {
+        console.log("getPost is not defined");
+      }
       await getAllForYouPosts();
       setLoading(false);
     } catch (err) {
