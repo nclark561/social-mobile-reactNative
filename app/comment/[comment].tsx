@@ -43,7 +43,7 @@ export default function CommentPage() {
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Reference for delete menu
   const [profileImageUri, setProfileImageUri] = useState("");
   const local = useLocalSearchParams();
-  const { myInfo } = useContext<any>(MyContext);
+  const { myInfo, loggedIn } = useContext<any>(MyContext);
   const [optimisticLike, setOptimisticLike] = useState(thisPost?.likes?.length);
   const [loading, setLoading] = useState(true);
   const [commentInput, setCommentInput] = useState("");
@@ -362,7 +362,7 @@ export default function CommentPage() {
               </ThemedView>
               <ThemedView style={styles.smallRow}>
                 <Ionicons
-                  onPress={() => { addLike(myInfo?.id, thisPost?.id) }}
+                  onPress={() => {if (loggedIn) addLike(myInfo?.id, thisPost?.id); }}
                   size={15}
                   name={
                     isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"

@@ -54,12 +54,13 @@ export default function PostPage() {
   const repostModalRef = useRef<BottomSheetModal>(null);
   const deleteMenuRef = useRef<BottomSheetModal>(null); // Reference for delete menu
   const local = useLocalSearchParams<any>();
-  const { myInfo } = useContext<any>(MyContext);
+  const { myInfo, loggedIn } = useContext<any>(MyContext);
   const [loading, setLoading] = useState(true);
   const [commentVisible, setCommentVisible] = useState(false);
   const [shareVisible, setShareVisible] = useState(false);
   const [repostVisible, setRepostVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false)
+
   const [renderKey, setRenderKey] = useState(0);
   const fadedTextColor = colorScheme === "dark" ? "#525252" : "#bebebe";
 
@@ -206,7 +207,7 @@ export default function PostPage() {
     }
   };
 
-  const getPost = async (id: string) => {    
+  const getPost = async (id: string) => {
     try {
       const result = await fetch(`${getBaseUrl()}/api/posts/getPost?id=${id}`, {
         method: "GET",
@@ -295,10 +296,10 @@ export default function PostPage() {
     }
   };
 
-  
-    
 
-  
+
+
+
 
   return (
     <ThemedView style={styles.realRow}>
@@ -345,7 +346,7 @@ export default function PostPage() {
               </Link>
             </ThemedView>
             <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
-            <ThemedView style={{display:'flex', justifyContent: 'center', width: '100%', alignItems:'center'}}>
+            <ThemedView style={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
               <ThemedView style={styles.reactionsContainer}>
                 <ThemedView style={styles.smallRow}>
                   <Ionicons
@@ -383,7 +384,7 @@ export default function PostPage() {
                       isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
                     }
                     onPress={() => {
-                      addLike(myInfo?.id, thisPost?.id, false);
+                      if (loggedIn) addLike(myInfo?.id, thisPost?.id, false);
                     }}
                     color={colorScheme === "dark" ? "white" : "black"}
                   />
