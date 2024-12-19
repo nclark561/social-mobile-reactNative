@@ -4,7 +4,7 @@ import { ThemedView } from ".././ThemedView";
 import { Link } from "expo-router";
 import AnimatedUnderlineText from "./animatedUnderlineText";
 import MyContext from "../providers/MyContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { supabase } from "../Supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import StackLogos from "@/components/desktopComponents/stackLogos";
@@ -12,6 +12,7 @@ import StackLogos from "@/components/desktopComponents/stackLogos";
 export default function DesktopRouting() {
   const colorScheme = useColorScheme();
   const context = useContext<any>(MyContext);
+  const [me, setMe] = useState(localStorage.getItem("user"))
   const { myInfo, loggedIn, setLoginToggle, setLoggedIn, setMyInfo } = context;
 
   const handleLogout = async () => {
@@ -34,6 +35,8 @@ export default function DesktopRouting() {
     }
   };
 
+  
+
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -41,7 +44,7 @@ export default function DesktopRouting() {
           Platform.OS === "web"
             ? localStorage.getItem("user")
             : await AsyncStorage.getItem("user");        
-        if (user) {
+        if (user) {          
           setLoggedIn(true);
         }
       } catch (error) {
@@ -50,6 +53,8 @@ export default function DesktopRouting() {
     };
     checkUser();
   }, [myInfo]);
+
+  
 
 
   return (
@@ -107,7 +112,7 @@ export default function DesktopRouting() {
         </Link>
       </ThemedView>
       <ThemedView style={styles.iconRow}>
-        {loggedIn ? (
+        {me ? (
           <Link onPress={handleLogout} href={"/(drawer)/login"}>
             <Ionicons
               size={20}

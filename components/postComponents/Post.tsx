@@ -471,10 +471,8 @@ export default function Post({
           name="ellipsis-horizontal"
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
-          onPress={() => {
-            debugger
-            if (myInfo?.id === postOwner?.id) {
-              debugger
+          onPress={() => {            
+            if (myInfo?.id === postOwner?.id) {              
               handleOpenDeleteMenu();
             }
           }}

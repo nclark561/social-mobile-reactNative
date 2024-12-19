@@ -82,7 +82,7 @@ export default function CommentPage() {
       commentModalRef.current?.dismiss();
     }
   };
-  const handleOpenRepost = () => {
+  const handleOpenRepost = () => {    
     if (Platform.OS === 'web' && width > 1000) {
       setRepostVisible(true)
     } else {
@@ -196,8 +196,7 @@ export default function CommentPage() {
           },
         },
       );
-      const userData = await result.json();
-      console.log(userData, 'this is the user data')
+      const userData = await result.json();      
       setOptimisticLike(userData?.comment.likes.length)
       setThisPost(userData?.comment);
       setPostComments(userData.comment.replies);
@@ -287,8 +286,7 @@ export default function CommentPage() {
 
 
   const [liked, setLiked] = useState(isLikedByUser(thisPost?.likes));
-
-  console.log(thisPost, 'this is this post')
+  
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -342,7 +340,7 @@ export default function CommentPage() {
                 <Ionicons
                   size={15}
                   name="chatbubble-outline"
-                  onPress={myInfo ? handleOpenComment : undefined}
+                  onPress={loggedIn ? handleOpenComment : undefined }
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
                 <ThemedText style={styles.smallNumber}>
@@ -353,7 +351,7 @@ export default function CommentPage() {
                 <Ionicons
                   size={15}
                   name={repostedByMe ? "git-compare" : "git-compare-outline"}
-                  onPress={myInfo ? handleOpenRepost : undefined}
+                  onPress={loggedIn ? handleOpenRepost : undefined}
                   color={colorScheme === "dark" ? "white" : "green"}
                 />
                 <ThemedText style={styles.smallNumber}>

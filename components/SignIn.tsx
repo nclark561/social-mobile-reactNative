@@ -58,7 +58,7 @@ export default function SignIn({
         setLoginToggle(true);
         setForYouPosts([]);
         await getUser();
-  
+        location.reload();
         if (Platform.OS === "web") {          
           // location.reload();
         } else {          

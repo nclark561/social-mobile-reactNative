@@ -97,6 +97,7 @@ export default function PostPage() {
     }
   };
   const handleOpenRepost = () => {
+    debugger
     if (Platform.OS === 'web' && width > 1000) {
       setRepostVisible(true)
     } else {
@@ -352,7 +353,7 @@ export default function PostPage() {
                   <Ionicons
                     size={15}
                     name="chatbubble-outline"
-                    onPress={myInfo ? handleOpenComment : undefined}
+                    onPress={loggedIn ? handleOpenComment : undefined}
                     color={colorScheme === "dark" ? "white" : "black"}
                   />
                   <ThemedText style={styles.smallNumber}>
@@ -363,7 +364,7 @@ export default function PostPage() {
                   <Ionicons
                     size={15}
                     name={repostedByMe ? "git-compare" : "git-compare-outline"}
-                    onPress={myInfo ? handleOpenRepost : undefined}
+                    onPress={handleOpenRepost}
                     color={
                       repostedByMe
                         ? "green"
@@ -371,7 +372,7 @@ export default function PostPage() {
                           ? "white"
                           : "black"
                     }
-                  />
+                  />                  
                   <ThemedText style={styles.smallNumber}>
                     {thisPost?.reposts?.length}
                   </ThemedText>
