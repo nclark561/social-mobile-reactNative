@@ -335,14 +335,14 @@ export default function CommentPage() {
               </ThemedText>
             </Link>
           </ThemedView>
-          <ThemedText  style={styles.postText}>{thisPost?.content}</ThemedText>
+          <ThemedText style={styles.postText}>{thisPost?.content}</ThemedText>
           <ThemedView style={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
             <ThemedView style={styles.reactionsContainer}>
               <ThemedView style={styles.smallRow}>
                 <Ionicons
                   size={15}
                   name="chatbubble-outline"
-                  onPress={handleOpenComment}
+                  onPress={myInfo ? handleOpenComment : undefined}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
                 <ThemedText style={styles.smallNumber}>
@@ -353,7 +353,7 @@ export default function CommentPage() {
                 <Ionicons
                   size={15}
                   name={repostedByMe ? "git-compare" : "git-compare-outline"}
-                  onPress={handleOpenRepost}
+                  onPress={myInfo ? handleOpenRepost : undefined}
                   color={colorScheme === "dark" ? "white" : "green"}
                 />
                 <ThemedText style={styles.smallNumber}>
@@ -362,7 +362,7 @@ export default function CommentPage() {
               </ThemedView>
               <ThemedView style={styles.smallRow}>
                 <Ionicons
-                  onPress={() => {if (loggedIn) addLike(myInfo?.id, thisPost?.id); }}
+                  onPress={() => { if (loggedIn) addLike(myInfo?.id, thisPost?.id); }}
                   size={15}
                   name={
                     isLikedByUser(thisPost?.likes) ? "heart" : "heart-outline"
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
   postText: {
     flexShrink: 1,
     fontSize: 14,
-    marginTop: 5    
+    marginTop: 5
   },
   ellipsis: {
     position: "absolute",

@@ -341,7 +341,7 @@ export default function PostPage() {
               </ThemedView>
               <Link href={`/profile/${thisPost?.email}`}>
                 <ThemedText style={styles.postUser}>
-                  {thisPost?.user_name}
+                  {thisPost?.userName}
                 </ThemedText>
               </Link>
             </ThemedView>
@@ -352,7 +352,7 @@ export default function PostPage() {
                   <Ionicons
                     size={15}
                     name="chatbubble-outline"
-                    onPress={handleOpenComment}
+                    onPress={myInfo ? handleOpenComment : undefined}
                     color={colorScheme === "dark" ? "white" : "black"}
                   />
                   <ThemedText style={styles.smallNumber}>
@@ -363,7 +363,7 @@ export default function PostPage() {
                   <Ionicons
                     size={15}
                     name={repostedByMe ? "git-compare" : "git-compare-outline"}
-                    onPress={handleOpenRepost}
+                    onPress={myInfo ? handleOpenRepost : undefined}
                     color={
                       repostedByMe
                         ? "green"

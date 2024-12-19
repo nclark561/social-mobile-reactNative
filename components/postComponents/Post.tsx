@@ -235,7 +235,7 @@ export default function Post({
       });
       deleteMenuRef.current?.dismiss();
       handleCloseComment();
-      await getForYouPosts(myInfo?.id);      
+      await getForYouPosts(myInfo?.id);
       await getUserPosts(myInfo.email, myInfo.id);
       if (getPost) {
         await getPost(localId);
@@ -243,7 +243,7 @@ export default function Post({
         console.log("getPost is not defined");
       }
       setLoading(false)
-      
+
     } catch (error) {
       console.log(error, "this is the delete post error");
       setLoading(false);
@@ -375,7 +375,7 @@ export default function Post({
     setOptimisticComment(post.comments ? post?.comments?.length : post?.replies?.length)
   }, [post])
 
-console.log(post,'this is the post')
+  console.log(post, 'this is the post')
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -407,7 +407,7 @@ console.log(post,'this is the post')
               <Ionicons
                 size={15}
                 name="chatbubble-outline"
-                onPress={handleOpenComment}
+                onPress={myInfo ? handleOpenComment : undefined}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
               <ThemedText style={styles.smallNumber}>
@@ -418,7 +418,7 @@ console.log(post,'this is the post')
               <Ionicons
                 size={15}
                 name={repostedByMe ? "git-compare" : "git-compare-outline"}
-                onPress={handleOpenRepost}
+                onPress={myInfo ? handleOpenRepost : undefined}
                 color={
                   repostedByMe
                     ? "green"
