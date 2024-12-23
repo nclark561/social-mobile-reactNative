@@ -9,6 +9,7 @@ import { Platform } from "react-native";
 type PostContextType = {
   getUserPosts: (email: string, userId: string) => Promise<void>;
   getForYouPosts: () => Promise<void>;
+  getAllForYouPosts: () => Promise<void>;
   posts: any;
   forYouPosts: any[];
   forYouPostsToggle: boolean;
@@ -45,7 +46,8 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    getForYouPosts();
+    getAllForYouPosts();
+    getForYouPosts()
   }, [forYouPostsToggle]);
 
   const getUserPosts = async (email: string, userId: string) => {
@@ -105,6 +107,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
         getUserPosts,
         posts,
         getForYouPosts,
+        getAllForYouPosts,
         forYouPosts,
         forYouPostsToggle,
         setForYouPostsToggle,

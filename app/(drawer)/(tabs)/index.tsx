@@ -78,7 +78,7 @@ export default function HomeScreen() {
           email: myInfo.email
         }),
       });
-      await getForYouPosts(myInfo?.id);
+      await getAllForYouPosts();
       setLoading(false);
     } catch (error) {
       console.log(error, "this is the create post error");
@@ -100,7 +100,8 @@ export default function HomeScreen() {
   );
 
   const loadingPosts = async () => {
-    await getForYouPosts(myInfo?.id);
+    await getAllForYouPosts();
+    await getForYouPosts(myInfo?.id)
     setLoading(false);
   };
 
@@ -188,7 +189,7 @@ export default function HomeScreen() {
               style={{ width: "100%", flex: 1, height: height }}
               showsVerticalScrollIndicator={false}
             >
-              {!isForYou
+              {isForYou
                 ? Array.isArray(forYouPosts) &&
                 forYouPosts.map((post, i) => {
                   if (post.postId) {

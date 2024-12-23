@@ -212,7 +212,7 @@ export default function Post({
         }),
       });
       deleteMenuRef.current?.dismiss();
-      await getForYouPosts(myInfo?.id);
+      await getAllForYouPosts()
       await getUserPosts(myInfo.email, myInfo.id);
       setLoading(false);
     } catch (error) {
