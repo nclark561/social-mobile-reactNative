@@ -62,7 +62,7 @@ export default function TabTwoScreen() {
     }
   }, [myInfo]);
 
-  console.log(myInfo.links, 'these are the links')
+  
 
   const renderContent = () => {
     switch (selectedOption) {
@@ -73,9 +73,9 @@ export default function TabTwoScreen() {
             style={{ flexDirection: "column", flex: 1 }}
           >
             <ThemedView>
-              {Array.isArray(posts?.Posts?.posts) &&
-                posts?.Posts.posts?.map((post: any) => {
-        
+              {Array.isArray(posts?.posts) &&
+                posts?.posts?.map((post: any) => {
+                  console.log(post, 'this is the post')
                   return (
                     <Post
                       localId={post.id}
@@ -179,7 +179,7 @@ export default function TabTwoScreen() {
     );
   };
 
-
+// console.log(posts?.posts, "profile posts")
 
   return (
     <ThemedView
