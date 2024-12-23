@@ -62,7 +62,7 @@ export default function TabTwoScreen() {
     }
   }, [myInfo]);
 
-
+  console.log(myInfo.links, 'these are the links')
 
   const renderContent = () => {
     switch (selectedOption) {
