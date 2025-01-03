@@ -301,19 +301,27 @@ export default function PostPage() {
   function formatRelativeDate(isoDateString: string) {
     const date = new Date(isoDateString);
     const now = new Date();
-
-    const timeDiff = now - date;
-    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
-    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-    if (hoursDiff < 24) {
+  
+    const timeDiff = now - date; // Difference in milliseconds
+    const minutesDiff = Math.floor(timeDiff / (1000 * 60)); // Difference in minutes
+    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60)); // Difference in hours
+    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // Difference in days
+  
+    if (minutesDiff < 60) {
+      // Less than an hour ago
+      return `${minutesDiff} minutes ago`;
+    } else if (hoursDiff < 24) {
+      // Less than 24 hours ago
       return `${hoursDiff} hours ago`;
     } else if (daysDiff === 1) {
+      // Exactly 1 day ago
       return "1 day ago";
     } else if (daysDiff === 2) {
+      // Exactly 2 days ago
       return "2 days ago";
     } else {
-      const options = { month: "numeric", day: "numeric" };
+      // More than 2 days ago, show Month Day format
+      const options = { month: "long", day: "numeric" };
       return date.toLocaleDateString("en-US", options);
     }
   }
