@@ -155,7 +155,7 @@ export default function ExternalProfile() {
   const formatDate = (dateString: any) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat("en-US", {
-      month: "long",
+      month: "numeric",
       day: "numeric",
       year: "numeric",
     }).format(date);

@@ -304,7 +304,7 @@ export default function CommentPage() {
       return "2 days ago";
     } else {
       // More than 2 days ago, show Month Day format
-      const options = { month: "long", day: "numeric" };
+      const options = { month: "numeric", day: "numeric" };
       return date.toLocaleDateString("en-US", options);
     }
   }
