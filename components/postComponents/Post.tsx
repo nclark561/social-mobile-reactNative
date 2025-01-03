@@ -617,7 +617,7 @@ export default function Post({
                   {post.email || post.userName}
                 </ThemedText>
                 <ThemedText style={styles.postUser}>
-                  {formatDate(post.date)}
+                  {formatRelativeDate(post?.date)}
                 </ThemedText>
               </ThemedView>
               <ThemedView style={styles.commentOGPost}>
