@@ -380,21 +380,17 @@ export default function Post({
     const date = new Date(isoDateString);
     const now = new Date();
 
-    const timeDiff = now - date; // Difference in milliseconds
-    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60)); // Difference in hours
-    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // Difference in days
+    const timeDiff = now - date;
+    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
     if (hoursDiff < 24) {
-      // Less than 24 hours ago
       return `${hoursDiff} hours ago`;
     } else if (daysDiff === 1) {
-      // Between 1 and 2 days ago
       return "1 day ago";
     } else if (daysDiff === 2) {
-      // Exactly 2 days ago
       return "2 days ago";
     } else {
-      // More than 2 days ago, show Month Day format
       const options = { month: "numeric", day: "numeric" };
       return date.toLocaleDateString("en-US", options);
     }

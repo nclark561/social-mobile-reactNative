@@ -298,6 +298,25 @@ export default function PostPage() {
   };
 
 
+  function formatRelativeDate(isoDateString: string) {
+    const date = new Date(isoDateString);
+    const now = new Date();
+
+    const timeDiff = now - date;
+    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+    if (hoursDiff < 24) {
+      return `${hoursDiff} hours ago`;
+    } else if (daysDiff === 1) {
+      return "1 day ago";
+    } else if (daysDiff === 2) {
+      return "2 days ago";
+    } else {
+      const options = { month: "numeric", day: "numeric" };
+      return date.toLocaleDateString("en-US", options);
+    }
+  }
 
 
 
@@ -343,6 +362,9 @@ export default function PostPage() {
               <Link href={`/profile/${thisPost?.email}`}>
                 <ThemedText style={styles.postUser}>
                   {thisPost?.userName}
+                </ThemedText>
+                <ThemedText style={styles.postDate}>
+                  {formatRelativeDate(thisPost?.date)}
                 </ThemedText>
               </Link>
             </ThemedView>
@@ -534,6 +556,17 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     borderBottomWidth: 0.3,
     paddingBottom: 2,
+  },
+  postDate: {
+    fontWeight: "300",
+    fontSize: 11,
+    color: '	#818589',
+    opacity: .6,
+    marginLeft: 10,
+    paddingBottom: 5,
+    ...(Platform.OS === "web" && {
+      fontSize: 13,
+    }),
   },
   flex: {
     flexDirection: "row",

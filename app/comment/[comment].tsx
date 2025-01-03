@@ -270,9 +270,6 @@ export default function CommentPage() {
   );
 
 
-
-
-
   useEffect(() => {
     if (thisPost) {
       const newProfileImageUri = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profile-images/${thisPost?.user?.id}?${Date.now()}`;
@@ -284,6 +281,25 @@ export default function CommentPage() {
     return likes?.includes(myInfo?.id);
   };
 
+  function formatRelativeDate(isoDateString: string) {
+    const date = new Date(isoDateString);
+    const now = new Date();
+
+    const timeDiff = now - date;
+    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+    if (hoursDiff < 24) {
+      return `${hoursDiff} hours ago`;
+    } else if (daysDiff === 1) {
+      return "1 day ago";
+    } else if (daysDiff === 2) {
+      return "2 days ago";
+    } else {
+      const options = { month: "numeric", day: "numeric" };
+      return date.toLocaleDateString("en-US", options);
+    }
+  }
 
   const [liked, setLiked] = useState(isLikedByUser(thisPost?.likes));
   
@@ -330,6 +346,9 @@ export default function CommentPage() {
             <Link href={`/profile/${thisPost?.email}`}>
               <ThemedText style={styles.postUser}>
                 {thisPost?.userName}
+              </ThemedText>
+              <ThemedText style={styles.postDate}>
+                {formatRelativeDate(thisPost.date)}
               </ThemedText>
             </Link>
           </ThemedView>
@@ -513,6 +532,17 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     margin: 5,
     width: "90%",
+  },
+  postDate: {
+    fontWeight: "300",
+    fontSize: 11,
+    color: '	#818589',
+    opacity: .6,
+    marginLeft: 10,
+    paddingBottom: 5,
+    ...(Platform.OS === "web" && {
+      fontSize: 13,
+    }),
   },
   postUser: {
     fontWeight: "bold",
