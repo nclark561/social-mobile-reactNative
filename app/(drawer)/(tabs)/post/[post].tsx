@@ -9,7 +9,7 @@ import {
 import { useFocusEffect } from "expo-router";
 import { useContext, useCallback, useEffect, useMemo } from "react";
 import { useLocalSearchParams } from "expo-router";
-import PostContext from "../../components/providers/PostContext";
+import PostContext from "../../../../components/providers/PostContext";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -42,7 +42,7 @@ interface Post {
 export default function PostPage() {
   const route = useRoute();
   const colorScheme = useColorScheme();
-  const { post } = route.params as { post: Post };
+  // const { post } = route.params as { post: Post };
   const [thisPost, setThisPost] = useState<any>();
   const [liked, setLiked] = useState();
   const [postComments, setPostComments] = useState<any>();

@@ -19,7 +19,7 @@ export default function TabLayout() {
   const { width, height } = useWindowDimensions();
 
   // Debugging purposes: See if the dimensions change
-  
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -84,6 +84,13 @@ export default function TabLayout() {
                 size={20}
               />
             ),
+          }}
+        />
+        <Tabs.Screen
+          name="[post]"
+          options={{
+            title: "post",
+            tabBarButton: () => null, // Hides the tab button entirely
           }}
         />
       </Tabs>

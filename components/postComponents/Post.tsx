@@ -375,7 +375,33 @@ export default function Post({
     setOptimisticComment(post.comments ? post?.comments?.length : post?.replies?.length)
   }, [post])
 
-  console.log(post, 'this is the post')
+
+  function formatRelativeDate(isoDateString: string) {
+    const date = new Date(isoDateString);
+    const now = new Date();
+
+    const timeDiff = now - date; // Difference in milliseconds
+    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60)); // Difference in hours
+    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // Difference in days
+
+    if (hoursDiff < 24) {
+      // Less than 24 hours ago
+      return `${hoursDiff} hours ago`;
+    } else if (daysDiff === 1) {
+      // Between 1 and 2 days ago
+      return "1 day ago";
+    } else if (daysDiff === 2) {
+      // Exactly 2 days ago
+      return "2 days ago";
+    } else {
+      // More than 2 days ago, show Month Day format
+      const options = { month: "numeric", day: "numeric" };
+      return date.toLocaleDateString("en-US", options);
+    }
+  }
+
+
+
 
   return (
     <Pressable onPress={handlePostPress}>
@@ -400,6 +426,7 @@ export default function Post({
             onPress={handleProfilePress}
           >
             <ThemedText style={styles.postUser}>{postOwner?.username ? postOwner?.username : post?.userName}</ThemedText>
+            <ThemedText style={styles.postDate}>{formatRelativeDate(post.date)}</ThemedText>
           </Link>
           <ThemedText style={styles.postText}>{post?.content}</ThemedText>
           <ThemedView style={styles.reactionsContainer}>
@@ -471,8 +498,8 @@ export default function Post({
           name="ellipsis-horizontal"
           style={styles.ellipsis}
           color={colorScheme === "dark" ? "white" : "black"}
-          onPress={() => {            
-            if (myInfo?.id === postOwner?.id) {              
+          onPress={() => {
+            if (myInfo?.id === postOwner?.id) {
               handleOpenDeleteMenu();
             }
           }}
@@ -584,6 +611,9 @@ export default function Post({
                 />
                 <ThemedText style={styles.postUser}>
                   {post.email || post.userName}
+                </ThemedText>
+                <ThemedText style={styles.postUser}>
+                  {formatDate(post.date)}
                 </ThemedText>
               </ThemedView>
               <ThemedView style={styles.commentOGPost}>
@@ -730,6 +760,17 @@ const styles = StyleSheet.create({
   postUser: {
     fontWeight: "bold",
     fontSize: 15,
+    paddingBottom: 5,
+    ...(Platform.OS === "web" && {
+      fontSize: 13,
+    }),
+  },
+  postDate: {
+    fontWeight: "300",
+    fontSize: 11,
+    color: '	#818589',
+    opacity: .6,
+    marginLeft: 10,
     paddingBottom: 5,
     ...(Platform.OS === "web" && {
       fontSize: 13,

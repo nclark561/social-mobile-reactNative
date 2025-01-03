@@ -112,8 +112,7 @@ export default function HomeScreen() {
   // const handleError = () => setProfileImageUri(mortyUrl);
 
   const blurhash = myInfo?.blurhash || "U~I#+9xuRjj[_4t7aej[xvjYoej[WCWAkCoe";
-
-
+  
 
   return (
     <ThemedView style={styles.pageContainer}>
