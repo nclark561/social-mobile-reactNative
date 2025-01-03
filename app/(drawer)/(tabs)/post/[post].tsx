@@ -364,7 +364,7 @@ export default function PostPage() {
                   {thisPost?.userName}
                 </ThemedText>
                 <ThemedText style={styles.postDate}>
-                  {formatRelativeDate(thisPost?.date)}
+                  {formatRelativeDate(thisPost?.date || null)}
                 </ThemedText>
               </Link>
             </ThemedView>

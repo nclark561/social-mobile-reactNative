@@ -348,7 +348,7 @@ export default function CommentPage() {
                 {thisPost?.userName}
               </ThemedText>
               <ThemedText style={styles.postDate}>
-                {formatRelativeDate(thisPost.date)}
+                {formatRelativeDate(thisPost?.date || null)}
               </ThemedText>
             </Link>
           </ThemedView>
